@@ -1,0 +1,91 @@
+.sidebarLogo {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  background-color: #1890ff;
+
+  svg {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 44px;
+    height: 44px;
+    color: #fff;
+  }
+}
+
+.sidebarMenu {
+  overflow: hidden;
+  width: 56px;
+  height: 100%;
+  background-color: #f7f7fa;
+
+  .sidebarMenuItem {
+    svg {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 16px !important;
+    }
+    position: relative;
+    width: 56px !important;
+    height: 56px !important;
+    padding: 6px !important;
+    margin: 0 !important;
+  }  
+}
+
+.header {
+  position: fixed;
+  width: calc(100% - 56px);
+  background: #fff;
+  padding: 0;
+  height: 56px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.content {
+  margin: 72px 16px 0;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.user {
+  position: absolute;
+  margin-top: -4px;
+  right: 8px;
+  cursor: pointer;
+
+  .dropdownWrapper {
+    margin-right: 10px;
+  }
+
+  :global(.anticon-down) {
+    margin-left: 7px;
+  }
+
+  &:hover {
+    :global(.anticon-down), .username {
+      transition: color 0.3s ease;
+      color: #1890ff;
+    }
+  }
+
+  :global(.ant-avatar) {
+    margin-right: 7px;
+  }
+
+  :global(.ant-btn) {
+    position: relative;
+    margin-right: 8px;
+  }
+}
+
+.userMenu {
+  right: 14px;
+  width: calc(100% + 25px);
+
+  :global(.anticon) {
+    margin-right: 10px;
+  }
+}
