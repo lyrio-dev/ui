@@ -32,16 +32,16 @@ If you run API server and the frontend app server on different [origin](https://
 
 ```json
 {
-	...
+    ...
     "security": {
         "crossOrigin": {
             "enabled": true,
             "whiteList": [
                 "http://syzoj-ng-app.test"
             ]
-		},
-		...
-	}
+        },
+        ...
+    }
 }
 ```
 
