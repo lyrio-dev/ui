@@ -58,16 +58,35 @@ export default {
         errorType = "password";
         errorMessage = formatMessage({ id: "syzoj.login.empty_password" });
       } else {
-        const response = yield call(api.post, "login", payload);
-        if (response.success) {
+        const { requestError, response } = yield call(api.post, "auth/login", payload);
+        if (requestError) message.error(requestError);
+        else if (response.error) {
+          switch (response.error) {
+            case "ALREADY_LOGGEDIN":
+              message.error(formatMessage({ id: "syzoj.login.already_loggedin" }))
+              break;
+            case "NO_SUCH_USER":
+              errorType = "username";
+              errorMessage = formatMessage({ id: "syzoj.login.no_such_user" });
+              break;
+            case "WRONG_PASSWORD":
+              errorType = "password";
+              errorMessage = formatMessage({ id: "syzoj.login.wrong_password" });
+              break;
+            default:
+          }
+        } else {
           message.success(formatMessage({ id: "syzoj.login.welcome" }, { username: payload.username }));
           yield put({
             type: "app/setLoggedIn",
             payload: {
               loggedIn: true,
+              token: response.token,
               loggedInUser: {
-                username: payload.username,
-                avatar: null
+                id: response.userMeta.id,
+                username: response.userMeta.username,
+                email: response.userMeta.email,
+                bio: response.userMeta.bio
               }          
             }
           });
@@ -78,8 +97,6 @@ export default {
               success: true
             }
           });
-        } else {
-          message.error(response.message);
         }
       }
 

@@ -1,35 +1,36 @@
-const ROOT_URL = "http://localhost:8001/api/";
+import axios from "axios";
+
+let token = localStorage.getItem("token");
 
 export default async function api(path, method, body) {
   let response;
   try {
-    response = await fetch(ROOT_URL + path, {
+    response = await axios(window._appConfig.apiEndpoint + path, {
       method: method,
-      body: JSON.stringify(body),
-      credentials: "include"
+      data: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token && `Bearer ${token}`
+      }
     });
   } catch (e) {
     return {
-      success: false,
-      message: e.message
+      requestError: e.message
     };
   }
 
-  if (!response.ok) {
+  if (![200, 201].includes(response.status)) {
+    try {
+      console.log(response.data)
+    } catch (e) {}
     return {
-      success: false,
-      message: `${response.status} ${response.statusText}`
+      requestError: `${response.status} ${response.statusText}`
     };
   }
 
-  try {
-    return response.json();
-  } catch (e) {
-    return {
-      success: false,
-      message: "Error parsing server response: " + e.message
-    };
-  }
+  return {
+    response: typeof response.data === "string" ? JSON.parse(response.data) : response.data
+  };
 }
 
 export async function get(path) {
@@ -42,3 +43,9 @@ export async function post(path, body) {
 
 api.get = get;
 api.post = post;
+
+api.getToken = () => token;
+api.setToken = newToken => {
+  token = newToken;
+  localStorage.setItem("token", newToken);
+};

@@ -5,19 +5,24 @@ export default {
   state: {
     locale: "zh-CN",
     title: "SYZOJ",
-    siteInfo: window.syzojSiteInfo,
+    appConfig: window._appConfig,
     loggedIn: false,
+    token: null,
     loggedInUser: {
+      id: null,
       username: null,
-      avatar: null
+      email: null,
+      bio: null
     },
     loginRedirectUrl: null
   },
   reducers: {
-    setLoggedIn(state, { payload: { loggedIn, loggedInUser }}) {
+    setLoggedIn(state, { payload: { loggedIn, token, loggedInUser }}) {
+      api.setToken(token);
       return {
         ...state,
         loggedIn,
+        token,
         loggedInUser
       };
     },
@@ -33,12 +38,6 @@ export default {
         title
       };
     },
-    setSiteInfo(state, { payload: { siteInfo } }) {
-      return {
-        ...state,
-        siteInfo
-      };
-    },
     setLoginRedirectUrl(state, { payload: { loginRedirectUrl } }) {
       return {
         ...state,
@@ -47,16 +46,40 @@ export default {
     }
   },
   effects: {
+    *getLoggedInUser({ payload }, { call, put }) {
+      const token = api.getToken();
+      if (!token) return;
+
+      const { requestError, response } = yield call(api.get, "auth/getSelfMeta");
+      if (!requestError && response.userMeta) {
+        yield put({
+          type: "setLoggedIn",
+          payload: {
+            loggedIn: true,
+            token: token,
+            loggedInUser: {
+              id: response.userMeta.id,
+              username: response.userMeta.username,
+              email: response.userMeta.email,
+              bio: response.userMeta.bio
+            }
+          }
+        });
+      }
+    },
     *logout({ payload }, { call, put }) {
-      const response = yield call(api.post, "logout");
+      const { requestError, response } = yield call(api.post, "auth/logout");
 
       yield put({
         type: "setLoggedIn",
         payload: {
           loggedIn: false,
+          token: null,
           loggedInUser: {
+            id: null,
             username: null,
-            avatar: null
+            email: null,
+            bio: null
           }
         }
       });

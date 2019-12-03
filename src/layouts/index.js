@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "dva";
 import Helmet from "react-helmet";
+import * as gravatar from "gravatar";
 import NavLink from "umi/navlink";
 import router from "umi/router";
 import withRouter from 'umi/withRouter';
@@ -25,7 +26,7 @@ const locales = {
 @connect(({ app }) => ({
   locale: app.locale,
   title: app.title,
-  siteInfo: app.siteInfo,
+  appConfig: app.appConfig,
   loggedIn: app.loggedIn,
   loggedInUser: app.loggedInUser,
   loginRedirectUrl: app.loginRedirectUrl
@@ -116,7 +117,10 @@ class AppLayout extends React.Component {
           }
         >
           <div className={style.dropdownWrapper}>
-            <Avatar size={36} icon="user" />
+            <Avatar
+              size={36}
+              src={gravatar.url(this.props.loggedInUser.email, { s: 72, d: "mm" })}
+            />
             <span className={style.username}>
               {this.props.loggedInUser.username}
             </span>
@@ -141,7 +145,7 @@ class AppLayout extends React.Component {
         locale={locales[this.props.locale]}
       >
         <Helmet>
-          <title>{this.props.title} - {this.props.siteInfo.siteName}</title>
+          <title>{this.props.title} - {this.props.appConfig.siteName}</title>
         </Helmet>
         <Layout
           style={{ minHeight: "100%" }}
@@ -188,7 +192,7 @@ class AppLayout extends React.Component {
               {this.props.children}
             </Content>
             <Footer style={{ textAlign: "center" }}>
-              {this.props.siteInfo.siteName}
+              {this.props.appConfig.siteName}
               &nbsp;Powered by SYZOJ
             </Footer>
           </Layout>

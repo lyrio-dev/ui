@@ -24,18 +24,43 @@
 //       /     /  /               |   |    //
 /////////////////////////////////////////////
 -->
+<%
+// Esacpe </script> in JSON.stringify's result
+function safeStringify(object) {
+  return JSON.stringify(object).split("<").join("\\u003C");
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g,
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+}
+
+const appConfig = context.appConfig;
+%>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 
-  <!-- Site info should be served by the API server in production -->
   <script>
-  window.syzojSiteInfo = {
-    siteName: "SYZOJ NG Dev"
-  }
+  window._appConfig = <%- safeStringify(appConfig) %>;
   </script>
+
+  <% if (appConfig.crossOrigin) { %>
+  <script
+    src="<%= escapeHTML(appConfig.apiEndpoint + "cors/xdomain.min.js") %>"
+    data-slave="<%= escapeHTML(appConfig.apiEndpoint + "cors/") %>"
+  >
+  </script>
+  <% } %>
 
   <% if (context.title != null) { %>
   <title><%= context.title %></title>
