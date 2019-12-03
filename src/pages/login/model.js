@@ -1,6 +1,6 @@
 import api from "@/services/api";
 import { formatMessage } from "umi/locale";
-import { message } from 'antd';
+import { message } from "antd";
 
 const initialState = {
   pending: false,
@@ -50,7 +50,8 @@ export default {
         }
       });
 
-      let errorType = null, errorMessage = null;
+      let errorType = null,
+        errorMessage = null;
       if (payload.username.length === 0) {
         errorType = "username";
         errorMessage = formatMessage({ id: "syzoj.login.empty_username" });
@@ -58,12 +59,18 @@ export default {
         errorType = "password";
         errorMessage = formatMessage({ id: "syzoj.login.empty_password" });
       } else {
-        const { requestError, response } = yield call(api.post, "auth/login", payload);
+        const { requestError, response } = yield call(
+          api.post,
+          "auth/login",
+          payload
+        );
         if (requestError) message.error(requestError);
         else if (response.error) {
           switch (response.error) {
             case "ALREADY_LOGGEDIN":
-              message.error(formatMessage({ id: "syzoj.login.already_loggedin" }))
+              message.error(
+                formatMessage({ id: "syzoj.login.already_loggedin" })
+              );
               break;
             case "NO_SUCH_USER":
               errorType = "username";
@@ -71,12 +78,19 @@ export default {
               break;
             case "WRONG_PASSWORD":
               errorType = "password";
-              errorMessage = formatMessage({ id: "syzoj.login.wrong_password" });
+              errorMessage = formatMessage({
+                id: "syzoj.login.wrong_password"
+              });
               break;
             default:
           }
         } else {
-          message.success(formatMessage({ id: "syzoj.login.welcome" }, { username: payload.username }));
+          message.success(
+            formatMessage(
+              { id: "syzoj.login.welcome" },
+              { username: payload.username }
+            )
+          );
           yield put({
             type: "app/setLoggedIn",
             payload: {
@@ -87,7 +101,7 @@ export default {
                 username: response.userMeta.username,
                 email: response.userMeta.email,
                 bio: response.userMeta.bio
-              }          
+              }
             }
           });
 

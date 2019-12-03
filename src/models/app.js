@@ -17,7 +17,7 @@ export default {
     loginRedirectUrl: null
   },
   reducers: {
-    setLoggedIn(state, { payload: { loggedIn, token, loggedInUser }}) {
+    setLoggedIn(state, { payload: { loggedIn, token, loggedInUser } }) {
       api.setToken(token);
       return {
         ...state,
@@ -50,7 +50,10 @@ export default {
       const token = api.getToken();
       if (!token) return;
 
-      const { requestError, response } = yield call(api.get, "auth/getSelfMeta");
+      const { requestError, response } = yield call(
+        api.get,
+        "auth/getSelfMeta"
+      );
       if (!requestError && response.userMeta) {
         yield put({
           type: "setLoggedIn",

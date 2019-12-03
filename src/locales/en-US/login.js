@@ -11,4 +11,4 @@ module.exports = {
   no_such_user: "No such user",
   wrong_password: "Wrong password",
   welcome: "Welcome back, {username}!"
-}
+};

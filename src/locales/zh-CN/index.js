@@ -1,3 +1,3 @@
 module.exports = {
-  "title": "首页"
+  title: "首页"
 };

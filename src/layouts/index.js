@@ -4,16 +4,24 @@ import Helmet from "react-helmet";
 import * as gravatar from "gravatar";
 import NavLink from "umi/navlink";
 import router from "umi/router";
-import withRouter from 'umi/withRouter';
+import withRouter from "umi/withRouter";
 import { FormattedMessage, setLocale } from "umi/locale";
 
 import enUS from "antd/es/locale/en_US";
 import zhCN from "antd/es/locale/zh_CN";
 
-import { ConfigProvider, Layout, Menu, Icon, Button, Dropdown, Avatar } from "antd";
+import {
+  ConfigProvider,
+  Layout,
+  Menu,
+  Icon,
+  Button,
+  Dropdown,
+  Avatar
+} from "antd";
 
 import style from "./index.less";
-import Logo from "@/assets/syzoj-applogo.svg"
+import Logo from "@/assets/syzoj-applogo.svg";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -51,8 +59,14 @@ class AppLayout extends React.Component {
   onLoginOrRegisterClick(loginOrRegister) {
     return () => {
       // Save the current url for redirecting back
-      if (window.location.pathname !== "/login" && window.location.pathname !== "/register") {
-        const currentUrl = window.location.pathname + window.location.search + window.location.hash;
+      if (
+        window.location.pathname !== "/login" &&
+        window.location.pathname !== "/register"
+      ) {
+        const currentUrl =
+          window.location.pathname +
+          window.location.search +
+          window.location.hash;
         this.props.dispatch({
           type: "app/setLoginRedirectUrl",
           payload: {
@@ -94,7 +108,7 @@ class AppLayout extends React.Component {
         icon: "question-circle",
         text: "syzoj.common.navbar.help"
       }
-    }
+    };
 
     const userPanel = this.props.loggedIn ? (
       <div>
@@ -119,7 +133,10 @@ class AppLayout extends React.Component {
           <div className={style.dropdownWrapper}>
             <Avatar
               size={36}
-              src={gravatar.url(this.props.loggedInUser.email, { s: 72, d: "mm" })}
+              src={gravatar.url(this.props.loggedInUser.email, {
+                s: 72,
+                d: "mm"
+              })}
             />
             <span className={style.username}>
               {this.props.loggedInUser.username}
@@ -133,7 +150,10 @@ class AppLayout extends React.Component {
         <Button onClick={this.onLoginOrRegisterClick("login")}>
           <FormattedMessage id="syzoj.common.header.user.login" />
         </Button>
-        <Button onClick={this.onLoginOrRegisterClick("register")} type="primary">
+        <Button
+          onClick={this.onLoginOrRegisterClick("register")}
+          type="primary"
+        >
           <FormattedMessage id="syzoj.common.header.user.register" />
         </Button>
       </div>
@@ -145,11 +165,11 @@ class AppLayout extends React.Component {
         locale={locales[this.props.locale]}
       >
         <Helmet>
-          <title>{this.props.title} - {this.props.appConfig.siteName}</title>
+          <title>
+            {this.props.title} - {this.props.appConfig.siteName}
+          </title>
         </Helmet>
-        <Layout
-          style={{ minHeight: "100%" }}
-        >
+        <Layout style={{ minHeight: "100%" }}>
           <Sider
             width={56}
             collapsed={true}
@@ -158,7 +178,7 @@ class AppLayout extends React.Component {
               overflow: "hidden",
               height: "100vh",
               position: "fixed",
-              left: 0,
+              left: 0
             }}
           >
             <NavLink to="/">
@@ -172,25 +192,19 @@ class AppLayout extends React.Component {
               mode="inline"
               defaultSelectedKeys={["1"]}
             >
-              {
-                Object.keys(navButtons).map(name =>
-                  <Menu.Item key={name} className={style.sidebarMenuItem}>
-                    <Icon type={navButtons[name].icon} />
-                    <FormattedMessage id={navButtons[name].text} />
-                  </Menu.Item>
-                )
-              }
+              {Object.keys(navButtons).map(name => (
+                <Menu.Item key={name} className={style.sidebarMenuItem}>
+                  <Icon type={navButtons[name].icon} />
+                  <FormattedMessage id={navButtons[name].text} />
+                </Menu.Item>
+              ))}
             </Menu>
           </Sider>
           <Layout style={{ marginLeft: 56 }}>
             <Header className={style.header}>
-              <div className={style.user}>
-                {userPanel}
-              </div>
+              <div className={style.user}>{userPanel}</div>
             </Header>
-            <Content className={style.content}>
-              {this.props.children}
-            </Content>
+            <Content className={style.content}>{this.props.children}</Content>
             <Footer style={{ textAlign: "center" }}>
               {this.props.appConfig.siteName}
               &nbsp;Powered by SYZOJ

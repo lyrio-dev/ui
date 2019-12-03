@@ -1,3 +1,3 @@
 module.exports = {
-  "title": "Home"
+  title: "Home"
 };

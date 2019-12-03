@@ -10,7 +10,7 @@ export default async function api(path, method, body) {
       data: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": token && `Bearer ${token}`
+        Authorization: token && `Bearer ${token}`
       }
     });
   } catch (e) {
@@ -21,7 +21,7 @@ export default async function api(path, method, body) {
 
   if (![200, 201].includes(response.status)) {
     try {
-      console.log(response.data)
+      console.log(response.data);
     } catch (e) {}
     return {
       requestError: `${response.status} ${response.statusText}`
@@ -29,7 +29,10 @@ export default async function api(path, method, body) {
   }
 
   return {
-    response: typeof response.data === "string" ? JSON.parse(response.data) : response.data
+    response:
+      typeof response.data === "string"
+        ? JSON.parse(response.data)
+        : response.data
   };
 }
 
