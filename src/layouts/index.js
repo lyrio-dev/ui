@@ -42,6 +42,10 @@ const locales = {
 class AppLayout extends React.Component {
   componentDidMount() {
     setLocale(this.props.locale, false);
+
+    this.props.dispatch({
+      type: "app/getLoggedInUser"
+    });
   }
 
   componentDidUpdate(prevProps) {

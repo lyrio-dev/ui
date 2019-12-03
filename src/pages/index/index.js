@@ -11,10 +11,6 @@ class IndexPage extends React.Component {
         title: formatMessage({ id: "syzoj.index.title" })
       }
     });
-
-    this.props.dispatch({
-      type: "app/getLoggedInUser"
-    });
   }
 
   render() {
