@@ -55,9 +55,15 @@ export default {
       if (payload.username.length === 0) {
         errorType = "username";
         errorMessage = formatMessage({ id: "syzoj.login.empty_username" });
+      } else if (!/^[a-zA-Z0-9\-\_\.\#\$]{3,24}$/.test(payload.username)) {
+        errorType = "username";
+        errorMessage = formatMessage({ id: "syzoj.login.invalid_username" });
       } else if (payload.password.length === 0) {
         errorType = "password";
         errorMessage = formatMessage({ id: "syzoj.login.empty_password" });
+      } else if (payload.password.length < 6 || payload.password.length > 32) {
+        errorType = "password";
+        errorMessage = formatMessage({ id: "syzoj.login.invalid_password" });
       } else {
         const { requestError, response } = yield call(
           api.post,

@@ -57,6 +57,12 @@ class LoginPage extends React.Component {
       setTimeout(() => {
         router.push(this.props.loginRedirectUrl || "/");
       }, 1000);
+    } else {
+      if (this.props.error.type === "username") {
+        this.refUsername.focus();
+      } else if (this.props.error.type === "password") {
+        this.refPassword.focus();
+      }
     }
   }
 
@@ -90,6 +96,7 @@ class LoginPage extends React.Component {
                 this.refPassword.input.focus();
                 this.refPassword.input.select();
               }}
+              ref={ref => (this.refUsername = ref)}
             />
           </Form.Item>
         </div>
