@@ -126,7 +126,7 @@ const AppLayout: React.FC = props => {
   );
 
   return (
-    <Layout style={{ minHeight: "100%" }}>
+    <Layout className={style.outerLayout}>
       <Sider
         width={56}
         collapsed={true}
@@ -154,12 +154,12 @@ const AppLayout: React.FC = props => {
           ))}
         </Menu>
       </Sider>
-      <Layout style={{ marginLeft: 56 }}>
+      <Layout className={style.innerLayout}>
+        <Content className={style.content}>{props.children}</Content>
         <Header className={style.header}>
           <div className={style.user}>{userPanel}</div>
         </Header>
-        <Content className={style.content}>{props.children}</Content>
-        <Footer style={{ textAlign: "center" }}>
+        <Footer className={style.footer}>
           {appConfig.siteName}
           &nbsp;Powered by SYZOJ
         </Footer>

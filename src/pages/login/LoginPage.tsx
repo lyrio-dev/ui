@@ -4,7 +4,7 @@ import { Icon, Input, Button, Checkbox, Form, message } from "antd";
 import { useHistory } from "react-router";
 
 import style from "./LoginPage.module.less";
-import UserIcon from "@/assets/user.svg";
+import LoginLogo from "@/assets/syzoj-login-logo.svg";
 
 import { appState } from "@/appState";
 
@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className={style.wrapper}>
-      <Icon component={UserIcon as any} className={style.userIcon} />
+      <LoginLogo className={style.logo} />
       <div className={style.row}>
         <Form.Item
           validateStatus={

@@ -1,15 +1,27 @@
 .wrapper {
   max-width: 450px;
-  margin: auto;
+  margin: 60px auto 10px auto;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0 0 10px #cbcdcf;
 }
 
-.userIcon {
+@media (max-width: 600px) {
+  .wrapper {
+    max-width: 100%;
+    margin: 0;
+    box-shadow: none;
+    width: 100%;
+  }
+}
+
+.logo {
   display: block;
-  margin: 40px auto;
-  width: 125px;
-  height: 125px;
+  margin: 0 auto 30px auto;
+  width: auto;
+  height: 160px;
   font-size: 125px;
-  opacity: 0.5;
+  opacity: 0.8;
 }
 
 .compactRow {
