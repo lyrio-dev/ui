@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { Icon, Input, Button, Form, message } from "antd";
 import { useHistory } from "react-router";
@@ -35,6 +35,12 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [registerPending, setRegisterPending] = useState(false);
+
+  const refUsername = useRef<Input>();
+  const refEmail = useRef<Input>();
+  // const refEmailVerifyCode = useRef<Input>();
+  const refPassword = useRef<Input>();
+  const refRetypePassword = useRef<Input>();
 
   // usernameCheckStatus: false (not checked) | true (pass) | string (error message)
   const [checkUsername, waitForUsernameCheck, getUsernameUIValidateStatus, getUsernameUIHelp] = useFieldCheck(
@@ -110,11 +116,23 @@ const RegisterPage: React.FC = () => {
     if (registerPending) return;
     setRegisterPending(true);
 
-    if (!(await waitForUsernameCheck())) message.error(_("register.username_unavailable_message"));
-    else if (!(await waitForEmailCheck())) message.error(_("register.email_unavailable_message"));
-    else if (!(await waitForPasswordCheck())) message.error(_("register.invalid_password_message"));
-    else if (!(await waitForRetypePasswordCheck())) message.error(_("register.passwords_do_not_match_message"));
-    else {
+    if (!(await waitForUsernameCheck())) {
+      message.error(_("register.username_unavailable_message"));
+      refUsername.current.input.focus();
+      refUsername.current.input.select();
+    } else if (!(await waitForEmailCheck())) {
+      message.error(_("register.email_unavailable_message"));
+      refEmail.current.input.focus();
+      refEmail.current.input.select();
+    } else if (!(await waitForPasswordCheck())) {
+      message.error(_("register.invalid_password_message"));
+      refPassword.current.input.focus();
+      refPassword.current.input.select();
+    } else if (!(await waitForRetypePasswordCheck())) {
+      message.error(_("register.passwords_do_not_match_message"));
+      refRetypePassword.current.input.focus();
+      refRetypePassword.current.input.select();
+    } else {
       const { requestError, response } = await AuthApi.register({
         username: username,
         email: email,
@@ -130,10 +148,14 @@ const RegisterPage: React.FC = () => {
           case "DUPLICATE_USERNAME":
             message.error(_("register.response_duplicate_username"));
             await waitForUsernameCheck(true);
+            refUsername.current.input.focus();
+            refUsername.current.input.select();
             break;
           case "DUPLICATE_EMAIL":
             message.error(_("register.response_duplicate_email"));
             await waitForEmailCheck(true);
+            refEmail.current.input.focus();
+            refEmail.current.input.select();
             break;
         }
       } else {
@@ -179,6 +201,11 @@ const RegisterPage: React.FC = () => {
             value={username}
             onBlur={e => checkUsername()}
             onChange={e => setUsername(e.target.value)}
+            onPressEnter={() => {
+              refEmail.current.input.focus();
+              refEmail.current.input.select();
+            }}
+            ref={refUsername}
           />
         </Form.Item>
       </div>
@@ -193,6 +220,11 @@ const RegisterPage: React.FC = () => {
             value={email}
             onBlur={e => checkEmail()}
             onChange={e => setEmail(e.target.value)}
+            onPressEnter={() => {
+              refPassword.current.input.focus();
+              refPassword.current.input.select();
+            }}
+            ref={refEmail}
           />
         </Form.Item>
       </div>
@@ -250,6 +282,11 @@ const RegisterPage: React.FC = () => {
               value={password}
               onBlur={e => (checkPassword(), checkRetypePassword())}
               onChange={e => (setPassword(e.target.value), checkPassword(), checkRetypePassword())}
+              onPressEnter={() => {
+                refRetypePassword.current.input.focus();
+                refRetypePassword.current.input.select();
+              }}
+              ref={refPassword}
             />
           </Form.Item>
           <Form.Item
@@ -267,6 +304,8 @@ const RegisterPage: React.FC = () => {
               value={retypePassword}
               onBlur={e => checkRetypePassword()}
               onChange={e => (setRetypePassword(e.target.value), checkPassword(), checkRetypePassword())}
+              onPressEnter={onSubmit}
+              ref={refRetypePassword}
             />
           </Form.Item>
         </Form.Item>

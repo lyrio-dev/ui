@@ -65,9 +65,13 @@ const LoginPage: React.FC = () => {
             break;
           case "NO_SUCH_USER":
             setError("username", _("login.no_such_user"));
+            refUsername.current.input.focus();
+            refUsername.current.input.select();
             break;
           case "WRONG_PASSWORD":
             setError("password", _("login.wrong_password"));
+            refPassword.current.input.focus();
+            refPassword.current.input.select();
             break;
         }
       } else {
