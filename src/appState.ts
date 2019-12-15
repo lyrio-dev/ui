@@ -28,5 +28,6 @@ const hydrate = create({
 });
 
 export const appState = new AppState();
+(window as any)._appState = appState;
 
 export const initAppStateStore = async () => await hydrate("appState", appState);

@@ -10,13 +10,23 @@ import { appState } from "@/appState";
 
 import { AuthApi } from "@/api";
 import { useIntlMessage } from "@/utils/hooks";
+import { isValidUsername, isValidPassword } from "@/utils/validators";
 
 const LoginPage: React.FC = () => {
   const _ = useIntlMessage();
 
+  const history = useHistory();
+  const redirect = () => {
+    history.push(appState.loginRedirectUrl || "/");
+  };
+
+  useEffect(() => {
+    if (appState.loggedInUser) redirect();
+  }, []);
+
   useEffect(() => {
     appState.title = _("login.title");
-  });
+  }, [appState.locale]);
 
   const [requestStatus, setRequestStatus] = useState({ success: false, error: { type: "", message: "" } });
   const setError = (type: "username" | "password", message: string) =>
@@ -31,19 +41,17 @@ const LoginPage: React.FC = () => {
   const refUsername = useRef<Input>(null),
     refPassword = useRef<Input>(null);
 
-  const history = useHistory();
-
   async function onSubmit() {
     if (pending) return;
     setPending(true);
 
     if (username.length === 0) {
       setError("username", _("login.empty_username"));
-    } else if (!/^[a-zA-Z0-9\-_.#$]{3,24}$/.test(username)) {
+    } else if (!isValidUsername(username)) {
       setError("username", _("login.invalid_username"));
     } else if (password.length === 0) {
       setError("password", _("login.empty_password"));
-    } else if (password.length < 6 || password.length > 32) {
+    } else if (!isValidPassword(password)) {
       setError("password", _("login.invalid_password"));
     } else {
       // Send login request
@@ -70,8 +78,10 @@ const LoginPage: React.FC = () => {
         setSuccess();
 
         setTimeout(() => {
-          history.push(appState.loginRedirectUrl || "/");
+          redirect();
         }, 1000);
+
+        return;
       }
     }
 
@@ -79,7 +89,7 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className={style.wrapper}>
+    <Form className={style.wrapper}>
       <LoginLogo className={style.logo} />
       <div className={style.row}>
         <Form.Item
@@ -97,6 +107,7 @@ const LoginPage: React.FC = () => {
             size="large"
             prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
             placeholder={_("login.username")}
+            autoComplete="username"
             value={username}
             onChange={e => setUsername(e.target.value)}
             onPressEnter={() => {
@@ -124,6 +135,7 @@ const LoginPage: React.FC = () => {
             prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
             type="password"
             placeholder={_("login.password")}
+            autoComplete="current-password"
             value={password}
             onChange={e => setPassword(e.target.value)}
             onPressEnter={onSubmit}
@@ -139,12 +151,12 @@ const LoginPage: React.FC = () => {
           <FormattedMessage id="login.forget" />
         </a>
       </div>
-      <div className={style.compactRow}>
+      <div className={style.buttonRow}>
         <Button size="large" type="primary" block loading={pending} onClick={onSubmit}>
           <FormattedMessage id="login.login" />
         </Button>
       </div>
-    </div>
+    </Form>
   );
 };
 

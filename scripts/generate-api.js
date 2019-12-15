@@ -30,7 +30,7 @@ function getResponseSchemaName(responses) {
 
 (async () => {
   await fs.remove(__dirname + "/../src/api-generated");
-  await fs.ensureDir(__dirname + "/../src/api-generated");
+  await fs.ensureDir(__dirname + "/../src/api-generated/modules");
 
   const api = await (await fetch(apiUrl)).json();
 

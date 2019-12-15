@@ -8,6 +8,10 @@ declare namespace ApiTypes {
   export interface AddUserToGroupResponseDto {
     error: "PERMISSION_DENIED" | "NO_SUCH_USER" | "NO_SUCH_GROUP" | "USER_ALREADY_IN_GROUP";
   }
+  export interface CheckAvailabilityResponseDto {
+    usernameAvailable: boolean;
+    emailAvailable: boolean;
+  }
   export interface CreateGroupRequestDto {
     groupName: string;
   }
@@ -72,6 +76,7 @@ declare namespace ApiTypes {
   }
   namespace Parameters {
     export type DisplayId = string;
+    export type Email = string;
     export type GetPrivileges = boolean;
     export type GroupId = string;
     export type Id = string;

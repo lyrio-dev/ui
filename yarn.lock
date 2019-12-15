@@ -1418,6 +1418,18 @@
   resolved "https://registry.npm.taobao.org/@types/json-schema/download/@types/json-schema-7.0.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fjson-schema%2Fdownload%2F%40types%2Fjson-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
   integrity sha1-vf1p1h5GTcyBslFZwnDXWnPBpjY=
 
+"@types/lodash.debounce@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.npm.taobao.org/@types/lodash.debounce/download/@types/lodash.debounce-4.0.6.tgz#c5a2326cd3efc46566c47e4c0aa248dc0ee57d60"
+  integrity sha1-xaIybNPvxGVmxH5MCqJI3A7lfWA=
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.149"
+  resolved "https://registry.npm.taobao.org/@types/lodash/download/@types/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
+  integrity sha1-E0LWPZSMYGKDj7+WEBL3TU5jhEA=
+
 "@types/minimatch@*":
   version "3.0.3"
   resolved "https://registry.npm.taobao.org/@types/minimatch/download/@types/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
@@ -1486,6 +1498,11 @@
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/@types/stack-utils/download/@types/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha1-CoUdO9lkmPolwzq3J47TvWXwbD4=
+
+"@types/validator@^12.0.1":
+  version "12.0.1"
+  resolved "https://registry.npm.taobao.org/@types/validator/download/@types/validator-12.0.1.tgz#73dbc7f5f730ff7131754bca682824eb3c260b79"
+  integrity sha1-c9vH9fcw/3ExdUvKaCgk6zwmC3k=
 
 "@types/yargs-parser@*":
   version "13.1.0"
@@ -11286,6 +11303,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@^12.1.0:
+  version "12.1.0"
+  resolved "https://registry.npm.taobao.org/validator/download/validator-12.1.0.tgz#a3a7315d5238cbc15e46ad8d5e479aafa7119925"
+  integrity sha1-o6cxXVI4y8FeRq2NXkear6cRmSU=
 
 value-equal@^1.0.1:
   version "1.0.1"
