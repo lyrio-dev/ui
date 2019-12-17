@@ -1,0 +1,28 @@
+.wrapper {
+  margin: 20px;
+}
+
+.tableWrapper {
+  :global(table) {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  :global(th) {
+    font-weight: bolder !important;
+  }
+
+  :global(tbody) {
+    background: white;
+  }
+
+  :global(tr:nth-child(even)) {
+    background: #fafafa;
+  }
+
+  :global(td) {
+    line-height: 0;
+    height: 40px;
+  }
+}
+
+.rightWrapper {}

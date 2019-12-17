@@ -4,6 +4,8 @@
 
 import { createGetApi, createPostApi } from "@/api";
 
+export type QueryProblemSetRequestDto = ApiTypes.QueryProblemSetRequestDto;
+export type QueryProblemSetResponseDto = ApiTypes.QueryProblemSetResponseDto;
 export type CreateProblemRequestDto = ApiTypes.CreateProblemRequestDto;
 export type CreateProblemResponseDto = ApiTypes.CreateProblemResponseDto;
 export type UpdateProblemStatementRequestDto = ApiTypes.UpdateProblemStatementRequestDto;
@@ -17,6 +19,9 @@ export type SetProblemDisplayIdResponseDto = ApiTypes.SetProblemDisplayIdRespons
 export type SetProblemPublicRequestDto = ApiTypes.SetProblemPublicRequestDto;
 export type SetProblemPublicResponseDto = ApiTypes.SetProblemPublicResponseDto;
 
+export const queryProblemSet = createPostApi<QueryProblemSetRequestDto, QueryProblemSetResponseDto>(
+  "problem/queryProblemSet"
+);
 export const createProblem = createPostApi<CreateProblemRequestDto, CreateProblemResponseDto>("problem/createProblem");
 export const updateStatement = createPostApi<UpdateProblemStatementRequestDto, UpdateProblemStatementResponseDto>(
   "problem/updateStatement"

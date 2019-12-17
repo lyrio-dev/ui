@@ -12,8 +12,8 @@ import AppRouter from "./AppRouter";
 
 const App: React.FC = () => {
   return (
-    <ConfigProvider autoInsertSpaceInButton={false} locale={localeDataForAntd[appState.locale]}>
-      <IntlProvider locale={appState.locale} messages={localeDataForApp[appState.locale]}>
+    <ConfigProvider autoInsertSpaceInButton={false} locale={localeDataForAntd[appState.localeHyphen]}>
+      <IntlProvider locale={appState.localeHyphen} messages={localeDataForApp[appState.localeHyphen]}>
         <HelmetProvider>
           <Helmet>
             <title>

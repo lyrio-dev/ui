@@ -1,12 +1,18 @@
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import { create, persist } from "mobx-persist";
 
 import { UserMeta } from "./interfaces/UserMeta";
+import { Locale } from "./interfaces/Locale";
 
 export class AppState {
   @persist
   @observable
-  locale: string = "zh-CN";
+  locale: Locale = Locale.zh_CN;
+
+  @computed
+  get localeHyphen(): string {
+    return this.locale.replace("_", "-");
+  }
 
   @persist
   @observable

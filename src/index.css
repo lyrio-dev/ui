@@ -28,7 +28,7 @@ body {
   -moz-osx-font-smoothing: grayscale;  
 }
 
-.ant-input, .ant-btn, .ant-checkbox-input, .ant-dropdown-menu, .ant-tooltip-inner {
+.ant-input, .ant-btn, .ant-checkbox-input, .ant-dropdown-menu, .ant-tooltip-inner, li, a, th {
   border-radius: 0 !important;
 }
 

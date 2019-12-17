@@ -42,10 +42,9 @@ declare namespace ApiTypes {
     error: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
     meta: ApiTypes.ProblemMetaDto;
     title: string;
-    titleLocale: string;
+    resultLocale: string;
     samples: ApiTypes.ProblemSampleDataMemberDto[];
     contentSections: ApiTypes.ProblemContentSectionDto[];
-    contentLocale: string;
     judgeInfo: {};
   }
   export interface GetProblemPermissionsResponseDto {
@@ -117,6 +116,21 @@ declare namespace ApiTypes {
     problemId: ApiTypes.Parameters.ProblemId;
     permissionType: ApiTypes.Parameters.PermissionType;
   }
+  export interface QueryProblemSetRequestDto {
+    locale: "en_US" | "zh_CN";
+    skipCount: number;
+    takeCount: number;
+  }
+  export interface QueryProblemSetResponseDto {
+    error: "TAKE_TOO_MANY";
+    result: ApiTypes.QueryProblemSetResponseItemDto[];
+    count: number;
+  }
+  export interface QueryProblemSetResponseItemDto {
+    meta: ApiTypes.ProblemMetaDto;
+    title: string;
+    titleLocale: "en_US" | "zh_CN";
+  }
   export interface RegisterRequestDto {
     username: string;
     email: string;
@@ -185,13 +199,12 @@ declare namespace ApiTypes {
   }
   export interface UpdateProblemRequestUpdatingLocalizedContentDto {
     locale: string;
-    delete: boolean;
     title: string;
     contentSections: ApiTypes.ProblemContentSectionDto[];
   }
   export interface UpdateProblemStatementRequestDto {
     problemId: number;
-    updatingLocalizedContents: ApiTypes.UpdateProblemRequestUpdatingLocalizedContentDto[];
+    localizedContents: ApiTypes.UpdateProblemRequestUpdatingLocalizedContentDto[];
     samples: ApiTypes.ProblemSampleDataMemberDto[];
   }
   export interface UpdateProblemStatementResponseDto {
