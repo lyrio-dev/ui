@@ -1,13 +1,14 @@
 import React from "react";
 import { FormattedMessage } from "react-intl";
 import { observer } from "mobx-react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigation, useLoadingRoute } from "react-navi";
 import { Layout, Menu, Icon, Button, Dropdown, Avatar, message } from "antd";
-
 import gravatar from "gravatar";
 
 import style from "./AppLayout.module.less";
 import Logo from "@/assets/syzoj-applogo.svg";
+
+import GlobalProgressBar from "@/components/GlobalProgressBar";
 
 import { appState } from "@/appState";
 import { appConfig } from "@/appConfig";
@@ -17,7 +18,7 @@ import { AuthApi } from "@/api";
 const { Header, Content, Footer, Sider } = Layout;
 
 const AppLayout: React.FC = props => {
-  const history = useHistory();
+  const navigation = useNavigation();
 
   async function onLogoutClick() {
     const { requestError, response } = await AuthApi.logout();
@@ -36,7 +37,7 @@ const AppLayout: React.FC = props => {
       appState.loginRedirectUrl = currentUrl;
     }
 
-    history.push("/" + loginOrRegister);
+    navigation.navigate("/" + loginOrRegister);
   }
 
   const navButtons = {
@@ -78,7 +79,7 @@ const AppLayout: React.FC = props => {
   };
 
   function onNavButtonClick(name: string) {
-    history.push(navButtons[name].url);
+    navigation.navigate(navButtons[name].url);
   }
 
   const userPanel = appState.loggedInUser ? (
@@ -87,7 +88,7 @@ const AppLayout: React.FC = props => {
         overlay={
           <Menu className={style.userMenu}>
             <Menu.Item>
-              <Link to="/settings">
+              <Link href="/settings">
                 <Icon type="setting" />
                 <FormattedMessage id="common.header.user.settings" />
               </Link>
@@ -125,46 +126,53 @@ const AppLayout: React.FC = props => {
     </>
   );
 
+  const loadingRoute = useLoadingRoute();
+
+  console.log(!!loadingRoute, loadingRoute);
+
   return (
-    <Layout className={style.outerLayout}>
-      <Sider
-        width={56}
-        collapsed={true}
-        collapsedWidth={56}
-        style={{
-          overflow: "hidden",
-          height: "100vh",
-          position: "fixed",
-          left: 0
-        }}
-      >
-        <Link to="/">
-          <div className={style.sidebarLogo}>
-            <Logo />
-          </div>
-        </Link>
-        <Menu className={style.sidebarMenu} theme="light" mode="inline" defaultSelectedKeys={["1"]}>
-          {Object.keys(navButtons).map(name => (
-            <Menu.Item key={name} className={style.sidebarMenuItem} onClick={() => onNavButtonClick(name)}>
-              <Icon type={navButtons[name].icon} />
-              <span>
-                <FormattedMessage id={navButtons[name].text} />
-              </span>
-            </Menu.Item>
-          ))}
-        </Menu>
-      </Sider>
-      <Layout className={style.innerLayout}>
-        <Content className={style.content}>{props.children}</Content>
-        <Header className={style.header}>
-          <div className={style.user}>{userPanel}</div>
-        </Header>
-        <Footer className={style.footer}>
-          {appConfig.siteName}
-          &nbsp;Powered by SYZOJ
-        </Footer>
+    <>
+      <GlobalProgressBar isAnimating={!!loadingRoute} />
+      <Layout className={style.outerLayout}>
+        <Sider
+          width={56}
+          collapsed={true}
+          collapsedWidth={56}
+          style={{
+            overflow: "hidden",
+            height: "100vh",
+            position: "fixed",
+            left: 0
+          }}
+        >
+          <Link href="/">
+            <div className={style.sidebarLogo}>
+              <Logo />
+            </div>
+          </Link>
+          <Menu className={style.sidebarMenu} theme="light" mode="inline" defaultSelectedKeys={["1"]}>
+            {Object.keys(navButtons).map(name => (
+              <Menu.Item key={name} className={style.sidebarMenuItem} onClick={() => onNavButtonClick(name)}>
+                <Icon type={navButtons[name].icon} />
+                <span>
+                  <FormattedMessage id={navButtons[name].text} />
+                </span>
+              </Menu.Item>
+            ))}
+          </Menu>
+        </Sider>
+        <Layout className={style.innerLayout}>
+          <Content className={style.content}>{props.children}</Content>
+          <Header className={style.header}>
+            <div className={style.user}>{userPanel}</div>
+          </Header>
+          <Footer className={style.footer}>
+            {appConfig.siteName}
+            &nbsp;Powered by SYZOJ
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
+    </>
   );
 };
 

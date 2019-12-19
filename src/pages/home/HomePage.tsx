@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useIntl } from "react-intl";
+import { route } from "navi";
 
 import { appState } from "@/appState";
 
@@ -13,4 +14,6 @@ const HomePage: React.FC = () => {
   return <>Hello, world!</>;
 };
 
-export default HomePage;
+export default route({
+  view: <HomePage />
+});

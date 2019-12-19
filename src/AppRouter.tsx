@@ -1,25 +1,25 @@
-import React from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import React, { Suspense } from "react";
+import { mount, lazy } from "navi";
+import { Router, View } from "react-navi";
 
 import AppLayout from "./layouts/AppLayout";
 
-import HomePage from "./pages/home/HomePage";
-import LoginPage from "./pages/login/LoginPage";
-import RegisterPage from "./pages/register/RegisterPage";
-import ProblemSetPage from "./pages/problem-set/ProblemSetPage";
+const routes = mount({
+  "/": lazy(() => import("./pages/home/HomePage")),
+  "/login": lazy(() => import("./pages/login/LoginPage")),
+  "/register": lazy(() => import("./pages/register/RegisterPage")),
+  "/problems": lazy(() => import("./pages/problem-set/ProblemSetPage"))
+});
 
 const AppRouter: React.FC = () => {
   return (
-    <BrowserRouter>
+    <Router routes={routes}>
       <AppLayout>
-        <Switch>
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
-          <Route path="/problems" component={ProblemSetPage} />
-          <Route path="/" component={HomePage} />
-        </Switch>
+        <Suspense fallback={null}>
+          <View />
+        </Suspense>
       </AppLayout>
-    </BrowserRouter>
+    </Router>
   );
 };
 

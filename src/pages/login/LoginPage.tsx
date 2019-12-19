@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { Icon, Input, Button, Checkbox, Form, message } from "antd";
-import { useHistory } from "react-router";
+import { route } from "navi";
+import { useNavigation } from "react-navi";
 
 import style from "./LoginPage.module.less";
 import LoginLogo from "@/assets/syzoj-login-logo.svg";
@@ -15,9 +16,9 @@ import { isValidUsername, isValidPassword } from "@/utils/validators";
 const LoginPage: React.FC = () => {
   const _ = useIntlMessage();
 
-  const history = useHistory();
+  const navigation = useNavigation();
   const redirect = () => {
-    history.push(appState.loginRedirectUrl || "/");
+    navigation.navigate(appState.loginRedirectUrl || "/");
   };
 
   useEffect(() => {
@@ -164,4 +165,6 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default route({
+  view: <LoginPage />
+});

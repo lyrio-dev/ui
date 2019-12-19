@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Row, Col, Table, message } from "antd";
+import { mount, route } from "navi";
+import { useNavigation } from "react-navi";
 
 import style from "./ProblemSetPage.module.less";
 
@@ -15,44 +17,55 @@ interface ProblemRecord {
   acceptedRate: number;
 }
 
+async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]> {
+  const { requestError, response } = await ProblemApi.queryProblemSet({
+    locale: appState.locale,
+    skipCount: PROBLEMS_PER_PAGE * (currentPage - 1),
+    takeCount: PROBLEMS_PER_PAGE
+  });
+
+  if (requestError || response.error) {
+    message.error(requestError || response.error);
+    return [null, null];
+  }
+
+  return [
+    response.count,
+    response.result.map(item => ({
+      id: item.meta.id,
+      displayId: item.meta.displayId,
+      title: item.title,
+      submissionCount: Math.round(Math.random() * 10000),
+      acceptedRate: Math.random()
+    }))
+  ];
+}
+
 // TODO: Make this a config item, maybe from server?
 const PROBLEMS_PER_PAGE = 50;
 
-const ProblemSetPage: React.FC = () => {
+interface ProblemSetPageProps {
+  totalCount: number;
+  currentPage: number;
+  problems: ProblemRecord[];
+}
+
+const ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   const _ = useIntlMessage();
 
   useEffect(() => {
     appState.title = _("problem_set.title");
   }, []);
 
-  const [problems, setProblems] = useState<ProblemRecord[]>();
-  const [loading, setLoading] = useState(true);
-  const [totalCount, setTotalCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  useEffect(() => {
-    (async () => {
-      setLoading(true);
-      const { requestError, response } = await ProblemApi.queryProblemSet({
-        locale: appState.locale,
-        skipCount: PROBLEMS_PER_PAGE * (currentPage - 1),
-        takeCount: PROBLEMS_PER_PAGE
-      });
-      setLoading(false);
+  const navigation = useNavigation();
 
-      if (requestError || response.error) return message.error(requestError || response.error);
-
-      setTotalCount(response.count);
-      setProblems(
-        response.result.map(item => ({
-          id: item.meta.id,
-          displayId: item.meta.displayId,
-          title: item.title,
-          submissionCount: Math.round(Math.random() * 10000),
-          acceptedRate: Math.random()
-        }))
-      );
-    })();
-  }, [currentPage, appState.locale]);
+  function changePage(page: number) {
+    navigation.navigate({
+      query: {
+        page: page.toString()
+      }
+    });
+  }
 
   return (
     <div className={style.wrapper}>
@@ -60,14 +73,13 @@ const ProblemSetPage: React.FC = () => {
         <Col span={17}>
           <div className={style.tableWrapper}>
             <Table<ProblemRecord>
-              dataSource={problems}
-              loading={loading}
+              dataSource={props.problems}
               rowKey={record => record.displayId.toString()}
               pagination={{
-                total: totalCount,
-                current: currentPage,
+                total: props.totalCount,
+                current: props.currentPage,
                 pageSize: PROBLEMS_PER_PAGE,
-                onChange: setCurrentPage
+                onChange: changePage
               }}
             >
               <Table.Column title="#" dataIndex="displayId" key="displayId" width={60} align="center" />
@@ -96,4 +108,17 @@ const ProblemSetPage: React.FC = () => {
   );
 };
 
-export default ProblemSetPage;
+export default mount({
+  "/": route({
+    async getView(request) {
+      const page = parseInt(request.query.page) || 1;
+      const [count, problems] = await fetchData(page);
+      if (count === null) {
+        // TODO: Display an error page
+        return null;
+      }
+
+      return <ProblemSetPage totalCount={count} currentPage={page} problems={problems} />;
+    }
+  })
+});

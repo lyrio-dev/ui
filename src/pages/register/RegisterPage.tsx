@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FormattedMessage } from "react-intl";
 import { Icon, Input, Button, Form, message } from "antd";
-import { useHistory } from "react-router";
+import { route } from "navi";
+import { useNavigation } from "react-navi";
 
 import style from "./RegisterPage.module.less";
 import LoginLogo from "@/assets/syzoj-login-logo.svg";
@@ -15,9 +16,9 @@ import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validato
 const RegisterPage: React.FC = () => {
   const _ = useIntlMessage();
 
-  const history = useHistory();
+  const navigation = useNavigation();
   const redirect = () => {
-    history.push(appState.loginRedirectUrl || "/");
+    navigation.navigate(appState.loginRedirectUrl || "/");
   };
 
   useEffect(() => {
@@ -320,4 +321,6 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-export default RegisterPage;
+export default route({
+  view: <RegisterPage />
+});
