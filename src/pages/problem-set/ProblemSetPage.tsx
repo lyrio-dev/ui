@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Row, Col, Table, message } from "antd";
+import { Row, Col, Table, message, Tag } from "antd";
 import { mount, route } from "navi";
 import { useNavigation } from "react-navi";
 
@@ -15,6 +15,10 @@ interface ProblemRecord {
   title: string;
   submissionCount: number;
   acceptedRate: number;
+  tags: {
+    id: number;
+    name: string;
+  }[];
 }
 
 async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]> {
@@ -29,6 +33,13 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]
     return [null, null];
   }
 
+  const testTags = ["NOIP", "模板", "图论", "素数", "线段树", "计算几何"];
+
+  function randomTags() {
+    const randomTagCount = Math.round(Math.random() * 4);
+    return testTags.sort(() => Math.random() - 0.5).filter((_, i) => i <= randomTagCount);
+  }
+
   return [
     response.count,
     response.result.map(item => ({
@@ -36,7 +47,8 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]
       displayId: item.meta.displayId,
       title: item.title,
       submissionCount: Math.round(Math.random() * 10000),
-      acceptedRate: Math.random()
+      acceptedRate: Math.random(),
+      tags: randomTags().map((name, id) => ({ id, name }))
     }))
   ];
 }
@@ -82,13 +94,23 @@ const ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                 onChange: changePage
               }}
             >
-              <Table.Column title="#" dataIndex="displayId" key="displayId" width={60} align="center" />
-              <Table.Column title={_("problem_set.column_title")} dataIndex="title" key="title" />
+              <Table.Column title="#" dataIndex="displayId" key="displayId" width={80} align="center" />
+              <Table.Column
+                title={_("problem_set.column_title")}
+                dataIndex="title"
+                key="title"
+                render={(title, problem: ProblemRecord) => <>
+                  <div style={{ display: "inline-block" }}>{title}</div>
+                  <div style={{ display: "inline-block", float: "right" }}>
+                  {problem.tags.map(tag => <Tag key={tag.id}>{tag.name}</Tag>)}
+                  </div>
+                </>}
+              />
               <Table.Column
                 title={_("problem_set.column_submission_count")}
                 dataIndex="submissionCount"
                 key="submissionCount"
-                width={100}
+                width={120}
                 align="center"
               />
               <Table.Column
@@ -96,7 +118,7 @@ const ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                 dataIndex="acceptedRate"
                 key="acceptedRate"
                 render={(rate: number) => (rate * 100).toFixed(2) + "%"}
-                width={100}
+                width={120}
                 align="center"
               />
             </Table>

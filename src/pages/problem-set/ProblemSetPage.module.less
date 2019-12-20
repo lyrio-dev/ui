@@ -20,8 +20,17 @@
   }
 
   :global(td) {
-    line-height: 0;
+    padding: 0 !important;
     height: 40px;
+    line-height: 40px;
+
+    :global(.ant-tag) {
+      border-radius: 0;
+      border: none;
+      background-color: #f1f1f1;
+      padding: 2.5px 9.5px;
+      font-size: 12.5px;
+    }
   }
 }
 
