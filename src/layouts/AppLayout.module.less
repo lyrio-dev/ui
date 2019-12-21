@@ -1,0 +1,81 @@
+.menu {
+  height: 48px;
+}
+
+.logo {
+  margin-left: -8px;
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.siteName {
+  font-size: 23px;
+  margin-left: 8px;
+  font-family: Saira;
+  font-weight: 500;
+}
+
+.userContainer {
+  margin-left: auto;
+  display: flex;
+}
+
+.loginButton {
+  margin-right: 0.4em !important;
+}
+
+:global(#noty_layout__topRight) {
+  top: calc(20px + 48px) !important;
+}
+
+:global(.noty_body) {
+  padding: 1em 1.05em !important;
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  height: calc(100% - 49px);
+  margin-top: 49px;
+  padding-top: 28px;
+  overflow-y: overlay;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.25);
+  -webkit-transition: color 0.2s ease;
+  transition: color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 135, 139, 0.8);
+}
+
+.footer {
+  margin: 2em 0em 0em !important;
+  padding: 1em 0em !important;
+  border: none !important;
+  color: #999;
+}

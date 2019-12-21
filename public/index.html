@@ -1,0 +1,79 @@
+<!--
+/////////////////////////////////////////////
+//        Designed & Coded by Menci        //
+/////////////////////////////////////////////
+//                                         //
+//                                         //
+//    +   +                                //
+//   +++ +++                               //
+//  +++++++++                              //
+//    +++++            /\                 ///
+//     +++            /  \               / //
+//      +            /    \             /  //
+//                  /      \           /   //
+//                 /        \_________/    //
+//                /                        //
+//               /       \         /       //
+//              /       __\       /__      //
+//             /                           //
+//            /             ____           //
+//           /              \  /           //
+//          /     _~_        \/    _~_     //
+//         /     /  /             |   |    //
+//        /     /  /              |   |    //
+//       /     /  /               |   |    //
+/////////////////////////////////////////////
+-->
+<%
+// Esacpe </script> in JSON.stringify's result
+function safeStringify(object) {
+  return JSON.stringify(object).split("<").join("\\u003C");
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g,
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+}
+%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <link href="https://fonts.googleapis.com/css?family=Saira:500&display=block" rel="stylesheet">
+
+    <script>
+    window._appConfig = <%= safeStringify(global.appConfig) %>;
+    </script>
+
+    <% if (global.appConfig.crossOrigin) { %>
+    <script
+      src="<%= escapeHTML(global.appConfig.apiEndpoint + "cors/xdomain.min.js") %>"
+      data-slave="<%= escapeHTML(global.appConfig.apiEndpoint + "cors/") %>"
+    >
+    </script>
+    <% } %>
+
+    <title><%= global.appConfig.siteName %></title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

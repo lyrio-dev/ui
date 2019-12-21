@@ -1,0 +1,5 @@
+{
+    "siteName": "SYZOJ NG",
+    "apiEndpoint": "http://syzoj-ng.test/api",
+    "crossOrigin": true
+}

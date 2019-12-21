@@ -1,0 +1,48 @@
+.wrapper {
+  max-width: 550px;
+
+  :global(.error.field) {
+    position: relative;
+
+    :global(.ui.label) {
+      position: absolute;
+      top: 5px;
+      word-break: keep-all;
+      white-space: pre;
+      text-align: left;
+
+      &:global(.left.pointing) {
+        left: 516px;
+      }
+
+      &:global(.right.pointing) {
+        right: 269px;
+      }
+    }
+  }
+
+  // It's relative to the field, not the row...
+  .passwords > :global(div:last-of-type .ui.label) {
+    left: 270px !important;
+  }
+}
+
+.header {
+  padding: 10px 0 20px 0;
+  font-size: 26px !important;
+  font-weight: 500 !important;
+  opacity: 0.9;
+}
+
+.logo {
+  margin-top: -4px !important;
+  margin-left: -12px;
+}
+
+.successButton {
+  transition: background-color 200ms ease-in !important;
+}
+
+.message {
+  box-shadow: none !important;
+}
