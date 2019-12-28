@@ -11,3 +11,7 @@ export function isValidPassword(password: string): boolean {
 export function isValidEmail(email: string): boolean {
   return validator.isEmail(email);
 }
+
+export function isValidDisplayId(displayId: string): boolean {
+  return validator.isInt(displayId);
+}

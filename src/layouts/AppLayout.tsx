@@ -32,7 +32,7 @@ let AppLayout: React.FC = props => {
       toast.error(requestError);
     } else {
       appState.token = appState.loggedInUser = null;
-      // TODO: Should we refresh the page?
+      navigation.refresh();
     }
   }
 

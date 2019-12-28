@@ -1,0 +1,116 @@
+.container {
+  padding: 0 30px;
+}
+
+.headerContainer {
+  margin-top: 10px;
+  margin-bottom: 80px;
+}
+
+.headerRightStatisticGroup {
+  padding-top: 15px;
+  flex-wrap: nowrap !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: min-content;
+
+  > :first-child {
+    margin-left: 0 !important;
+  }
+}
+
+.divider {
+  margin-top: 45px !important;
+  margin-left: -233333px !important;
+  margin-right: -233333px !important;
+}
+
+.rightColumn {
+  position: sticky !important;
+  top: -152px;
+  align-self: flex-start;
+}
+
+.rightContainer {
+  float: right;
+}
+
+.actionMenusWrapper {
+  margin-top: 40px !important;
+}
+
+.secondActionMenu {
+  margin-top: 40px !important;
+}
+
+.actionMenu {
+  min-height: 0 !important;
+  min-width: 240px !important;
+
+  border-right: none !important;
+  border-left-width: 2px !important;
+  border-left-style: solid !important;
+  border-left-color: rgba(34, 36, 38, 0.15) !important;
+
+  :global(.item) {
+    border-right: none !important;
+    border-left-style: solid !important;
+    border-left-color: transparent !important;
+    margin: 0 0 0 -2px !important;
+    border-left-width: 2px !important;
+    
+    &.menuItemImportant {
+      background: #2185d0 !important;
+      color: #fff !important;
+      border-left-color: rgba(255, 255, 255, 0.6) !important;
+
+      &:hover {
+        background: #1678c2 !important;
+        color: #fff !important;
+        border-left-color: rgba(255, 255, 255, 0.45) !important;
+      }
+    }
+
+    &.menuItemDangerous {
+      color: #db2828 !important;
+      border-left-color: rgba(219, 40, 40, 0.5) !important;
+
+      &:hover {
+        background: rgba(219, 40, 40, 0.03) !important;
+        color: #db2828 !important;
+        border-left-color: #db2828 !important
+      }
+    }
+
+    &:hover {
+      color: rgba(0, 0, 0, 0.95) !important;
+      border-color: rgba(0, 0, 0, 0.95) !important;
+      background-color: rgba(0, 0, 0, 0.03) !important;
+    }
+
+    :global(.icon) {
+      float: none !important;
+      margin: 0 1em 0 0 !important;
+    }
+  }
+}
+
+.sampleDataPre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.copySample {
+  display: block;
+  float: right;
+  user-select: none;
+}
+
+.sampleExplanation {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+
+  :global(p) {
+    margin-bottom: 1em !important;
+  }
+}

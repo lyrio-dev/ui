@@ -41,6 +41,7 @@ declare namespace ApiTypes {
   export interface GetProblemDetailResponseDto {
     error: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
     meta: ApiTypes.ProblemMetaDto;
+    permission: {};
     title: string;
     resultLocale: string;
     samples: ApiTypes.ProblemSampleDataMemberDto[];
@@ -171,7 +172,7 @@ declare namespace ApiTypes {
     displayId: number;
   }
   export interface SetProblemDisplayIdResponseDto {
-    error: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "DUPLICATE_DISPLAY_ID";
+    error: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "DUPLICATE_DISPLAY_ID" | "PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID";
   }
   export interface SetProblemPermissionsRequestDto {
     problemId: number;

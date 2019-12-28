@@ -8,7 +8,8 @@ const routes = mount({
   "/": lazy(() => import("./pages/home/HomePage")),
   "/login": lazy(() => import("./pages/login/LoginPage")),
   "/register": lazy(() => import("./pages/register/RegisterPage")),
-  "/problems": lazy(() => import("./pages/problem-set/ProblemSetPage"))
+  "/problems": lazy(() => import("./pages/problem-set/ProblemSetPage")),
+  "/problem": lazy(() => import("./pages/problem/ProblemPage"))
 });
 
 const AppRouter: React.FC = () => {
