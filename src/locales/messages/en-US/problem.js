@@ -4,6 +4,8 @@ module.exports = {
     non_public: "Non-Public",
     no_display_id: "No ID"
   },
+  show_tags: "Show Tags",
+  hide_tags: "Hide Tags",
   type: {
     TRADITIONAL: "Traditional"
   },

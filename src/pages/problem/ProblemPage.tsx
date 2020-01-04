@@ -65,6 +65,16 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const timeLimit = "1000 ms";
   const memoryLimit = "256 MiB";
 
+  const randomTagCount = Math.round(Math.random() * 4);
+  const tags = useState(["NOIP", "模板", "图论", "素数", "线段树", "计算几何"].sort(() => Math.random() - 0.5).filter((_, i) => i <= randomTagCount))[0];
+
+  // Begin toggle tags
+  const [showTags, setShowTags] = useState(appState.showTagsInProblemSet);
+  function toggleTags() {
+    setShowTags(!showTags);
+  }
+  // End toggle tags
+
   // Begin copy sample
   const [lastCopiedSample, setLastCopiedSample] = useState<{ id: number; type: "input" | "output" }>({
     id: null,
@@ -164,6 +174,21 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     <Icon name="microchip" />
                     {memoryLimit}
                   </Label>
+                  <Label color="grey" as="a" onClick={toggleTags} className={style.toggleTagsLabel}>
+                    {!showTags ? _("problem.show_tags") : _("problem.hide_tags")}
+                    <Icon
+                      name={"caret down"}
+                      style={{ transform: showTags && "rotateZ(-90deg)" }}
+                    />
+                  </Label>
+                  {
+                    showTags && <>
+                      {tags.map(tag =>
+                        <Label key={tag}>
+                          {tag}
+                        </Label>)}
+                    </>
+                  }
                 </div>
               </Container>
               <Container>
