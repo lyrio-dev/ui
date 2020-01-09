@@ -15,7 +15,8 @@ import {
   Segment,
   Popup,
   Button,
-  Form
+  Form,
+  Message
 } from "semantic-ui-react";
 import { mount, route } from "navi";
 import { useNavigation, Link } from "react-navi";
@@ -25,6 +26,8 @@ import lodashDebounce from "lodash.debounce";
 import style from "./ProblemPage.module.less";
 
 import { ProblemApi } from "@/api";
+import { Locale } from "@/interfaces/Locale";
+import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
@@ -33,9 +36,9 @@ import { isValidDisplayId } from "@/utils/validators";
 
 type ProblemDetail = ApiTypes.GetProblemDetailResponseDto;
 
-async function fetchData(idType: "id" | "displayId", id: number): Promise<ProblemDetail> {
+async function fetchData(idType: "id" | "displayId", id: number, locale: string): Promise<ProblemDetail> {
   const { requestError, response } = await ProblemApi.getProblemDetail({
-    locale: appState.locale,
+    locale: locale,
     [idType]: id
   });
 
@@ -49,6 +52,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
 
 interface ProblemPageProps {
   idType: "id" | "displayId";
+  requestedLocale: Locale;
   problem: ProblemDetail;
 }
 
@@ -138,6 +142,10 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   }
   // End set public
 
+  // Begin "localized content unavailable" message
+  const [localizedContentUnavailableMessageVisable, setLocalizedContentUnavailableMessageVisable] = useState(true);
+  // End "locaized content unavailable" message
+
   return (
     <>
       <Container className={style.container}>
@@ -149,6 +157,31 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   <Header as="h1">
                     <strong>{idString}</strong>.&nbsp;
                     {props.problem.title}
+                    {
+                      props.problem.meta.locales.length > 1 &&
+                      <Dropdown icon="globe" className={style.languageSelectIcon}>
+                        <Dropdown.Menu>
+                          {
+                            props.problem.meta.locales.map((locale: Locale) =>
+                              <Dropdown.Item
+                                key={locale}
+                                onClick={() => {
+                                  navigation.navigate({
+                                    query: {
+                                      locale: locale
+                                    }
+                                  });
+                                }}
+                                flag={localeMeta[locale].flag}
+                                text={localeMeta[locale].name}
+                                value={locale}
+                                selected={locale === props.problem.resultLocale}
+                              />
+                            )
+                          }
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    }
                   </Header>
                   {!props.problem.meta.isPublic && (
                     <Label color="red">
@@ -192,6 +225,24 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 </div>
               </Container>
               <Container>
+                {(() => {
+                  if (!localizedContentUnavailableMessageVisable) return;
+                  let message: string;
+                  if (props.requestedLocale && props.problem.resultLocale !== props.requestedLocale) {
+                    message = _("common.localized_content_unavailable.requested_unavailable", {
+                      display_locale: _(`language.${props.problem.resultLocale}`)
+                    });
+                  } else if (!props.requestedLocale && props.problem.resultLocale !== appState.locale) {
+                    message = _("common.localized_content_unavailable.preferred_unavailable", {
+                      display_locale: _(`language.${props.problem.resultLocale}`)
+                    });
+                  } else return;
+
+                  return <Message
+                    onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)}
+                    content={message}
+                  />
+                })()}
                 {props.problem.contentSections.map((section, i) => (
                   <React.Fragment key={i}>
                     <Header size="large">{section.sectionTitle}</Header>
@@ -414,25 +465,27 @@ export default mount({
   "/by-id/:id": route({
     async getView(request) {
       const id = parseInt(request.params["id"]) || 1;
-      const problem = await fetchData("id", id);
+      const requestedLocale: Locale = request.query["locale"] in Locale && request.query["locale"] as Locale;
+      const problem = await fetchData("id", id, requestedLocale || appState.locale);
       if (problem === null) {
         // TODO: Display an error page
         return null;
       }
 
-      return <ProblemPage key={Math.random()} idType="id" problem={problem} />;
+      return <ProblemPage key={Math.random()} idType="id" requestedLocale={requestedLocale} problem={problem} />;
     }
   }),
   "/:displayId": route({
     async getView(request) {
       const displayId = parseInt(request.params["displayId"]) || 1;
-      const problem = await fetchData("displayId", displayId);
+      const requestedLocale: Locale = request.query["locale"] in Locale && request.query["locale"] as Locale;
+      const problem = await fetchData("displayId", displayId, requestedLocale || appState.locale);
       if (problem === null) {
         // TODO: Display an error page
         return null;
       }
 
-      return <ProblemPage key={Math.random()} idType="displayId" problem={problem} />;
+      return <ProblemPage key={Math.random()} idType="displayId" requestedLocale={requestedLocale} problem={problem} />;
     }
   })
 });

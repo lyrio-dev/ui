@@ -14,6 +14,7 @@ import Logo from "@/assets/syzoj-applogo.svg";
 import GlobalProgressBar from "@/components/GlobalProgressBar";
 
 import { Locale } from "@/interfaces/Locale";
+import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import { appConfig } from "@/appConfig";
 import { useIntlMessage } from "@/utils/hooks";
@@ -92,17 +93,6 @@ let AppLayout: React.FC = props => {
     }
   };
 
-  const languages: Record<Locale, { name: string, flag: string }> = {
-    [Locale.zh_CN]: {
-      name: "中文（简体）",
-      flag: "cn"
-    },
-    [Locale.en_US]: {
-      name: "English",
-      flag: "us"
-    }
-  }
-
   return (
     <>
       <GlobalProgressBar isAnimating={!!loadingRoute} />
@@ -158,15 +148,15 @@ let AppLayout: React.FC = props => {
             <Dropdown icon="language">
               <Dropdown.Menu>
                 {
-                  Object.keys(languages).map((locale: Locale) =>
+                  Object.keys(localeMeta).map((locale: Locale) =>
                     <Dropdown.Item
                       key={locale}
                       onClick={() => {
                         appState.locale = locale;
                         navigation.refresh();
                       }}
-                      flag={languages[locale].flag}
-                      text={languages[locale].name}
+                      flag={localeMeta[locale].flag}
+                      text={localeMeta[locale].name}
                       value={locale}
                       selected={locale === appState.locale}
                     />
