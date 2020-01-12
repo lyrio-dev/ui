@@ -11,7 +11,7 @@ export type UpdateUserProfileRequestDto = ApiTypes.UpdateUserProfileRequestDto;
 export type UpdateUserProfileResponseDto = ApiTypes.UpdateUserProfileResponseDto;
 
 export const getUserMeta = createGetApi<
-  { userId?: string; username?: string; getPrivileges: string },
+  { userId?: string; username?: string; getPrivileges?: string },
   GetUserMetaResponseDto
 >("user/getUserMeta");
 export const setUserPrivileges = createPostApi<SetUserPrivilegesRequestDto, SetUserPrivilegesResponseDto>(

@@ -147,21 +147,19 @@ let AppLayout: React.FC = props => {
           <div className={style.languageSwitchContainer}>
             <Dropdown icon="language">
               <Dropdown.Menu>
-                {
-                  Object.keys(localeMeta).map((locale: Locale) =>
-                    <Dropdown.Item
-                      key={locale}
-                      onClick={() => {
-                        appState.locale = locale;
-                        navigation.refresh();
-                      }}
-                      flag={localeMeta[locale].flag}
-                      text={localeMeta[locale].name}
-                      value={locale}
-                      selected={locale === appState.locale}
-                    />
-                  )
-                }
+                {Object.keys(localeMeta).map((locale: Locale) => (
+                  <Dropdown.Item
+                    key={locale}
+                    onClick={() => {
+                      appState.locale = locale;
+                      navigation.refresh();
+                    }}
+                    flag={localeMeta[locale].flag}
+                    text={localeMeta[locale].name}
+                    value={locale}
+                    selected={locale === appState.locale}
+                  />
+                ))}
               </Dropdown.Menu>
             </Dropdown>
           </div>

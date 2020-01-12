@@ -10,6 +10,7 @@ export type CreateProblemRequestDto = ApiTypes.CreateProblemRequestDto;
 export type CreateProblemResponseDto = ApiTypes.CreateProblemResponseDto;
 export type UpdateProblemStatementRequestDto = ApiTypes.UpdateProblemStatementRequestDto;
 export type UpdateProblemStatementResponseDto = ApiTypes.UpdateProblemStatementResponseDto;
+export type GetProblemStatementsAllLocalesResponseDto = ApiTypes.GetProblemStatementsAllLocalesResponseDto;
 export type GetProblemDetailResponseDto = ApiTypes.GetProblemDetailResponseDto;
 export type SetProblemPermissionsRequestDto = ApiTypes.SetProblemPermissionsRequestDto;
 export type SetProblemPermissionsResponseDto = ApiTypes.SetProblemPermissionsResponseDto;
@@ -26,6 +27,10 @@ export const createProblem = createPostApi<CreateProblemRequestDto, CreateProble
 export const updateStatement = createPostApi<UpdateProblemStatementRequestDto, UpdateProblemStatementResponseDto>(
   "problem/updateStatement"
 );
+export const getProblemStatementsAllLocales = createGetApi<
+  { id?: string; displayId?: string },
+  GetProblemStatementsAllLocalesResponseDto
+>("problem/getProblemStatementsAllLocales");
 export const getProblemDetail = createGetApi<
   { id?: string; displayId?: string; locale: string },
   GetProblemDetailResponseDto

@@ -1,9 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Search,
-  ButtonGroup,
   Dropdown,
-  Checkbox,
   Grid,
   Icon,
   Label,
@@ -18,10 +15,9 @@ import {
   Form,
   Message
 } from "semantic-ui-react";
-import { mount, route } from "navi";
+import { mount, route, lazy } from "navi";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
-import lodashDebounce from "lodash.debounce";
 
 import style from "./ProblemPage.module.less";
 
@@ -60,17 +56,21 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const _ = useIntlMessage();
   const navigation = useNavigation();
 
-  useEffect(() => {
-    appState.title = `${props.problem.title} - ${_("problem.title")}`;
-  }, [appState.locale]);
-
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
+
+  useEffect(() => {
+    appState.title = `${idString}. ${props.problem.title} - ${_("problem.title")}`;
+  }, [appState.locale]);
 
   const timeLimit = "1000 ms";
   const memoryLimit = "256 MiB";
 
   const randomTagCount = Math.round(Math.random() * 4);
-  const tags = useState(["NOIP", "模板", "图论", "素数", "线段树", "计算几何"].sort(() => Math.random() - 0.5).filter((_, i) => i <= randomTagCount))[0];
+  const tags = useState(
+    ["NOIP", "模板", "图论", "素数", "线段树", "计算几何"]
+      .sort(() => Math.random() - 0.5)
+      .filter((_, i) => i <= randomTagCount)
+  )[0];
 
   // Begin toggle tags
   const [showTags, setShowTags] = useState(appState.showTagsInProblemSet);
@@ -157,31 +157,28 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   <Header as="h1">
                     <strong>{idString}</strong>.&nbsp;
                     {props.problem.title}
-                    {
-                      props.problem.meta.locales.length > 1 &&
+                    {props.problem.meta.locales.length > 1 && (
                       <Dropdown icon="globe" className={style.languageSelectIcon}>
                         <Dropdown.Menu>
-                          {
-                            props.problem.meta.locales.map((locale: Locale) =>
-                              <Dropdown.Item
-                                key={locale}
-                                onClick={() => {
-                                  navigation.navigate({
-                                    query: {
-                                      locale: locale
-                                    }
-                                  });
-                                }}
-                                flag={localeMeta[locale].flag}
-                                text={localeMeta[locale].name}
-                                value={locale}
-                                selected={locale === props.problem.resultLocale}
-                              />
-                            )
-                          }
+                          {props.problem.meta.locales.map((locale: Locale) => (
+                            <Dropdown.Item
+                              key={locale}
+                              onClick={() => {
+                                navigation.navigate({
+                                  query: {
+                                    locale: locale
+                                  }
+                                });
+                              }}
+                              flag={localeMeta[locale].flag}
+                              text={_(`language.${locale}`)}
+                              value={locale}
+                              selected={locale === props.problem.resultLocale}
+                            />
+                          ))}
                         </Dropdown.Menu>
                       </Dropdown>
-                    }
+                    )}
                   </Header>
                   {!props.problem.meta.isPublic && (
                     <Label color="red">
@@ -209,19 +206,15 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   </Label>
                   <Label color="grey" as="a" onClick={toggleTags} className={style.toggleTagsLabel}>
                     {!showTags ? _("problem.show_tags") : _("problem.hide_tags")}
-                    <Icon
-                      name={"caret down"}
-                      style={{ transform: showTags && "rotateZ(-90deg)" }}
-                    />
+                    <Icon name={"caret down"} style={{ transform: showTags && "rotateZ(-90deg)" }} />
                   </Label>
-                  {
-                    showTags && <>
-                      {tags.map(tag =>
-                        <Label key={tag}>
-                          {tag}
-                        </Label>)}
+                  {showTags && (
+                    <>
+                      {tags.map(tag => (
+                        <Label key={tag}>{tag}</Label>
+                      ))}
                     </>
-                  }
+                  )}
                 </div>
               </Container>
               <Container>
@@ -238,10 +231,9 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     });
                   } else return;
 
-                  return <Message
-                    onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)}
-                    content={message}
-                  />
+                  return (
+                    <Message onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)} content={message} />
+                  );
                 })()}
                 {props.problem.contentSections.map((section, i) => (
                   <React.Fragment key={i}>
@@ -366,7 +358,23 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     </Menu>
                     <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
                       {props.problem.permission["WRITE"] && (
-                        <Menu.Item name={_("problem.action.edit")} icon="edit" onClick={() => console.log("edit")} />
+                        <Menu.Item
+                          name={_("problem.action.edit")}
+                          icon="edit"
+                          onClick={() =>
+                            navigation.navigate({
+                              pathname:
+                                props.idType === "id"
+                                  ? `/problem/edit/by-id/${props.problem.meta.id}`
+                                  : `/problem/edit/${props.problem.meta.displayId}`,
+                              query: props.requestedLocale
+                                ? {
+                                    locale: props.requestedLocale
+                                  }
+                                : null
+                            })
+                          }
+                        />
                       )}
                       {props.problem.permission["WRITE"] && (
                         <Menu.Item
@@ -464,8 +472,8 @@ ProblemPage = observer(ProblemPage);
 export default mount({
   "/by-id/:id": route({
     async getView(request) {
-      const id = parseInt(request.params["id"]) || 1;
-      const requestedLocale: Locale = request.query["locale"] in Locale && request.query["locale"] as Locale;
+      const id = parseInt(request.params["id"]);
+      const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
       const problem = await fetchData("id", id, requestedLocale || appState.locale);
       if (problem === null) {
         // TODO: Display an error page
@@ -477,8 +485,8 @@ export default mount({
   }),
   "/:displayId": route({
     async getView(request) {
-      const displayId = parseInt(request.params["displayId"]) || 1;
-      const requestedLocale: Locale = request.query["locale"] in Locale && request.query["locale"] as Locale;
+      const displayId = parseInt(request.params["displayId"]);
+      const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
       const problem = await fetchData("displayId", displayId, requestedLocale || appState.locale);
       if (problem === null) {
         // TODO: Display an error page
@@ -487,5 +495,6 @@ export default mount({
 
       return <ProblemPage key={Math.random()} idType="displayId" requestedLocale={requestedLocale} problem={problem} />;
     }
-  })
+  }),
+  "/edit": lazy(() => import("@/pages/problem-edit/ProblemEditPage"))
 });

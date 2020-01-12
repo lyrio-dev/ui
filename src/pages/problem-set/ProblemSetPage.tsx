@@ -114,7 +114,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             <ButtonGroup size="mini">
               <Dropdown labeled button className="icon" icon="plus" text={_("problem_set.add_problem")}>
                 <Dropdown.Menu>
-                  <Dropdown.Item icon="file" text={_("problem_set.new_problem")} />
+                  <Dropdown.Item icon="file" text={_("problem_set.new_problem")} as={Link} href="/problem/edit/new" />
                   <Dropdown.Item icon="cloud download" text={_("problem_set.import_problem")} />
                 </Dropdown.Menu>
               </Dropdown>

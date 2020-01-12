@@ -14,6 +14,6 @@ const localeMeta: Record<Locale, LocaleMeta> = {
     name: "English",
     flag: "us"
   }
-}
+};
 
 export default localeMeta;
