@@ -695,8 +695,13 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
     setPendingSubmit(true);
 
-    const localizedContentsPayload = Object.keys(localizedContents).map(
-      (locale: Locale): ApiTypes.ProblemLocalizedContentDto => ({
+    // Swap the default locale to the first of the array.
+    const localizedContentsPayload = Object.keys(localizedContents).map((locale: Locale, index, locales: Locale[]) => {
+      if (index === 0) return defaultLocale;
+      if (locale === defaultLocale) return locales[0];
+      return locale;
+    }).map(
+      (locale): ApiTypes.ProblemLocalizedContentDto => ({
         locale: locale,
         title: localizedContents[locale].title,
         contentSections: localizedContents[locale].contentSections.map(section =>
