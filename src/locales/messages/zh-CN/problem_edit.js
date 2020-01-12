@@ -4,6 +4,7 @@ module.exports = {
   header_edit: "编辑题目 {idString}",
   header_new: "新建题目",
   submit: "提交",
+  no_submit_permission: "无提交权限",
   submit_error: {
     create: {
       FAILED: "创建题目失败，发生了未知错误。",

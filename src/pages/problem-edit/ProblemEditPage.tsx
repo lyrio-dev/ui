@@ -1110,12 +1110,15 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     props.new ? appState.locale : (props.problem.meta.locales[0] as Locale)
   );
 
+  // TODO: Request permission from server for creating new problems
+  const haveSubmitPermission = (props.new ? true : props.problem.permission["WRITE"]);
+
   return (
     <>
       <Container className={style.container}>
         <Grid>
           <Grid.Row>
-            <Grid.Column width={9}>
+            <Grid.Column width={8}>
               <Container className={style.headerContainer}>
                 <div>
                   <Header as="h1">
@@ -1126,9 +1129,18 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 </div>
               </Container>
             </Grid.Column>
-            <Grid.Column width={2} textAlign="right">
-              <Button primary loading={pendingSubmit} onClick={onSubmit}>
-                {_("problem_edit.submit")}
+            <Grid.Column width={3} textAlign="right">
+              <Button
+                primary
+                disabled={!haveSubmitPermission}
+                loading={pendingSubmit}
+                onClick={onSubmit}
+              >
+                {
+                  haveSubmitPermission
+                  ? _("problem_edit.submit")
+                  : _("problem_edit.no_submit_permission")
+                }
               </Button>
             </Grid.Column>
             <Grid.Column width={5}>

@@ -4,6 +4,7 @@ module.exports = {
   header_edit: "Edit Problem {idString}",
   header_new: "New Problem",
   submit: "Submit",
+  no_submit_permission: "No Permission",
   submit_error: {
     create: {
       FAILED: "Failed to create new problem due to unknown error.",
