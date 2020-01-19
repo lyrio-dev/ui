@@ -49,8 +49,8 @@ module.exports = {
     add_sample_when_empty: "Add Sample When Empty",
     sample_id: "Sample ID",
     warning: {
-      not_referenced: "Not referenced in language \"{language}\"",
-      multiple_references: "Referenced {referenceCount} times in language \"{language}\""
+      not_referenced: 'Not referenced in language "{language}"',
+      multiple_references: 'Referenced {referenceCount} times in language "{language}"'
     },
     add_sample: {
       before_this_sample: "Before this sample",

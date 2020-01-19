@@ -20,7 +20,7 @@ import {
   List
 } from "semantic-ui-react";
 import TextAreaAutoSize from "react-textarea-autosize";
-import { mount, route } from "navi";
+import { route } from "navi";
 import { useNavigation } from "react-navi";
 import uuid from "uuid/v4";
 import update from "immutability-helper";
@@ -696,30 +696,32 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     setPendingSubmit(true);
 
     // Swap the default locale to the first of the array.
-    const localizedContentsPayload = Object.keys(localizedContents).map((locale: Locale, index, locales: Locale[]) => {
-      if (index === 0) return defaultLocale;
-      if (locale === defaultLocale) return locales[0];
-      return locale;
-    }).map(
-      (locale): ApiTypes.ProblemLocalizedContentDto => ({
-        locale: locale,
-        title: localizedContents[locale].title,
-        contentSections: localizedContents[locale].contentSections.map(section =>
-          section.type === "TEXT"
-            ? {
-                sectionTitle: section.sectionTitle,
-                type: "TEXT",
-                text: section.text
-              }
-            : {
-                sectionTitle: section.sectionTitle,
-                type: "SAMPLE",
-                sampleId: section.sampleId,
-                text: section.text
-              }
-        )
+    const localizedContentsPayload = Object.keys(localizedContents)
+      .map((locale: Locale, index, locales: Locale[]) => {
+        if (index === 0) return defaultLocale;
+        if (locale === defaultLocale) return locales[0];
+        return locale;
       })
-    );
+      .map(
+        (locale): ApiTypes.ProblemLocalizedContentDto => ({
+          locale: locale,
+          title: localizedContents[locale].title,
+          contentSections: localizedContents[locale].contentSections.map(section =>
+            section.type === "TEXT"
+              ? {
+                  sectionTitle: section.sectionTitle,
+                  type: "TEXT",
+                  text: section.text
+                }
+              : {
+                  sectionTitle: section.sectionTitle,
+                  type: "SAMPLE",
+                  sampleId: section.sampleId,
+                  text: section.text
+                }
+          )
+        })
+      );
 
     const samplesPayload = samples.map(sample => ({
       inputData: sample.inputData,
@@ -1111,7 +1113,7 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   );
 
   // TODO: Request permission from server for creating new problems
-  const haveSubmitPermission = (props.new ? true : props.problem.permission["WRITE"]);
+  const haveSubmitPermission = props.new ? true : props.problem.permission["WRITE"];
 
   return (
     <>
@@ -1130,17 +1132,8 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
               </Container>
             </Grid.Column>
             <Grid.Column width={3} textAlign="right">
-              <Button
-                primary
-                disabled={!haveSubmitPermission}
-                loading={pendingSubmit}
-                onClick={onSubmit}
-              >
-                {
-                  haveSubmitPermission
-                  ? _("problem_edit.submit")
-                  : _("problem_edit.no_submit_permission")
-                }
+              <Button primary disabled={!haveSubmitPermission} loading={pendingSubmit} onClick={onSubmit}>
+                {haveSubmitPermission ? _("problem_edit.submit") : _("problem_edit.no_submit_permission")}
               </Button>
             </Grid.Column>
             <Grid.Column width={5}>
@@ -1285,13 +1278,13 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   );
 };
 
-export default mount({
-  "/new": route({
+export default {
+  new: route({
     async getView(request) {
       return <ProblemEditPage key={Math.random()} new={true} />;
     }
   }),
-  "/by-id/:id": route({
+  byId: route({
     async getView(request) {
       const id = parseInt(request.params["id"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
@@ -1304,7 +1297,7 @@ export default mount({
       return <ProblemEditPage key={Math.random()} idType="id" problem={problem} requestedLocale={requestedLocale} />;
     }
   }),
-  "/:displayId": route({
+  byDisplayId: route({
     async getView(request) {
       const displayId = parseInt(request.params["displayId"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
@@ -1319,4 +1312,4 @@ export default mount({
       );
     }
   })
-});
+};

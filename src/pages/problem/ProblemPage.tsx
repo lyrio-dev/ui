@@ -15,8 +15,8 @@ import {
   Form,
   Message
 } from "semantic-ui-react";
-import { mount, route, lazy } from "navi";
-import { useNavigation, Link } from "react-navi";
+import { route, lazy } from "navi";
+import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "./ProblemPage.module.less";
@@ -365,8 +365,8 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                             navigation.navigate({
                               pathname:
                                 props.idType === "id"
-                                  ? `/problem/edit/by-id/${props.problem.meta.id}`
-                                  : `/problem/edit/${props.problem.meta.displayId}`,
+                                  ? `/problem/by-id/${props.problem.meta.id}/edit`
+                                  : `/problem/${props.problem.meta.displayId}/edit`,
                               query: props.requestedLocale
                                 ? {
                                     locale: props.requestedLocale
@@ -469,8 +469,8 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
 ProblemPage = observer(ProblemPage);
 
-export default mount({
-  "/by-id/:id": route({
+export default {
+  byId: route({
     async getView(request) {
       const id = parseInt(request.params["id"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
@@ -483,7 +483,7 @@ export default mount({
       return <ProblemPage key={Math.random()} idType="id" requestedLocale={requestedLocale} problem={problem} />;
     }
   }),
-  "/:displayId": route({
+  byDisplayId: route({
     async getView(request) {
       const displayId = parseInt(request.params["displayId"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
@@ -495,6 +495,5 @@ export default mount({
 
       return <ProblemPage key={Math.random()} idType="displayId" requestedLocale={requestedLocale} problem={problem} />;
     }
-  }),
-  "/edit": lazy(() => import("@/pages/problem-edit/ProblemEditPage"))
-});
+  })
+};
