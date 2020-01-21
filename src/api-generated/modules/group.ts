@@ -20,7 +20,5 @@ export const getGroupMeta = createGetApi<{ groupId: string }, GetGroupMetaRespon
 export const createGroup = createPostApi<CreateGroupRequestDto, CreateGroupResponseDto>("group/createGroup");
 export const deleteGroup = createPostApi<DeleteGroupRequestDto, DeleteGroupResponseDto>("group/deleteGroup");
 export const addMember = createPostApi<AddUserToGroupRequestDto, AddUserToGroupResponseDto>("group/addMember");
-export const removeMember = createPostApi<RemoveUserFromGroupRequestDto, RemoveUserFromGroupResponseDto>(
-  "group/removeMember"
-);
+export const removeMember = createPostApi<RemoveUserFromGroupRequestDto, RemoveUserFromGroupResponseDto>("group/removeMember");
 export const setGroupAdmin = createPostApi<SetGroupAdminRequestDto, SetGroupAdminResponseDto>("group/setGroupAdmin");

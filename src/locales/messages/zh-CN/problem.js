@@ -17,7 +17,7 @@ module.exports = {
     submit: "提交",
     submission: "提交记录",
     statistics: "统计",
-    testdata: "测试数据",
+    files: "文件",
     discussion: "讨论",
     edit: "编辑",
     manage_judge_info: "评测管理",

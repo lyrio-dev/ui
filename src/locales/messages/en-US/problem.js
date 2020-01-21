@@ -17,7 +17,7 @@ module.exports = {
     submit: "Submit",
     submission: "Submissions",
     statistics: "Statistics",
-    testdata: "Testdata",
+    files: "Files",
     discussion: "Discussion",
     edit: "Edit",
     manage_judge_info: "Manage",

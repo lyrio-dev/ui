@@ -6,6 +6,8 @@
     "@tanem/react-nprogress": "^3.0.9",
     "@types/gravatar": "^1.8.0",
     "@types/lodash.debounce": "^4.0.6",
+    "@types/lodash.isequal": "^4.5.5",
+    "@types/lodash.throttle": "^4.1.6",
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
@@ -22,6 +24,8 @@
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.isequal": "^4.5.0",
+    "lodash.throttle": "^4.1.1",
     "mobx": "^5.15.0",
     "mobx-persist": "^0.4.1",
     "mobx-react": "^6.1.4",
@@ -38,9 +42,13 @@
     "react-textarea-autosize": "^7.1.2",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
+    "sha256-wasm": "^1.2.1",
+    "streamsaver": "^2.0.3",
     "typescript": "~3.7.2",
     "uuid": "^3.3.3",
-    "validator": "^12.1.0"
+    "validator": "^12.1.0",
+    "web-streams-polyfill": "^2.0.6",
+    "workerize-loader": "^1.1.0"
   },
   "config-overrides-path": "react-app-rewired.js",
   "scripts": {

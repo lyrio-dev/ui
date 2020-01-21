@@ -16,7 +16,7 @@ import {
   Message
 } from "semantic-ui-react";
 import { route, lazy } from "navi";
-import { useNavigation } from "react-navi";
+import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "./ProblemPage.module.less";
@@ -346,14 +346,25 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                         onClick={() => console.log("statistics")}
                       />
                       <Menu.Item
-                        name={_("problem.action.testdata")}
-                        icon="folder open"
-                        onClick={() => console.log("testdata")}
-                      />
-                      <Menu.Item
                         name={_("problem.action.discussion")}
                         icon="comment alternate"
                         onClick={() => console.log("discussion")}
+                      />
+                      <Menu.Item
+                        name={_("problem.action.files")}
+                        icon="folder open"
+                        as={Link}
+                        href={{
+                          pathname:
+                            props.idType === "id"
+                              ? `/problem/by-id/${props.problem.meta.id}/files`
+                              : `/problem/${props.problem.meta.displayId}/files`,
+                          query: props.requestedLocale
+                            ? {
+                                locale: props.requestedLocale
+                              }
+                            : null
+                        }}
                       />
                     </Menu>
                     <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
@@ -361,26 +372,36 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                         <Menu.Item
                           name={_("problem.action.edit")}
                           icon="edit"
-                          onClick={() =>
-                            navigation.navigate({
-                              pathname:
-                                props.idType === "id"
-                                  ? `/problem/by-id/${props.problem.meta.id}/edit`
-                                  : `/problem/${props.problem.meta.displayId}/edit`,
-                              query: props.requestedLocale
-                                ? {
-                                    locale: props.requestedLocale
-                                  }
-                                : null
-                            })
-                          }
+                          as={Link}
+                          href={{
+                            pathname:
+                              props.idType === "id"
+                                ? `/problem/by-id/${props.problem.meta.id}/edit`
+                                : `/problem/${props.problem.meta.displayId}/edit`,
+                            query: props.requestedLocale
+                              ? {
+                                  locale: props.requestedLocale
+                                }
+                              : null
+                          }}
                         />
                       )}
                       {props.problem.permission["WRITE"] && (
                         <Menu.Item
                           name={_("problem.action.manage_judge_info")}
                           icon="cog"
-                          onClick={() => console.log("manage_judge_info")}
+                          as={Link}
+                          href={{
+                            pathname:
+                              props.idType === "id"
+                                ? `/problem/by-id/${props.problem.meta.id}/manage`
+                                : `/problem/${props.problem.meta.displayId}/manage`,
+                            query: props.requestedLocale
+                              ? {
+                                  locale: props.requestedLocale
+                                }
+                              : null
+                          }}
                         />
                       )}
                       {props.problem.permission["FULL_CONTROL"] && (

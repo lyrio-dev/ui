@@ -1,0 +1,86 @@
+.container {
+  padding: 0 30px;
+}
+
+@columnWidthSize: 120px;
+@columnWidthOperations: 155px;
+
+.fileTable {
+  table-layout: fixed;
+}
+
+.fileTableColumnFilename {
+  .filename {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.fileTableColumnSize {
+  width: @columnWidthSize;
+}
+
+.fileTableColumnOperations {
+  width: @columnWidthOperations;
+}
+
+.fileTableCheckbox {
+  margin-left: 4px;
+  margin-right: 13px;
+  margin-bottom: -3.5px;
+}
+
+th .fileTableCheckbox {
+  margin-bottom: -4.5px;
+}
+
+.fileTableOperationIcon {
+  &:first-child {
+    margin-left: 0 !important;
+  }
+
+  margin-left: 10px !important;
+  margin-right: 0 !important;
+  cursor: pointer;
+}
+
+.filesTableNoFiles {
+  height: 85px;
+}
+
+.fileTableSelectedFilesDropdownMenu {
+  left: 50% !important;
+  transform: translateX(-50%);
+}
+
+.fileTable {
+  background: none !important;
+
+  td {
+    position: relative;
+  
+    > :global(.ui.progress) {
+      border-radius: 0 !important;
+      position: absolute !important;
+      top: 0;
+      left: 0;
+      width: calc(100% + @columnWidthSize + @columnWidthOperations); // The width must be the row width, it can't auto calc
+      height: 100%;
+      max-width: unset !important;
+      z-index: -1;
+      background-color: rgba(0, 0, 0, 0.05) !important;
+    
+      > :global(.bar) {
+        border-radius: 0 !important;
+        min-width: 0 !important;
+        height: 100% !important;
+      }
+    }
+  }
+}
+
+.fileTableFooterInfo {
+  padding-left: 17px !important;
+}
