@@ -31,6 +31,7 @@ import axios from "axios";
 import { WritableStream } from "web-streams-polyfill/ponyfill/es6";
 import * as streamsaver from "streamsaver";
 import "streamsaver/examples/zip-stream";
+import pAll from "p-all";
 
 import style from "./ProblemFilesPage.module.less";
 
@@ -48,6 +49,8 @@ import pipeStream from "@/utils/pipeStream";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
+
+const MAX_UPLOAD_CONCURRENCY = 5;
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblemAllFilesAndPermission({
@@ -879,8 +882,9 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
       });
     }
 
-    // TODO: Use a task queue to limit the count of files uploading in the same time
-    await Promise.all(uploadTasks.map(f => f()));
+    await pAll(uploadTasks, {
+      concurrency: MAX_UPLOAD_CONCURRENCY
+    });
   }
 
   return (
