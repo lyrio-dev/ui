@@ -2,6 +2,16 @@
   height: 48px;
 }
 
+.logoItem {
+  .wide & {
+    zoom: 0.9;
+  }
+
+  .narrow & {
+    zoom: 0.85;
+  }
+}
+
 .logo {
   margin-left: -8px;
 
@@ -12,8 +22,14 @@
 }
 
 .siteName {
+  text-align: center;
+
+  .logo ~ & {
+    margin-left: 4px;
+    text-align: left;
+  }
+
   font-size: 23px;
-  margin-left: 8px;
   font-family: Saira;
   font-weight: 500;
 }
@@ -23,8 +39,20 @@
   display: flex;
 }
 
-.loginButton {
-  margin-right: 0.4em !important;
+.loginAndRegisterButton {
+  width: 70px;
+
+  &:first-of-type {
+    margin-right: 0.4em !important;
+  }
+
+  .sidebarMenu & {
+    width: 50%;
+    margin-right: 0 !important;
+  }
+
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 :global(#noty_layout__topRight) {
@@ -35,14 +63,29 @@
   padding: 1em 1.05em !important;
 }
 
-html {
+html, body, :global(#root), .sidebarPushable, .sidebarPusher {
   overflow: hidden;
+  height: 100%;
 }
 
-body {
-  height: calc(100% - 49px);
+@sidebarWidth: 180px;
+
+:global(.ui.visible.right.sidebar) ~ .sidebarPusher {
+  transform: translate3d(-@sidebarWidth, 0, 0) !important;
+}
+
+.sidebarMenu {
+  width: @sidebarWidth !important;
+
+  .userMenu {
+    margin-top: 10px !important;
+  }
+}
+
+.appContentContainer {
   margin-top: 49px;
   padding-top: 28px;
+  height: calc(100% - 49px);
   overflow-y: overlay;
 }
 

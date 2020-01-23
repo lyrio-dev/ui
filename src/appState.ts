@@ -5,6 +5,15 @@ import { UserMeta } from "./interfaces/UserMeta";
 import { Locale } from "./interfaces/Locale";
 
 export class AppState {
+  constructor() {
+    window.addEventListener("resize", () => {
+      this.windowWidth = window.innerWidth;
+    });
+  }
+
+  @observable
+  windowWidth: number = window.innerWidth;
+
   @persist
   @observable
   locale: Locale = Locale.zh_CN;
