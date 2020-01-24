@@ -2,22 +2,14 @@
   height: 48px;
 }
 
-.logoItem {
-  .wide & {
-    zoom: 0.9;
-  }
-
-  .narrow & {
-    zoom: 0.85;
-  }
-}
-
 .logo {
   margin-left: -8px;
+  display: inline-block;
+  vertical-align: middle;
 
   svg {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -25,11 +17,13 @@
   text-align: center;
 
   .logo ~ & {
-    margin-left: 4px;
+    margin-left: 3.5px;
     text-align: left;
+    display: inline-block;
+    vertical-align: middle;
   }
 
-  font-size: 23px;
+  font-size: 20px;
   font-family: Saira;
   font-weight: 500;
 }
@@ -87,33 +81,54 @@ html, body, :global(#root), .sidebarPushable, .sidebarPusher {
   padding-top: 28px;
   height: calc(100% - 49px);
   overflow-y: overlay;
+  -webkit-overflow-scrolling: touch !important;
+  overflow-x: hidden;
 }
 
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 10px;
-  height: 10px;
+@media only screen and (max-width: 1127px) {
+  :global(.ui.container) {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  #mainUiContainer {
+    width: auto !important;
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 0px;
+@media only screen and (min-width: 1128px) {
+  #mainUiContainer, #mainMenuContainer {
+    width: 1127px !important;
+  }
+
+  #mainUiContainer {
+    max-width: calc(100% - 30px);
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  cursor: pointer;
-  border-radius: 5px;
-  background: rgba(0, 0, 0, 0.25);
-  -webkit-transition: color 0.2s ease;
-  transition: color 0.2s ease;
-}
+// Reset SemanticUI scrollbar styles
+// TODO: Remove the scrollbar style from SemanticUI css with webpack
+@media only screen and (max-width: 767px) {
+  .appContentContainer {
+    padding-top: 15px;
+  }
 
-::-webkit-scrollbar-thumb:window-inactive {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(128, 135, 139, 0.8);
+  ::-webkit-scrollbar {
+    all: unset !important;
+  }
+  
+  ::-webkit-scrollbar-track {
+    all: unset !important;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    all: unset !important;
+  }
 }
 
 .footer {
@@ -121,6 +136,10 @@ html, body, :global(#root), .sidebarPushable, .sidebarPusher {
   padding: 1em 0em !important;
   border: none !important;
   color: #999;
+}
+
+@media only screen and (max-width: 767px) {
+  margin-top: 10px !important;
 }
 
 .languageSwitchContainer {

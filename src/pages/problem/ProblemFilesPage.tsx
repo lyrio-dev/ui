@@ -85,13 +85,13 @@ interface FileUploadInfo {
   cancel?: () => void;
   progress?: number;
   error?: string;
-};
+}
 
 interface FileTableItem {
   uuid: string;
   filename: string;
   size: number;
-  upload?: FileUploadInfo
+  upload?: FileUploadInfo;
 }
 
 interface FileTableRowProps {
@@ -133,63 +133,83 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
     const status = (() => {
       switch (props.file.upload.progressType) {
         case "Waiting":
-          return <><Icon name="hourglass half" />{_("problem_files.progress_waiting")}</>;
+          return (
+            <>
+              <Icon name="hourglass half" />
+              {_("problem_files.progress_waiting")}
+            </>
+          );
         case "Hashing":
-          return <><Icon name="hashtag" />{_("problem_files.progress_hashing", {
-            progress: formatProgress(props.file.upload.progress)
-          })}</>;
+          return (
+            <>
+              <Icon name="hashtag" />
+              {_("problem_files.progress_hashing", {
+                progress: formatProgress(props.file.upload.progress)
+              })}
+            </>
+          );
         case "Uploading":
-          return <><Icon name="cloud upload" />{_("problem_files.progress_uploading", {
-            progress: formatProgress(props.file.upload.progress)
-          })}</>;
+          return (
+            <>
+              <Icon name="cloud upload" />
+              {_("problem_files.progress_uploading", {
+                progress: formatProgress(props.file.upload.progress)
+              })}
+            </>
+          );
         case "Requesting":
-          return <><Icon name="spinner" />{_("problem_files.progress_requesting")}</>;
+          return (
+            <>
+              <Icon name="spinner" />
+              {_("problem_files.progress_requesting")}
+            </>
+          );
         case "Error":
-          return <><Icon name="warning sign" />{_("problem_files.progress_error")}</>;
+          return (
+            <>
+              <Icon name="warning sign" />
+              {_("problem_files.progress_error")}
+            </>
+          );
         case "Cancelled":
-          return <><Icon name="warning circle" />{_("problem_files.progress_cancelled")}</>;
+          return (
+            <>
+              <Icon name="warning circle" />
+              {_("problem_files.progress_cancelled")}
+            </>
+          );
       }
     })();
 
     if (props.file.upload.progressType === "Error") {
-      return <>
-        <Popup
-          trigger={<span>{status}</span>}
-          content={props.file.upload.error}
-          on="hover"
-          position="top center"
-        />
-      </>;
+      return (
+        <>
+          <Popup trigger={<span>{status}</span>} content={props.file.upload.error} on="hover" position="top center" />
+        </>
+      );
     } else if (props.file.upload.cancel) {
-      return <>
-        <Popup
-          trigger={<span>{status}</span>}
-          content={
-            <Button
-              onClick={props.file.upload.cancel}
-            >
-              {_("problem_files.cancel_upload")}
-            </Button>
-          }
-          on="hover"
-          mouseLeaveDelay={1000}
-          position="top center"
-        />
-      </>;
-    } return status;
+      return (
+        <>
+          <Popup
+            trigger={<span>{status}</span>}
+            content={<Button onClick={props.file.upload.cancel}>{_("problem_files.cancel_upload")}</Button>}
+            on="hover"
+            mouseLeaveDelay={1000}
+            position="top center"
+          />
+        </>
+      );
+    }
+    return status;
   }
 
   return (
     <>
       <Table.Row>
         <Table.Cell className={style.fileTableColumnFilename}>
-          {
-            props.file.upload && props.file.upload.progress &&
-            <Progress
-              percent={props.file.upload.progress}
-              indicating
-            />
-          }
+          {props.file.upload && props.file.upload.progress && (
+            <Progress percent={props.file.upload.progress} indicating />
+          )}
           <div className={style.filename}>
             <Checkbox
               className={style.fileTableCheckbox}
@@ -201,17 +221,14 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
             {props.file.filename}
           </div>
         </Table.Cell>
-        <Table.Cell textAlign="center">
-          {formatFileSize(props.file.size)}
-        </Table.Cell>
+        <Table.Cell textAlign="center">{formatFileSize(props.file.size)}</Table.Cell>
         <Table.Cell className={style.fileTableColumnOperations} textAlign="center">
-          {
-            props.file.upload
-            ? getUploadStatus()
-            : <>
+          {props.file.upload ? (
+            getUploadStatus()
+          ) : (
+            <>
               <Icon className={style.fileTableOperationIcon} name="download" onClick={() => props.onDownload()} />
-              {
-                props.hasPermission &&
+              {props.hasPermission && (
                 <>
                   <Popup
                     trigger={
@@ -227,9 +244,7 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
                           style={{ width: 230 }}
                           placeholder={_("problem_files.new_filename")}
                           value={newFilename}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setNewFilename(e.target.value)
-                          }
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewFilename(e.target.value)}
                           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                             if (e.keyCode === 13) {
                               e.preventDefault();
@@ -237,11 +252,7 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
                             }
                           }}
                         />
-                        <Button
-                          primary
-                          loading={props.pending}
-                          onClick={onRename}
-                        >
+                        <Button primary loading={props.pending} onClick={onRename}>
                           {_("problem_files.rename")}
                         </Button>
                       </Form>
@@ -250,19 +261,13 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
                     position="top center"
                   />
                   <Popup
-                    trigger={
-                      <Icon disabled={props.pending} className={style.fileTableOperationIcon} name="delete" />
-                    }
+                    trigger={<Icon disabled={props.pending} className={style.fileTableOperationIcon} name="delete" />}
                     disabled={props.pending}
                     open={deleteOpen}
                     onOpen={() => setDeleteOpen(true)}
                     onClose={() => !props.pending && setDeleteOpen(false)}
                     content={
-                      <Button
-                        negative
-                        loading={props.pending}
-                        onClick={onDelete}
-                      >
+                      <Button negative loading={props.pending} onClick={onDelete}>
                         {_("problem_files.confirm_delete")}
                       </Button>
                     }
@@ -270,13 +275,13 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
                     position="top center"
                   />
                 </>
-              }
+              )}
             </>
-          }
+          )}
         </Table.Cell>
       </Table.Row>
     </>
-  )
+  );
 };
 
 interface FileTableProps {
@@ -292,7 +297,7 @@ interface FileTableProps {
 
 const FileTable: React.FC<FileTableProps> = props => {
   const _ = useIntlMessage();
-  
+
   const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
 
   const nonUploadingFiles = props.files.filter(file => !file.upload);
@@ -303,24 +308,17 @@ const FileTable: React.FC<FileTableProps> = props => {
       if (fileUuids.includes(fileUuid)) newSelectedFiles.add(fileUuid);
     }
 
-    if (!lodashIsEqual(selectedFiles, newSelectedFiles))
-      setSelectedFiles(newSelectedFiles);
+    if (!lodashIsEqual(selectedFiles, newSelectedFiles)) setSelectedFiles(newSelectedFiles);
   }, [props.files]);
 
   function onSelectAll(checked: boolean) {
-    setSelectedFiles(new Set(
-      checked
-      ? nonUploadingFiles.map(file => file.uuid)
-      : []
-    ));
+    setSelectedFiles(new Set(checked ? nonUploadingFiles.map(file => file.uuid) : []));
   }
 
   function onSelect(fileUuid: string, checked: boolean) {
     const newSelectedFiles = new Set(selectedFiles);
-    if (checked)
-      newSelectedFiles.add(fileUuid);
-    else
-      newSelectedFiles.delete(fileUuid);
+    if (checked) newSelectedFiles.add(fileUuid);
+    else newSelectedFiles.delete(fileUuid);
     setSelectedFiles(newSelectedFiles);
   }
 
@@ -333,10 +331,8 @@ const FileTable: React.FC<FileTableProps> = props => {
     if (typeof fileUuids === "string") fileUuids = [fileUuids];
 
     for (const fileUuid of fileUuids) {
-      if (pending)
-        newPendingFiles.add(fileUuid);
-      else
-        newPendingFiles.delete(fileUuid);
+      if (pending) newPendingFiles.add(fileUuid);
+      else newPendingFiles.delete(fileUuid);
     }
 
     setPendingFiles(newPendingFiles);
@@ -356,7 +352,9 @@ const FileTable: React.FC<FileTableProps> = props => {
     setPending(fileUuids, false);
   }
 
-  const uploadingCount = props.files.filter(file => file.upload && file.upload.progressType !== "Error" && file.upload.progressType !== "Cancelled").length;
+  const uploadingCount = props.files.filter(
+    file => file.upload && file.upload.progressType !== "Error" && file.upload.progressType !== "Cancelled"
+  ).length;
 
   const [overridingFiles, setOverridingFiles] = useState<string[]>([]);
   const refDoUpload = useRef<() => void>();
@@ -404,125 +402,102 @@ const FileTable: React.FC<FileTableProps> = props => {
               />
               {_("problem_files.filename")}
             </Table.HeaderCell>
-            <Table.HeaderCell
-              className={style.fileTableColumnSize}
-              textAlign="center"
-            >
+            <Table.HeaderCell className={style.fileTableColumnSize} textAlign="center">
               {_("problem_files.size")}
             </Table.HeaderCell>
-            <Table.HeaderCell
-              textAlign="center"
-              className={style.fileTableColumnOperations}
-            >
-              {
-                props.hasPermission
-                ? _("problem_files.operations_and_status")
-                : _("problem_files.operations")
-              }
+            <Table.HeaderCell textAlign="center" className={style.fileTableColumnOperations}>
+              {props.hasPermission ? _("problem_files.operations_and_status") : _("problem_files.operations")}
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {
-            props.files.length === 0
-            ? (
-              <Table.Row>
-                <Table.HeaderCell colSpan={3} textAlign="center" className={style.filesTableNoFiles}>
-                  <Header>
-                    {_("problem_files.no_files")}
-                  </Header>
-                </Table.HeaderCell>
-              </Table.Row>
-            )
-            : (
-              props.files.map(file => (
-                <FileTableRow
-                  key={file.uuid}
-                  file={file}
-                  hasPermission={props.hasPermission}
-                  selected={selectedFiles.has(file.uuid)}
-                  pending={pendingFiles.has(file.uuid)}
-                  onSelect={checked => onSelect(file.uuid, checked)}
-                  onDownload={() => props.onDownloadFile(file.filename)}
-                  onRename={newFilename => onRename(file.uuid, file.filename, newFilename)}
-                  onDelete={() => onDelete([file.uuid], [file.filename])}
-                />
-              ))
-            )
-          }
+          {props.files.length === 0 ? (
+            <Table.Row>
+              <Table.HeaderCell colSpan={3} textAlign="center" className={style.filesTableNoFiles}>
+                <Header>{_("problem_files.no_files")}</Header>
+              </Table.HeaderCell>
+            </Table.Row>
+          ) : (
+            props.files.map(file => (
+              <FileTableRow
+                key={file.uuid}
+                file={file}
+                hasPermission={props.hasPermission}
+                selected={selectedFiles.has(file.uuid)}
+                pending={pendingFiles.has(file.uuid)}
+                onSelect={checked => onSelect(file.uuid, checked)}
+                onDownload={() => props.onDownloadFile(file.filename)}
+                onRename={newFilename => onRename(file.uuid, file.filename, newFilename)}
+                onDelete={() => onDelete([file.uuid], [file.filename])}
+              />
+            ))
+          )}
         </Table.Body>
         <Table.Footer fullWidth>
           <Table.Row>
             <Table.HeaderCell colSpan={2} className={style.fileTableFooterInfo}>
-              {
-                selectedFilesArray.length > 0
-                ? (
-                  <Dropdown
-                    // Semantic UI doesn't forward ref
-                    ref={ref => (refSelectedInfoDropdown.current = ref && (ref as any).ref.current)}
-                    open={selectedInfoDropdownOpen}
-                    onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
-                    onClose={() => setSelectedInfoDropdownOpen(false)}
-                    pointing
-                    text={_("problem_files.selected_files_count_and_size", {
-                      count: selectedFilesArray.length.toString(),
-                      totalSize: formatFileSize(selectedFilesArray.reduce((sum, file) => sum + file.size, 0))
-                    })}
-                  >
-                    <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
-                      <Dropdown.Item
-                        icon="download"
-                        text={_("problem_files.download_as_archive")}
-                        onClick={() => props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))}
+              {selectedFilesArray.length > 0 ? (
+                <Dropdown
+                  // Semantic UI doesn't forward ref
+                  ref={ref => (refSelectedInfoDropdown.current = ref && (ref as any).ref.current)}
+                  open={selectedInfoDropdownOpen}
+                  onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
+                  onClose={() => setSelectedInfoDropdownOpen(false)}
+                  pointing
+                  text={_("problem_files.selected_files_count_and_size", {
+                    count: selectedFilesArray.length.toString(),
+                    totalSize: formatFileSize(selectedFilesArray.reduce((sum, file) => sum + file.size, 0))
+                  })}
+                >
+                  <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
+                    <Dropdown.Item
+                      icon="download"
+                      text={_("problem_files.download_as_archive")}
+                      onClick={() => props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))}
+                    />
+                    {props.hasPermission && (
+                      <Popup
+                        trigger={<Dropdown.Item icon="delete" text={_("problem_files.delete")} />}
+                        open={popupDeleteSelectedOpen}
+                        onOpen={() => setPopupDeleteSelectedOpen(true)}
+                        onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
+                        context={refSelectedInfoDropdown}
+                        content={
+                          <Button negative loading={deleteSelectedPending} onClick={onDeleteSelected}>
+                            {_("problem_files.confirm_delete")}
+                          </Button>
+                        }
+                        on="click"
+                        position="top center"
                       />
-                      {
-                        props.hasPermission &&
-                        <Popup
-                          trigger={
-                            <Dropdown.Item icon="delete" text={_("problem_files.delete")}  />
-                          }
-                          open={popupDeleteSelectedOpen}
-                          onOpen={() => setPopupDeleteSelectedOpen(true)}
-                          onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
-                          context={refSelectedInfoDropdown}
-                          content={
-                            <Button
-                              negative
-                              loading={deleteSelectedPending}
-                              onClick={onDeleteSelected}
-                            >
-                              {_("problem_files.confirm_delete")}
-                            </Button>
-                          }
-                          on="click"
-                          position="top center"
-                        />
-                      }
-                    </Dropdown.Menu>
-                  </Dropdown>
-                )
-                : (
-                  uploadingCount
-                  ? _("problem_files.files_count_and_size_with_uploading", {
-                    count: props.files.length.toString(),
-                    totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0)),
-                    uploadingCount: uploadingCount.toString()
-                  })
-                  : _("problem_files.files_count_and_size", {
-                    count: props.files.length.toString(),
-                    totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0))
-                  })
-                )
-              }
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : uploadingCount ? (
+                _("problem_files.files_count_and_size_with_uploading", {
+                  count: props.files.length.toString(),
+                  totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0)),
+                  uploadingCount: uploadingCount.toString()
+                })
+              ) : (
+                _("problem_files.files_count_and_size", {
+                  count: props.files.length.toString(),
+                  totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0))
+                })
+              )}
             </Table.HeaderCell>
             <Table.HeaderCell>
               {
                 <Popup
                   trigger={
                     <Button
-                      style={props.hasPermission ? {} : {
-                        visibility: "hidden"
-                      }}
+                      style={
+                        props.hasPermission
+                          ? {}
+                          : {
+                              visibility: "hidden"
+                            }
+                      }
                       floated="right"
                       icon="upload"
                       content={_("problem_files.upload")}
@@ -537,13 +512,13 @@ const FileTable: React.FC<FileTableProps> = props => {
                   onClose={() => setOverridingFiles([])}
                   content={
                     <>
-                      <p><strong>{_("problem_files.confirm_override_question")}</strong></p>
+                      <p>
+                        <strong>{_("problem_files.confirm_override_question")}</strong>
+                      </p>
                       <List>
-                        {
-                          overridingFiles.map(filename => (
-                            <List.Item key={filename} icon={getFileIcon(filename)} content={filename} />
-                          ))
-                        }
+                        {overridingFiles.map(filename => (
+                          <List.Item key={filename} icon={getFileIcon(filename)} content={filename} />
+                        ))}
                       </List>
                       <Button
                         onClick={() => {
@@ -565,7 +540,7 @@ const FileTable: React.FC<FileTableProps> = props => {
       </Table>
     </>
   );
-}
+};
 
 interface ProblemManagePageProps {
   idType?: "id" | "displayId";
@@ -599,10 +574,7 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
   refStateListAdditionalFiles.current = stateListAdditionalFiles;
   const fileListAdditionalFiles = stateListAdditionalFiles[0];
 
-  async function onDownloadFile(
-    type: "TestData" | "AdditionalFile",
-    filename: string
-  ) {
+  async function onDownloadFile(type: "TestData" | "AdditionalFile", filename: string) {
     const { requestError, response } = await ProblemApi.downloadProblemFiles({
       problemId: props.problem.meta.id,
       type,
@@ -616,16 +588,13 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
     downloadFile(response.downloadInfo[0].downloadUrl, filename);
   }
 
-  async function onDownloadFilesAsArchive(
-    type: "TestData" | "AdditionalFile",
-    filenames: string[]
-  ) {
+  async function onDownloadFilesAsArchive(type: "TestData" | "AdditionalFile", filenames: string[]) {
     const fileStream = streamsaver.createWriteStream(type + "_" + idString + ".zip");
 
     const { requestError, response } = await ProblemApi.downloadProblemFiles({
       problemId: props.problem.meta.id,
       type,
-      filenameList: filenames,
+      filenameList: filenames
     });
     if (requestError) return toast.error(requestError);
     if (response.error) return toast.error(`problem_files.error.${response.error}`);
@@ -648,18 +617,20 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
           });
         } catch (e) {
           stopDownload();
-          toast.error(_("problem_files.download_as_archive_error", {
-            filename: downloadInfo[i].filename,
-            error: e.toString()
-          }));
+          toast.error(
+            _("problem_files.download_as_archive_error", {
+              filename: downloadInfo[i].filename,
+              error: e.toString()
+            })
+          );
         }
-        
+
         i++;
       }
     });
 
     const abortCallbackReceiver: { abort?: () => void } = {};
-    
+
     function stopDownload() {
       abortCallbackReceiver.abort();
     }
@@ -708,9 +679,15 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
 
     // Unpack state object later to prevent from using a dirty value
     const [fileList, setFileList] = stateFileList;
-    setFileList(fileList.map(file => file.filename !== filename ? file : Object.assign({}, file, {
-      filename: newFilename
-    })));
+    setFileList(
+      fileList.map(file =>
+        file.filename !== filename
+          ? file
+          : Object.assign({}, file, {
+              filename: newFilename
+            })
+      )
+    );
   }
 
   async function onDeleteFiles(
@@ -781,15 +758,18 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
       uploadTasks.push(async () => {
         try {
           let cancelled = false;
-          const cancel = () => cancelled = true;
-          const sha256 = await sha256File(item.upload.file, lodashDebounce(processedSize => {
-            if (cancelled) return true;
-            updateFileUploadInfo(item.uuid, {
-              progressType: "Hashing",
-              progress: processedSize / item.upload.file.size * 100,
-              cancel
-            });
-          }));
+          const cancel = () => (cancelled = true);
+          const sha256 = await sha256File(
+            item.upload.file,
+            lodashDebounce(processedSize => {
+              if (cancelled) return true;
+              updateFileUploadInfo(item.uuid, {
+                progressType: "Hashing",
+                progress: (processedSize / item.upload.file.size) * 100,
+                cancel
+              });
+            })
+          );
 
           if (cancelled) {
             updateFileUploadInfo(item.uuid, {
@@ -798,7 +778,7 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
             });
             return;
           }
-          
+
           updateFileUploadInfo(item.uuid, {
             progressType: "Requesting",
             progress: 100
@@ -823,7 +803,8 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
           }
 
           const uploadUrlAndUuid = await tryAddFile(true);
-          if (uploadUrlAndUuid) { // If upload is required
+          if (uploadUrlAndUuid) {
+            // If upload is required
             const { uploadUrl, uploadUuid } = uploadUrlAndUuid;
             const cancelTokenSource = axios.CancelToken.source();
             let cancelled = false;
@@ -836,11 +817,13 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
             try {
               await axios.put(uploadUrl, item.upload.file, {
                 cancelToken: cancelTokenSource.token,
-                onUploadProgress: lodashDebounce(e => updateFileUploadInfo(item.uuid, {
-                  progressType: "Uploading",
-                  progress: e.loaded / e.total * 100,
-                  cancel
-                }))
+                onUploadProgress: lodashDebounce(e =>
+                  updateFileUploadInfo(item.uuid, {
+                    progressType: "Uploading",
+                    progress: (e.loaded / e.total) * 100,
+                    cancel
+                  })
+                )
               });
             } catch (e) {
               if (cancelled) {
@@ -889,62 +872,60 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
 
   return (
     <>
-      <Container className={style.container}>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              <Header as="h2">
-                <strong>
-                  {_("problem_files.header_testdata")}
-                </strong>
-              </Header>
-              <FileTable
-                hasPermission={props.problem.permission["WRITE"]}
-                color="green"
-                files={fileListTestData}
-                onDownloadFile={filename => onDownloadFile("TestData", filename)}
-                onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("TestData", filenames)}
-                onRenameFile={(filename, newFilename) => onRenameFile("TestData", stateListTestData, filename, newFilename)}
-                onDeleteFiles={(filenames) => onDeleteFiles("TestData", stateListTestData, filenames)}
-                onUploadFiles={(files) => onUploadFiles("TestData", refStateListTestData, files)}
-              />
-            </Grid.Column>
-            <Grid.Column width={8}>
-              <Header as="h2">
-                <strong>
-                  {_("problem_files.header_additional_files")}
-                </strong>
-              </Header>
-              <FileTable
-                hasPermission={props.problem.permission["WRITE"]}
-                color="pink"
-                files={fileListAdditionalFiles}
-                onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}
-                onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("AdditionalFile", filenames)}
-                onRenameFile={(filename, newFilename) => onRenameFile("AdditionalFile", stateListAdditionalFiles, filename, newFilename)}
-                onDeleteFiles={(filenames) => onDeleteFiles("AdditionalFile", stateListAdditionalFiles, filenames)}
-                onUploadFiles={(files) => onUploadFiles("AdditionalFile", refStateListAdditionalFiles, files)}
-              />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={16} textAlign="center">
-              <Button
-                primary
-                icon="backward"
-                as={Link}
-                href={
-                  props.idType === "id"
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={8}>
+            <Header as="h2">
+              <strong>{_("problem_files.header_testdata")}</strong>
+            </Header>
+            <FileTable
+              hasPermission={props.problem.permission["WRITE"]}
+              color="green"
+              files={fileListTestData}
+              onDownloadFile={filename => onDownloadFile("TestData", filename)}
+              onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("TestData", filenames)}
+              onRenameFile={(filename, newFilename) =>
+                onRenameFile("TestData", stateListTestData, filename, newFilename)
+              }
+              onDeleteFiles={filenames => onDeleteFiles("TestData", stateListTestData, filenames)}
+              onUploadFiles={files => onUploadFiles("TestData", refStateListTestData, files)}
+            />
+          </Grid.Column>
+          <Grid.Column width={8}>
+            <Header as="h2">
+              <strong>{_("problem_files.header_additional_files")}</strong>
+            </Header>
+            <FileTable
+              hasPermission={props.problem.permission["WRITE"]}
+              color="pink"
+              files={fileListAdditionalFiles}
+              onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}
+              onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("AdditionalFile", filenames)}
+              onRenameFile={(filename, newFilename) =>
+                onRenameFile("AdditionalFile", stateListAdditionalFiles, filename, newFilename)
+              }
+              onDeleteFiles={filenames => onDeleteFiles("AdditionalFile", stateListAdditionalFiles, filenames)}
+              onUploadFiles={files => onUploadFiles("AdditionalFile", refStateListAdditionalFiles, files)}
+            />
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16} textAlign="center">
+            <Button
+              primary
+              icon="backward"
+              as={Link}
+              href={
+                props.idType === "id"
                   ? `/problem/by-id/${props.problem.meta.id}`
                   : `/problem/${props.problem.meta.displayId}`
-                }
-                content={_("problem_files.back_to_problem")}
-                labelPosition="left"
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+              }
+              content={_("problem_files.back_to_problem")}
+              labelPosition="left"
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </>
   );
 };
@@ -974,4 +955,4 @@ export default {
       return <ProblemManagePage key={Math.random()} idType="displayId" problem={problem} />;
     }
   })
-}
+};

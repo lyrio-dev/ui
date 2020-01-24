@@ -188,140 +188,138 @@ let RegisterPage: React.FC = () => {
 
   return (
     <>
-      <Grid textAlign="center">
-        <Grid.Column className={style.wrapper}>
-          <Header as="h2" className={style.header} textAlign="center">
-            <Image as={AppLogo} className={style.logo} />
-            {_("register.register_new_account")}
-          </Header>
-          <Form size="large" ref={refForm}>
-            <Segment>
-              {/* username */}
+      <div className={style.wrapper}>
+        <Header as="h2" className={style.header} textAlign="center">
+          <Image as={AppLogo} className={style.logo} />
+          {_("register.register_new_account")}
+        </Header>
+        <Form size="large" ref={refForm}>
+          <Segment>
+            {/* username */}
+            <Form.Field
+              control={Input}
+              error={
+                getUsernameUIValidateStatus() === "error" && {
+                  content: getUsernameUIHelp(),
+                  pointing: "left"
+                }
+              }
+              loading={getUsernameUIValidateStatus() === "validating"}
+              fluid
+              icon="user"
+              iconPosition="left"
+              placeholder={_("register.username")}
+              value={username}
+              autoComplete="username"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+              onBlur={() => checkUsername()}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.keyCode === 13) {
+                  e.preventDefault();
+                  getInput("email").focus();
+                }
+              }}
+            />
+
+            {/* email */}
+            <Form.Field
+              control={Input}
+              error={
+                getEmailUIValidateStatus() === "error" && {
+                  content: getEmailUIHelp(),
+                  pointing: "left"
+                }
+              }
+              loading={getEmailUIValidateStatus() === "validating"}
+              fluid
+              icon="envelope"
+              iconPosition="left"
+              placeholder={_("register.email")}
+              value={email}
+              autoComplete="email"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+              onBlur={() => checkEmail()}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.keyCode === 13) {
+                  e.preventDefault();
+                  getInput("password").focus();
+                }
+              }}
+            />
+
+            {/* password */}
+            <Form.Group className={style.passwords} widths="equal">
               <Form.Field
                 control={Input}
                 error={
-                  getUsernameUIValidateStatus() === "error" && {
-                    content: getUsernameUIHelp(),
-                    pointing: "left"
+                  getPasswordUIValidateStatus() === "error" && {
+                    content: getPasswordUIHelp(),
+                    pointing: "right"
                   }
                 }
-                loading={getUsernameUIValidateStatus() === "validating"}
+                loading={getPasswordUIValidateStatus() === "validating"}
                 fluid
-                icon="user"
+                icon="lock"
                 iconPosition="left"
-                placeholder={_("register.username")}
-                value={username}
-                autoComplete="username"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                onBlur={() => checkUsername()}
+                placeholder={_("register.password")}
+                value={password}
+                type="password"
+                autoComplete="new-password"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                onBlur={() => checkPassword()}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.keyCode === 13) {
                     e.preventDefault();
-                    getInput("email").focus();
+                    getInput("retype-password").focus();
                   }
                 }}
               />
-
-              {/* email */}
               <Form.Field
                 control={Input}
                 error={
-                  getEmailUIValidateStatus() === "error" && {
-                    content: getEmailUIHelp(),
+                  getRetypePasswordUIValidateStatus() === "error" && {
+                    content: getRetypePasswordUIHelp(),
                     pointing: "left"
                   }
                 }
-                loading={getEmailUIValidateStatus() === "validating"}
+                loading={getRetypePasswordUIValidateStatus() === "validating"}
                 fluid
-                icon="envelope"
+                icon="lock"
                 iconPosition="left"
-                placeholder={_("register.email")}
-                value={email}
-                autoComplete="email"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                onBlur={() => checkEmail()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    getInput("password").focus();
-                  }
-                }}
+                placeholder={_("register.retype_password")}
+                value={retypePassword}
+                type="password"
+                autoComplete="new-password"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRetypePassword(e.target.value)}
+                onBlur={() => checkRetypePassword()}
               />
+            </Form.Group>
 
-              {/* password */}
-              <Form.Group className={style.passwords} widths="equal">
-                <Form.Field
-                  control={Input}
-                  error={
-                    getPasswordUIValidateStatus() === "error" && {
-                      content: getPasswordUIHelp(),
-                      pointing: "right"
-                    }
-                  }
-                  loading={getPasswordUIValidateStatus() === "validating"}
-                  fluid
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder={_("register.password")}
-                  value={password}
-                  type="password"
-                  autoComplete="new-password"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-                  onBlur={() => checkPassword()}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.keyCode === 13) {
-                      e.preventDefault();
-                      getInput("retype-password").focus();
-                    }
-                  }}
-                />
-                <Form.Field
-                  control={Input}
-                  error={
-                    getRetypePasswordUIValidateStatus() === "error" && {
-                      content: getRetypePasswordUIHelp(),
-                      pointing: "left"
-                    }
-                  }
-                  loading={getRetypePasswordUIValidateStatus() === "validating"}
-                  fluid
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder={_("register.retype_password")}
-                  value={retypePassword}
-                  type="password"
-                  autoComplete="new-password"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRetypePassword(e.target.value)}
-                  onBlur={() => checkRetypePassword()}
-                />
-              </Form.Group>
-
-              <Button
-                className={successMessage && style.successButton}
-                primary={!successMessage}
-                color={successMessage ? "green" : null}
-                fluid
-                size="large"
-                loading={registerPending && !successMessage}
-                onClick={() => onSubmit()}
-              >
-                {successMessage ? (
-                  <>
-                    <Icon name="checkmark" />
-                    {successMessage}
-                  </>
-                ) : (
-                  _("register.register")
-                )}
-              </Button>
-            </Segment>
-          </Form>
-          <Message className={style.message}>
-            {_("register.already_have_account")}
-            <Link href="/login">{_("register.login")}</Link>
-          </Message>
-        </Grid.Column>
-      </Grid>
+            <Button
+              className={successMessage && style.successButton}
+              primary={!successMessage}
+              color={successMessage ? "green" : null}
+              fluid
+              size="large"
+              loading={registerPending && !successMessage}
+              onClick={() => onSubmit()}
+            >
+              {successMessage ? (
+                <>
+                  <Icon name="checkmark" />
+                  {successMessage}
+                </>
+              ) : (
+                _("register.register")
+              )}
+            </Button>
+          </Segment>
+        </Form>
+        <Message className={style.message} textAlign="center">
+          {_("register.already_have_account")}
+          <Link href="/login">{_("register.login")}</Link>
+        </Message>
+      </div>
     </>
   );
 };

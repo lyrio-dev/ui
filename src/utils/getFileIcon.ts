@@ -47,8 +47,7 @@ export default function getFileIcon(filename: string): SemanticICONS {
     ".mpg": "file audio outline"
   };
 
-  for (const suffix in suffixIconMap)
-    if (filename.endsWith(suffix)) return suffixIconMap[suffix];
+  for (const suffix in suffixIconMap) if (filename.endsWith(suffix)) return suffixIconMap[suffix];
 
   return "file outline";
 }

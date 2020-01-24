@@ -1117,163 +1117,161 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   return (
     <>
-      <Container className={style.container}>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column width={8}>
-              <Container className={style.headerContainer}>
-                <div>
-                  <Header as="h1">
-                    <strong>
-                      {props.new ? `${_("problem_edit.header_new")}` : `${_("problem_edit.header_edit", { idString })}`}
-                    </strong>
-                  </Header>
-                </div>
-              </Container>
-            </Grid.Column>
-            <Grid.Column width={3} textAlign="right">
-              <Button primary disabled={!haveSubmitPermission} loading={pendingSubmit} onClick={onSubmit}>
-                {haveSubmitPermission ? _("problem_edit.submit") : _("problem_edit.no_submit_permission")}
-              </Button>
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <Header as="h1">
-                <strong>{_("problem_edit.header_samples")}</strong>
-              </Header>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column width={11}>
-              <Tab
-                activeIndex={languageTabActiveIndex}
-                onTabChange={(e, { activeIndex }) =>
-                  activeIndex !== Object.keys(localizedContents).length &&
-                  setLanguageTabActiveIndex(activeIndex as number)
-                }
-                menu={{ pointing: true }}
-                panes={[
-                  ...Object.keys(localizedContents).map((locale: Locale) => ({
-                    menuItem: (
-                      <Menu.Item key={locale}>
-                        <Flag name={localeMeta[locale].flag as any} />
-                        {_(`language.${locale}`)}
-                      </Menu.Item>
-                    ),
-                    pane: {
-                      key: locale,
-                      className: style.localeTabPane,
-                      content: (
-                        <LocalizedContentEditor
-                          localizedContent={localizedContents[locale]}
-                          samples={samples}
-                          isOnly={Object.keys(localizedContents).length === 1}
-                          isDefault={defaultLocale === locale}
-                          onMakeDefault={() => setDefaultLocale(locale)}
-                          onApplyTemplate={() => onApplyTemplateToLocale(locale)}
-                          onDelete={() => onDeleteLocale(locale)}
-                          onChangeTitle={title => onChangeTitle(locale, title)}
-                          onChangeSectionValue={(index, type, newValue) =>
-                            onChangeSectionValue(locale, index, type, newValue)
-                          }
-                          onChangeSectionType={(index, newType) => onChangeSectionType(locale, index, newType)}
-                          onChangeSectionSampleId={(index, newSampleId) =>
-                            onChangeSectionSampleId(locale, index, newSampleId)
-                          }
-                          onChangeSampleData={onChangeSampleData}
-                          onAddSection={index => onAddSection(locale, index)}
-                          onDeleteSection={index => onDeleteSection(locale, index)}
-                          onMoveSection={(index, direction) => onMoveSection(locale, index, direction)}
-                        />
-                      )
-                    }
-                  })),
-                  {
-                    menuItem: (
-                      <Dropdown
-                        key="add"
-                        item
-                        icon="add"
-                        // Fix Semantic UI attempts to pass a active={false} to this menu item
-                        active=""
-                        disabled={Object.keys(localizedContents).length === Object.keys(localeMeta).length}
-                        className={`icon ${style.toolbarMenuIconItem}`}
-                      >
-                        <Dropdown.Menu>
-                          {Object.keys(localeMeta)
-                            .filter((locale: Locale) => !(locale in localizedContents))
-                            .map((locale: Locale) => (
-                              <Dropdown.Item
-                                key={locale}
-                                flag={localeMeta[locale].flag}
-                                text={_(`language.${locale}`)}
-                                onClick={() => onAddLocale(locale)}
-                              />
-                            ))}
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    ),
-                    pane: {
-                      key: "add",
-                      content: null
-                    }
+      <Grid>
+        <Grid.Row>
+          <Grid.Column width={8}>
+            <Container className={style.headerContainer}>
+              <div>
+                <Header as="h1">
+                  <strong>
+                    {props.new ? `${_("problem_edit.header_new")}` : `${_("problem_edit.header_edit", { idString })}`}
+                  </strong>
+                </Header>
+              </div>
+            </Container>
+          </Grid.Column>
+          <Grid.Column width={3} textAlign="right">
+            <Button primary disabled={!haveSubmitPermission} loading={pendingSubmit} onClick={onSubmit}>
+              {haveSubmitPermission ? _("problem_edit.submit") : _("problem_edit.no_submit_permission")}
+            </Button>
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <Header as="h1">
+              <strong>{_("problem_edit.header_samples")}</strong>
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={11}>
+            <Tab
+              activeIndex={languageTabActiveIndex}
+              onTabChange={(e, { activeIndex }) =>
+                activeIndex !== Object.keys(localizedContents).length &&
+                setLanguageTabActiveIndex(activeIndex as number)
+              }
+              menu={{ pointing: true }}
+              panes={[
+                ...Object.keys(localizedContents).map((locale: Locale) => ({
+                  menuItem: (
+                    <Menu.Item key={locale}>
+                      <Flag name={localeMeta[locale].flag as any} />
+                      {_(`language.${locale}`)}
+                    </Menu.Item>
+                  ),
+                  pane: {
+                    key: locale,
+                    className: style.localeTabPane,
+                    content: (
+                      <LocalizedContentEditor
+                        localizedContent={localizedContents[locale]}
+                        samples={samples}
+                        isOnly={Object.keys(localizedContents).length === 1}
+                        isDefault={defaultLocale === locale}
+                        onMakeDefault={() => setDefaultLocale(locale)}
+                        onApplyTemplate={() => onApplyTemplateToLocale(locale)}
+                        onDelete={() => onDeleteLocale(locale)}
+                        onChangeTitle={title => onChangeTitle(locale, title)}
+                        onChangeSectionValue={(index, type, newValue) =>
+                          onChangeSectionValue(locale, index, type, newValue)
+                        }
+                        onChangeSectionType={(index, newType) => onChangeSectionType(locale, index, newType)}
+                        onChangeSectionSampleId={(index, newSampleId) =>
+                          onChangeSectionSampleId(locale, index, newSampleId)
+                        }
+                        onChangeSampleData={onChangeSampleData}
+                        onAddSection={index => onAddSection(locale, index)}
+                        onDeleteSection={index => onDeleteSection(locale, index)}
+                        onMoveSection={(index, direction) => onMoveSection(locale, index, direction)}
+                      />
+                    )
                   }
-                ]}
-                renderActiveOnly={false}
-              />
-            </Grid.Column>
-            <Grid.Column width={5}>
-              {samples.length === 0 ? (
-                <Dimmer.Dimmable dimmed={true} className={style.noSampleDimmer}>
-                  <SampleEditor
-                    sampleId={null}
-                    sample={null}
-                    warningMessage={[]}
-                    isFirst={null}
-                    isLast={null}
-                    onChangeSampleData={null}
-                    onMoveSampleUp={null}
-                    onMoveSampleDown={null}
-                    onAddSampleBefore={null}
-                    onAddSampleAfter={null}
-                    onDeleteSample={null}
-                  />
-                  <Dimmer active={true} inverted>
-                    <Button primary onClick={() => onAddSample()}>
-                      {_("problem_edit.sample_editor.add_sample_when_empty")}
-                    </Button>
-                  </Dimmer>
-                </Dimmer.Dimmable>
-              ) : (
-                samples.map((sample, sampleId) => (
-                  <SampleEditor
-                    key={sample.uuid}
-                    sampleId={sampleId}
-                    sample={sample}
-                    warningMessage={Object.keys(localizedContents)
-                      .map((locale: Locale) => {
-                        const referenceCount = localizedContents[locale].contentSections.filter(
-                          section => section.type === "SAMPLE" && section.sampleId === sampleId
-                        ).length;
+                })),
+                {
+                  menuItem: (
+                    <Dropdown
+                      key="add"
+                      item
+                      icon="add"
+                      // Fix Semantic UI attempts to pass a active={false} to this menu item
+                      active=""
+                      disabled={Object.keys(localizedContents).length === Object.keys(localeMeta).length}
+                      className={`icon ${style.toolbarMenuIconItem}`}
+                    >
+                      <Dropdown.Menu>
+                        {Object.keys(localeMeta)
+                          .filter((locale: Locale) => !(locale in localizedContents))
+                          .map((locale: Locale) => (
+                            <Dropdown.Item
+                              key={locale}
+                              flag={localeMeta[locale].flag}
+                              text={_(`language.${locale}`)}
+                              onClick={() => onAddLocale(locale)}
+                            />
+                          ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  ),
+                  pane: {
+                    key: "add",
+                    content: null
+                  }
+                }
+              ]}
+              renderActiveOnly={false}
+            />
+          </Grid.Column>
+          <Grid.Column width={5}>
+            {samples.length === 0 ? (
+              <Dimmer.Dimmable dimmed={true} className={style.noSampleDimmer}>
+                <SampleEditor
+                  sampleId={null}
+                  sample={null}
+                  warningMessage={[]}
+                  isFirst={null}
+                  isLast={null}
+                  onChangeSampleData={null}
+                  onMoveSampleUp={null}
+                  onMoveSampleDown={null}
+                  onAddSampleBefore={null}
+                  onAddSampleAfter={null}
+                  onDeleteSample={null}
+                />
+                <Dimmer active={true} inverted>
+                  <Button primary onClick={() => onAddSample()}>
+                    {_("problem_edit.sample_editor.add_sample_when_empty")}
+                  </Button>
+                </Dimmer>
+              </Dimmer.Dimmable>
+            ) : (
+              samples.map((sample, sampleId) => (
+                <SampleEditor
+                  key={sample.uuid}
+                  sampleId={sampleId}
+                  sample={sample}
+                  warningMessage={Object.keys(localizedContents)
+                    .map((locale: Locale) => {
+                      const referenceCount = localizedContents[locale].contentSections.filter(
+                        section => section.type === "SAMPLE" && section.sampleId === sampleId
+                      ).length;
 
-                        if (referenceCount === 1) return null;
-                        return { locale, referenceCount };
-                      })
-                      .filter(x => x)}
-                    isFirst={sampleId === 0}
-                    isLast={sampleId === samples.length - 1}
-                    onChangeSampleData={(type, newData) => onChangeSampleData(sampleId, type, newData)}
-                    onMoveSampleUp={() => onMoveSample(sampleId, "UP")}
-                    onMoveSampleDown={() => onMoveSample(sampleId, "DOWN")}
-                    onAddSampleBefore={() => onAddSampleAt(sampleId)}
-                    onAddSampleAfter={() => onAddSampleAt(sampleId + 1)}
-                    onDeleteSample={() => onDeleteSample(sampleId)}
-                  />
-                ))
-              )}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+                      if (referenceCount === 1) return null;
+                      return { locale, referenceCount };
+                    })
+                    .filter(x => x)}
+                  isFirst={sampleId === 0}
+                  isLast={sampleId === samples.length - 1}
+                  onChangeSampleData={(type, newData) => onChangeSampleData(sampleId, type, newData)}
+                  onMoveSampleUp={() => onMoveSample(sampleId, "UP")}
+                  onMoveSampleDown={() => onMoveSample(sampleId, "DOWN")}
+                  onAddSampleBefore={() => onAddSampleAt(sampleId)}
+                  onAddSampleAfter={() => onAddSampleAt(sampleId + 1)}
+                  onDeleteSample={() => onDeleteSample(sampleId)}
+                />
+              ))
+            )}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     </>
   );
 };

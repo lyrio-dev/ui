@@ -31,8 +31,7 @@ let AppLayout: React.FC = props => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   navigation.subscribe(route => {
-    if (route.type === "ready")
-      setSidebarOpen(false);
+    if (route.type === "ready") setSidebarOpen(false);
   });
 
   async function onLogoutClick() {
@@ -100,21 +99,24 @@ let AppLayout: React.FC = props => {
     }
   };
 
-  const navMenuItems = (
-    Object.keys(navButtons).map(name => (
-      <Menu.Item key={name} as={Link} href={navButtons[name].url}>
-        <Icon name={navButtons[name].icon} />
-        {_(navButtons[name].text)}
-      </Menu.Item>
-    ))
-  );
+  const navMenuItems = Object.keys(navButtons).map(name => (
+    <Menu.Item key={name} as={Link} href={navButtons[name].url}>
+      <Icon name={navButtons[name].icon} />
+      {_(navButtons[name].text)}
+    </Menu.Item>
+  ));
 
   const loginAndRegisterButtons = (
     <>
       <Button className={style.loginAndRegisterButton} onClick={() => onLoginOrRegisterClick("login")}>
         {_("common.header.user.login")}
       </Button>
-      <Button className={style.loginAndRegisterButton} primary onClick={() => onLoginOrRegisterClick("register")} type="primary">
+      <Button
+        className={style.loginAndRegisterButton}
+        primary
+        onClick={() => onLoginOrRegisterClick("register")}
+        type="primary"
+      >
         {_("common.header.user.register")}
       </Button>
     </>
@@ -137,10 +139,12 @@ let AppLayout: React.FC = props => {
 
   const logo = (
     <Menu.Item as={Link} href="/" className={style.logoItem}>
-      <div className={style.logo}>
-        <Logo />
+      <div className={style.content}>
+        <div className={style.logo}>
+          <Logo />
+        </div>
+        <div className={style.siteName}>{appConfig.siteName}</div>
       </div>
-      <div className={style.siteName}>{appConfig.siteName}</div>
     </Menu.Item>
   );
 
@@ -184,7 +188,9 @@ let AppLayout: React.FC = props => {
       {appState.loggedInUser ? (
         <>
           <div className={style.userContainer}>
-            <Dropdown text={appState.loggedInUser.username} simple item>{userMenu(Dropdown)}</Dropdown>
+            <Dropdown text={appState.loggedInUser.username} simple item>
+              {userMenu(Dropdown)}
+            </Dropdown>
           </div>
         </>
       ) : (
@@ -195,13 +201,13 @@ let AppLayout: React.FC = props => {
 
   const topBarItemsForNarrowScreen = (
     <Menu.Menu position="right">
-      {
-        appState.loggedInUser && (
-          <div className={style.userContainer}>
-            <Dropdown text={appState.loggedInUser.username} simple icon={false} item>{userMenu(Dropdown)}</Dropdown>
-          </div>
-        )
-      }
+      {appState.loggedInUser && (
+        <div className={style.userContainer}>
+          <Dropdown text={appState.loggedInUser.username} simple icon={false} item>
+            {userMenu(Dropdown)}
+          </Dropdown>
+        </div>
+      )}
       <Menu.Item icon="bars" onClick={() => setSidebarOpen(true)} />
     </Menu.Menu>
   );
@@ -221,50 +227,30 @@ let AppLayout: React.FC = props => {
           vertical
           visible={sidebarOpen}
         >
-          <Menu.Item
-            className={style.siteName}
-            as={Link}
-            href="/"
-          >
+          <Menu.Item className={style.siteName} as={Link} href="/">
             {appConfig.siteName}
           </Menu.Item>
           <Menu.Item>
-            {
-              appState.loggedInUser
-              ? (
-                <>
-                  <Menu.Header>{appState.loggedInUser.username}</Menu.Header>
-                  {userMenu(Menu)}
-                </>
-              )
-              : (
-                <Button.Group fluid>
-                  {loginAndRegisterButtons}
-                </Button.Group>
-              )
-            }
+            {appState.loggedInUser ? (
+              <>
+                <Menu.Header>{appState.loggedInUser.username}</Menu.Header>
+                {userMenu(Menu)}
+              </>
+            ) : (
+              <Button.Group fluid>{loginAndRegisterButtons}</Button.Group>
+            )}
           </Menu.Item>
           {navMenuItems}
         </Sidebar>
         <Sidebar.Pusher dimmed={sidebarOpen} className={style.sidebarPusher}>
-          <Menu
-            borderless
-            fixed="top"
-            className={
-              style.menu + " " + (wide ? style.wide : style.narrow)
-            }
-          >
-            <Container>
-            {logo}
-              {
-                wide
-                ? topBarItemsForWideScreen
-                : topBarItemsForNarrowScreen
-              }
+          <Menu borderless fixed="top" className={style.menu}>
+            <Container id={style.mainMenuContainer}>
+              {logo}
+              {wide ? topBarItemsForWideScreen : topBarItemsForNarrowScreen}
             </Container>
           </Menu>
           <div className={style.appContentContainer}>
-            <Container>{props.children}</Container>
+            <Container id={style.mainUiContainer}>{props.children}</Container>
             {footer}
           </div>
         </Sidebar.Pusher>

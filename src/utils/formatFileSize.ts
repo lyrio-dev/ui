@@ -1,6 +1,6 @@
 export default function formatFileSize(size: number, precision: number = 2) {
   const units = ["K", "M", "G", "T"];
-  
+
   let unit = "B";
   for (const currUnit of units) {
     if (size > 1024) {
