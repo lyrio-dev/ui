@@ -6,7 +6,7 @@
 
 .headerContainer {
   margin-top: 10px;
-  margin-bottom: 39px;
+  margin-bottom: 37px;
 
   :global(.ui.label) {
     margin: 2px !important;
@@ -43,9 +43,7 @@
 }
 
 .divider {
-  margin-top: 37.5px !important;
-  margin-left: -233333px !important;
-  margin-right: -233333px !important;
+  margin: 37.5px -233333px !important;
 }
 
 .leftContainer, .rightContainer {
@@ -64,7 +62,7 @@
 }
 
 .actionMenusWrapper {
-  margin-top: 87px !important;
+  margin-top: 85px !important;
 }
 
 .secondActionMenu {
@@ -188,8 +186,8 @@
 
 @media only screen and (max-width: 767px) {
   .headerContainer {
-    margin-top: 0;
-    margin-bottom: 0;
+    margin-top: 12px;
+    margin-bottom: 25px;
   }
   
   .labels {
@@ -197,7 +195,8 @@
   }
 
   .divider {
-    margin-top: 15px !important;
+    margin-top: 9px !important;
+    margin-bottom: 25px !important;
   }
 
   .leftContainer {
@@ -219,15 +218,24 @@
     width: 100%;
   }
 
-  .actionMenusWrapper, .secondActionMenu {
-    margin-top: 27px !important;
+  .actionMenusWrapper {
+    margin-top: 20px !important;
+  }
+
+  .secondActionMenu {
+    margin-top: 30px !important;
   }
 
   .actionMenu {
     width: 100% !important;
   }
 
+  .dividerBottom {
+    margin-top: 25px !important;
+  }
+
   .headerRightStatisticGroup {
-    margin: 10px auto !important;
+    padding-top: 4px;
+    margin: 0 auto !important;
   }
 }

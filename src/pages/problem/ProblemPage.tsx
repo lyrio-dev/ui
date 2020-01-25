@@ -247,9 +247,9 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 </>
               )}
             </div>
-            <Divider className={style.divider} />
           </div>
         </Container>
+        <Divider className={style.divider} />
         <Container>
           {(() => {
             if (!localizedContentUnavailableMessageVisable) return;
