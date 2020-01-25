@@ -33,6 +33,7 @@ import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage } from "@/utils/hooks";
+import { observer } from "mobx-react";
 
 type ProblemEditDetail = ApiTypes.GetProblemStatementsAllLocalesResponseDto;
 
@@ -643,7 +644,7 @@ interface ProblemEditPageProps {
   requestedLocale?: Locale;
 }
 
-const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
+let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   const _ = useIntlMessage();
   const navigation = useNavigation();
 
@@ -1275,6 +1276,8 @@ const ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     </>
   );
 };
+
+ProblemEditPage = observer(ProblemEditPage);
 
 export default {
   new: route({

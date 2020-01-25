@@ -46,6 +46,7 @@ import openUploadDialog from "@/utils/openUploadDialog";
 import readFile from "@/utils/readFile";
 import sha256 from "@/utils/sha256";
 import pipeStream from "@/utils/pipeStream";
+import { observer } from "mobx-react";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -542,12 +543,12 @@ const FileTable: React.FC<FileTableProps> = props => {
   );
 };
 
-interface ProblemManagePageProps {
+interface ProblemFilesPageProps {
   idType?: "id" | "displayId";
   problem?: ApiTypes.GetProblemAllFilesAndPermissionResponseDto;
 }
 
-const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
+let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   const _ = useIntlMessage();
 
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
@@ -930,6 +931,8 @@ const ProblemManagePage: React.FC<ProblemManagePageProps> = props => {
   );
 };
 
+ProblemFilesPage = observer(ProblemFilesPage);
+
 export default {
   byId: route({
     async getView(request) {
@@ -940,7 +943,7 @@ export default {
         return null;
       }
 
-      return <ProblemManagePage key={Math.random()} idType="id" problem={problem} />;
+      return <ProblemFilesPage key={Math.random()} idType="id" problem={problem} />;
     }
   }),
   byDisplayId: route({
@@ -952,7 +955,7 @@ export default {
         return null;
       }
 
-      return <ProblemManagePage key={Math.random()} idType="displayId" problem={problem} />;
+      return <ProblemFilesPage key={Math.random()} idType="displayId" problem={problem} />;
     }
   })
 };
