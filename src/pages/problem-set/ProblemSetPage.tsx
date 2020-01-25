@@ -75,6 +75,8 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
 
   const navigation = useNavigation();
 
+  const isMobile = appState.windowWidth < 768;
+
   function changePage(page: number) {
     navigation.navigate({
       query: {
@@ -92,46 +94,75 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     />
   );
 
+  const headerSearch = (
+    <>
+      <Search
+        className={style.search}
+        placeholder={_("problem_set.search_placeholder")}
+        input={{ iconPosition: "left", fluid: isMobile }}
+      />
+    </>
+  );
+
+  const headerShowTagsCheckbox = (
+    <>
+      <Checkbox
+        className={style.showTagsCheckbox}
+        toggle
+        checked={appState.showTagsInProblemSet}
+        onChange={() => (appState.showTagsInProblemSet = !appState.showTagsInProblemSet)}
+        label={_("problem_set.show_tags")}
+      />
+    </>
+  );
+
+  const headerAddButton = (
+    <>
+      <ButtonGroup size="mini" className={style.addButton}>
+        <Dropdown labeled button className="icon" icon="plus" text={_("problem_set.add_problem")}>
+          <Dropdown.Menu>
+            <Dropdown.Item icon="file" text={_("problem_set.new_problem")} as={Link} href="/problem/new" />
+            <Dropdown.Item icon="cloud download" text={_("problem_set.import_problem")} />
+          </Dropdown.Menu>
+        </Dropdown>
+      </ButtonGroup>
+    </>
+  );
+
   return (
     <>
       <Grid>
-        <Grid.Row>
-          <Grid.Column width={5}>
-            <Search
-              className={style.search}
-              placeholder={_("problem_set.search_placeholder")}
-              input={{ iconPosition: "left" }}
-            />
-          </Grid.Column>
-          <Grid.Column width={11} floated="right" textAlign="right">
-            <Checkbox
-              className={style.showTags}
-              toggle
-              checked={appState.showTagsInProblemSet}
-              onChange={() => (appState.showTagsInProblemSet = !appState.showTagsInProblemSet)}
-              label={_("problem_set.show_tags")}
-            />
-            <ButtonGroup size="mini">
-              <Dropdown labeled button className="icon" icon="plus" text={_("problem_set.add_problem")}>
-                <Dropdown.Menu>
-                  <Dropdown.Item icon="file" text={_("problem_set.new_problem")} as={Link} href="/problem/new" />
-                  <Dropdown.Item icon="cloud download" text={_("problem_set.import_problem")} />
-                </Dropdown.Menu>
-              </Dropdown>
-            </ButtonGroup>
-          </Grid.Column>
-        </Grid.Row>
+        {isMobile ? (
+          <>
+            <Grid.Row className={style.firstRow}>
+              <Grid.Column width={16}>{headerSearch}</Grid.Column>
+            </Grid.Row>
+            <Grid.Row className={style.secondRow}>
+              <Grid.Column width={16} className={style.showTagsCheckboxAndAddButtonContainer}>
+                {headerShowTagsCheckbox}
+                {headerAddButton}
+              </Grid.Column>
+            </Grid.Row>
+          </>
+        ) : (
+          <Grid.Row>
+            <Grid.Column width={5}>{headerSearch}</Grid.Column>
+            <Grid.Column width={11} floated="right" textAlign="right">
+              {headerShowTagsCheckbox}
+              {headerAddButton}
+            </Grid.Column>
+          </Grid.Row>
+        )}
         <Grid.Row className={style.topPagination}>
           <Grid.Column textAlign="center">{getPagination()}</Grid.Column>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column textAlign="center">
-            <Table basic="very" textAlign="center">
+            <Table basic="very" textAlign="center" unstackable>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell width={1}>#</Table.HeaderCell>
                   <Table.HeaderCell textAlign="left">{_("problem_set.column_title")}</Table.HeaderCell>
-                  <Table.HeaderCell />
                   <Table.HeaderCell width={1}>{_("problem_set.column_submission_count")}</Table.HeaderCell>
                   <Table.HeaderCell width={1}>{_("problem_set.column_accepted_rate")}</Table.HeaderCell>
                 </Table.Row>
@@ -142,14 +173,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                     <Table.Cell>
                       <b>{problem.displayId}</b>
                     </Table.Cell>
-                    <Table.Cell textAlign="left">
+                    <Table.Cell textAlign="left" className={style.problemTitleCell}>
                       <Link href={`/problem/${problem.displayId}`}>{problem.title}</Link>
-                    </Table.Cell>
-                    <Table.Cell textAlign="right">
-                      <div
-                        className={style.tags}
-                        style={{ visibility: appState.showTagsInProblemSet ? null : "hidden" }}
-                      >
+                      <div className={style.tags} style={{ display: appState.showTagsInProblemSet ? null : "none" }}>
                         {problem.tags.map(tag => (
                           <Label key={tag.id} content={tag.name} />
                         ))}

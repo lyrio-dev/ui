@@ -168,7 +168,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const [localizedContentUnavailableMessageVisable, setLocalizedContentUnavailableMessageVisable] = useState(true);
   // End "locaized content unavailable" message
 
-  const isMobile = appState.windowWidth <= 768;
+  const isMobile = appState.windowWidth < 768;
 
   return (
     <>

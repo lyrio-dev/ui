@@ -1,25 +1,52 @@
-.search {
-  width: 280px;
-  height: 28px;
-  display: inline-block;
-
-  :global(.ui.input) {
-    width: 100%;
-  }
-}
-
-.showTags {
-  margin-right: 20px;
-}
-
 .topPagination {
-  margin-bottom: -1rem;
+  margin-bottom: -0.6rem;
 }
 
 .row {
   height: 44px;
 }
 
+.problemTitleCell {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+}
+
 .tags {
-  display: inline-block;
+  :global(.ui.label) {
+    margin: 2px !important;
+  }
+
+  margin-left: auto;
+}
+
+@media only screen and (min-width: 768px) {
+  .showTagsCheckbox {
+    margin-right: 20px;
+  }
+
+  .search {
+    width: 280px;
+    height: 28px;
+    display: inline-block;
+
+    :global(.ui.input) {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .secondRow {
+    padding: 0.5rem 0 !important;
+  }
+
+  .showTagsCheckboxAndAddButtonContainer {
+    display: flex !important;
+    align-items: center;
+  }
+
+  .addButton {
+    margin-left: auto !important;
+  }
 }
