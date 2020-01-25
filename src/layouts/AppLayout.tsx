@@ -212,7 +212,7 @@ let AppLayout: React.FC = props => {
     </Menu.Menu>
   );
 
-  const wide = appState.windowWidth >= 1024;
+  const wide = appState.isScreenWidthIn(1024, Infinity);
 
   return (
     <>

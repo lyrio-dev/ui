@@ -17,25 +17,25 @@ let Pagination: React.FC<PaginationProps> = props => {
 
   let siblingRange = 1,
     size = "mini";
-  if (appState.windowWidth <= 375) {
+  if (appState.isScreenWidthIn(0, 375 + 1)) {
     siblingRange = 0;
     size = "mini";
-  } else if (appState.windowWidth <= 425) {
+  } else if (appState.isScreenWidthIn(0, 425 + 1)) {
     siblingRange = 1;
     size = "mini";
-  } else if (appState.windowWidth < 540) {
+  } else if (appState.isScreenWidthIn(426, 540)) {
     siblingRange = 1;
     size = "small";
-  } else if (appState.windowWidth < 640) {
+  } else if (appState.isScreenWidthIn(540, 640)) {
     siblingRange = 2;
     size = "small";
-  } else if (appState.windowWidth < 768) {
+  } else if (appState.isScreenWidthIn(640, 768)) {
     siblingRange = 3;
     size = "small";
-  } else if (appState.windowWidth < 880) {
+  } else if (appState.isScreenWidthIn(768, 880)) {
     siblingRange = 4;
     size = "small";
-  } else if (appState.windowWidth < 1024) {
+  } else if (appState.isScreenWidthIn(880, 1024)) {
     siblingRange = 5;
     size = null;
   } else {

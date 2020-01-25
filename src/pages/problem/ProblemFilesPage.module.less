@@ -1,4 +1,4 @@
-@columnWidthSize: 120px;
+@columnWidthSize: 85px;
 @columnWidthOperations: 155px;
 
 .fileTable {
@@ -78,5 +78,19 @@ th .fileTableCheckbox {
 }
 
 .fileTableFooterInfo {
-  padding-left: 17px !important;
+  display: flex;
+  align-items: center;
+  padding-left: 6px !important;
+  white-space: pre;
+}
+
+.tableFooterButton {
+  margin-left: auto !important;
+  white-space: nowrap;
+}
+
+@media only screen and (max-width: 425px) {
+  .fileTable td > :global(.ui.progress) {
+    width: calc(100% + @columnWidthOperations); // No file size column
+  }
 }

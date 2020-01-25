@@ -75,7 +75,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
 
   const navigation = useNavigation();
 
-  const isMobile = appState.windowWidth < 768;
+  const isMobile = appState.isScreenWidthIn(0, 768);
 
   function changePage(page: number) {
     navigation.navigate({

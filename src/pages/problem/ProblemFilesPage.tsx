@@ -106,7 +106,7 @@ interface FileTableRowProps {
   onDelete: () => Promise<void>;
 }
 
-const FileTableRow: React.FC<FileTableRowProps> = props => {
+let FileTableRow: React.FC<FileTableRowProps> = props => {
   const _ = useIntlMessage();
 
   const [renameOpen, setRenameOpen] = useState(false);
@@ -204,6 +204,8 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
     return status;
   }
 
+  const isMobile = appState.isScreenWidthIn(0, 425 + 1);
+
   return (
     <>
       <Table.Row>
@@ -222,7 +224,7 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
             {props.file.filename}
           </div>
         </Table.Cell>
-        <Table.Cell textAlign="center">{formatFileSize(props.file.size)}</Table.Cell>
+        {!isMobile && <Table.Cell textAlign="center">{formatFileSize(props.file.size)}</Table.Cell>}
         <Table.Cell className={style.fileTableColumnOperations} textAlign="center">
           {props.file.upload ? (
             getUploadStatus()
@@ -285,6 +287,8 @@ const FileTableRow: React.FC<FileTableRowProps> = props => {
   );
 };
 
+FileTableRow = observer(FileTableRow);
+
 interface FileTableProps {
   hasPermission: boolean;
   color: SemanticCOLORS;
@@ -296,7 +300,7 @@ interface FileTableProps {
   onUploadFiles: (files: File[]) => void;
 }
 
-const FileTable: React.FC<FileTableProps> = props => {
+let FileTable: React.FC<FileTableProps> = props => {
   const _ = useIntlMessage();
 
   const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
@@ -388,9 +392,11 @@ const FileTable: React.FC<FileTableProps> = props => {
     setDeleteSelectedPending(false);
   }
 
+  const isMobile = appState.isScreenWidthIn(0, 425 + 1);
+
   return (
     <>
-      <Table color={props.color} className={style.fileTable}>
+      <Table color={props.color} className={style.fileTable} unstackable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>
@@ -403,9 +409,11 @@ const FileTable: React.FC<FileTableProps> = props => {
               />
               {_("problem_files.filename")}
             </Table.HeaderCell>
-            <Table.HeaderCell className={style.fileTableColumnSize} textAlign="center">
-              {_("problem_files.size")}
-            </Table.HeaderCell>
+            {!isMobile && (
+              <Table.HeaderCell className={style.fileTableColumnSize} textAlign="center">
+                {_("problem_files.size")}
+              </Table.HeaderCell>
+            )}
             <Table.HeaderCell textAlign="center" className={style.fileTableColumnOperations}>
               {props.hasPermission ? _("problem_files.operations_and_status") : _("problem_files.operations")}
             </Table.HeaderCell>
@@ -414,7 +422,7 @@ const FileTable: React.FC<FileTableProps> = props => {
         <Table.Body>
           {props.files.length === 0 ? (
             <Table.Row>
-              <Table.HeaderCell colSpan={3} textAlign="center" className={style.filesTableNoFiles}>
+              <Table.HeaderCell colSpan={isMobile ? 2 : 3} textAlign="center" className={style.filesTableNoFiles}>
                 <Header>{_("problem_files.no_files")}</Header>
               </Table.HeaderCell>
             </Table.Row>
@@ -436,105 +444,110 @@ const FileTable: React.FC<FileTableProps> = props => {
         </Table.Body>
         <Table.Footer fullWidth>
           <Table.Row>
-            <Table.HeaderCell colSpan={2} className={style.fileTableFooterInfo}>
-              {selectedFilesArray.length > 0 ? (
-                <Dropdown
-                  // Semantic UI doesn't forward ref
-                  ref={ref => (refSelectedInfoDropdown.current = ref && (ref as any).ref.current)}
-                  open={selectedInfoDropdownOpen}
-                  onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
-                  onClose={() => setSelectedInfoDropdownOpen(false)}
-                  pointing
-                  text={_("problem_files.selected_files_count_and_size", {
-                    count: selectedFilesArray.length.toString(),
-                    totalSize: formatFileSize(selectedFilesArray.reduce((sum, file) => sum + file.size, 0))
-                  })}
-                >
-                  <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
-                    <Dropdown.Item
-                      icon="download"
-                      text={_("problem_files.download_as_archive")}
-                      onClick={() => props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))}
-                    />
-                    {props.hasPermission && (
-                      <Popup
-                        trigger={<Dropdown.Item icon="delete" text={_("problem_files.delete")} />}
-                        open={popupDeleteSelectedOpen}
-                        onOpen={() => setPopupDeleteSelectedOpen(true)}
-                        onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
-                        context={refSelectedInfoDropdown}
-                        content={
-                          <Button negative loading={deleteSelectedPending} onClick={onDeleteSelected}>
-                            {_("problem_files.confirm_delete")}
-                          </Button>
+            <Table.HeaderCell colSpan={isMobile ? 2 : 3}>
+              <div className={style.fileTableFooterInfo}>
+                <div className={style.tableFooterText}>
+                  {selectedFilesArray.length > 0 ? (
+                    <Dropdown
+                      // Semantic UI doesn't forward ref
+                      ref={ref => (refSelectedInfoDropdown.current = ref && (ref as any).ref.current)}
+                      open={selectedInfoDropdownOpen}
+                      onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
+                      onClose={() => setSelectedInfoDropdownOpen(false)}
+                      pointing
+                      text={_(
+                        isMobile
+                          ? "problem_files.selected_files_count_and_size_narrow"
+                          : "problem_files.selected_files_count_and_size",
+                        {
+                          count: selectedFilesArray.length.toString(),
+                          totalSize: formatFileSize(selectedFilesArray.reduce((sum, file) => sum + file.size, 0))
                         }
-                        on="click"
-                        position="top center"
-                      />
-                    )}
-                  </Dropdown.Menu>
-                </Dropdown>
-              ) : uploadingCount ? (
-                _("problem_files.files_count_and_size_with_uploading", {
-                  count: props.files.length.toString(),
-                  totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0)),
-                  uploadingCount: uploadingCount.toString()
-                })
-              ) : (
-                _("problem_files.files_count_and_size", {
-                  count: props.files.length.toString(),
-                  totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0))
-                })
-              )}
-            </Table.HeaderCell>
-            <Table.HeaderCell>
-              {
-                <Popup
-                  trigger={
-                    <Button
-                      style={
-                        props.hasPermission
-                          ? {}
-                          : {
-                              visibility: "hidden"
+                      )}
+                    >
+                      <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
+                        <Dropdown.Item
+                          icon="download"
+                          text={_("problem_files.download_as_archive")}
+                          onClick={() => props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))}
+                        />
+                        {props.hasPermission && (
+                          <Popup
+                            trigger={<Dropdown.Item icon="delete" text={_("problem_files.delete")} />}
+                            open={popupDeleteSelectedOpen}
+                            onOpen={() => setPopupDeleteSelectedOpen(true)}
+                            onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
+                            context={refSelectedInfoDropdown}
+                            content={
+                              <Button negative loading={deleteSelectedPending} onClick={onDeleteSelected}>
+                                {_("problem_files.confirm_delete")}
+                              </Button>
                             }
+                            on="click"
+                            position="top center"
+                          />
+                        )}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  ) : uploadingCount ? (
+                    _(
+                      isMobile
+                        ? "problem_files.files_count_and_size_with_uploading_narrow"
+                        : "problem_files.files_count_and_size_with_uploading",
+                      {
+                        count: props.files.length.toString(),
+                        totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0)),
+                        uploadingCount: uploadingCount.toString()
                       }
-                      floated="right"
-                      icon="upload"
-                      content={_("problem_files.upload")}
-                      labelPosition="left"
-                      primary
-                      size="small"
-                      loading={uploadingCount !== 0}
-                      onClick={onUploadButtonClick}
-                    />
-                  }
-                  open={overridingFiles.length !== 0}
-                  onClose={() => setOverridingFiles([])}
-                  content={
-                    <>
-                      <p>
-                        <strong>{_("problem_files.confirm_override_question")}</strong>
-                      </p>
-                      <List>
-                        {overridingFiles.map(filename => (
-                          <List.Item key={filename} icon={getFileIcon(filename)} content={filename} />
-                        ))}
-                      </List>
+                    )
+                  ) : (
+                    _(isMobile ? "problem_files.files_count_and_size_narrow" : "problem_files.files_count_and_size", {
+                      count: props.files.length.toString(),
+                      totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0))
+                    })
+                  )}
+                </div>
+                {props.hasPermission && (
+                  <Popup
+                    trigger={
                       <Button
-                        onClick={() => {
-                          setOverridingFiles([]);
-                          refDoUpload.current();
-                        }}
-                      >
-                        {_("problem_files.confirm_override")}
-                      </Button>
-                    </>
-                  }
-                  on="click"
-                  position="left center"
-                />
-              }
+                        className={style.tableFooterButton}
+                        icon="upload"
+                        content={_("problem_files.upload")}
+                        labelPosition="left"
+                        primary
+                        size={"small"}
+                        loading={uploadingCount !== 0}
+                        onClick={onUploadButtonClick}
+                      />
+                    }
+                    open={overridingFiles.length !== 0}
+                    onClose={() => setOverridingFiles([])}
+                    content={
+                      <>
+                        <p>
+                          <strong>{_("problem_files.confirm_override_question")}</strong>
+                        </p>
+                        <List>
+                          {overridingFiles.map(filename => (
+                            <List.Item key={filename} icon={getFileIcon(filename)} content={filename} />
+                          ))}
+                        </List>
+                        <Button
+                          onClick={() => {
+                            setOverridingFiles([]);
+                            refDoUpload.current();
+                          }}
+                        >
+                          {_("problem_files.confirm_override")}
+                        </Button>
+                      </>
+                    }
+                    on="click"
+                    position="left center"
+                  />
+                )}
+              </div>
             </Table.HeaderCell>
           </Table.Row>
         </Table.Footer>
@@ -542,6 +555,8 @@ const FileTable: React.FC<FileTableProps> = props => {
     </>
   );
 };
+
+FileTable = observer(FileTable);
 
 interface ProblemFilesPageProps {
   idType?: "id" | "displayId";
@@ -871,45 +886,66 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     });
   }
 
+  const isWideScreen = appState.isScreenWidthIn(960, Infinity);
+
+  const fileTableTestdata = (
+    <>
+      <Header as="h2">
+        <strong>{_("problem_files.header_testdata")}</strong>
+      </Header>
+      <FileTable
+        hasPermission={props.problem.permission["WRITE"]}
+        color="green"
+        files={fileListTestData}
+        onDownloadFile={filename => onDownloadFile("TestData", filename)}
+        onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("TestData", filenames)}
+        onRenameFile={(filename, newFilename) => onRenameFile("TestData", stateListTestData, filename, newFilename)}
+        onDeleteFiles={filenames => onDeleteFiles("TestData", stateListTestData, filenames)}
+        onUploadFiles={files => onUploadFiles("TestData", refStateListTestData, files)}
+      />
+    </>
+  );
+
+  const fileTableAdditionalFile = (
+    <>
+      <Header as="h2">
+        <strong>{_("problem_files.header_additional_files")}</strong>
+      </Header>
+      <FileTable
+        hasPermission={props.problem.permission["WRITE"]}
+        color="pink"
+        files={fileListAdditionalFiles}
+        onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}
+        onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("AdditionalFile", filenames)}
+        onRenameFile={(filename, newFilename) =>
+          onRenameFile("AdditionalFile", stateListAdditionalFiles, filename, newFilename)
+        }
+        onDeleteFiles={filenames => onDeleteFiles("AdditionalFile", stateListAdditionalFiles, filenames)}
+        onUploadFiles={files => onUploadFiles("AdditionalFile", refStateListAdditionalFiles, files)}
+      />
+    </>
+  );
+
   return (
     <>
       <Grid>
-        <Grid.Row>
-          <Grid.Column width={8}>
-            <Header as="h2">
-              <strong>{_("problem_files.header_testdata")}</strong>
-            </Header>
-            <FileTable
-              hasPermission={props.problem.permission["WRITE"]}
-              color="green"
-              files={fileListTestData}
-              onDownloadFile={filename => onDownloadFile("TestData", filename)}
-              onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("TestData", filenames)}
-              onRenameFile={(filename, newFilename) =>
-                onRenameFile("TestData", stateListTestData, filename, newFilename)
-              }
-              onDeleteFiles={filenames => onDeleteFiles("TestData", stateListTestData, filenames)}
-              onUploadFiles={files => onUploadFiles("TestData", refStateListTestData, files)}
-            />
-          </Grid.Column>
-          <Grid.Column width={8}>
-            <Header as="h2">
-              <strong>{_("problem_files.header_additional_files")}</strong>
-            </Header>
-            <FileTable
-              hasPermission={props.problem.permission["WRITE"]}
-              color="pink"
-              files={fileListAdditionalFiles}
-              onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}
-              onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("AdditionalFile", filenames)}
-              onRenameFile={(filename, newFilename) =>
-                onRenameFile("AdditionalFile", stateListAdditionalFiles, filename, newFilename)
-              }
-              onDeleteFiles={filenames => onDeleteFiles("AdditionalFile", stateListAdditionalFiles, filenames)}
-              onUploadFiles={files => onUploadFiles("AdditionalFile", refStateListAdditionalFiles, files)}
-            />
-          </Grid.Column>
-        </Grid.Row>
+        {isWideScreen ? (
+          <>
+            <Grid.Row>
+              <Grid.Column width={8}>{fileTableTestdata}</Grid.Column>
+              <Grid.Column width={8}>{fileTableAdditionalFile}</Grid.Column>
+            </Grid.Row>
+          </>
+        ) : (
+          <>
+            <Grid.Row>
+              <Grid.Column width={16}>{fileTableTestdata}</Grid.Column>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Column width={16}>{fileTableAdditionalFile}</Grid.Column>
+            </Grid.Row>
+          </>
+        )}
         <Grid.Row>
           <Grid.Column width={16} textAlign="center">
             <Button

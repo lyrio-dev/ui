@@ -1,4 +1,5 @@
 import { observable, computed } from "mobx";
+import { computedFn } from "mobx-utils";
 import { create, persist } from "mobx-persist";
 
 import { UserMeta } from "./interfaces/UserMeta";
@@ -13,6 +14,10 @@ export class AppState {
 
   @observable
   windowWidth: number = window.innerWidth;
+
+  isScreenWidthIn = computedFn(function(this: AppState, l: number, r: number) {
+    return this.windowWidth >= l && this.windowWidth < r;
+  });
 
   @persist
   @observable
