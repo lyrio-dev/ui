@@ -3,8 +3,11 @@ module.exports = {
   title_new: "新建题目",
   header_edit: "编辑题目 {idString}",
   header_new: "新建题目",
+  back_to_problem: "返回",
+  confirm_back_to_problem: "放弃修改并返回",
   submit: "提交",
   no_submit_permission: "无提交权限",
+  submit_success: "提交成功。",
   submit_error: {
     create: {
       FAILED: "创建题目失败，发生了未知错误。",

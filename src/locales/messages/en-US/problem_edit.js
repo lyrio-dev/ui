@@ -3,8 +3,11 @@ module.exports = {
   title_new: "New Problem",
   header_edit: "Edit Problem {idString}",
   header_new: "New Problem",
+  back_to_problem: "Back",
+  confirm_back_to_problem: "Discard Changes and Back",
   submit: "Submit",
   no_submit_permission: "No Permission",
+  submit_success: "Successfully submitted.",
   submit_error: {
     create: {
       FAILED: "Failed to create new problem due to unknown error.",

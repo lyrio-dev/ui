@@ -32,7 +32,7 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage } from "@/utils/hooks";
+import { useIntlMessage, useConfirmUnload } from "@/utils/hooks";
 import { observer } from "mobx-react";
 
 type ProblemEditDetail = ApiTypes.GetProblemStatementsAllLocalesResponseDto;
@@ -690,6 +690,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     })()
   );
 
+  const [modified, setModified] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
   async function onSubmit() {
     if (pendingSubmit) return;
@@ -755,33 +756,41 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       else if (response.error) {
         toast.error(_(`problem_edit.submit_error.update.${response.error}`));
       } else {
-        if (props.idType === "displayId") {
-          navigation.navigate({
-            pathname: `/problem/${props.problem.meta.displayId}`,
-            query: props.requestedLocale
-              ? {
-                  locale: props.requestedLocale
-                }
-              : null
-          });
-        } else {
-          navigation.navigate({
-            pathname: `/problem/by-id/${props.problem.meta.id}`,
-            query: props.requestedLocale
-              ? {
-                  locale: props.requestedLocale
-                }
-              : null
-          });
-        }
+        toast.success(_("problem_edit.submit_success"));
+        setModified(false);
       }
     }
 
     setPendingSubmit(false);
   }
 
+  function onBackToProblem() {
+    if (props.new) {
+      navigation.navigate("/problems");
+    } else if (props.idType === "displayId") {
+      navigation.navigate({
+        pathname: `/problem/${props.problem.meta.displayId}`,
+        query: props.requestedLocale
+          ? {
+              locale: props.requestedLocale
+            }
+          : null
+      });
+    } else {
+      navigation.navigate({
+        pathname: `/problem/by-id/${props.problem.meta.id}`,
+        query: props.requestedLocale
+          ? {
+              locale: props.requestedLocale
+            }
+          : null
+      });
+    }
+  }
+
   function onApplyTemplateToLocale(locale: Locale) {
     if (pendingSubmit) return;
+    setModified(true);
 
     if (samples.length === 0) onAddSample();
     setLocalizedContents(
@@ -795,6 +804,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onDeleteLocale(locale: Locale) {
     if (pendingSubmit) return;
+    setModified(true);
 
     const locales = Object.keys(localizedContents);
 
@@ -825,6 +835,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onAddLocale(locale: Locale) {
     if (pendingSubmit) return;
+    setModified(true);
 
     const index = Object.keys(localizedContents).length;
 
@@ -851,6 +862,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onAddSample() {
     if (pendingSubmit) return;
+    setModified(true);
 
     setSamples(
       update(samples, {
@@ -867,6 +879,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onAddSection(locale: Locale, index: number) {
     if (pendingSubmit) return;
+    setModified(true);
 
     setLocalizedContents(
       update(localizedContents, {
@@ -892,6 +905,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onMoveSection(locale: Locale, index: number, direction: "UP" | "DOWN") {
     if (pendingSubmit) return;
+    setModified(true);
 
     const section = localizedContents[locale].contentSections[index];
     setLocalizedContents(
@@ -910,6 +924,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onDeleteSection(locale: Locale, index: number) {
     if (pendingSubmit) return;
+    setModified(true);
 
     setLocalizedContents(
       update(localizedContents, {
@@ -924,6 +939,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onChangeTitle(locale: Locale, title: string) {
     if (pendingSubmit) return;
+    setModified(true);
 
     setLocalizedContents(
       update(localizedContents, {
@@ -939,6 +955,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   // change title / text
   function onChangeSectionValue(locale: Locale, index: number, type: "sectionTitle" | "text", newValue: string) {
     if (pendingSubmit) return;
+    setModified(true);
 
     setLocalizedContents(
       update(localizedContents, {
@@ -955,6 +972,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onChangeSectionType(locale: Locale, index: number, newType: "TEXT" | "SAMPLE") {
     if (pendingSubmit) return;
+    setModified(true);
 
     if (newType === "SAMPLE" && !samples.length) onAddSample();
     setLocalizedContents(
@@ -974,6 +992,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onChangeSectionSampleId(locale: Locale, index: number, newSampleId: number) {
     if (pendingSubmit) return;
+    setModified(true);
 
     if (newSampleId == null) {
       // Add new sample
@@ -996,6 +1015,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onChangeSampleData(sampleId: number, type: "inputData" | "outputData", newData: string) {
     if (pendingSubmit) return;
+    setModified(true);
 
     setSamples(
       update(samples, {
@@ -1038,6 +1058,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onAddSampleAt(index: number) {
     if (pendingSubmit) return;
+    setModified(true);
 
     setSamples(
       update(samples, {
@@ -1063,6 +1084,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onMoveSample(sampleId: number, direction: "UP" | "DOWN") {
     if (pendingSubmit) return;
+    setModified(true);
 
     const swappingSampleId = sampleId + (direction === "UP" ? -1 : +1);
 
@@ -1083,6 +1105,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onDeleteSample(sampleId: number) {
     if (pendingSubmit) return;
+    setModified(true);
 
     updateSampleIdReference(id => {
       if (id === sampleId) return null;
@@ -1116,25 +1139,40 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   // TODO: Request permission from server for creating new problems
   const haveSubmitPermission = props.new ? true : props.problem.permission["WRITE"];
 
+  useConfirmUnload(() => modified);
+
   return (
     <>
       <Grid>
         <Grid.Row>
-          <Grid.Column width={8}>
-            <Container className={style.headerContainer}>
-              <div>
-                <Header as="h1">
-                  <strong>
-                    {props.new ? `${_("problem_edit.header_new")}` : `${_("problem_edit.header_edit", { idString })}`}
-                  </strong>
-                </Header>
-              </div>
-            </Container>
-          </Grid.Column>
-          <Grid.Column width={3} textAlign="right">
-            <Button primary disabled={!haveSubmitPermission} loading={pendingSubmit} onClick={onSubmit}>
-              {haveSubmitPermission ? _("problem_edit.submit") : _("problem_edit.no_submit_permission")}
-            </Button>
+          <Grid.Column width={11}>
+            <Header as="h1" className={style.headerContainer}>
+              {props.new ? `${_("problem_edit.header_new")}` : `${_("problem_edit.header_edit", { idString })}`}
+              <Popup
+                trigger={
+                  <Button
+                    className={style.backButton}
+                    disabled={pendingSubmit}
+                    content={_("problem_edit.back_to_problem")}
+                    onClick={() => !modified && onBackToProblem()}
+                  />
+                }
+                // It's safe to redirect if not modified, don't confirm
+                disabled={!modified}
+                content={
+                  <Button
+                    negative
+                    content={_("problem_edit.confirm_back_to_problem")}
+                    onClick={onBackToProblem}
+                  />
+                }
+                on="click"
+                position="bottom center"
+              />
+              <Button primary disabled={!haveSubmitPermission} loading={pendingSubmit} onClick={onSubmit}>
+                {haveSubmitPermission ? _("problem_edit.submit") : _("problem_edit.no_submit_permission")}
+              </Button>
+            </Header>
           </Grid.Column>
           <Grid.Column width={5}>
             <Header as="h1">
