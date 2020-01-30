@@ -660,7 +660,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         isBeforeUnloadTriggeredByLibrary = false;
         return;
       }
-      e.returnValue = _("problem_files.close_page_while_downloading");
+      e.returnValue = "";
     }
 
     window.addEventListener("unload", stopDownload);

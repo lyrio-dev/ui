@@ -9,7 +9,6 @@ module.exports = {
   delete: "Delete",
   download_as_archive: "Download as Archive",
   download_as_archive_error: "Error downloading file {filename}: {error}",
-  close_page_while_downloading: "There're files downloading, stop and close the page?",
   confirm_delete: "Confirm delete",
   new_filename: "New filename",
   rename: "Rename",

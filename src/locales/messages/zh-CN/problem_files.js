@@ -9,7 +9,6 @@ module.exports = {
   delete: "删除",
   download_as_archive: "打包下载",
   download_as_archive_error: "下载文件 {filename} 时出错：{error}",
-  close_page_while_downloading: "有文件正在下载中，关闭页面将终止文件下载，确认关闭？",
   confirm_delete: "确认删除",
   new_filename: "新文件名",
   rename: "重命名",
