@@ -306,8 +306,8 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 <>
                   <Grid columns="equal">
                     <Grid.Row>
-                      <Grid.Column className={style.columnSampleInput}>
-                        <Header size="small">
+                      <Grid.Column className={style.sample + " " + style.sampleInput}>
+                        <Header size="small" className={style.sampleHeader}>
                           {_("problem.sample.input")}
                           <Label
                             size="small"
@@ -327,14 +327,14 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                               : _("problem.sample.copy")}
                           </Label>
                         </Header>
-                        <Segment>
+                        <Segment className={style.sampleDataSegment}>
                           <pre className={style.sampleDataPre}>
                             <code>{props.problem.samples[section.sampleId].inputData}</code>
                           </pre>
                         </Segment>
                       </Grid.Column>
-                      <Grid.Column className={style.columnSampleOutput}>
-                        <Header size="small">
+                      <Grid.Column className={style.sample + " " + style.sampleOutput}>
+                        <Header size="small" className={style.sampleHeader}>
                           {_("problem.sample.output")}
                           <Label
                             size="small"
@@ -354,7 +354,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                               : _("problem.sample.copy")}
                           </Label>
                         </Header>
-                        <Segment>
+                        <Segment className={style.sampleDataSegment}>
                           <pre className={style.sampleDataPre}>
                             <code>{props.problem.samples[section.sampleId].outputData}</code>
                           </pre>

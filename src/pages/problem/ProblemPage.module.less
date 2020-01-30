@@ -125,6 +125,20 @@
   }
 }
 
+.sample {
+  display: inline-flex !important;
+  flex-direction: column;
+}
+
+.sampleHeader {
+  margin-bottom: 1.5px !important;
+}
+
+.sampleDataSegment {
+  flex-grow: 1;
+  margin-top: 0 !important;
+}
+
 .sampleDataPre {
   margin-top: 0;
   margin-bottom: 0;
@@ -140,8 +154,12 @@
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 
-  :global(p) {
+  p {
     margin-bottom: 1em !important;
+
+    &:empty {
+      display: none;
+    }
   }
 }
 
@@ -209,11 +227,11 @@
     padding-right: 0;
   }
 
-  .columnSampleInput {
+  .sampleInput {
     padding-right: 0.5rem !important;
   }
 
-  .columnSampleOutput {
+  .sampleOutput {
     padding-left: 0.5rem !important;
   }
 
