@@ -70,6 +70,7 @@ async function sha256File(file: File, onProgress: (processedSize: number) => Pro
   const hash = sha256();
   await hash.init();
   let readSize = 0;
+  await hash.update(new Uint8Array());
   await readFile(file, async data => {
     readSize += data.byteLength;
     await hash.update(data);
