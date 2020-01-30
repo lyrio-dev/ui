@@ -46,6 +46,31 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: string)
   return response;
 }
 
+function getLimit(judgeInfo: any, limit: "timeLimit" | "memoryLimit") {
+  const isValidLimit = (x: any) => Number.isSafeInteger(x) && x >= 0;
+
+  const taskLimit = isValidLimit(judgeInfo[limit]) ? judgeInfo[limit] : Infinity;
+
+  let min = Infinity,
+    max = -Infinity;
+  for (const subtask of judgeInfo.subtasks || []) {
+    const subtaskLimit = isValidLimit(subtask[limit]) ? subtask[limit] : taskLimit;
+    for (const testcase of subtask.testcases || []) {
+      let x = isValidLimit(testcase[limit]) ? testcase[limit] : subtaskLimit;
+      if (x === 0) x = Infinity;
+
+      min = Math.min(min, x);
+      max = Math.max(max, x);
+    }
+  }
+
+  if (!Number.isFinite(min)) return null;
+
+  if (min === max) return min.toString();
+  if (!Number.isFinite(max)) return min + " - ∞";
+  return min + " - " + max;
+}
+
 interface ProblemPageProps {
   idType: "id" | "displayId";
   requestedLocale: Locale;
@@ -62,8 +87,8 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
     appState.title = `${idString}. ${props.problem.title} - ${_("problem.title")}`;
   }, [appState.locale]);
 
-  const timeLimit = "1000 ms";
-  const memoryLimit = "256 MiB";
+  const timeLimit = getLimit(props.problem.judgeInfo, "timeLimit");
+  const memoryLimit = getLimit(props.problem.judgeInfo, "memoryLimit");
 
   const randomTagCount = Math.round(Math.random() * 4);
   const tags = useState(
@@ -218,14 +243,18 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 <Icon name="book" />
                 {_(`problem.type.${props.problem.meta.type}`)}
               </Label>
-              <Label size={isMobile ? "small" : null} color="pink">
-                <Icon name="clock" />
-                {timeLimit}
-              </Label>
-              <Label size={isMobile ? "small" : null} color="blue">
-                <Icon name="microchip" />
-                {memoryLimit}
-              </Label>
+              {timeLimit && (
+                <Label size={isMobile ? "small" : null} color="pink">
+                  <Icon name="clock" />
+                  {timeLimit + " ms"}
+                </Label>
+              )}
+              {memoryLimit && (
+                <Label size={isMobile ? "small" : null} color="blue">
+                  <Icon name="microchip" />
+                  {memoryLimit + " MiB"}
+                </Label>
+              )}
               <Label
                 size={isMobile ? "small" : null}
                 color="grey"
@@ -380,17 +409,11 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 name={_("problem.action.files")}
                 icon="folder open"
                 as={Link}
-                href={{
-                  pathname:
-                    props.idType === "id"
-                      ? `/problem/by-id/${props.problem.meta.id}/files`
-                      : `/problem/${props.problem.meta.displayId}/files`,
-                  query: props.requestedLocale
-                    ? {
-                        locale: props.requestedLocale
-                      }
-                    : null
-                }}
+                href={
+                  props.idType === "id"
+                    ? `/problem/by-id/${props.problem.meta.id}/files`
+                    : `/problem/${props.problem.meta.displayId}/files`
+                }
               />
             </Menu>
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
@@ -414,20 +437,14 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
               )}
               {props.problem.permission["WRITE"] && (
                 <Menu.Item
-                  name={_("problem.action.manage_judge_info")}
+                  name={_("problem.action.judge_settings")}
                   icon="cog"
                   as={Link}
-                  href={{
-                    pathname:
-                      props.idType === "id"
-                        ? `/problem/by-id/${props.problem.meta.id}/manage`
-                        : `/problem/${props.problem.meta.displayId}/manage`,
-                    query: props.requestedLocale
-                      ? {
-                          locale: props.requestedLocale
-                        }
-                      : null
-                  }}
+                  href={
+                    props.idType === "id"
+                      ? `/problem/by-id/${props.problem.meta.id}/judge-settings`
+                      : `/problem/${props.problem.meta.displayId}/judge-settings`
+                  }
                 />
               )}
               {props.problem.permission["FULL_CONTROL"] && (

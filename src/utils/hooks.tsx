@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useIntl } from "react-intl";
+import { Modal, ModalProps } from "semantic-ui-react";
 import lodashDebounce from "lodash.debounce";
 
 export function useIntlMessage() {
@@ -116,4 +117,36 @@ export function useFieldCheck(
     getUIHelp,
     getCurrentValue
   ];
+}
+
+export function useDialog(
+  props: ModalProps,
+  header: React.ReactNode,
+  content: React.ReactNode,
+  actions: React.ReactNode
+) {
+  const [open, setOpen] = useState(false);
+  return {
+    element: (
+      <Modal {...props} open={open}>
+        {header}
+        <Modal.Content>{content}</Modal.Content>
+        <Modal.Actions>{actions}</Modal.Actions>
+      </Modal>
+    ),
+    isOpen: open,
+    open: () => setOpen(true),
+    close: () => setOpen(false)
+  };
+}
+
+export function useConfirmUnload(getIfConfirm: () => boolean) {
+  useEffect(() => {
+    function onBeforeUnload(e: BeforeUnloadEvent) {
+      if (getIfConfirm()) e.returnValue = "";
+    }
+
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  });
 }

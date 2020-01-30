@@ -9,11 +9,14 @@ export class AppState {
   constructor() {
     window.addEventListener("resize", () => {
       this.windowWidth = window.innerWidth;
+      this.windowHeight = window.innerHeight;
     });
   }
 
   @observable
   windowWidth: number = window.innerWidth;
+  @observable
+  windowHeight: number = window.innerHeight;
 
   isScreenWidthIn = computedFn(function(this: AppState, l: number, r: number) {
     return this.windowWidth >= l && this.windowWidth < r;

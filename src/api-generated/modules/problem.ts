@@ -30,6 +30,9 @@ export type DownloadProblemFilesResponseDto = ApiTypes.DownloadProblemFilesRespo
 export type GetProblemAllFilesAndPermissionResponseDto = ApiTypes.GetProblemAllFilesAndPermissionResponseDto;
 export type RenameProblemFileRequestDto = ApiTypes.RenameProblemFileRequestDto;
 export type RenameProblemFileResponseDto = ApiTypes.RenameProblemFileResponseDto;
+export type GetProblemJudgeInfoAndPermissionResponseDto = ApiTypes.GetProblemJudgeInfoAndPermissionResponseDto;
+export type UpdateProblemJudgeInfoRequestDto = ApiTypes.UpdateProblemJudgeInfoRequestDto;
+export type UpdateProblemJudgeInfoResponseDto = ApiTypes.UpdateProblemJudgeInfoResponseDto;
 
 export const queryProblemSet = createPostApi<QueryProblemSetRequestDto, QueryProblemSetResponseDto>(
   "problem/queryProblemSet"
@@ -78,3 +81,11 @@ export const getProblemAllFilesAndPermission = createGetApi<
 export const renameProblemFile = createPostApi<RenameProblemFileRequestDto, RenameProblemFileResponseDto>(
   "problem/renameProblemFile"
 );
+export const getProblemJudgeInfoAndPermission = createGetApi<
+  { id?: string; displayId?: string },
+  GetProblemJudgeInfoAndPermissionResponseDto
+>("problem/getProblemJudgeInfoAndPermission");
+export const updateProblemJudgeInfo = createPostApi<
+  UpdateProblemJudgeInfoRequestDto,
+  UpdateProblemJudgeInfoResponseDto
+>("problem/updateProblemJudgeInfo");

@@ -83,6 +83,12 @@ declare namespace ApiTypes {
     additionalFiles?: ApiTypes.ProblemFileDto[];
     judgeInfo?: {};
   }
+  export interface GetProblemJudgeInfoAndPermissionResponseDto {
+    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
+    meta?: ApiTypes.ProblemMetaDto;
+    judgeInfo?: {};
+    permission?: {};
+  }
   export interface GetProblemPermissionsResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
     users?: ApiTypes.UserMetaDto[];
@@ -231,7 +237,7 @@ declare namespace ApiTypes {
   }
   export type RequestBody = ApiTypes.FinishUploadRequestDto;
   namespace Responses {
-    export type $200 = ApiTypes.GetProblemAllFilesAndPermissionResponseDto;
+    export type $200 = ApiTypes.GetProblemJudgeInfoAndPermissionResponseDto;
     export type $201 = ApiTypes.FinishUploadResponseDto;
   }
   export interface SetGroupAdminRequestDto {
@@ -272,6 +278,13 @@ declare namespace ApiTypes {
   }
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";
+  }
+  export interface UpdateProblemJudgeInfoRequestDto {
+    problemId: number;
+    judgeInfo?: {};
+  }
+  export interface UpdateProblemJudgeInfoResponseDto {
+    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
   }
   export interface UpdateProblemRequestUpdatingLocalizedContentDto {
     locale: "en_US" | "zh_CN";

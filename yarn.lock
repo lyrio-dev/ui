@@ -1420,10 +1420,22 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
+"@types/js-yaml@^3.12.2":
+  version "3.12.2"
+  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-3.12.2.tgz#a35a1809c33a68200fb6403d1ad708363c56470a"
+  integrity sha512-0CFu/g4mDSNkodVwWijdlr8jH7RoplRWNgovjFLEZeT+QEbbZXjBmCe3HwaWheAlCbHwomTwzZoSedeOycABug==
+
 "@types/json-schema@^7.0.3":
   version "7.0.3"
   resolved "https://registry.npm.taobao.org/@types/json-schema/download/@types/json-schema-7.0.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fjson-schema%2Fdownload%2F%40types%2Fjson-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
   integrity sha1-vf1p1h5GTcyBslFZwnDXWnPBpjY=
+
+"@types/lodash.clonedeep@^4.5.6":
+  version "4.5.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.clonedeep/-/lodash.clonedeep-4.5.6.tgz#3b6c40a0affe0799a2ce823b440a6cf33571d32b"
+  integrity sha512-cE1jYr2dEg1wBImvXlNtp0xDoS79rfEdGozQVgliDZj1uERH4k+rmEMTudP9b4VQ8O6nRb5gPqft0QzEQGMQgA==
+  dependencies:
+    "@types/lodash" "*"
 
 "@types/lodash.debounce@^4.0.6":
   version "4.0.6"
@@ -6228,8 +6240,8 @@ js-tokens@^3.0.2:
 
 js-yaml@^3.13.1:
   version "3.13.1"
-  resolved "https://registry.npm.taobao.org/js-yaml/download/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
-  integrity sha1-r/FRswv9+o5J4F2iLnQV6d+jeEc=
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
+  integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
@@ -6582,6 +6594,11 @@ lodash._reinterpolate@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npm.taobao.org/lodash._reinterpolate/download/lodash._reinterpolate-3.0.0.tgz#0ccf2d89166af03b3663c796538b75ac6e114d9d"
   integrity sha1-DM8tiRZq8Ds2Y8eWU4t1rG4RTZ0=
+
+lodash.clonedeep@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
+  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
 
 lodash.debounce@^4.0.8:
   version "4.0.8"
