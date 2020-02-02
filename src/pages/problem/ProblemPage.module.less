@@ -88,7 +88,7 @@
     border-left-color: transparent !important;
     margin: 0 0 0 -2px !important;
     border-left-width: 2px !important;
-    
+
     &.menuItemImportant {
       background: #2185d0 !important;
       color: #fff !important;
@@ -118,9 +118,15 @@
       background-color: rgba(0, 0, 0, 0.03) !important;
     }
 
-    :global(.icon) {
+    > :global(.icon) {
       float: none !important;
       margin: 0 1em 0 0 !important;
+    }
+
+    > :global(.loader) {
+      right: 16px;
+      left: unset !important;
+      transform: translateY(-50%) !important;
     }
   }
 }

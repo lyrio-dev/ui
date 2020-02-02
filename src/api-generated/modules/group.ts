@@ -5,6 +5,7 @@
 import { createGetApi, createPostApi } from "@/api";
 
 export type GetGroupMetaResponseDto = ApiTypes.GetGroupMetaResponseDto;
+export type SearchGroupResponseDto = ApiTypes.SearchGroupResponseDto;
 export type CreateGroupRequestDto = ApiTypes.CreateGroupRequestDto;
 export type CreateGroupResponseDto = ApiTypes.CreateGroupResponseDto;
 export type DeleteGroupRequestDto = ApiTypes.DeleteGroupRequestDto;
@@ -17,6 +18,9 @@ export type SetGroupAdminRequestDto = ApiTypes.SetGroupAdminRequestDto;
 export type SetGroupAdminResponseDto = ApiTypes.SetGroupAdminResponseDto;
 
 export const getGroupMeta = createGetApi<{ groupId: string }, GetGroupMetaResponseDto>("group/getGroupMeta");
+export const searchGroup = createGetApi<{ query: string; wildcard?: string }, SearchGroupResponseDto>(
+  "group/searchGroup"
+);
 export const createGroup = createPostApi<CreateGroupRequestDto, CreateGroupResponseDto>("group/createGroup");
 export const deleteGroup = createPostApi<DeleteGroupRequestDto, DeleteGroupResponseDto>("group/deleteGroup");
 export const addMember = createPostApi<AddUserToGroupRequestDto, AddUserToGroupResponseDto>("group/addMember");

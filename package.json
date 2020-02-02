@@ -51,6 +51,7 @@
     "sha256-wasm": "^1.2.1",
     "streamsaver": "^2.0.3",
     "typescript": "~3.7.2",
+    "use-debounce": "^3.3.0",
     "uuid": "^3.3.3",
     "validator": "^12.1.0",
     "web-streams-polyfill": "^2.0.6",

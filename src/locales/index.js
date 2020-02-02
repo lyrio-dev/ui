@@ -1,8 +1,8 @@
 const flatten = require("flat");
 
 function extractPath(path) {
-  const splitted = path.split(/[./]/);
-  return [splitted[2], splitted[3]];
+  const matchResult = path.match(/\.\/([^\/]+?)\/(.+)\.js/);
+  return [matchResult[1], matchResult[2]];
 }
 
 const context = require.context("./messages", true, /\.js$/),
@@ -11,10 +11,10 @@ const context = require.context("./messages", true, /\.js$/),
 export const localeData = {};
 for (const path of paths) {
   const fileData = context(path);
-  const [locale, filename] = extractPath(path);
+  const [locale, subpath] = extractPath(path);
   if (!localeData[locale]) localeData[locale] = {};
 
-  localeData[locale][filename] = fileData;
+  localeData[locale][subpath.split("/").join(".")] = fileData;
 }
 
 for (const locale in localeData) localeData[locale] = flatten(localeData[locale]);

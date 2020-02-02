@@ -1,0 +1,51 @@
+.dropdown {
+  > input {
+    line-height: 19.5px;
+  }
+
+  > :global(.menu) {
+    top: 30.5px !important;
+    left: -12px !important;
+    width: calc(100% + 24px) !important;
+
+    :global(.ui.compact.table) & {
+      left: -11px !important;
+      width: calc(100% + 22px) !important;
+    }
+
+    &:empty {
+      display: none !important;
+    }
+  }
+
+  > :global(i.dropdown.icon) {
+    width: 18px !important;
+    position: absolute !important;
+    right: 9.5px;
+    top: 0.75px;
+    display: none !important;
+
+    &::before, &::after {
+      top: unset !important;
+      left: unset !important;
+      margin: 0 !important;
+      width: 18px !important;
+      height: 18px !important;
+    }
+  }
+
+  &:global(.loading) > :global(i.dropdown.icon) {
+    display: block !important;
+  }
+}
+
+.resultItem {
+  display: flex;
+  align-items: center;
+  width: calc(100% + 10px);
+  margin-left: -5px;
+
+  :global(.default.text) > & {
+    display: none;
+  }
+}

@@ -121,17 +121,17 @@ export function useFieldCheck(
 
 export function useDialog(
   props: ModalProps,
-  header: React.ReactNode,
-  content: React.ReactNode,
-  actions: React.ReactNode
+  header: React.ReactNode | (() => React.ReactNode),
+  content: React.ReactNode | (() => React.ReactNode),
+  actions: React.ReactNode | (() => React.ReactNode)
 ) {
   const [open, setOpen] = useState(false);
   return {
     element: (
       <Modal {...props} open={open}>
-        {header}
-        <Modal.Content>{content}</Modal.Content>
-        <Modal.Actions>{actions}</Modal.Actions>
+        {open && (typeof header === "function" ? header() : header)}
+        <Modal.Content>{open && (typeof content === "function" ? content() : content)}</Modal.Content>
+        <Modal.Actions>{open && (typeof actions === "function" ? actions() : actions)}</Modal.Actions>
       </Modal>
     ),
     isOpen: open,

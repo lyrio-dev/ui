@@ -21,6 +21,8 @@ module.exports = {
     files: "文件",
     edit: "编辑",
     judge_settings: "评测设置",
+    permission_manage: "权限管理",
+    permission_manager_description: "题目 {idString}",
     set_display_id: "设置题目 ID",
     set_display_id_new: "新 ID（留空或为 0 则清除 ID）",
     set_display_id_submit: "设置",
@@ -42,7 +44,18 @@ module.exports = {
       NO_SUCH_PROBLEM: "当前题目不存在。",
       PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "已公开的题目必须拥有 ID。",
       DUPLICATE_DISPLAY_ID: "ID {displayId} 已被使用。"
+    },
+    get_permissions: {
+      PERMISSION_DENIED: "权限不足。",
+      NO_SUCH_PROBLEM: "无此题目。"
+    },
+    set_permissions: {
+      NO_SUCH_PROBLEM: "无此题目。"
     }
+  },
+  permission_level: {
+    read: "只读",
+    write: "读写"
   },
   sample: {
     input: "输入",

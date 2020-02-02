@@ -1160,11 +1160,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 // It's safe to redirect if not modified, don't confirm
                 disabled={!modified}
                 content={
-                  <Button
-                    negative
-                    content={_("problem_edit.confirm_back_to_problem")}
-                    onClick={onBackToProblem}
-                  />
+                  <Button negative content={_("problem_edit.confirm_back_to_problem")} onClick={onBackToProblem} />
                 }
                 on="click"
                 position="bottom center"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Dropdown,
   Grid,
@@ -13,7 +13,8 @@ import {
   Popup,
   Button,
   Form,
-  Message
+  Message,
+  Loader
 } from "semantic-ui-react";
 import { route, lazy } from "navi";
 import { useNavigation, Link } from "react-navi";
@@ -29,6 +30,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copy-to-clipboard";
 import { isValidDisplayId } from "@/utils/validators";
+import PermissionManager from "@/components/PermissionManager";
 
 type ProblemDetail = ApiTypes.GetProblemDetailResponseDto;
 
@@ -193,10 +195,72 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const [localizedContentUnavailableMessageVisable, setLocalizedContentUnavailableMessageVisable] = useState(true);
   // End "locaized content unavailable" message
 
+  // Begin Permission Manager
+  const refOpenPermissionManager = useRef<() => Promise<boolean>>();
+  const [permissionManagerLoading, setPermissionManagerLoading] = useState(false);
+  async function onGetInitialPermissions() {
+    const { requestError, response } = await ProblemApi.getProblemPermissions({
+      problemId: props.problem.meta.id.toString()
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`problem.action_error.get_permissions.${response.error}`));
+    else {
+      return {
+        owner: response.owner,
+        userPermissions: response.userPermissions,
+        groupPermissions: response.groupPermissions
+      };
+    }
+    return null;
+  }
+
+  async function onSubmitPermissions(
+    userPermissions: { userId: number; permissionLevel: number }[],
+    groupPermissions: { groupId: number; permissionLevel: number }[]
+  ) {
+    const { requestError, response } = await ProblemApi.setProblemPermissions({
+      problemId: props.problem.meta.id,
+      userPermissions: userPermissions as any,
+      groupPermissions: groupPermissions as any
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error === "NO_SUCH_PROBLEM")
+      toast.error(_("problem.action_error.set_permissions.NO_SUCH_PROBLEM"));
+    else if (response.error) return response;
+    return true;
+  }
+
+  async function onClickPermissionManage() {
+    if (permissionManagerLoading) return;
+    setPermissionManagerLoading(true);
+    await refOpenPermissionManager.current();
+    setPermissionManagerLoading(false);
+  }
+
+  const permissionManager = (
+    <PermissionManager
+      haveSubmitPermission={props.problem.permission["CONTROL"]}
+      objectDescription={_("problem.action.permission_manager_description", { idString })}
+      permissionsLevelDetails={{
+        1: {
+          title: _("problem.permission_level.read")
+        },
+        2: {
+          title: _("problem.permission_level.write")
+        }
+      }}
+      refOpen={refOpenPermissionManager}
+      onGetInitialPermissions={onGetInitialPermissions}
+      onSubmitPermissions={onSubmitPermissions}
+    />
+  );
+  // End Permission Manager
+
   const isMobile = appState.isScreenWidthIn(0, 768);
 
   return (
     <>
+      {permissionManager}
       <div className={style.leftContainer}>
         <Container className={style.headerContainer}>
           <div>
@@ -446,6 +510,13 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                       : `/problem/${props.problem.meta.displayId}/judge-settings`
                   }
                 />
+              )}
+              {props.problem.permission["WRITE"] && (
+                <Menu.Item onClick={onClickPermissionManage}>
+                  <Icon name="key" />
+                  {_("problem.action.permission_manage")}
+                  <Loader size="tiny" active={permissionManagerLoading} />
+                </Menu.Item>
               )}
               {props.problem.permission["FULL_CONTROL"] && (
                 <Popup

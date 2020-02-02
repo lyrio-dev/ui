@@ -1296,7 +1296,11 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   primary
                   loading={pending}
                   disabled={!props.problem.permission["WRITE"]}
-                  content={props.problem.permission["WRITE"] ? _("problem_judge_settings.submit") : _("problem_judge_settings.no_submit_permission")}
+                  content={
+                    props.problem.permission["WRITE"]
+                      ? _("problem_judge_settings.submit")
+                      : _("problem_judge_settings.no_submit_permission")
+                  }
                   onClick={onSubmit}
                 />
               </div>

@@ -52,10 +52,9 @@ export const getProblemDetail = createGetApi<
 export const setProblemPermissions = createPostApi<SetProblemPermissionsRequestDto, SetProblemPermissionsResponseDto>(
   "problem/setProblemPermissions"
 );
-export const getProblemPermissions = createGetApi<
-  { problemId: string; permissionType: string },
-  GetProblemPermissionsResponseDto
->("problem/getProblemPermissions");
+export const getProblemPermissions = createGetApi<{ problemId: string }, GetProblemPermissionsResponseDto>(
+  "problem/getProblemPermissions"
+);
 export const setProblemDisplayId = createPostApi<SetProblemDisplayIdRequestDto, SetProblemDisplayIdResponseDto>(
   "problem/setProblemDisplayId"
 );

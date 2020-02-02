@@ -91,8 +91,17 @@ declare namespace ApiTypes {
   }
   export interface GetProblemPermissionsResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
-    users?: ApiTypes.UserMetaDto[];
-    groups?: ApiTypes.GroupMetaDto[];
+    owner?: ApiTypes.UserMetaDto;
+    userPermissions?: ApiTypes.GetProblemPermissionsResponseUserPermissionDto[];
+    groupPermissions?: ApiTypes.GetProblemPermissionsResponseGroupPermissionDto[];
+  }
+  export interface GetProblemPermissionsResponseGroupPermissionDto {
+    group: ApiTypes.GroupMetaDto;
+    permissionLevel: 1 | 2;
+  }
+  export interface GetProblemPermissionsResponseUserPermissionDto {
+    user: ApiTypes.UserMetaDto;
+    permissionLevel: 1 | 2;
   }
   export interface GetProblemStatementsAllLocalesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
@@ -136,10 +145,11 @@ declare namespace ApiTypes {
     export type GroupId = string;
     export type Id = string;
     export type Locale = "en_US" | "zh_CN";
-    export type PermissionType = "READ" | "WRITE";
     export type ProblemId = string;
+    export type Query = string;
     export type UserId = string;
     export type Username = string;
+    export type Wildcard = "START" | "END" | "BOTH";
   }
   export interface ProblemContentSectionDto {
     sectionTitle: string;
@@ -240,6 +250,12 @@ declare namespace ApiTypes {
     export type $200 = ApiTypes.GetProblemJudgeInfoAndPermissionResponseDto;
     export type $201 = ApiTypes.FinishUploadResponseDto;
   }
+  export interface SearchGroupResponseDto {
+    groupMetas: ApiTypes.GroupMetaDto[];
+  }
+  export interface SearchUserResponseDto {
+    userMetas: ApiTypes.UserMetaDto[];
+  }
   export interface SetGroupAdminRequestDto {
     userId: number;
     groupId: number;
@@ -257,9 +273,16 @@ declare namespace ApiTypes {
   }
   export interface SetProblemPermissionsRequestDto {
     problemId: number;
-    permissionType: "READ" | "WRITE";
-    userIds: number[];
-    groupIds: number[];
+    userPermissions: ApiTypes.SetProblemPermissionsRequestUserPermissionDto[];
+    groupPermissions: ApiTypes.SetProblemPermissionsRequestGroupPermissionDto[];
+  }
+  export interface SetProblemPermissionsRequestGroupPermissionDto {
+    groupId: number;
+    permissionLevel: 1 | 2;
+  }
+  export interface SetProblemPermissionsRequestUserPermissionDto {
+    userId: number;
+    permissionLevel: 1 | 2;
   }
   export interface SetProblemPermissionsResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "NO_SUCH_USER" | "NO_SUCH_GROUP";
