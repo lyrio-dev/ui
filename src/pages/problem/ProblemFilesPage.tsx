@@ -45,7 +45,7 @@ if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
 const MAX_UPLOAD_CONCURRENCY = 5;
 
 async function fetchData(idType: "id" | "displayId", id: number) {
-  const { requestError, response } = await ProblemApi.getProblemAllFilesAndPermission({
+  const { requestError, response } = await ProblemApi.getProblemAllFiles({
     [idType]: id
   });
 
@@ -559,7 +559,7 @@ FileTable = observer(FileTable);
 
 interface ProblemFilesPageProps {
   idType?: "id" | "displayId";
-  problem?: ApiTypes.GetProblemAllFilesAndPermissionResponseDto;
+  problem?: ApiTypes.GetProblemAllFilesResponseDto;
 }
 
 let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
@@ -889,7 +889,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         <strong>{_("problem_files.header_testdata")}</strong>
       </Header>
       <FileTable
-        hasPermission={props.problem.permission["WRITE"]}
+        hasPermission={props.problem.haveWritePermission}
         color="green"
         files={fileListTestData}
         onDownloadFile={filename => onDownloadFile("TestData", filename)}
@@ -907,7 +907,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         <strong>{_("problem_files.header_additional_files")}</strong>
       </Header>
       <FileTable
-        hasPermission={props.problem.permission["WRITE"]}
+        hasPermission={props.problem.haveWritePermission}
         color="pink"
         files={fileListAdditionalFiles}
         onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}

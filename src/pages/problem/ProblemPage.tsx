@@ -239,7 +239,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   const permissionManager = (
     <PermissionManager
-      haveSubmitPermission={props.problem.permission["CONTROL"]}
+      haveSubmitPermission={props.problem.permission.managePermission}
       objectDescription={_("problem.action.permission_manager_description", { idString })}
       permissionsLevelDetails={{
         1: {
@@ -481,7 +481,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
               />
             </Menu>
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
-              {props.problem.permission["WRITE"] && (
+              {props.problem.permission.modify && (
                 <Menu.Item
                   name={_("problem.action.edit")}
                   icon="edit"
@@ -499,7 +499,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   }}
                 />
               )}
-              {props.problem.permission["WRITE"] && (
+              {props.problem.permission.modify && (
                 <Menu.Item
                   name={_("problem.action.judge_settings")}
                   icon="cog"
@@ -511,14 +511,16 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   }
                 />
               )}
-              {props.problem.permission["WRITE"] && (
+              {// Normal users won't interested in permissions
+              // Only show permission manage button when the user have write permission
+              props.problem.permission.modify && (
                 <Menu.Item onClick={onClickPermissionManage}>
                   <Icon name="key" />
                   {_("problem.action.permission_manage")}
                   <Loader size="tiny" active={permissionManagerLoading} />
                 </Menu.Item>
               )}
-              {props.problem.permission["FULL_CONTROL"] && (
+              {props.problem.permission.managePublicness && (
                 <Popup
                   trigger={
                     <Menu.Item
@@ -551,7 +553,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permission["FULL_CONTROL"] && (
+              {props.problem.permission.managePublicness && (
                 <Popup
                   trigger={
                     <Menu.Item
@@ -580,7 +582,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permission["CONTROL"] && (
+              {props.problem.permission.delete && (
                 <Menu.Item
                   className={style.menuItemDangerous}
                   name={_("problem.action.delete")}

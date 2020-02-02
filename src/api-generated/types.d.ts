@@ -65,17 +65,17 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_GROUP";
     groupMeta?: ApiTypes.GroupMetaDto;
   }
-  export interface GetProblemAllFilesAndPermissionResponseDto {
+  export interface GetProblemAllFilesResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
     meta?: ApiTypes.ProblemMetaDto;
     testdata?: ApiTypes.ProblemFileDto[];
     additionalFiles?: ApiTypes.ProblemFileDto[];
-    permission?: {};
+    haveWritePermission?: boolean;
   }
   export interface GetProblemDetailResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
     meta?: ApiTypes.ProblemMetaDto;
-    permission?: {};
+    permission?: ApiTypes.GetProblemDetailResponsePermissionDto;
     title?: string;
     resultLocale?: "en_US" | "zh_CN";
     samples?: ApiTypes.ProblemSampleDataMemberDto[];
@@ -83,11 +83,17 @@ declare namespace ApiTypes {
     additionalFiles?: ApiTypes.ProblemFileDto[];
     judgeInfo?: {};
   }
-  export interface GetProblemJudgeInfoAndPermissionResponseDto {
+  export interface GetProblemDetailResponsePermissionDto {
+    modify: boolean;
+    managePermission: boolean;
+    managePublicness: boolean;
+    delete: boolean;
+  }
+  export interface GetProblemJudgeInfoResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
     meta?: ApiTypes.ProblemMetaDto;
     judgeInfo?: {};
-    permission?: {};
+    haveWritePermission?: boolean;
   }
   export interface GetProblemPermissionsResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
@@ -106,8 +112,8 @@ declare namespace ApiTypes {
   export interface GetProblemStatementsAllLocalesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
     meta?: ApiTypes.ProblemMetaDto;
-    permission?: {};
     statement?: ApiTypes.ProblemStatementDto;
+    haveWritePermission?: boolean;
   }
   export interface GetSelfMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
@@ -247,7 +253,7 @@ declare namespace ApiTypes {
   }
   export type RequestBody = ApiTypes.FinishUploadRequestDto;
   namespace Responses {
-    export type $200 = ApiTypes.GetProblemJudgeInfoAndPermissionResponseDto;
+    export type $200 = ApiTypes.GetProblemJudgeInfoResponseDto;
     export type $201 = ApiTypes.FinishUploadResponseDto;
   }
   export interface SearchGroupResponseDto {

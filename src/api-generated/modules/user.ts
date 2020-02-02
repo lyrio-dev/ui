@@ -11,7 +11,7 @@ export type SetUserPrivilegesResponseDto = ApiTypes.SetUserPrivilegesResponseDto
 export type UpdateUserProfileRequestDto = ApiTypes.UpdateUserProfileRequestDto;
 export type UpdateUserProfileResponseDto = ApiTypes.UpdateUserProfileResponseDto;
 
-export const searchUser = createGetApi<{ query?: string; wildcard?: string }, SearchUserResponseDto>("user/searchUser");
+export const searchUser = createGetApi<{ query: string; wildcard?: string }, SearchUserResponseDto>("user/searchUser");
 export const getUserMeta = createGetApi<
   { userId?: string; username?: string; getPrivileges?: string },
   GetUserMetaResponseDto

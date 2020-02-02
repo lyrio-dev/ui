@@ -27,10 +27,10 @@ export type ListProblemFilesRequestDto = ApiTypes.ListProblemFilesRequestDto;
 export type ListProblemFilesResponseDto = ApiTypes.ListProblemFilesResponseDto;
 export type DownloadProblemFilesRequestDto = ApiTypes.DownloadProblemFilesRequestDto;
 export type DownloadProblemFilesResponseDto = ApiTypes.DownloadProblemFilesResponseDto;
-export type GetProblemAllFilesAndPermissionResponseDto = ApiTypes.GetProblemAllFilesAndPermissionResponseDto;
+export type GetProblemAllFilesResponseDto = ApiTypes.GetProblemAllFilesResponseDto;
 export type RenameProblemFileRequestDto = ApiTypes.RenameProblemFileRequestDto;
 export type RenameProblemFileResponseDto = ApiTypes.RenameProblemFileResponseDto;
-export type GetProblemJudgeInfoAndPermissionResponseDto = ApiTypes.GetProblemJudgeInfoAndPermissionResponseDto;
+export type GetProblemJudgeInfoResponseDto = ApiTypes.GetProblemJudgeInfoResponseDto;
 export type UpdateProblemJudgeInfoRequestDto = ApiTypes.UpdateProblemJudgeInfoRequestDto;
 export type UpdateProblemJudgeInfoResponseDto = ApiTypes.UpdateProblemJudgeInfoResponseDto;
 
@@ -73,17 +73,15 @@ export const listProblemFiles = createPostApi<ListProblemFilesRequestDto, ListPr
 export const downloadProblemFiles = createPostApi<DownloadProblemFilesRequestDto, DownloadProblemFilesResponseDto>(
   "problem/downloadProblemFiles"
 );
-export const getProblemAllFilesAndPermission = createGetApi<
-  { id?: string; displayId?: string },
-  GetProblemAllFilesAndPermissionResponseDto
->("problem/getProblemAllFilesAndPermission");
+export const getProblemAllFiles = createGetApi<{ id?: string; displayId?: string }, GetProblemAllFilesResponseDto>(
+  "problem/getProblemAllFiles"
+);
 export const renameProblemFile = createPostApi<RenameProblemFileRequestDto, RenameProblemFileResponseDto>(
   "problem/renameProblemFile"
 );
-export const getProblemJudgeInfoAndPermission = createGetApi<
-  { id?: string; displayId?: string },
-  GetProblemJudgeInfoAndPermissionResponseDto
->("problem/getProblemJudgeInfoAndPermission");
+export const getProblemJudgeInfo = createGetApi<{ id?: string; displayId?: string }, GetProblemJudgeInfoResponseDto>(
+  "problem/getProblemJudgeInfo"
+);
 export const updateProblemJudgeInfo = createPostApi<
   UpdateProblemJudgeInfoRequestDto,
   UpdateProblemJudgeInfoResponseDto

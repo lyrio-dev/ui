@@ -1137,7 +1137,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   );
 
   // TODO: Request permission from server for creating new problems
-  const haveSubmitPermission = props.new ? true : props.problem.permission["WRITE"];
+  const haveSubmitPermission = props.new ? true : props.problem.haveWritePermission;
 
   useConfirmUnload(() => modified);
 

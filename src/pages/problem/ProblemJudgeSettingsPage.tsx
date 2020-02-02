@@ -33,7 +33,7 @@ import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 
 async function fetchDataJudgeInfo(idType: "id" | "displayId", id: number) {
-  const { requestError, response } = await ProblemApi.getProblemJudgeInfoAndPermission({
+  const { requestError, response } = await ProblemApi.getProblemJudgeInfo({
     [idType]: id
   });
 
@@ -874,7 +874,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
 SubtaskEditor = observer(SubtaskEditor);
 
-type ProblemJudgeSettingsDetail = ApiTypes.GetProblemJudgeInfoAndPermissionResponseDto;
+type ProblemJudgeSettingsDetail = ApiTypes.GetProblemJudgeInfoResponseDto;
 type ProblemFile = ApiTypes.ProblemFileDto;
 
 interface ProblemJudgeSettingsPageProps {
@@ -1295,9 +1295,9 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   className={style.submitButton}
                   primary
                   loading={pending}
-                  disabled={!props.problem.permission["WRITE"]}
+                  disabled={!props.problem.haveWritePermission}
                   content={
-                    props.problem.permission["WRITE"]
+                    props.problem.haveWritePermission
                       ? _("problem_judge_settings.submit")
                       : _("problem_judge_settings.no_submit_permission")
                   }
