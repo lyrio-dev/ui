@@ -11,6 +11,10 @@
       white-space: nowrap;
       text-align: left;
 
+      @media only screen and (max-width: 767px) {
+        display: none;
+      }
+
       &:global(.left.pointing) {
         left: 544px;
       }
@@ -23,7 +27,7 @@
 
   // It's relative to the field, not the row...
   .passwords > :global(div:last-of-type .ui.label) {
-    left: 270px !important;
+    left: 284px !important;
   }
 }
 
