@@ -1,0 +1,5 @@
+/* Patches for Semantic UI */
+
+.ui.button:only-child {
+  margin-right: 0;
+}
