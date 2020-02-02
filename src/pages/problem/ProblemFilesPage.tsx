@@ -3,35 +3,26 @@ import {
   Dropdown,
   Grid,
   Icon,
-  Container,
   Header,
-  Menu,
-  Segment,
   Popup,
   Button,
   Form,
-  Tab,
-  Flag,
-  Input,
-  TextArea,
   Checkbox,
-  Radio,
-  Dimmer,
   List,
   Table,
   SemanticCOLORS,
   Progress
 } from "semantic-ui-react";
-import { useNavigation, Link } from "react-navi";
+import { Link } from "react-navi";
 import { route } from "navi";
 import uuid from "uuid/v4";
 import lodashIsEqual from "lodash.isequal";
-import lodashDebounce from "lodash.debounce";
 import axios from "axios";
 import { WritableStream } from "web-streams-polyfill/ponyfill/es6";
 import * as streamsaver from "streamsaver";
 import "streamsaver/examples/zip-stream";
 import pAll from "p-all";
+import { useDebounce } from "use-debounce";
 
 import style from "./ProblemFilesPage.module.less";
 
@@ -131,6 +122,15 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
     return str;
   }
 
+  const [debouncedUploadProgress, cancelDebouncedUploadProgress, callPendingDebouncedUploadProgress] = useDebounce(
+    (props.file.upload && props.file.upload.progress) || 0,
+    24,
+    {
+      maxWait: 24
+    }
+  );
+  if (props.file.upload && props.file.upload.progress === 100) callPendingDebouncedUploadProgress();
+
   function getUploadStatus() {
     const status = (() => {
       switch (props.file.upload.progressType) {
@@ -146,7 +146,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
             <>
               <Icon name="hashtag" />
               {_("problem_files.progress_hashing", {
-                progress: formatProgress(props.file.upload.progress)
+                progress: formatProgress(debouncedUploadProgress)
               })}
             </>
           );
@@ -155,7 +155,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
             <>
               <Icon name="cloud upload" />
               {_("problem_files.progress_uploading", {
-                progress: formatProgress(props.file.upload.progress)
+                progress: formatProgress(debouncedUploadProgress)
               })}
             </>
           );
@@ -211,9 +211,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
     <>
       <Table.Row>
         <Table.Cell className={style.fileTableColumnFilename}>
-          {props.file.upload && props.file.upload.progress && (
-            <Progress percent={props.file.upload.progress} indicating />
-          )}
+          {props.file.upload && props.file.upload.progress && <Progress percent={debouncedUploadProgress} indicating />}
           <div className={style.filename}>
             <Checkbox
               className={style.fileTableCheckbox}
@@ -776,17 +774,14 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         try {
           let cancelled = false;
           const cancel = () => (cancelled = true);
-          const sha256 = await sha256File(
-            item.upload.file,
-            lodashDebounce(processedSize => {
-              if (cancelled) return true;
-              updateFileUploadInfo(item.uuid, {
-                progressType: "Hashing",
-                progress: (processedSize / item.upload.file.size) * 100,
-                cancel
-              });
-            })
-          );
+          const sha256 = await sha256File(item.upload.file, processedSize => {
+            if (cancelled) return true;
+            updateFileUploadInfo(item.uuid, {
+              progressType: "Hashing",
+              progress: (processedSize / item.upload.file.size) * 100,
+              cancel
+            });
+          });
 
           if (cancelled) {
             updateFileUploadInfo(item.uuid, {
@@ -834,13 +829,12 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
             try {
               await axios.put(uploadUrl, item.upload.file, {
                 cancelToken: cancelTokenSource.token,
-                onUploadProgress: lodashDebounce(e =>
+                onUploadProgress: e =>
                   updateFileUploadInfo(item.uuid, {
                     progressType: "Uploading",
                     progress: (e.loaded / e.total) * 100,
                     cancel
                   })
-                )
               });
             } catch (e) {
               if (cancelled) {

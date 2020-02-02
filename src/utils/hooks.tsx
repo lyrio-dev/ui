@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { Modal, ModalProps } from "semantic-ui-react";
-import lodashDebounce from "lodash.debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 export function useIntlMessage() {
   const intl = useIntl();
@@ -76,6 +76,8 @@ export function useFieldCheck(
     }
   }
 
+  const [debouncedCheckField] = useDebouncedCallback(checkField, debounce || 1);
+
   // If NOT checked, start a check and wait for it
   // If already checked, return immediately
   // If checking, wait for it
@@ -110,13 +112,7 @@ export function useFieldCheck(
     return fieldValueRef.current;
   }
 
-  return [
-    debounce ? lodashDebounce(checkField, debounce) : checkField,
-    waitForCheck,
-    getUIValidateStatus,
-    getUIHelp,
-    getCurrentValue
-  ];
+  return [debounce ? debouncedCheckField : checkField, waitForCheck, getUIValidateStatus, getUIHelp, getCurrentValue];
 }
 
 export function useDialog(
