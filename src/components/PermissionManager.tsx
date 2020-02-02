@@ -210,6 +210,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   }
 
   function onClose() {
+    setModified(false);
     setOpened(false);
     dialog.close();
   }
@@ -425,7 +426,6 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
     setOpened(true);
     setPermissions(initialPermissions);
-    setModified(false);
 
     dialog.open();
     return true;
