@@ -65,55 +65,31 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_GROUP";
     groupMeta?: ApiTypes.GroupMetaDto;
   }
-  export interface GetProblemAllFilesResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
-    meta?: ApiTypes.ProblemMetaDto;
-    testdata?: ApiTypes.ProblemFileDto[];
-    additionalFiles?: ApiTypes.ProblemFileDto[];
-    haveWritePermission?: boolean;
+  export interface GetProblemRequestDto {
+    id?: number;
+    displayId?: number;
+    owner?: boolean;
+    localizedContentsOfLocale?: "en_US" | "zh_CN";
+    localizedContentsOfAllLocales?: boolean;
+    samples?: boolean;
+    judgeInfo?: boolean;
+    testData?: boolean;
+    additionalFiles?: boolean;
+    permissionOfCurrentUser?: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
+    permissions?: boolean;
   }
-  export interface GetProblemDetailResponseDto {
+  export interface GetProblemResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
     meta?: ApiTypes.ProblemMetaDto;
-    permission?: ApiTypes.GetProblemDetailResponsePermissionDto;
-    title?: string;
-    resultLocale?: "en_US" | "zh_CN";
-    samples?: ApiTypes.ProblemSampleDataMemberDto[];
-    contentSections?: ApiTypes.ProblemContentSectionDto[];
-    additionalFiles?: ApiTypes.ProblemFileDto[];
-    judgeInfo?: {};
-  }
-  export interface GetProblemDetailResponsePermissionDto {
-    modify: boolean;
-    managePermission: boolean;
-    managePublicness: boolean;
-    delete: boolean;
-  }
-  export interface GetProblemJudgeInfoResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
-    meta?: ApiTypes.ProblemMetaDto;
-    judgeInfo?: {};
-    haveWritePermission?: boolean;
-  }
-  export interface GetProblemPermissionsResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
     owner?: ApiTypes.UserMetaDto;
-    userPermissions?: ApiTypes.GetProblemPermissionsResponseUserPermissionDto[];
-    groupPermissions?: ApiTypes.GetProblemPermissionsResponseGroupPermissionDto[];
-  }
-  export interface GetProblemPermissionsResponseGroupPermissionDto {
-    group: ApiTypes.GroupMetaDto;
-    permissionLevel: 1 | 2;
-  }
-  export interface GetProblemPermissionsResponseUserPermissionDto {
-    user: ApiTypes.UserMetaDto;
-    permissionLevel: 1 | 2;
-  }
-  export interface GetProblemStatementsAllLocalesResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
-    meta?: ApiTypes.ProblemMetaDto;
-    statement?: ApiTypes.ProblemStatementDto;
-    haveWritePermission?: boolean;
+    localizedContentsOfLocale?: ApiTypes.ProblemLocalizedContentDto;
+    localizedContentsOfAllLocales?: ApiTypes.ProblemLocalizedContentDto[];
+    samples?: ApiTypes.ProblemSampleDataMemberDto[];
+    judgeInfo?: {};
+    testData?: ApiTypes.ProblemFileDto[];
+    additionalFiles?: ApiTypes.ProblemFileDto[];
+    permissionOfCurrentUser?: ApiTypes.ProblemPermissionOfCurrentUserDto;
+    permissions?: ApiTypes.ProblemPermissions;
   }
   export interface GetSelfMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
@@ -127,14 +103,6 @@ declare namespace ApiTypes {
     name: string;
     ownerId: number;
   }
-  export interface ListProblemFilesRequestDto {
-    problemId: number;
-    type: "TestData" | "AdditionalFile";
-  }
-  export interface ListProblemFilesResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
-    problemFiles?: ApiTypes.ProblemFileDto[];
-  }
   export interface LoginRequestDto {
     username: string;
     password: string;
@@ -145,13 +113,9 @@ declare namespace ApiTypes {
     token?: string;
   }
   namespace Parameters {
-    export type DisplayId = string;
     export type Email = string;
     export type GetPrivileges = boolean;
     export type GroupId = string;
-    export type Id = string;
-    export type Locale = "en_US" | "zh_CN";
-    export type ProblemId = string;
     export type Query = string;
     export type UserId = string;
     export type Username = string;
@@ -172,6 +136,10 @@ declare namespace ApiTypes {
     filename: string;
     size?: number;
   }
+  export interface ProblemGroupPermissionDto {
+    group: ApiTypes.GroupMetaDto;
+    permissionLevel: 1 | 2;
+  }
   export interface ProblemLocalizedContentDto {
     locale: "en_US" | "zh_CN";
     title: string;
@@ -185,6 +153,17 @@ declare namespace ApiTypes {
     ownerId: number;
     locales: ("en_US" | "zh_CN")[];
   }
+  export interface ProblemPermissionOfCurrentUserDto {
+    VIEW?: boolean;
+    MODIFY?: boolean;
+    MANAGE_PERMISSION?: boolean;
+    MANAGE_PUBLICNESS?: boolean;
+    DELETE?: boolean;
+  }
+  export interface ProblemPermissions {
+    userPermissions: ApiTypes.ProblemUserPermissionDto[];
+    groupPermissions: ApiTypes.ProblemGroupPermissionDto[];
+  }
   export interface ProblemSampleDataMemberDto {
     inputData: string;
     outputData: string;
@@ -193,9 +172,13 @@ declare namespace ApiTypes {
     localizedContents: ApiTypes.ProblemLocalizedContentDto[];
     samples: ApiTypes.ProblemSampleDataMemberDto[];
   }
+  export interface ProblemUserPermissionDto {
+    user: ApiTypes.UserMetaDto;
+    permissionLevel: 1 | 2;
+  }
   export interface QueryParameters {
-    id?: ApiTypes.Parameters.Id;
-    displayId?: ApiTypes.Parameters.DisplayId;
+    query: ApiTypes.Parameters.Query;
+    wildcard?: ApiTypes.Parameters.Wildcard;
   }
   export interface QueryProblemSetRequestDto {
     locale: "en_US" | "zh_CN";
@@ -251,10 +234,10 @@ declare namespace ApiTypes {
   export interface RenameProblemFileResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "NO_SUCH_FILE";
   }
-  export type RequestBody = ApiTypes.FinishUploadRequestDto;
+  export type RequestBody = ApiTypes.SubmitRequestDto;
   namespace Responses {
-    export type $200 = ApiTypes.GetProblemJudgeInfoResponseDto;
-    export type $201 = ApiTypes.FinishUploadResponseDto;
+    export type $200 = ApiTypes.SearchGroupResponseDto;
+    export type $201 = ApiTypes.SubmitResponseDto;
   }
   export interface SearchGroupResponseDto {
     groupMetas: ApiTypes.GroupMetaDto[];
@@ -307,6 +290,14 @@ declare namespace ApiTypes {
   }
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";
+  }
+  export interface SubmitRequestDto {
+    problemId: number;
+    content: {};
+  }
+  export interface SubmitResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
+    submissionId?: number;
   }
   export interface UpdateProblemJudgeInfoRequestDto {
     problemId: number;

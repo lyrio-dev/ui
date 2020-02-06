@@ -10,11 +10,10 @@ export type CreateProblemRequestDto = ApiTypes.CreateProblemRequestDto;
 export type CreateProblemResponseDto = ApiTypes.CreateProblemResponseDto;
 export type UpdateProblemStatementRequestDto = ApiTypes.UpdateProblemStatementRequestDto;
 export type UpdateProblemStatementResponseDto = ApiTypes.UpdateProblemStatementResponseDto;
-export type GetProblemStatementsAllLocalesResponseDto = ApiTypes.GetProblemStatementsAllLocalesResponseDto;
-export type GetProblemDetailResponseDto = ApiTypes.GetProblemDetailResponseDto;
+export type GetProblemRequestDto = ApiTypes.GetProblemRequestDto;
+export type GetProblemResponseDto = ApiTypes.GetProblemResponseDto;
 export type SetProblemPermissionsRequestDto = ApiTypes.SetProblemPermissionsRequestDto;
 export type SetProblemPermissionsResponseDto = ApiTypes.SetProblemPermissionsResponseDto;
-export type GetProblemPermissionsResponseDto = ApiTypes.GetProblemPermissionsResponseDto;
 export type SetProblemDisplayIdRequestDto = ApiTypes.SetProblemDisplayIdRequestDto;
 export type SetProblemDisplayIdResponseDto = ApiTypes.SetProblemDisplayIdResponseDto;
 export type SetProblemPublicRequestDto = ApiTypes.SetProblemPublicRequestDto;
@@ -23,14 +22,10 @@ export type AddProblemFileRequestDto = ApiTypes.AddProblemFileRequestDto;
 export type AddProblemFileResponseDto = ApiTypes.AddProblemFileResponseDto;
 export type RemoveProblemFilesRequestDto = ApiTypes.RemoveProblemFilesRequestDto;
 export type RemoveProblemFilesResponseDto = ApiTypes.RemoveProblemFilesResponseDto;
-export type ListProblemFilesRequestDto = ApiTypes.ListProblemFilesRequestDto;
-export type ListProblemFilesResponseDto = ApiTypes.ListProblemFilesResponseDto;
 export type DownloadProblemFilesRequestDto = ApiTypes.DownloadProblemFilesRequestDto;
 export type DownloadProblemFilesResponseDto = ApiTypes.DownloadProblemFilesResponseDto;
-export type GetProblemAllFilesResponseDto = ApiTypes.GetProblemAllFilesResponseDto;
 export type RenameProblemFileRequestDto = ApiTypes.RenameProblemFileRequestDto;
 export type RenameProblemFileResponseDto = ApiTypes.RenameProblemFileResponseDto;
-export type GetProblemJudgeInfoResponseDto = ApiTypes.GetProblemJudgeInfoResponseDto;
 export type UpdateProblemJudgeInfoRequestDto = ApiTypes.UpdateProblemJudgeInfoRequestDto;
 export type UpdateProblemJudgeInfoResponseDto = ApiTypes.UpdateProblemJudgeInfoResponseDto;
 
@@ -41,19 +36,9 @@ export const createProblem = createPostApi<CreateProblemRequestDto, CreateProble
 export const updateStatement = createPostApi<UpdateProblemStatementRequestDto, UpdateProblemStatementResponseDto>(
   "problem/updateStatement"
 );
-export const getProblemStatementsAllLocales = createGetApi<
-  { id?: string; displayId?: string },
-  GetProblemStatementsAllLocalesResponseDto
->("problem/getProblemStatementsAllLocales");
-export const getProblemDetail = createGetApi<
-  { id?: string; displayId?: string; locale: string },
-  GetProblemDetailResponseDto
->("problem/getProblemDetail");
+export const getProblem = createPostApi<GetProblemRequestDto, GetProblemResponseDto>("problem/getProblem");
 export const setProblemPermissions = createPostApi<SetProblemPermissionsRequestDto, SetProblemPermissionsResponseDto>(
   "problem/setProblemPermissions"
-);
-export const getProblemPermissions = createGetApi<{ problemId: string }, GetProblemPermissionsResponseDto>(
-  "problem/getProblemPermissions"
 );
 export const setProblemDisplayId = createPostApi<SetProblemDisplayIdRequestDto, SetProblemDisplayIdResponseDto>(
   "problem/setProblemDisplayId"
@@ -67,20 +52,11 @@ export const addProblemFile = createPostApi<AddProblemFileRequestDto, AddProblem
 export const removeProblemFiles = createPostApi<RemoveProblemFilesRequestDto, RemoveProblemFilesResponseDto>(
   "problem/removeProblemFiles"
 );
-export const listProblemFiles = createPostApi<ListProblemFilesRequestDto, ListProblemFilesResponseDto>(
-  "problem/listProblemFiles"
-);
 export const downloadProblemFiles = createPostApi<DownloadProblemFilesRequestDto, DownloadProblemFilesResponseDto>(
   "problem/downloadProblemFiles"
 );
-export const getProblemAllFiles = createGetApi<{ id?: string; displayId?: string }, GetProblemAllFilesResponseDto>(
-  "problem/getProblemAllFiles"
-);
 export const renameProblemFile = createPostApi<RenameProblemFileRequestDto, RenameProblemFileResponseDto>(
   "problem/renameProblemFile"
-);
-export const getProblemJudgeInfo = createGetApi<{ id?: string; displayId?: string }, GetProblemJudgeInfoResponseDto>(
-  "problem/getProblemJudgeInfo"
 );
 export const updateProblemJudgeInfo = createPostApi<
   UpdateProblemJudgeInfoRequestDto,

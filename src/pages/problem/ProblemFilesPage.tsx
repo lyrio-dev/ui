@@ -45,8 +45,11 @@ if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
 const MAX_UPLOAD_CONCURRENCY = 5;
 
 async function fetchData(idType: "id" | "displayId", id: number) {
-  const { requestError, response } = await ProblemApi.getProblemAllFiles({
-    [idType]: id
+  const { requestError, response } = await ProblemApi.getProblem({
+    [idType]: id,
+    testData: true,
+    additionalFiles: true,
+    permissionOfCurrentUser: ["MODIFY"]
   });
 
   if (requestError || response.error) {
@@ -559,7 +562,7 @@ FileTable = observer(FileTable);
 
 interface ProblemFilesPageProps {
   idType?: "id" | "displayId";
-  problem?: ApiTypes.GetProblemAllFilesResponseDto;
+  problem?: ApiTypes.GetProblemResponseDto;
 }
 
 let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
@@ -579,7 +582,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     }));
   }
 
-  const stateListTestData = useState(transformResponseToFileTableItems(props.problem.testdata));
+  const stateListTestData = useState(transformResponseToFileTableItems(props.problem.testData));
   const refStateListTestData = useRef(stateListTestData);
   refStateListTestData.current = stateListTestData;
   const fileListTestData = stateListTestData[0];
@@ -889,7 +892,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         <strong>{_("problem_files.header_testdata")}</strong>
       </Header>
       <FileTable
-        hasPermission={props.problem.haveWritePermission}
+        hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
         color="green"
         files={fileListTestData}
         onDownloadFile={filename => onDownloadFile("TestData", filename)}
@@ -907,7 +910,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         <strong>{_("problem_files.header_additional_files")}</strong>
       </Header>
       <FileTable
-        hasPermission={props.problem.haveWritePermission}
+        hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
         color="pink"
         files={fileListAdditionalFiles}
         onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}

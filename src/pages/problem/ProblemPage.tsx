@@ -16,7 +16,7 @@ import {
   Message,
   Loader
 } from "semantic-ui-react";
-import { route, lazy } from "navi";
+import { route } from "navi";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 
@@ -32,12 +32,15 @@ import copyToClipboard from "@/utils/copy-to-clipboard";
 import { isValidDisplayId } from "@/utils/validators";
 import PermissionManager from "@/components/PermissionManager";
 
-type ProblemDetail = ApiTypes.GetProblemDetailResponseDto;
+type Problem = ApiTypes.GetProblemResponseDto;
 
-async function fetchData(idType: "id" | "displayId", id: number, locale: string): Promise<ProblemDetail> {
-  const { requestError, response } = await ProblemApi.getProblemDetail({
-    locale: locale,
-    [idType]: id
+async function fetchData(idType: "id" | "displayId", id: number, locale: Locale): Promise<Problem> {
+  const { requestError, response } = await ProblemApi.getProblem({
+    [idType]: id,
+    localizedContentsOfLocale: locale,
+    samples: true,
+    judgeInfo: true,
+    permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"]
   });
 
   if (requestError || response.error) {
@@ -76,7 +79,7 @@ function getLimit(judgeInfo: any, limit: "timeLimit" | "memoryLimit") {
 interface ProblemPageProps {
   idType: "id" | "displayId";
   requestedLocale: Locale;
-  problem: ProblemDetail;
+  problem: Problem;
 }
 
 let ProblemPage: React.FC<ProblemPageProps> = props => {
@@ -86,7 +89,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.title = `${idString}. ${props.problem.title} - ${_("problem.title")}`;
+    appState.title = `${idString}. ${props.problem.localizedContentsOfLocale.title} - ${_("problem.title")}`;
   }, [appState.locale]);
 
   const timeLimit = getLimit(props.problem.judgeInfo, "timeLimit");
@@ -199,16 +202,18 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const refOpenPermissionManager = useRef<() => Promise<boolean>>();
   const [permissionManagerLoading, setPermissionManagerLoading] = useState(false);
   async function onGetInitialPermissions() {
-    const { requestError, response } = await ProblemApi.getProblemPermissions({
-      problemId: props.problem.meta.id.toString()
+    const { requestError, response } = await ProblemApi.getProblem({
+      id: props.problem.meta.id,
+      owner: true,
+      permissions: true
     });
     if (requestError) toast.error(requestError);
     else if (response.error) toast.error(_(`problem.action_error.get_permissions.${response.error}`));
     else {
       return {
         owner: response.owner,
-        userPermissions: response.userPermissions,
-        groupPermissions: response.groupPermissions
+        userPermissions: response.permissions.userPermissions,
+        groupPermissions: response.permissions.groupPermissions
       };
     }
     return null;
@@ -239,7 +244,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   const permissionManager = (
     <PermissionManager
-      haveSubmitPermission={props.problem.permission.managePermission}
+      haveSubmitPermission={props.problem.permissionOfCurrentUser.MANAGE_PERMISSION}
       objectDescription={_("problem.action.permission_manager_description", { idString })}
       permissionsLevelDetails={{
         1: {
@@ -266,7 +271,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
           <div>
             <Header as="h1">
               <strong>{idString}</strong>.&nbsp;
-              {props.problem.title}
+              {props.problem.localizedContentsOfLocale.title}
               {props.problem.meta.locales.length > 1 && (
                 <Dropdown icon="globe" className={style.languageSelectIcon}>
                   <Dropdown.Menu>
@@ -283,7 +288,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                         flag={localeMeta[locale].flag}
                         text={_(`language.${locale}`)}
                         value={locale}
-                        selected={locale === props.problem.resultLocale}
+                        selected={locale === props.problem.localizedContentsOfLocale.locale}
                       />
                     ))}
                   </Dropdown.Menu>
@@ -347,19 +352,19 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
           {(() => {
             if (!localizedContentUnavailableMessageVisable) return;
             let message: string;
-            if (props.requestedLocale && props.problem.resultLocale !== props.requestedLocale) {
+            if (props.requestedLocale && props.problem.localizedContentsOfLocale.locale !== props.requestedLocale) {
               message = _("common.localized_content_unavailable.requested_unavailable", {
-                display_locale: _(`language.${props.problem.resultLocale}`)
+                display_locale: _(`language.${props.problem.localizedContentsOfLocale.locale}`)
               });
-            } else if (!props.requestedLocale && props.problem.resultLocale !== appState.locale) {
+            } else if (!props.requestedLocale && props.problem.localizedContentsOfLocale.locale !== appState.locale) {
               message = _("common.localized_content_unavailable.preferred_unavailable", {
-                display_locale: _(`language.${props.problem.resultLocale}`)
+                display_locale: _(`language.${props.problem.localizedContentsOfLocale.locale}`)
               });
             } else return;
 
             return <Message onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)} content={message} />;
           })()}
-          {props.problem.contentSections.map((section, i) => (
+          {props.problem.localizedContentsOfLocale.contentSections.map((section, i) => (
             <React.Fragment key={i}>
               <Header size="large">{section.sectionTitle}</Header>
               {section.type === "TEXT" ? (
@@ -481,7 +486,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
               />
             </Menu>
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
-              {props.problem.permission.modify && (
+              {props.problem.permissionOfCurrentUser.MODIFY && (
                 <Menu.Item
                   name={_("problem.action.edit")}
                   icon="edit"
@@ -499,7 +504,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   }}
                 />
               )}
-              {props.problem.permission.modify && (
+              {props.problem.permissionOfCurrentUser.MODIFY && (
                 <Menu.Item
                   name={_("problem.action.judge_settings")}
                   icon="cog"
@@ -513,14 +518,14 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
               )}
               {// Normal users won't interested in permissions
               // Only show permission manage button when the user have write permission
-              props.problem.permission.modify && (
+              props.problem.permissionOfCurrentUser.MODIFY && (
                 <Menu.Item onClick={onClickPermissionManage}>
                   <Icon name="key" />
                   {_("problem.action.permission_manage")}
                   <Loader size="tiny" active={permissionManagerLoading} />
                 </Menu.Item>
               )}
-              {props.problem.permission.managePublicness && (
+              {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
                 <Popup
                   trigger={
                     <Menu.Item
@@ -553,7 +558,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permission.managePublicness && (
+              {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
                 <Popup
                   trigger={
                     <Menu.Item
@@ -582,7 +587,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permission.delete && (
+              {props.problem.permissionOfCurrentUser.DELETE && (
                 <Menu.Item
                   className={style.menuItemDangerous}
                   name={_("problem.action.delete")}

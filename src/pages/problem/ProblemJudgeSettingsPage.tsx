@@ -32,9 +32,12 @@ import toast from "@/utils/toast";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 
-async function fetchDataJudgeInfo(idType: "id" | "displayId", id: number) {
-  const { requestError, response } = await ProblemApi.getProblemJudgeInfo({
-    [idType]: id
+async function fetchData(idType: "id" | "displayId", id: number) {
+  const { requestError, response } = await ProblemApi.getProblem({
+    [idType]: id,
+    judgeInfo: true,
+    testData: true,
+    permissionOfCurrentUser: ["MODIFY"]
   });
 
   if (requestError || response.error) {
@@ -43,20 +46,6 @@ async function fetchDataJudgeInfo(idType: "id" | "displayId", id: number) {
   }
 
   return response;
-}
-
-async function fetchDataTestDataFiles(id: number) {
-  const { requestError, response } = await ProblemApi.listProblemFiles({
-    problemId: id,
-    type: "TestData"
-  });
-
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
-
-  return response.problemFiles;
 }
 
 function getColor(uuid: string) {
@@ -874,12 +863,11 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
 SubtaskEditor = observer(SubtaskEditor);
 
-type ProblemJudgeSettingsDetail = ApiTypes.GetProblemJudgeInfoResponseDto;
+type Problem = ApiTypes.GetProblemResponseDto;
 type ProblemFile = ApiTypes.ProblemFileDto;
 
 interface ProblemJudgeSettingsPageProps {
-  problem: ProblemJudgeSettingsDetail;
-  testDataFiles: ProblemFile[];
+  problem: Problem;
   idType?: "id" | "displayId";
 }
 
@@ -1295,9 +1283,9 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   className={style.submitButton}
                   primary
                   loading={pending}
-                  disabled={!props.problem.haveWritePermission}
+                  disabled={!props.problem.permissionOfCurrentUser.MODIFY}
                   content={
-                    props.problem.haveWritePermission
+                    props.problem.permissionOfCurrentUser.MODIFY
                       ? _("problem_judge_settings.submit")
                       : _("problem_judge_settings.no_submit_permission")
                   }
@@ -1428,7 +1416,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
               judgeInfo.subtasks.map((subtask, index) => (
                 <SubtaskEditor
                   key={subtask.uuid}
-                  testDataFiles={props.testDataFiles}
+                  testDataFiles={props.problem.testData}
                   subtaskIndex={index}
                   subtaskCount={judgeInfo.subtasks.length}
                   subtask={subtask}
@@ -1461,46 +1449,25 @@ export default {
   byId: route({
     async getView(request) {
       const id = parseInt(request.params["id"]);
-      const problem = await fetchDataJudgeInfo("id", id);
+      const problem = await fetchData("id", id);
       if (problem === null) {
         // TODO: Display an error page
         return null;
       }
 
-      const testDataFiles = await fetchDataTestDataFiles(problem.meta.id);
-      if (testDataFiles === null) {
-        // TODO: Display an error page
-        return null;
-      }
-
-      return (
-        <ProblemJudgeSettingsPage key={Math.random()} idType="id" problem={problem} testDataFiles={testDataFiles} />
-      );
+      return <ProblemJudgeSettingsPage key={Math.random()} idType="id" problem={problem} />;
     }
   }),
   byDisplayId: route({
     async getView(request) {
       const displayId = parseInt(request.params["displayId"]);
-      const problem = await fetchDataJudgeInfo("displayId", displayId);
+      const problem = await fetchData("displayId", displayId);
       if (problem === null) {
         // TODO: Display an error page
         return null;
       }
 
-      const testDataFiles = await fetchDataTestDataFiles(problem.meta.id);
-      if (testDataFiles === null) {
-        // TODO: Display an error page
-        return null;
-      }
-
-      return (
-        <ProblemJudgeSettingsPage
-          key={Math.random()}
-          idType="displayId"
-          problem={problem}
-          testDataFiles={testDataFiles}
-        />
-      );
+      return <ProblemJudgeSettingsPage key={Math.random()} idType="displayId" problem={problem} />;
     }
   })
 };

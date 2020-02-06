@@ -3,7 +3,6 @@ import {
   Dropdown,
   Grid,
   Icon,
-  Container,
   Header,
   Menu,
   Segment,
@@ -35,11 +34,14 @@ import toast from "@/utils/toast";
 import { useIntlMessage, useConfirmUnload } from "@/utils/hooks";
 import { observer } from "mobx-react";
 
-type ProblemEditDetail = ApiTypes.GetProblemStatementsAllLocalesResponseDto;
+type Problem = ApiTypes.GetProblemResponseDto;
 
-async function fetchData(idType: "id" | "displayId", id: number): Promise<ProblemEditDetail> {
-  const { requestError, response } = await ProblemApi.getProblemStatementsAllLocales({
-    [idType]: id
+async function fetchData(idType: "id" | "displayId", id: number): Promise<Problem> {
+  const { requestError, response } = await ProblemApi.getProblem({
+    [idType]: id,
+    localizedContentsOfAllLocales: true,
+    samples: true,
+    permissionOfCurrentUser: ["MODIFY"]
   });
 
   if (requestError || response.error) {
@@ -639,7 +641,7 @@ const sectionsTemplate: Record<Locale, LocalizedContentSection[]> = {
 
 interface ProblemEditPageProps {
   idType?: "id" | "displayId";
-  problem?: ProblemEditDetail;
+  problem?: Problem;
   new?: boolean;
   requestedLocale?: Locale;
 }
@@ -663,7 +665,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     (() => {
       const converted: Partial<Record<Locale, LocalizedContent>> = {};
       if (!props.new) {
-        for (const content of props.problem.statement.localizedContents) {
+        for (const content of props.problem.localizedContentsOfAllLocales) {
           converted[content.locale] = {
             title: content.title,
             contentSections: content.contentSections.map(section => ({
@@ -1119,7 +1121,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   const [samples, setSamples] = useState<Sample[]>(
     props.new
       ? []
-      : props.problem.statement.samples.map(sample => ({
+      : props.problem.samples.map(sample => ({
           uuid: uuid(),
           ...sample
         }))
@@ -1137,7 +1139,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   );
 
   // TODO: Request permission from server for creating new problems
-  const haveSubmitPermission = props.new ? true : props.problem.haveWritePermission;
+  const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.MODIFY;
 
   useConfirmUnload(() => modified);
 
