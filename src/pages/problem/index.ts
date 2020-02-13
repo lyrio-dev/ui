@@ -3,16 +3,16 @@ import getRoute from "@/utils/getRoute";
 
 export default mount({
   "/by-id/:id": mount({
-    "/": getRoute(import("./ProblemPage"), "byId"),
-    "/edit": getRoute(import("./ProblemEditPage"), "byId"),
-    "/files": getRoute(import("./ProblemFilesPage"), "byId"),
-    "/judge-settings": getRoute(import("./ProblemJudgeSettingsPage"), "byId")
+    "/": getRoute(import("./index/ProblemPage"), "byId"),
+    "/edit": getRoute(import("./edit/ProblemEditPage"), "byId"),
+    "/files": getRoute(import("./files/ProblemFilesPage"), "byId"),
+    "/judge-settings": getRoute(import("./judge-settings/ProblemJudgeSettingsPage"), "byId")
   }),
   "/:displayId": mount({
-    "/": getRoute(import("./ProblemPage"), "byDisplayId"),
-    "/edit": getRoute(import("./ProblemEditPage"), "byDisplayId"),
-    "/files": getRoute(import("./ProblemFilesPage"), "byDisplayId"),
-    "/judge-settings": getRoute(import("./ProblemJudgeSettingsPage"), "byDisplayId")
+    "/": getRoute(import("./index/ProblemPage"), "byDisplayId"),
+    "/edit": getRoute(import("./edit/ProblemEditPage"), "byDisplayId"),
+    "/files": getRoute(import("./files/ProblemFilesPage"), "byDisplayId"),
+    "/judge-settings": getRoute(import("./judge-settings/ProblemJudgeSettingsPage"), "byDisplayId")
   }),
-  "/new": getRoute(import("./ProblemEditPage"), "new")
+  "/new": getRoute(import("./edit/ProblemEditPage"), "new")
 });
