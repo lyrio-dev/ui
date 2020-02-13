@@ -78,5 +78,13 @@
   "description": "The frontend of next-generation SYZOJ",
   "repository": "https://github.com/syzoj/syzoj-ng-app",
   "author": "Menci",
-  "license": "AGPL-3.0"
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "cz-conventional-changelog": "3.1.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
