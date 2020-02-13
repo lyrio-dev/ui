@@ -61,7 +61,7 @@ let AppLayout: React.FC = props => {
     });
   }
 
-  const navButtons: Record<string, { icon: SemanticICONS; text: string; url: string }> = {
+  const navButtons: Record<string, { icon: SemanticICONS; text: string; url?: string }> = {
     home: {
       icon: "home",
       text: "common.navbar.home",
@@ -75,27 +75,27 @@ let AppLayout: React.FC = props => {
     contests: {
       icon: "calendar",
       text: "common.navbar.contests",
-      url: "/contests"
+      // url: "/contests"
     },
     submissions: {
       icon: "hourglass",
       text: "common.navbar.submissions",
-      url: "/submissions"
+      // url: "/submissions"
     },
     members: {
       icon: "users",
       text: "common.navbar.members",
-      url: "/members"
+      // url: "/members"
     },
     discussion: {
       icon: "comments",
       text: "common.navbar.discussion",
-      url: "/discussion"
+      // url: "/discussion"
     },
     help: {
       icon: "help circle",
       text: "common.navbar.help",
-      url: "/help"
+      // url: "/help"
     }
   };
 
@@ -125,7 +125,7 @@ let AppLayout: React.FC = props => {
   const userMenu = ContainerComponent => (
     <>
       <ContainerComponent.Menu className={style.userMenu}>
-        <ContainerComponent.Item as={Link} href="/settings">
+        <ContainerComponent.Item as={Link}>
           <Icon name="cog" />
           {_("common.header.user.settings")}
         </ContainerComponent.Item>
