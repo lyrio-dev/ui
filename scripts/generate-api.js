@@ -28,6 +28,11 @@ function getResponseSchemaName(responses) {
   return response.content && getSchemaName(response.content["application/json"].schema);
 }
 
+function normalizeModuleName(moduleName, forFilename) {
+  if (forFilename) return moduleName.split(" ").join("-").toLowerCase();
+  else return moduleName.split(" ").join("");
+}
+
 (async () => {
   await fs.remove(__dirname + "/../src/api-generated");
   await fs.ensureDir(__dirname + "/../src/api-generated/modules");
@@ -114,7 +119,7 @@ function getResponseSchemaName(responses) {
       }
     }
 
-    await fs.writeFile(__dirname + `/../src/api-generated/modules/${moduleName.toLowerCase()}.ts`, code);
+    await fs.writeFile(__dirname + `/../src/api-generated/modules/${normalizeModuleName(moduleName, true)}.ts`, code);
   }
 
   // Generate index file
@@ -122,11 +127,11 @@ function getResponseSchemaName(responses) {
 
   code += generatedMessage;
   for (const moduleName in tags) {
-    code += `import * as Imported${moduleName}Api from "./modules/${moduleName.toLowerCase()}";\n`;
+    code += `import * as Imported${normalizeModuleName(moduleName)}Api from "./modules/${normalizeModuleName(moduleName, true)}";\n`;
   }
   code += "\n";
   for (const moduleName in tags) {
-    code += `export const ${moduleName}Api = Imported${moduleName}Api;\n`;
+    code += `export const ${normalizeModuleName(moduleName)}Api = Imported${normalizeModuleName(moduleName)}Api;\n`;
   }
 
   await fs.writeFile(__dirname + `/../src/api-generated/index.ts`, code);
