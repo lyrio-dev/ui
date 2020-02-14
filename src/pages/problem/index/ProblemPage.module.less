@@ -6,7 +6,7 @@
 
 .headerContainer {
   margin-top: 10px;
-  margin-bottom: 37px;
+  margin-bottom: 37.5px;
 
   :global(.ui.label) {
     margin: 2px !important;
@@ -43,26 +43,67 @@
 }
 
 .divider {
-  margin: 37.5px -233333px !important;
+  margin: 0 -233333px 37.5px !important;
 }
 
 .leftContainer, .rightContainer {
-  display: inline-block;
   vertical-align: top;
 }
 
 .leftContainer {
+  display: flex;
+  flex-direction: column;
   padding-right: 1rem;
+
+  .inSubmitView & {
+    padding-right: 0;
+  }
 }
 
 .rightContainer {
+  align-self: end;
   padding-left: 1rem;
   position: sticky !important;
   top: -152px;
 }
 
+.inSubmitView .statementView {
+  display: none;
+}
+
+.submitView {
+  .inStatementView & {
+    display: none;
+  }
+
+  flex-grow: 1;
+
+  form {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 341px);
+    min-height: 100%;
+
+    textarea {
+      border-radius: 0 !important;
+      width: 100%;
+      height: 100%;
+      resize: none !important;
+    }
+  }
+}
+
+.submitViewForm, .submitButton {
+  margin-top: 25px !important;
+}
+
 .actionMenusWrapper {
   margin-top: 85px !important;
+}
+
+.inStatementView .submitViewMenu, .inSubmitView .statementViewMenu {
+  display: none;
 }
 
 .secondActionMenu {
@@ -109,6 +150,18 @@
         background: rgba(219, 40, 40, 0.03) !important;
         color: #db2828 !important;
         border-left-color: #db2828 !important
+      }
+    }
+
+    &.menuItemPrimary {
+      background: rgba(40, 110, 219, 0.03) !important;
+      color: #1678c2 !important;
+      border-left-color: rgba(40, 110, 219, 0.5) !important;
+
+      &:hover {
+        background: rgba(40, 110, 219, 0.07) !important;
+        color: #1678c2 !important;
+        border-left-color: #1678c2 !important
       }
     }
 
@@ -186,6 +239,13 @@
   width: @actionMenuWidth !important;
 }
 
+@media only screen and (min-width: 768px) {
+  .flexContainer {
+    display: flex;
+    align-items: stretch;
+  }
+}
+
 @media only screen and (max-width: 1023px) and (min-width: 768px) {
   @actionMenuWidth: 180px;
   @rightContainerWidth: calc(@actionMenuWidth + 1rem);
@@ -224,13 +284,16 @@
   }
 
   .divider {
-    margin-top: 9px !important;
     margin-bottom: 25px !important;
   }
 
   .leftContainer {
     width: 100%;
     padding-right: 0;
+  }
+
+  .submitView form {
+    height: 50vh !important;
   }
 
   .sampleInput {
@@ -268,6 +331,10 @@
   }
 
   .headerRightStatisticGroup {
+    &.inSubmitView {
+      display: none;
+    }
+
     padding-top: 4px;
     margin: 0 auto !important;
   }

@@ -16,7 +16,7 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import { appConfig } from "@/appConfig";
-import { useIntlMessage } from "@/utils/hooks";
+import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 
 import { AuthApi } from "@/api";
@@ -25,7 +25,6 @@ import { SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
   const loadingRoute = useLoadingRoute();
-  const currentRoute = useCurrentRoute();
   const _ = useIntlMessage();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -44,22 +43,7 @@ let AppLayout: React.FC = props => {
     }
   }
 
-  function onLoginOrRegisterClick(loginOrRegister: string) {
-    // Save the current url for redirecting back
-    let loginRedirectUrl: string;
-    if (currentRoute.url.pathname !== "/login" && currentRoute.url.pathname !== "/register") {
-      loginRedirectUrl = currentRoute.url.pathname + currentRoute.url.search + currentRoute.url.hash;
-    } else {
-      loginRedirectUrl = currentRoute.url.query.loginRedirectUrl;
-    }
-
-    navigation.navigate({
-      pathname: "/" + loginOrRegister,
-      query: loginRedirectUrl && {
-        loginRedirectUrl
-      }
-    });
-  }
+  const onLoginOrRegisterClick = useLoginOrRegisterNavigation();
 
   const navButtons: Record<string, { icon: SemanticICONS; text: string; url?: string }> = {
     home: {
@@ -74,27 +58,27 @@ let AppLayout: React.FC = props => {
     },
     contests: {
       icon: "calendar",
-      text: "common.navbar.contests",
+      text: "common.navbar.contests"
       // url: "/contests"
     },
     submissions: {
       icon: "hourglass",
-      text: "common.navbar.submissions",
+      text: "common.navbar.submissions"
       // url: "/submissions"
     },
     members: {
       icon: "users",
-      text: "common.navbar.members",
+      text: "common.navbar.members"
       // url: "/members"
     },
     discussion: {
       icon: "comments",
-      text: "common.navbar.discussion",
+      text: "common.navbar.discussion"
       // url: "/discussion"
     },
     help: {
       icon: "help circle",
-      text: "common.navbar.help",
+      text: "common.navbar.help"
       // url: "/help"
     }
   };
@@ -249,7 +233,7 @@ let AppLayout: React.FC = props => {
               {wide ? topBarItemsForWideScreen : topBarItemsForNarrowScreen}
             </Container>
           </Menu>
-          <div className={style.appContentContainer}>
+          <div className={style.appContentContainer} id="scrollView">
             <Container id={style.mainUiContainer}>{props.children}</Container>
             {footer}
           </div>

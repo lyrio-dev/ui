@@ -15,6 +15,7 @@ module.exports = {
   },
   action: {
     submit: "Submit",
+    login_to_submit: "Login to submit",
     submission: "Submissions",
     statistics: "Statistics",
     discussion: "Discussion",
@@ -51,7 +52,16 @@ module.exports = {
     },
     set_permissions: {
       NO_SUCH_PROBLEM: "No such problem."
+    },
+    submit: {
+      PERMISSION_DENIED: "Permission denied.",
+      NO_SUCH_PROBLEM: "No such problem."
     }
+  },
+  submit: {
+    back_to_statement: "Back to Statement",
+    language: "Langauge",
+    submit: "Submit"
   },
   permission_level: {
     read: "Read Only",

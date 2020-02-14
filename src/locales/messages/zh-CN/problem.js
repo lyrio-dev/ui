@@ -15,6 +15,7 @@ module.exports = {
   },
   action: {
     submit: "提交",
+    login_to_submit: "请登录后提交",
     submission: "提交记录",
     statistics: "统计",
     discussion: "讨论",
@@ -51,7 +52,16 @@ module.exports = {
     },
     set_permissions: {
       NO_SUCH_PROBLEM: "无此题目。"
+    },
+    submit: {
+      PERMISSION_DENIED: "权限不足。",
+      NO_SUCH_PROBLEM: "无此题目。"
     }
+  },
+  submit: {
+    back_to_statement: "返回题面",
+    language: "语言",
+    submit: "提交"
   },
   permission_level: {
     read: "只读",

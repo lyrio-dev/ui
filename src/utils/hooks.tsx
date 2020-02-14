@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useIntl } from "react-intl";
 import { Modal, ModalProps } from "semantic-ui-react";
 import { useDebouncedCallback } from "use-debounce";
+import { useNavigation, useCurrentRoute } from "react-navi";
 
 export function useIntlMessage() {
   const intl = useIntl();
@@ -145,4 +146,28 @@ export function useConfirmUnload(getIfConfirm: () => boolean) {
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   });
+}
+
+export function useLoginOrRegisterNavigation(bindLoginOrRegister?: "login" | "register") {
+  const navigation = useNavigation();
+  const currentRoute = useCurrentRoute();
+
+  return (loginOrRegister?: "login" | "register") => {
+    if (!loginOrRegister) loginOrRegister = bindLoginOrRegister;
+
+    // Save the current url for redirecting back
+    let loginRedirectUrl: string;
+    if (currentRoute.url.pathname !== "/login" && currentRoute.url.pathname !== "/register") {
+      loginRedirectUrl = currentRoute.url.pathname + currentRoute.url.search + currentRoute.url.hash;
+    } else {
+      loginRedirectUrl = currentRoute.url.query.loginRedirectUrl;
+    }
+
+    navigation.navigate({
+      pathname: "/" + loginOrRegister,
+      query: loginRedirectUrl && {
+        loginRedirectUrl
+      }
+    });
+  };
 }

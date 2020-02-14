@@ -1,6 +1,14 @@
 // This file is generated automatically, do NOT modify it.
 
 declare namespace ApiTypes {
+  export interface AddJudgeClientRequestDto {
+    name: string;
+    allowedHosts: string[];
+  }
+  export interface AddJudgeClientResponseDto {
+    error?: string;
+    judgeClient?: ApiTypes.JudgeClientInfoDto;
+  }
   export interface AddProblemFileRequestDto {
     problemId: number;
     type: "TestData" | "AdditionalFile";
@@ -44,6 +52,12 @@ declare namespace ApiTypes {
   }
   export interface DeleteGroupResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_GROUP" | "GROUP_NOT_EMPTY" | "GROUP_HAVE_PRIVILIGE";
+  }
+  export interface DeleteJudgeClientRequestDto {
+    id: number;
+  }
+  export interface DeleteJudgeClientResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_JUDGE_CLIENT";
   }
   export interface DownloadProblemFilesRequestDto {
     problemId: number;
@@ -102,6 +116,17 @@ declare namespace ApiTypes {
     id: number;
     name: string;
     ownerId: number;
+  }
+  export interface JudgeClientInfoDto {
+    id: number;
+    name: string;
+    key: string;
+    allowedHosts: string[];
+    online: boolean;
+    systemInfo?: {};
+  }
+  export interface ListJudgeClientsResponseDto {
+    judgeClients?: ApiTypes.JudgeClientInfoDto[];
   }
   export interface LoginRequestDto {
     username: string;
@@ -234,10 +259,17 @@ declare namespace ApiTypes {
   export interface RenameProblemFileResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "NO_SUCH_FILE";
   }
-  export type RequestBody = ApiTypes.SubmitRequestDto;
+  export type RequestBody = ApiTypes.ResetJudgeClientKeyRequestDto;
+  export interface ResetJudgeClientKeyRequestDto {
+    id: number;
+  }
+  export interface ResetJudgeClientKeyResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_JUDGE_CLIENT";
+    key?: string;
+  }
   namespace Responses {
-    export type $200 = ApiTypes.SearchGroupResponseDto;
-    export type $201 = ApiTypes.SubmitResponseDto;
+    export type $200 = ApiTypes.ListJudgeClientsResponseDto;
+    export type $201 = ApiTypes.ResetJudgeClientKeyResponseDto;
   }
   export interface SearchGroupResponseDto {
     groupMetas: ApiTypes.GroupMetaDto[];

@@ -6,6 +6,7 @@ import * as ImportedGroupApi from "./modules/group";
 import * as ImportedProblemApi from "./modules/problem";
 import * as ImportedFileApi from "./modules/file";
 import * as ImportedSubmissionApi from "./modules/submission";
+import * as ImportedJudgeClientApi from "./modules/judge-client";
 
 export const UserApi = ImportedUserApi;
 export const AuthApi = ImportedAuthApi;
@@ -13,3 +14,4 @@ export const GroupApi = ImportedGroupApi;
 export const ProblemApi = ImportedProblemApi;
 export const FileApi = ImportedFileApi;
 export const SubmissionApi = ImportedSubmissionApi;
+export const JudgeClientApi = ImportedJudgeClientApi;
