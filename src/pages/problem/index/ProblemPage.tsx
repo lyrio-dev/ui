@@ -603,7 +603,18 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 <Menu.Item
                   name={_("problem.action.submission")}
                   icon="list"
-                  onClick={() => console.log("submission")}
+                  as={Link}
+                  href={{
+                    pathname: "/submissions",
+                    query:
+                      props.idType === "id"
+                        ? {
+                            problemId: props.problem.meta.id.toString()
+                          }
+                        : {
+                            problemDisplayId: props.problem.meta.displayId.toString()
+                          }
+                  }}
                 />
                 <Menu.Item
                   name={_("problem.action.statistics")}

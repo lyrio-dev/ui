@@ -220,6 +220,37 @@ declare namespace ApiTypes {
     title: string;
     titleLocale: "en_US" | "zh_CN";
   }
+  export interface QuerySubmissionRequestDto {
+    locale: "en_US" | "zh_CN";
+    problemId: number;
+    problemDisplayId: number;
+    submitter: string;
+    codeLanguage: string;
+    status:
+      | "Pending"
+      | "ConfigurationError"
+      | "SystemError"
+      | "CompilationError"
+      | "FileError"
+      | "RuntimeError"
+      | "TimeLimitExceeded"
+      | "MemoryLimitExceeded"
+      | "OutputLimitExceeded"
+      | "InvalidInteraction"
+      | "PartiallyCorrect"
+      | "WrongAnswer"
+      | "Accepted"
+      | "JudgementFailed";
+    minId: number;
+    maxId: number;
+    takeCount: number;
+  }
+  export interface QuerySubmissionResponseDto {
+    error?: "NO_SUCH_PROBLEM" | "NO_SUCH_USER";
+    submissions?: ApiTypes.SubmissionMetaDto[];
+    hasSmallerId?: boolean;
+    hasLargerId?: boolean;
+  }
   export interface RegisterRequestDto {
     username: string;
     email: string;
@@ -322,6 +353,34 @@ declare namespace ApiTypes {
   }
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";
+  }
+  export interface SubmissionMetaDto {
+    id: number;
+    isPublic: boolean;
+    codeLanguage: string;
+    answerSize: number;
+    score: number;
+    status:
+      | "Pending"
+      | "ConfigurationError"
+      | "SystemError"
+      | "CompilationError"
+      | "FileError"
+      | "RuntimeError"
+      | "TimeLimitExceeded"
+      | "MemoryLimitExceeded"
+      | "OutputLimitExceeded"
+      | "InvalidInteraction"
+      | "PartiallyCorrect"
+      | "WrongAnswer"
+      | "Accepted"
+      | "JudgementFailed";
+    submitTime: string; // date-time
+    problem: ApiTypes.ProblemMetaDto;
+    problemTitle: string;
+    submitter: ApiTypes.UserMetaDto;
+    timeUsed: number;
+    memoryUsed: number;
   }
   export interface SubmitRequestDto {
     problemId: number;

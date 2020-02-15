@@ -63,8 +63,8 @@ let AppLayout: React.FC = props => {
     },
     submissions: {
       icon: "hourglass",
-      text: "common.navbar.submissions"
-      // url: "/submissions"
+      text: "common.navbar.submissions",
+      url: "/submissions"
     },
     members: {
       icon: "users",

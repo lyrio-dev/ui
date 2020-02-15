@@ -1,0 +1,131 @@
+.columnStatus,
+.columnScore,
+.columnProblemAndSubmitter,
+.columnTime,
+.columnMemory,
+.columnAnswer,
+.columnSubmitTime {
+  white-space: nowrap;
+}
+
+.columnStatus {
+  width: 190px;
+  padding-right: 0 !important;
+}
+
+.columnScore {
+  width: 50px;
+  padding-left: 0 !important;
+}
+
+.columnProblemAndSubmitter {
+  width: auto;
+  // padding-right: 15px !important;
+  display: flex;
+
+  .problem, .submitter {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .problem {
+    max-width: min-content;
+    flex-basis: calc(100% - 70px);
+    flex-grow: 1;
+  }
+  
+  .submitter {
+    flex-shrink: 10;
+    margin-left: auto;
+  }
+}
+
+.columnTime {
+  width: 100px;
+}
+
+.columnMemory {
+  width: 80px;
+}
+
+.columnAnswer {
+  width: 130px;
+}
+
+.columnSubmitTime {
+  width: 120px;
+}
+
+// responsive
+@media only screen and (max-width: 1023px) {
+  .columnTime {
+    display: none;
+  }
+
+  .columnMemory {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .columnAnswer {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 639px) {
+  .columnStatus {
+    width: 150px !important;
+  }
+}
+
+@media only screen and (max-width: 559px) {
+  .submitter {
+    display: none;
+  }
+
+  .columnStatus,
+  .columnScore,
+  .columnProblemAndSubmitter,
+  .columnTime,
+  .columnMemory,
+  .columnAnswer,
+  .columnSubmitTime {
+    font-size: 0.9em;
+  }
+
+  .columnSubmitTime {
+    width: 105px;
+  }
+}
+
+@media only screen and (max-width: 478px) {
+  .columnStatus {
+    width: 40px !important;
+    text-align: center !important;
+
+    :global(.statusicon) {
+      margin-right: 0 !important;
+    }
+
+    :global(.statustext) {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .columnStatus,
+  .columnScore,
+  .columnProblemAndSubmitter,
+  .columnTime,
+  .columnMemory,
+  .columnAnswer,
+  .columnSubmitTime {
+    font-size: 0.85em;
+  }
+
+  .columnSubmitTime {
+    width: 95px;
+  }
+}

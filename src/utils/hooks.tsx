@@ -116,6 +116,24 @@ export function useFieldCheck(
   return [debounce ? debouncedCheckField : checkField, waitForCheck, getUIValidateStatus, getUIHelp, getCurrentValue];
 }
 
+export function useFieldCheckSimple(
+  fieldValue: string,
+  check?: (fieldValue: string) => boolean
+): [() => boolean, boolean] {
+  const checkResultRef = useRef(true);
+  const [checkResultState, setCheckResultState] = useState(true);
+
+  const checkField = () => setCheckResultState((checkResultRef.current = check(fieldValue)));
+
+  return [
+    () => {
+      checkField();
+      return checkResultRef.current;
+    },
+    !checkResultState
+  ];
+}
+
 export function useDialog(
   props: ModalProps,
   header: React.ReactNode | (() => React.ReactNode),

@@ -1,0 +1,147 @@
+.queryForm {
+  margin-bottom: 30px;
+}
+
+.queryInputProblemId input {
+  width: 110px !important;
+}
+
+.queryInputSubmitter input {
+  width: 140px !important;
+}
+
+.select div[role=listbox] {
+  min-width: 0 !important;
+
+  :global(.icon) {
+    margin-left: -3px !important;
+  }
+
+  &> :global(.text) :global(.icon) {
+    opacity: 0.5;
+  }
+
+  &:global(.active) > :global(.text) :global(.icon) {
+    opacity: 1;
+  }
+
+  > :global(.text) {
+    .inMenu {
+      display: none;
+    }
+  }
+
+  :global(.menu) {
+    :global(.icon) {
+      display: none;
+    }
+    .notInMenu {
+      display: none;
+    }
+  }
+}
+
+.queryInputCodeLanguage div[role=listbox] {
+  width: 150px !important;
+}
+
+.queryInputStatus div[role=listbox] {
+  width: 220px !important;
+
+  :global(.menu) {
+    :global(.icon) {
+      margin-left: -5px !important;
+      display: inline-block;
+    }
+  }
+}
+
+.queryInputStatus:not(.selectedAll) {
+  :global(.icon) {
+    opacity: 1 !important;
+  }
+}
+
+// If the current value is "all", display it like a placeholder
+.selectedAll div[role=listbox]:not(:global(.active)) > :global(.text) > span {
+  color: rgba(191, 191, 191, 0.87);
+}
+
+.mySubmissions {
+  margin-left: auto !important;
+}
+
+.table {
+  margin-bottom: 42px !important;
+}
+
+// responsive
+@media only screen and (max-width: 1023px) {
+  .queryForm :global(.field) {
+    padding-right: 0.8em !important;
+  }
+
+  .queryInputSubmitter input {
+    width: 130px !important;
+  }
+
+  .queryInputCodeLanguage div[role=listbox] {
+    width: 140px !important;
+  }
+
+  .queryForm {
+    margin-bottom: 15px;
+  }  
+
+  .table {
+    margin-bottom: 20px !important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .queryInputStatus {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 559px) {
+  .queryForm {
+    font-size: 0.9em !important;
+
+    :global(.button) {
+      font-size: 1em !important;
+    }
+  }
+
+  .queryInputProblemId input {
+    width: 95px !important;
+  }
+  
+  .queryInputSubmitter input {
+    width: 120px !important;
+  }
+
+  .queryInputCodeLanguage div[role=listbox] {
+    width: 120px !important;
+  }  
+}
+
+@media only screen and (max-width: 478px) {
+  .queryInputCodeLanguage {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .queryForm {
+    font-size: 0.85em !important;
+  }
+
+  .queryInputProblemId input {
+    width: 90px !important;
+  }
+  
+  .queryInputSubmitter input {
+    width: 105px !important;
+  }
+}
