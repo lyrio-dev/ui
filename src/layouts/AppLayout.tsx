@@ -144,7 +144,7 @@ let AppLayout: React.FC = props => {
           </div>
           <div className={style.languageSwitchContainer}>
             <Dropdown icon="language">
-              <Dropdown.Menu>
+              <Dropdown.Menu className={style.languageSwitchMenu}>
                 {Object.keys(localeMeta).map((locale: Locale) => (
                   <Dropdown.Item
                     key={locale}
