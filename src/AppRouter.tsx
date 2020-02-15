@@ -3,13 +3,14 @@ import { mount, lazy } from "navi";
 import { Router, View } from "react-navi";
 
 import AppLayout from "./layouts/AppLayout";
+import getRoute from "./utils/getRoute";
 
 const routes = mount({
   "/": lazy(() => import("./pages/home")),
   "/login": lazy(() => import("./pages/login")),
   "/register": lazy(() => import("./pages/register")),
-  "/problems": lazy(() => import("./pages/problem-set")),
-  "/problem": lazy(() => import("./pages/problem"))
+  "/problems": getRoute(import("./pages/problem"), "problems"),
+  "/problem": getRoute(import("./pages/problem"), "problem")
 });
 
 const AppRouter: React.FC = () => {

@@ -199,8 +199,8 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
 
 ProblemSetPage = observer(ProblemSetPage);
 
-export default mount({
-  "/": route({
+export default {
+  public: route({
     async getView(request) {
       const page = parseInt(request.query.page) || 1;
       const [count, problems] = await fetchData(page);
@@ -212,4 +212,4 @@ export default mount({
       return <ProblemSetPage totalCount={count} currentPage={page} problems={problems} />;
     }
   })
-});
+};
