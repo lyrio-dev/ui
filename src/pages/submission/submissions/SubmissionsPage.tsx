@@ -254,7 +254,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
         <>
           <Table textAlign="center" basic="very" className={style.table} unstackable fixed>
             <Table.Header>
-              <SubmissionHeader />
+              <SubmissionHeader page="submissions" />
             </Table.Header>
             <Table.Body>
               {submissions.map(submission => {

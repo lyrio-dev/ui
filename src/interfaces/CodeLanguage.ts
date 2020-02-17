@@ -17,6 +17,10 @@ export interface CodeLanguageOption {
   defaultValue: string; // string | boolean
 }
 
+export const codeLanguageHighlightName: Record<CodeLanguage, string> = {
+  [CodeLanguage.CPP]: "cpp"
+};
+
 export const codeLanguageOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
   [CodeLanguage.CPP]: [
     {

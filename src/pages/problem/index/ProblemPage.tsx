@@ -324,7 +324,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
     if (requestError) toast.error(requestError);
     else if (response.error) {
       toast.error(_(`problem.action_error.submit.${response.error}`));
-    } else toast.success(`Submission ID: ${response.submissionId}`);
+    } else return navigation.navigate(`/submission/${response.submissionId}`);
 
     setSubmitPending(false);
   }

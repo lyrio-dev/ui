@@ -20,7 +20,6 @@
 
 .columnProblemAndSubmitter {
   width: auto;
-  // padding-right: 15px !important;
   display: flex;
 
   .problem, .submitter {
@@ -57,75 +56,129 @@
 }
 
 // responsive
-@media only screen and (max-width: 1023px) {
-  .columnTime {
-    display: none;
-  }
-
-  .columnMemory {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .columnAnswer {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 639px) {
-  .columnStatus {
-    width: 150px !important;
-  }
-}
-
-@media only screen and (max-width: 559px) {
-  .submitter {
-    display: none;
-  }
-
-  .columnStatus,
-  .columnScore,
-  .columnProblemAndSubmitter,
-  .columnTime,
-  .columnMemory,
-  .columnAnswer,
-  .columnSubmitTime {
-    font-size: 0.9em;
-  }
-
-  .columnSubmitTime {
-    width: 105px;
-  }
-}
-
-@media only screen and (max-width: 478px) {
-  .columnStatus {
-    width: 40px !important;
-    text-align: center !important;
-
-    :global(.statusicon) {
-      margin-right: 0 !important;
+.submissionsPage {
+  @media only screen and (max-width: 1023px) {
+    .columnTime {
+      display: none;
     }
 
-    :global(.statustext) {
+    .columnMemory {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    .columnAnswer {
+      display: none;
+    }
+  }
+
+  @media only screen and (max-width: 639px) {
+    .columnStatus {
+      width: 150px !important;
+    }
+  }
+
+  @media only screen and (max-width: 559px) {
+    .submitter {
+      display: none;
+    }
+
+    .columnStatus,
+    .columnScore,
+    .columnProblemAndSubmitter,
+    .columnTime,
+    .columnMemory,
+    .columnAnswer,
+    .columnSubmitTime {
+      font-size: 0.9em;
+    }
+
+    .columnSubmitTime {
+      width: 105px;
+    }
+  }
+
+  @media only screen and (max-width: 478px) {
+    .columnStatus {
+      width: 40px !important;
+      text-align: center !important;
+
+      :global(.statusicon) {
+        margin-right: 0 !important;
+      }
+
+      :global(.statustext) {
+        display: none;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 375px) {
+    .columnStatus,
+    .columnScore,
+    .columnProblemAndSubmitter,
+    .columnTime,
+    .columnMemory,
+    .columnAnswer,
+    .columnSubmitTime {
+      font-size: 0.85em;
+    }
+
+    .columnSubmitTime {
+      width: 95px;
+    }
+  }
+}
+
+.submissionPage {
+  @media only screen and (max-width: 1023px) {
+    .columnTime,
+    .columnMemory,
+    .columnAnswer,
+    .columnSubmitTime {
       display: none;
     }
   }
 }
 
-@media only screen and (max-width: 375px) {
-  .columnStatus,
-  .columnScore,
-  .columnProblemAndSubmitter,
-  .columnTime,
-  .columnMemory,
-  .columnAnswer,
-  .columnSubmitTime {
-    font-size: 0.85em;
-  }
+.extraRowsWrapper {
+  white-space: nowrap;
+  margin-right: 7px;
+  margin-bottom: 15px !important;
 
-  .columnSubmitTime {
-    width: 95px;
+  > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 13px;
+
+    :global(.icon) {
+      &:not(:global(.statusicon)) {
+        opacity: 0.7;
+      }
+      margin-right: 5px !important;
+    }
+
+    @media only screen and (max-width: 767px) {
+      > div:last-child {
+        :global(.icon) {
+          float: right;
+          margin-left: 5px !important;
+          margin-right: 0 !important;
+        }
+      }
+    }
   }
+}
+
+.extraRowsColumnProblem {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex-basis: calc(100% - 80px);
+  flex-grow: 1;
+}
+
+.extraRowsColumnSubmitter {
+  text-overflow: ellipsis;
+  overflow: hidden;
 }

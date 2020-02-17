@@ -3,3 +3,13 @@
 .ui.button:only-child {
   margin-right: 0;
 }
+
+/* Global styles */
+
+.monospace, code, pre {
+  font-family: "Fira Code", monospace;
+}
+
+pre {
+  tab-size: 4;
+}

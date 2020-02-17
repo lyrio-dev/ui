@@ -1,0 +1,108 @@
+.codeBox {
+  margin-top: 0px;
+  margin-bottom: 14px;
+}
+
+.codeBox.main {
+  margin-bottom: 25px;
+}
+
+.codeBoxSegment {
+  overflow: overlay;
+}
+
+.codeBoxContent {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.fileNameWrapper {
+  float: right;
+  opacity: 0.5;
+  cursor: pointer;
+
+  .fileName {
+    font-size: 13px;
+    margin-right: 5px;
+  }
+}
+
+.subAccordion {
+  margin-top: 0 !important;
+}
+
+.accordionTitle {
+  white-space: nowrap;
+
+  :not(:global(.active)) + & {
+    border-top: none !important;
+  }
+
+  &:not(:hover):not(:global(.active)) {
+    :global(.statuscolor) {
+      color: inherit !important;
+    }
+  }
+}
+
+.accordionContent {
+  padding-bottom: 15px !important;
+
+  .codeBox {
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    p {
+      margin-bottom: 0.5em !important;
+    }
+  
+    :global(.segment) {
+      margin-top: 0.5em !important;
+    }
+  }
+}
+
+.accordionTitleIcon {
+  margin-right: 5px !important;
+}
+
+// responsive
+.accordionTitleSecondRow {
+  margin-top: -23px;
+  
+  :global(.column):first-child {
+    padding-left: 31px !important;
+  }
+
+  :global(.dropdown.icon) {
+    visibility: hidden;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .codeBox.main {
+    margin-bottom: 16px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .accordion {
+    font-size: 0.9em;
+
+    :global(.statusicon) {
+      margin-right: 5px !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 424px) {
+  .testcaseColumnTitle,
+  .testcaseColumnScore {
+    margin-right: -7px;
+  }
+
+  .testcaseColumnTime {
+    margin-right: 1px;
+  }
+}

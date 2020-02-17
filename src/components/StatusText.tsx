@@ -27,13 +27,13 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
   Waiting: "hourglass half",
   Compiling: "spinner",
   Running: "spinner",
-  Skipped: "ban"
+  Skipped: "fast forward"
 };
 
 const StatusText: React.FC<StatusTextProps> = props => {
   const text = props.status.replace(/([A-Z])/g, " $1").trimLeft();
   return (
-    <span className={style[props.status]}>
+    <span className={"statuscolor " + style[props.status]}>
       <Icon className={"statusicon" + " " + style.icon} name={icons[props.status]} />
       <span className="statustext">{text}</span>
     </span>

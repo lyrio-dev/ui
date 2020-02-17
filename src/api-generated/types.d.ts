@@ -108,6 +108,16 @@ declare namespace ApiTypes {
   export interface GetSelfMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
   }
+  export interface GetSubmissionDetailRequestDto {
+    submissionId: string;
+    locale: "en_US" | "zh_CN";
+  }
+  export interface GetSubmissionDetailResponseDto {
+    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
+    partialMeta?: ApiTypes.SubmissionMetaDto;
+    content?: {};
+    result?: {};
+  }
   export interface GetUserMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
     privileges?: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];

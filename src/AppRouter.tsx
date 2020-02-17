@@ -11,7 +11,8 @@ const routes = mount({
   "/register": lazy(() => import("./pages/register")),
   "/problems": getRoute(() => import("./pages/problem"), "problems"),
   "/problem": getRoute(() => import("./pages/problem"), "problem"),
-  "/submissions": getRoute(() => import("./pages/submission"), "submissions")
+  "/submissions": getRoute(() => import("./pages/submission"), "submissions"),
+  "/submission": getRoute(() => import("./pages/submission"), "submission")
 });
 
 const AppRouter: React.FC = () => {
