@@ -215,67 +215,71 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     key: i,
     // If a subtask is skipped, make it unable to open
     [subtaskStatus[i] === "Skipped" ? "active" : ""]: false,
-    title: (
-      <Accordion.Title className={style.accordionTitle}>
-        {(() => {
-          const columnTitle = (width: SemanticWIDTHS) => (
-            <Grid.Column width={width}>
-              <Icon name="dropdown" />
-              {_("submission.subtask.title")} #{i + 1}
-            </Grid.Column>
-          );
+    title: (() => {
+      const columnTitle = (width: SemanticWIDTHS) => (
+        <Grid.Column width={width}>
+          <Icon name="dropdown" />
+          {_("submission.subtask.title")} #{i + 1}
+        </Grid.Column>
+      );
 
-          const columnStatus = (width: SemanticWIDTHS) => (
-            <Grid.Column width={width}>
-              <StatusText status={subtaskStatus[i]} />
-            </Grid.Column>
-          );
+      const columnStatus = (width: SemanticWIDTHS) => (
+        <Grid.Column width={width}>
+          <StatusText status={subtaskStatus[i]} />
+        </Grid.Column>
+      );
 
-          const columnScore = (width: SemanticWIDTHS) => (
-            <Grid.Column width={width}>
-              <Icon className={style.accordionTitleIcon} name="clipboard check" />
-              {round(subtask.score)}/{round(subtask.fullScore)} pts
-            </Grid.Column>
-          );
+      const columnScore = (width: SemanticWIDTHS) => (
+        <Grid.Column width={width}>
+          <Icon className={style.accordionTitleIcon} name="clipboard check" />
+          {round(subtask.score)}/{round(subtask.fullScore)} pts
+        </Grid.Column>
+      );
 
-          if (isWideScreen) {
-            return (
-              <Grid>
-                {columnTitle(3)}
-                {columnStatus(4)}
-                {columnScore(3)}
-              </Grid>
-            );
-          } else if (!isMobile) {
-            return (
-              <Grid>
-                {columnTitle(4)}
-                {columnStatus(5)}
-                {columnScore(4)}
-              </Grid>
-            );
-          } else if (!isNarrowMobile) {
-            return (
-              <Grid>
-                {columnTitle(4)}
-                {columnStatus(7)}
-                {columnScore(5)}
-              </Grid>
-            );
-          } else {
-            return (
-              <Grid>
-                <Grid.Row className={style.accordionTitleFirstRow}>
-                  {columnTitle(6)}
-                  {columnStatus(10)}
-                </Grid.Row>
-                <Grid.Row className={style.accordionTitleSecondRow}>{columnScore(5)}</Grid.Row>
-              </Grid>
-            );
-          }
-        })()}
-      </Accordion.Title>
-    ),
+      if (isWideScreen) {
+        return (
+          <Accordion.Title className={style.accordionTitle}>
+            <Grid>
+              {columnTitle(3)}
+              {columnStatus(4)}
+              {columnScore(3)}
+            </Grid>
+          </Accordion.Title>
+        );
+      } else if (!isMobile) {
+        return (
+          <Accordion.Title className={style.accordionTitle}>
+            <Grid>
+              {columnTitle(4)}
+              {columnStatus(5)}
+              {columnScore(4)}
+            </Grid>
+          </Accordion.Title>
+        );
+      } else if (!isNarrowMobile) {
+        return (
+          <Accordion.Title className={style.accordionTitle}>
+            <Grid>
+              {columnTitle(4)}
+              {columnStatus(7)}
+              {columnScore(5)}
+            </Grid>
+          </Accordion.Title>
+        );
+      } else {
+        return (
+          <Accordion.Title className={style.accordionTitle + " " + style.accordionTitleTwoRows}>
+            <Grid>
+              <Grid.Row className={style.accordionTitleFirstRow}>
+                {columnTitle(6)}
+                {columnStatus(10)}
+              </Grid.Row>
+              <Grid.Row className={style.accordionTitleSecondRow}>{columnScore(5)}</Grid.Row>
+            </Grid>
+          </Accordion.Title>
+        );
+      }
+    })(),
     content: !subtask.testcases.some(x => x != null) ? null : (
       <Accordion.Content className={style.accordionContent}>
         <Accordion.Accordion
@@ -337,34 +341,32 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                   </Grid.Column>
                 );
 
-                return (
+                return isMobile ? (
+                  <Accordion.Title className={style.accordionTitle + " " + style.accordionTitleTwoRows}>
+                    <Grid>
+                      <Grid.Row className={style.accordionTitleFirstRow}>
+                        {columnTitle(6)}
+                        {columnStatus(10)}
+                      </Grid.Row>
+                      {testcase && (
+                        <Grid.Row className={style.accordionTitleSecondRow}>
+                          {columnScore(6)}
+                          {columnTime(5)}
+                          {columnMemory(5)}
+                        </Grid.Row>
+                      )}
+                    </Grid>
+                  </Accordion.Title>
+                ) : (
                   <Accordion.Title className={style.accordionTitle}>
                     <Grid>
-                      {isMobile ? (
+                      {columnTitle(3)}
+                      {columnStatus(4)}
+                      {testcase && (
                         <>
-                          <Grid.Row className={style.accordionTitleFirstRow}>
-                            {columnTitle(6)}
-                            {columnStatus(10)}
-                          </Grid.Row>
-                          {testcase && (
-                            <Grid.Row className={style.accordionTitleSecondRow}>
-                              {columnScore(6)}
-                              {columnTime(5)}
-                              {columnMemory(5)}
-                            </Grid.Row>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          {columnTitle(3)}
-                          {columnStatus(4)}
-                          {testcase && (
-                            <>
-                              {columnScore(3)}
-                              {columnTime(3)}
-                              {columnMemory(3)}
-                            </>
-                          )}
+                          {columnScore(3)}
+                          {columnTime(3)}
+                          {columnMemory(3)}
                         </>
                       )}
                     </Grid>
