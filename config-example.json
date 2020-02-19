@@ -1,5 +1,5 @@
 {
     "siteName": "SYZOJ NG",
-    "apiEndpoint": "http://syzoj-ng.test/api",
+    "apiEndpoint": "http://syzoj-ng.test",
     "crossOrigin": true
 }

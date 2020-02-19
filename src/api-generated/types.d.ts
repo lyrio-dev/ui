@@ -117,6 +117,8 @@ declare namespace ApiTypes {
     partialMeta?: ApiTypes.SubmissionMetaDto;
     content?: {};
     result?: {};
+    progress?: {};
+    progressSubscriptionKey?: string;
   }
   export interface GetUserMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
@@ -260,6 +262,7 @@ declare namespace ApiTypes {
     submissions?: ApiTypes.SubmissionMetaDto[];
     hasSmallerId?: boolean;
     hasLargerId?: boolean;
+    progressSubscriptionKey?: string;
   }
   export interface RegisterRequestDto {
     username: string;
@@ -389,6 +392,7 @@ declare namespace ApiTypes {
     problem: ApiTypes.ProblemMetaDto;
     problemTitle: string;
     submitter: ApiTypes.UserMetaDto;
+    progressMeta?: 0 | 1 | 2 | 3;
     timeUsed: number;
     memoryUsed: number;
   }

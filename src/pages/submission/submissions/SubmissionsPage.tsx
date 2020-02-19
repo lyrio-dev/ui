@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Table, Form, Icon, Button, Segment, Header } from "semantic-ui-react";
 import { route } from "navi";
-import { useNavigation, Link } from "react-navi";
+import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import uuid from "uuid";
+import { patch } from "jsondiffpatch";
 
 import style from "./SubmissionsPage.module.less";
 
 import { SubmissionApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
+import { useIntlMessage, useFieldCheckSimple, useSocket } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { CodeLanguage, codeLanguageOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
@@ -54,6 +55,23 @@ async function fetchData(query: SubmissionsQuery) {
   });
   if (requestError) toast.error(requestError);
   else return response;
+}
+
+enum SubmissionProgressType {
+  Preparing,
+  Compiling,
+  Running,
+  Finished
+}
+
+interface SubmissionProgressMessage {
+  progressMeta?: SubmissionProgressType;
+  resultMeta?: {
+    status: SubmissionStatus;
+    score: number;
+    timeUsed: number;
+    memoryUsed: number;
+  };
 }
 
 interface SubmissionsPageProps {
@@ -115,7 +133,60 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
     });
   }
 
-  const submissions = props.queryResult.submissions ? props.queryResult.submissions : [];
+  const stateSubmissions = useState(props.queryResult.submissions ? props.queryResult.submissions : []);
+  const [submissions, setSubmissions] = stateSubmissions;
+
+  const refStateSubmissions = useRef<typeof stateSubmissions>();
+  refStateSubmissions.current = stateSubmissions;
+
+  // Subscribe to submission progress with the key
+  const subscriptionKey = props.queryResult.progressSubscriptionKey;
+  // Save the messages to a map, since we receive message delta each time
+  const messagesMapRef = useRef<Map<number, SubmissionProgressMessage>>();
+  useSocket(
+    "submission-progress",
+    {
+      subscriptionKey: subscriptionKey
+    },
+    socket => {
+      socket.on("message", (submissionId: number, messageDelta: any) => {
+        const messageMap = messagesMapRef.current;
+        let message = messageMap.get(submissionId);
+        message = patch(message, messageDelta);
+        messageMap.set(submissionId, message);
+
+        const [submissions, setSubmissions] = refStateSubmissions.current;
+        const newSubmissions = [...submissions];
+        for (const i in newSubmissions) {
+          if (submissionId === newSubmissions[i].id) {
+            if (message.progressMeta) {
+              newSubmissions[i] = {
+                ...newSubmissions[i],
+                progressMeta: message.progressMeta
+              };
+            } else {
+              delete newSubmissions[i].progressMeta;
+              newSubmissions[i] = {
+                ...newSubmissions[i],
+                ...message.resultMeta
+              };
+            }
+
+            break;
+          }
+        }
+        setSubmissions(newSubmissions);
+      });
+    },
+    () => {
+      // Server maintains the "previous" messages for each connection,
+      // so clear the local "previous" messages after reconnection
+      console.log("connected");
+      messagesMapRef.current = new Map();
+    },
+    !!subscriptionKey
+  );
+
   const hasPrevPage = props.queryResult.hasLargerId;
   const hasNextPage = props.queryResult.hasSmallerId;
 
@@ -258,7 +329,32 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             </Table.Header>
             <Table.Body>
               {submissions.map(submission => {
-                return <SubmissionItem key={submission.id} submission={submission} page="submissions" />;
+                let status = null;
+                if (submission.status === "Pending") {
+                  switch (submission.progressMeta) {
+                    case SubmissionProgressType.Preparing:
+                      status = "Preparing";
+                      break;
+                    case SubmissionProgressType.Compiling:
+                      status = "Compiling";
+                      break;
+                    case SubmissionProgressType.Running:
+                      status = "Running";
+                      break;
+                    default:
+                      status = "Waiting";
+                  }
+                }
+                return (
+                  <SubmissionItem
+                    key={submission.id}
+                    submission={{
+                      ...submission,
+                      status: status || submission.status
+                    }}
+                    page="submissions"
+                  />
+                );
               })}
             </Table.Body>
           </Table>

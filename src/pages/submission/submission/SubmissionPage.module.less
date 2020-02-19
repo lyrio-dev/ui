@@ -70,6 +70,10 @@
 // responsive
 .accordionTitleSecondRow {
   margin-top: -23px;
+
+  &:empty {
+    display: none !important;
+  }
   
   :global(.column):first-child {
     padding-left: 31px !important;

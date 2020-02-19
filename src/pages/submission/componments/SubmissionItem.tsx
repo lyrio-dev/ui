@@ -15,6 +15,9 @@ import { CodeLanguage } from "@/interfaces/CodeLanguage";
 interface SubmissionItemProps {
   submission: ApiTypes.SubmissionMetaDto;
   page: "submission" | "submissions";
+
+  // This is passed to <StatusText> to override the display text for status
+  statusText?: string;
 }
 
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
@@ -35,7 +38,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
     <Table.Row className={style[props.page + "Page"]}>
       <Table.Cell className={style.columnStatus} textAlign="left">
         <Link href={props.page === "submissions" ? submissionLink : null}>
-          <StatusText status={submission.status} />
+          <StatusText status={submission.status} statusText={props.statusText} />
         </Link>
       </Table.Cell>
       <Table.Cell className={style.columnScore}>

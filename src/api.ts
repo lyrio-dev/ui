@@ -11,7 +11,7 @@ export interface ApiResponse<T> {
 async function request<T>(path: string, method: "get" | "post", params?: any, body?: any): Promise<ApiResponse<T>> {
   let response: any;
   try {
-    response = await axios(appConfig.apiEndpoint + path, {
+    response = await axios(appConfig.apiEndpoint + "api/" + path, {
       method: method,
       params: params,
       data: body && JSON.stringify(body),

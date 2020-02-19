@@ -64,8 +64,8 @@ function escapeHTML(str) {
 
     <% if (global.appConfig.crossOrigin) { %>
     <script
-      src="<%= escapeHTML(global.appConfig.apiEndpoint + "cors/xdomain.min.js") %>"
-      data-slave="<%= escapeHTML(global.appConfig.apiEndpoint + "cors/") %>"
+      src="<%= escapeHTML(global.appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
+      data-slave="<%= escapeHTML(global.appConfig.apiEndpoint + "api/cors/") %>"
     >
     </script>
     <% } %>
