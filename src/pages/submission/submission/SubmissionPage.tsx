@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Segment, Table, Icon, Accordion, Grid, SemanticWIDTHS } from "semantic-ui-react";
+import { Segment, Table, Icon, Accordion, Grid, SemanticWIDTHS, Header, List } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
 import uuid from "uuid";
@@ -282,7 +282,7 @@ function parseProgress(
 interface SubmissionContentTraditional {
   language: string;
   code: string;
-  languageOptions: unknown;
+  languageOptions: Record<string, string>;
 }
 
 interface SubmissionPageProps {
@@ -691,6 +691,23 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     )
   }));
 
+  const answerInfo = (
+    <>
+      <table className={style.languageOptions}>
+        <tbody>
+          {Object.entries(content.languageOptions).map(([name, value]) => (
+            <tr key={name}>
+              <td align="right" className={style.languageOptionsName}>
+                <strong>{_(`code_language.${content.language}.options.${name}.name`)}</strong>
+              </td>
+              <td>{_(`code_language.${content.language}.options.${name}.values.${value}`)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  );
+
   return (
     <>
       {!isMobile && (
@@ -699,11 +716,16 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             <SubmissionHeader page="submission" />
           </Table.Header>
           <Table.Body>
-            <SubmissionItem submission={meta} statusText={fullInfo.statusText} page="submission" />
+            <SubmissionItem
+              submission={meta}
+              statusText={fullInfo.statusText}
+              answerInfo={answerInfo}
+              page="submission"
+            />
           </Table.Body>
         </Table>
       )}
-      {!isWideScreen && <SubmissionItemExtraRows submission={meta} isMobile={isMobile} />}
+      {!isWideScreen && <SubmissionItemExtraRows submission={meta} answerInfo={answerInfo} isMobile={isMobile} />}
       <CodeBox
         className={style.main}
         content={content.code}

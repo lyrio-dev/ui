@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Link } from "react-navi";
-import { Table, Grid, Icon } from "semantic-ui-react";
+import { Table, Grid, Icon, Popup, Ref } from "semantic-ui-react";
 
 import style from "./SubmissionItem.module.less";
 
@@ -18,6 +18,9 @@ interface SubmissionItemProps {
 
   // This is passed to <StatusText> to override the display text for status
   statusText?: string;
+
+  // Mouse hover on "answer" column to display
+  answerInfo?: React.ReactNode;
 }
 
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
@@ -33,6 +36,8 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   const problemUrl = submission.problem.displayId
     ? `/problem/${submission.problem.displayId}`
     : `/problem/by-id/${submission.problem.id}`;
+
+  const refAnswerInfoIcon = useRef<HTMLElement>();
 
   return (
     <Table.Row className={style[props.page + "Page"]}>
@@ -61,15 +66,34 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
         {formatFileSize((submission.memoryUsed || 0) * 1024, 2)}
       </Table.Cell>
       <Table.Cell className={style.columnAnswer}>
-        {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
-          <>
-            <Link href={props.page === "submissions" ? submissionLink : null}>
-              {_(`code_language.${submission.codeLanguage}.name`)}
-            </Link>
-            &nbsp;/&nbsp;
-          </>
-        )}
-        <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+        <Popup
+          className={style.popupOnIcon}
+          context={refAnswerInfoIcon}
+          content={props.answerInfo}
+          disabled={!props.answerInfo}
+          trigger={
+            <span>
+              {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
+                <>
+                  {props.answerInfo && (
+                    <Ref innerRef={refAnswerInfoIcon}>
+                      <Icon name="info circle" />
+                    </Ref>
+                  )}
+                  {props.page === "submissions" ? (
+                    <Link href={submissionLink}>{_(`code_language.${submission.codeLanguage}.name`)}</Link>
+                  ) : (
+                    _(`code_language.${submission.codeLanguage}.name`)
+                  )}
+                  &nbsp;/&nbsp;
+                </>
+              )}
+              <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+            </span>
+          }
+          position="bottom center"
+          on="hover"
+        />
       </Table.Cell>
       <Table.Cell className={style.columnSubmitTime} title={timeString[1]}>
         {timeString[0]}
@@ -105,9 +129,10 @@ export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
 
 // This is for the responsive view in submission page (not submissions page)
 // < 1024 has one row
-// < 768  has two rows
+// < 768  has more rows
 interface SubmissionItemExtraRowsProps {
   submission: ApiTypes.SubmissionMetaDto;
+  answerInfo?: React.ReactNode;
   isMobile: boolean;
 }
 
@@ -168,16 +193,24 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
   );
 
   const columnAnswer = (
-    <div>
-      <Icon name="file" />
-      {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
-        <>
-          {_(`code_language.${submission.codeLanguage}.name`)}
-          &nbsp;/&nbsp;
-        </>
-      )}
-      <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
-    </div>
+    <Popup
+      content={props.answerInfo}
+      disabled={!props.answerInfo}
+      position={props.isMobile ? "left center" : "bottom center"}
+      on="hover"
+      trigger={
+        <div>
+          <Icon name="file" />
+          {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
+            <>
+              {_(`code_language.${submission.codeLanguage}.name`)}
+              &nbsp;/&nbsp;
+            </>
+          )}
+          <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+        </div>
+      }
+    />
   );
 
   const columnSubmitTime = (
