@@ -66,12 +66,7 @@ enum SubmissionProgressType {
 
 interface SubmissionProgressMessage {
   progressMeta?: SubmissionProgressType;
-  resultMeta?: {
-    status: SubmissionStatus;
-    score: number;
-    timeUsed: number;
-    memoryUsed: number;
-  };
+  resultMeta?: Partial<ApiTypes.SubmissionMetaDto>;
 }
 
 interface SubmissionsPageProps {

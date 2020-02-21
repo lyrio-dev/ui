@@ -68,8 +68,10 @@ const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, ref) => {
 });
 
 interface SubmissionProgressMessage {
-  resultDetail?: SubmissionResultDetail;
+  progressMeta?: SubmissionProgressType;
   progressDetail?: SubmissionProgress<unknown>;
+  resultMeta?: Partial<ApiTypes.SubmissionMetaDto>;
+  resultDetail?: SubmissionResult<unknown>;
 }
 
 interface SubmissionProgress<TestcaseResult> {
@@ -180,37 +182,17 @@ export interface SubmissionFullInfo<TestcaseResult> {
   }[];
 }
 
-interface SubmissionResultDetail {
-  status: SubmissionStatus;
-  score: number;
-  result: SubmissionResult<unknown>;
-}
-
-function parseTimeAndMemoryUsed(fullInfo: SubmissionFullInfo<SubmissionTestcaseResultTraditional>) {
-  fullInfo.timeUsed = fullInfo.memoryUsed = 0;
-
-  if (Array.isArray(fullInfo.subtasks)) {
-    for (const subtask of fullInfo.subtasks) {
-      for (const { testcaseHash } of subtask.testcases) {
-        if (!testcaseHash) continue;
-        fullInfo.timeUsed += fullInfo.testcaseResult[testcaseHash].time;
-        fullInfo.memoryUsed = Math.max(fullInfo.memoryUsed, fullInfo.testcaseResult[testcaseHash].memory);
-      }
-    }
-  }
-
-  return fullInfo;
-}
-
 function parseResult(
-  meta: Omit<ApiTypes.SubmissionMetaDto, "timeUsed" | "memoryUsed">,
+  meta: ApiTypes.SubmissionMetaDto,
   result: SubmissionResult<SubmissionTestcaseResultTraditional>
 ): SubmissionFullInfo<SubmissionTestcaseResultTraditional> {
-  return parseTimeAndMemoryUsed({
+  return {
     ...result,
     progressType: SubmissionProgressType.Finished,
     status: meta.status,
     score: meta.score,
+    timeUsed: meta.timeUsed,
+    memoryUsed: meta.memoryUsed,
     subtasks:
       result.subtasks &&
       result.subtasks.map(subtask => ({
@@ -227,7 +209,7 @@ function parseResult(
               }
         )
       }))
-  });
+  };
 }
 
 function parseProgress(
@@ -271,12 +253,26 @@ function parseProgress(
     statusText += ` ${finishedCount}/${totalCount}`;
   }
 
-  return parseTimeAndMemoryUsed({
+  let timeUsed = 0,
+    memoryUsed = 0;
+  if (Array.isArray(progress.subtasks)) {
+    for (const subtask of progress.subtasks) {
+      for (const { testcaseHash } of subtask.testcases) {
+        if (!testcaseHash) continue;
+        timeUsed += progress.testcaseResult[testcaseHash].time;
+        memoryUsed = Math.max(memoryUsed, progress.testcaseResult[testcaseHash].memory);
+      }
+    }
+  }
+
+  return {
     ...progress,
     status,
     statusText,
-    score
-  });
+    score,
+    timeUsed,
+    memoryUsed
+  };
 }
 
 interface SubmissionContentTraditional {
@@ -286,7 +282,7 @@ interface SubmissionContentTraditional {
 }
 
 interface SubmissionPageProps {
-  partialMeta: Omit<ApiTypes.SubmissionMetaDto, "timeUsed" | "memoryUsed">;
+  meta: ApiTypes.SubmissionMetaDto;
   content: unknown;
   result: SubmissionResult<unknown>;
   progress?: SubmissionProgress<unknown>;
@@ -303,7 +299,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const _ = useIntlMessage();
 
   useEffect(() => {
-    appState.title = `${_("submission.title")} #${props.partialMeta.id}`;
+    appState.title = `${_("submission.title")} #${props.meta.id}`;
   }, [appState.locale]);
 
   const content = props.content as SubmissionContentTraditional;
@@ -311,11 +307,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   // The meta only provides fields not changing with progress
   // score, status, time, memory are in the full info
   // score and status are in this meta, but we still use them in full info
-  const partialMeta = props.partialMeta;
+  const meta = props.meta;
   const stateFullInfo = useState(
-    props.partialMeta.status === "Pending"
+    props.meta.status === "Pending"
       ? parseProgress(props.progress as SubmissionProgress<SubmissionTestcaseResultTraditional>)
-      : parseResult(partialMeta, props.result as SubmissionResult<SubmissionTestcaseResultTraditional>)
+      : parseResult(meta, props.result as SubmissionResult<SubmissionTestcaseResultTraditional>)
   );
   const [fullInfo, setFullInfo] = stateFullInfo;
 
@@ -342,11 +338,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           setFullInfo(
             parseResult(
               {
-                ...partialMeta,
-                status: message.resultDetail.status,
-                score: message.resultDetail.score
+                ...meta,
+                ...message.resultMeta
               },
-              message.resultDetail.result as SubmissionResult<SubmissionTestcaseResultTraditional>
+              message.resultDetail as SubmissionResult<SubmissionTestcaseResultTraditional>
             )
           );
         } else {
@@ -363,8 +358,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     !!subscriptionKey
   );
 
-  const meta: ApiTypes.SubmissionMetaDto = {
-    ...partialMeta,
+  // displayMeta contains fields parsed from the progress
+  const displayMeta: ApiTypes.SubmissionMetaDto = {
+    ...meta,
     timeUsed: fullInfo.timeUsed,
     memoryUsed: fullInfo.memoryUsed,
     status: fullInfo.status as any,
@@ -391,7 +387,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
 
   async function onDownload(filename: string) {
     const { requestError, response } = await ProblemApi.downloadProblemFiles({
-      problemId: partialMeta.problem.id,
+      problemId: meta.problem.id,
       type: "TestData",
       filenameList: [filename]
     });
@@ -717,7 +713,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           </Table.Header>
           <Table.Body>
             <SubmissionItem
-              submission={meta}
+              submission={displayMeta}
               statusText={fullInfo.statusText}
               answerInfo={answerInfo}
               page="submission"
@@ -725,7 +721,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           </Table.Body>
         </Table>
       )}
-      {!isWideScreen && <SubmissionItemExtraRows submission={meta} answerInfo={answerInfo} isMobile={isMobile} />}
+      {!isWideScreen && (
+        <SubmissionItemExtraRows submission={displayMeta} answerInfo={answerInfo} isMobile={isMobile} />
+      )}
       <CodeBox
         className={style.main}
         content={content.code}

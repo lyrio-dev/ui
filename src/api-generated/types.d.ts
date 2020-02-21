@@ -114,7 +114,7 @@ declare namespace ApiTypes {
   }
   export interface GetSubmissionDetailResponseDto {
     error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
-    partialMeta?: ApiTypes.SubmissionMetaDto;
+    meta?: ApiTypes.SubmissionMetaDto;
     content?: {};
     result?: {};
     progress?: {};
@@ -389,12 +389,12 @@ declare namespace ApiTypes {
       | "Accepted"
       | "JudgementFailed";
     submitTime: string; // date-time
+    timeUsed: number;
+    memoryUsed: number;
     problem: ApiTypes.ProblemMetaDto;
     problemTitle: string;
     submitter: ApiTypes.UserMetaDto;
     progressMeta?: 0 | 1 | 2 | 3;
-    timeUsed: number;
-    memoryUsed: number;
   }
   export interface SubmitRequestDto {
     problemId: number;
