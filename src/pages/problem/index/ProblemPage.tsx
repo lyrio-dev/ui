@@ -45,6 +45,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     localizedContentsOfLocale: locale,
     samples: true,
     judgeInfo: true,
+    statistics: true,
     permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"]
   });
 
@@ -526,12 +527,12 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
         <div className={style.rightContainer}>
           <Statistic.Group size="small" className={style.headerRightStatisticGroup}>
             <Statistic>
-              <Statistic.Value>114</Statistic.Value>
-              <Statistic.Label>{_("problem.statistic.submissions")}</Statistic.Label>
+              <Statistic.Value>{props.problem.meta.acceptedSubmissionCount}</Statistic.Value>
+              <Statistic.Label>{_("problem.statistic.accepted")}</Statistic.Label>
             </Statistic>
             <Statistic>
-              <Statistic.Value>514</Statistic.Value>
-              <Statistic.Label>{_("problem.statistic.accepted")}</Statistic.Label>
+              <Statistic.Value>{props.problem.meta.submissionCount}</Statistic.Value>
+              <Statistic.Label>{_("problem.statistic.submissions")}</Statistic.Label>
             </Statistic>
           </Statistic.Group>
           <div className={style.actionMenusWrapper}>

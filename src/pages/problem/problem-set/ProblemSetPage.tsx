@@ -50,8 +50,8 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]
       id: item.meta.id,
       displayId: item.meta.displayId,
       title: item.title,
-      submissionCount: Math.round(Math.random() * 10000),
-      acceptedRate: Math.random(),
+      submissionCount: item.meta.submissionCount,
+      acceptedRate: item.meta.acceptedSubmissionCount / item.meta.submissionCount || 0,
       tags: randomTags().map((name, id) => ({ id, name }))
     }))
   ];
@@ -160,7 +160,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           <Grid.Column textAlign="center">
             <Table basic="very" textAlign="center" unstackable>
               <Table.Header>
-                <Table.Row>
+                <Table.Row className={style.tableHeaderRow}>
                   <Table.HeaderCell width={1}>#</Table.HeaderCell>
                   <Table.HeaderCell textAlign="left">{_("problem_set.column_title")}</Table.HeaderCell>
                   <Table.HeaderCell width={1}>{_("problem_set.column_submission_count")}</Table.HeaderCell>

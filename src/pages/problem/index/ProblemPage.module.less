@@ -15,6 +15,7 @@
 
 .headerRightStatisticGroup {
   padding-top: 15px;
+  white-space: nowrap;
   flex-wrap: nowrap !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -331,8 +332,8 @@
   }
 
   .headerRightStatisticGroup {
-    &.inSubmitView {
-      display: none;
+    .inSubmitView & {
+      display: none !important;
     }
 
     padding-top: 4px;

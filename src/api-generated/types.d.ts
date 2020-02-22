@@ -89,6 +89,7 @@ declare namespace ApiTypes {
     judgeInfo?: boolean;
     testData?: boolean;
     additionalFiles?: boolean;
+    statistics?: boolean;
     permissionOfCurrentUser?: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
     permissions?: boolean;
   }
@@ -189,6 +190,8 @@ declare namespace ApiTypes {
     isPublic: boolean;
     ownerId: number;
     locales: ("en_US" | "zh_CN")[];
+    submissionCount?: number;
+    acceptedSubmissionCount?: number;
   }
   export interface ProblemPermissionOfCurrentUserDto {
     VIEW?: boolean;
@@ -263,6 +266,18 @@ declare namespace ApiTypes {
     hasSmallerId?: boolean;
     hasLargerId?: boolean;
     progressSubscriptionKey?: string;
+  }
+  export interface QuerySubmissionStatisticsRequestDto {
+    locale: "en_US" | "zh_CN";
+    problemId: number;
+    statisticsType: "Fastest" | "MinMemory" | "MinAnswerSize" | "Earlist";
+    skipCount: number;
+    takeCount: number;
+  }
+  export interface QuerySubmissionStatisticsResponseDto {
+    error?: "NO_SUCH_PROBLEM" | "TAKE_TOO_MANY";
+    submissions?: ApiTypes.SubmissionMetaDto[];
+    count?: number;
   }
   export interface RegisterRequestDto {
     username: string;
