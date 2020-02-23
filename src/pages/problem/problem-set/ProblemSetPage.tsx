@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Search, ButtonGroup, Dropdown, Checkbox, Grid, Table, Label } from "semantic-ui-react";
+import { Search, ButtonGroup, Dropdown, Checkbox, Grid, Table, Label, Button } from "semantic-ui-react";
 import { mount, route } from "navi";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
@@ -25,7 +25,7 @@ interface ProblemRecord {
   }[];
 }
 
-async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]> {
+async function fetchData(currentPage: number): Promise<[number, ProblemRecord[], boolean]> {
   const { requestError, response } = await ProblemApi.queryProblemSet({
     locale: appState.locale,
     skipCount: PROBLEMS_PER_PAGE * (currentPage - 1),
@@ -34,7 +34,7 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]
 
   if (requestError || response.error) {
     toast.error(requestError || response.error);
-    return [null, null];
+    return [null, null, null];
   }
 
   const testTags = ["NOIP", "模板", "图论", "素数", "线段树", "计算几何"];
@@ -53,7 +53,8 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[]]
       submissionCount: item.meta.submissionCount,
       acceptedRate: item.meta.acceptedSubmissionCount / item.meta.submissionCount || 0,
       tags: randomTags().map((name, id) => ({ id, name }))
-    }))
+    })),
+    response.createProblemPermission
   ];
 }
 
@@ -64,6 +65,7 @@ interface ProblemSetPageProps {
   totalCount: number;
   currentPage: number;
   problems: ProblemRecord[];
+  createProblemPermission: boolean;
 }
 
 let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
@@ -116,17 +118,15 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     </>
   );
 
-  const headerAddButton = (
-    <>
-      <ButtonGroup size="mini" className={style.addButton}>
-        <Dropdown labeled button className="icon" icon="plus" text={_("problem_set.add_problem")}>
-          <Dropdown.Menu>
-            <Dropdown.Item icon="file" text={_("problem_set.new_problem")} as={Link} href="/problem/new" />
-            <Dropdown.Item icon="cloud download" text={_("problem_set.import_problem")} />
-          </Dropdown.Menu>
-        </Dropdown>
-      </ButtonGroup>
-    </>
+  const headerAddButton = props.createProblemPermission && (
+    <Button
+      size="tiny"
+      className={"labeled icon " + style.addButton}
+      icon="plus"
+      content={_("problem_set.add_problem")}
+      as={Link}
+      href="/problem/new"
+    />
   );
 
   return (
@@ -145,9 +145,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             </Grid.Row>
           </>
         ) : (
-          <Grid.Row>
+          <Grid.Row className={style.headerRow}>
             <Grid.Column width={5}>{headerSearch}</Grid.Column>
-            <Grid.Column width={11} floated="right" textAlign="right">
+            <Grid.Column width={11} className={style.headerRightControls}>
               {headerShowTagsCheckbox}
               {headerAddButton}
             </Grid.Column>
@@ -203,13 +203,20 @@ export default {
   public: route({
     async getView(request) {
       const page = parseInt(request.query.page) || 1;
-      const [count, problems] = await fetchData(page);
+      const [count, problems, createProblemPermission] = await fetchData(page);
       if (count === null) {
         // TODO: Display an error page
         return null;
       }
 
-      return <ProblemSetPage totalCount={count} currentPage={page} problems={problems} />;
+      return (
+        <ProblemSetPage
+          totalCount={count}
+          currentPage={page}
+          problems={problems}
+          createProblemPermission={createProblemPermission}
+        />
+      );
     }
   })
 };

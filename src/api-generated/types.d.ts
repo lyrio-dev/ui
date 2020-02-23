@@ -229,6 +229,7 @@ declare namespace ApiTypes {
     error?: "TAKE_TOO_MANY";
     result?: ApiTypes.QueryProblemSetResponseItemDto[];
     count?: number;
+    createProblemPermission?: boolean;
   }
   export interface QueryProblemSetResponseItemDto {
     meta: ApiTypes.ProblemMetaDto;
