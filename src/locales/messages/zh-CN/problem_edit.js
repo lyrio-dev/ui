@@ -20,6 +20,9 @@ module.exports = {
     }
   },
   header_samples: "样例",
+  header_tags: "标签",
+  tags_placeholder: "搜索标签 …",
+  no_addable_tags: "没有可以添加的标签。",
   content_editor: {
     title: "标题",
     preview_all: "预览",

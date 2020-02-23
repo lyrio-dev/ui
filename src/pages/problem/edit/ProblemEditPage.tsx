@@ -40,6 +40,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
   const { requestError, response } = await ProblemApi.getProblem({
     [idType]: id,
     localizedContentsOfAllLocales: true,
+    tagsOfLocale: appState.locale,
     samples: true,
     permissionOfCurrentUser: ["MODIFY"]
   });
@@ -50,6 +51,19 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
   }
 
   return response;
+}
+
+async function fetchDataAllProblemTags(): Promise<ApiTypes.LocalizedProblemTagDto[]> {
+  const { requestError, response } = await ProblemApi.getAllProblemTags({
+    locale: appState.locale
+  });
+
+  if (requestError) {
+    toast.error(requestError);
+    return null;
+  }
+
+  return response.tags;
 }
 
 interface LocalizedContentSection {
@@ -643,6 +657,7 @@ interface ProblemEditPageProps {
   idType?: "id" | "displayId";
   problem?: Problem;
   new?: boolean;
+  allProblemTags: ApiTypes.LocalizedProblemTagDto[];
   requestedLocale?: Locale;
 }
 
@@ -737,7 +752,8 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         type: "TRADITIONAL",
         statement: {
           localizedContents: localizedContentsPayload,
-          samples: samplesPayload
+          samples: samplesPayload,
+          problemTagIds: tagIds
         }
       });
 
@@ -751,7 +767,8 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       const { requestError, response } = await ProblemApi.updateStatement({
         problemId: props.problem.meta.id,
         localizedContents: localizedContentsPayload,
-        samples: samplesPayload
+        samples: samplesPayload,
+        problemTagIds: tagIds
       });
 
       if (requestError) toast.error(requestError);
@@ -1134,11 +1151,16 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     defaultEditingLocaleIndex == -1 ? 0 : defaultEditingLocaleIndex
   );
 
+  const [tagIds, setTagIds] = useState(props.problem.tagsOfLocale.map(problemTag => problemTag.id));
+
+  function searchTags(options: { problemTag: ApiTypes.LocalizedProblemTagDto }[], query: string) {
+    return options.filter(option => option.problemTag.name.startsWith(query));
+  }
+
   const [defaultLocale, setDefaultLocale] = useState(
     props.new ? appState.locale : (props.problem.meta.locales[0] as Locale)
   );
 
-  // TODO: Request permission from server for creating new problems
   const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.MODIFY;
 
   useConfirmUnload(() => modified);
@@ -1306,6 +1328,29 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 />
               ))
             )}
+            <Header as="h1">
+              <strong>{_("problem_edit.header_tags")}</strong>
+            </Header>
+            <Dropdown
+              search={searchTags}
+              fluid
+              multiple
+              value={tagIds}
+              placeholder={_("problem_edit.tags_placeholder")}
+              selection
+              noResultsMessage={_("problem_edit.no_addable_tags")}
+              onChange={(e, { value }: { value: number[] }) => {
+                if (value.length <= 20) {
+                  setModified(true);
+                  setTagIds(value);
+                }
+              }}
+              options={props.allProblemTags.map(problemTag => ({
+                key: problemTag.id,
+                value: problemTag.id,
+                text: problemTag.name
+              }))}
+            />
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -1318,7 +1363,13 @@ ProblemEditPage = observer(ProblemEditPage);
 export default {
   new: route({
     async getView(request) {
-      return <ProblemEditPage key={Math.random()} new={true} />;
+      const allProblemTags = await fetchDataAllProblemTags();
+      if (allProblemTags == null) {
+        // TODO: Display an error page
+        return null;
+      }
+
+      return <ProblemEditPage key={Math.random()} new={true} allProblemTags={allProblemTags} />;
     }
   }),
   byId: route({
@@ -1326,12 +1377,21 @@ export default {
       const id = parseInt(request.params["id"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
       const problem = await fetchData("id", id);
-      if (problem === null) {
+      const allProblemTags = await fetchDataAllProblemTags();
+      if (problem === null || allProblemTags == null) {
         // TODO: Display an error page
         return null;
       }
 
-      return <ProblemEditPage key={Math.random()} idType="id" problem={problem} requestedLocale={requestedLocale} />;
+      return (
+        <ProblemEditPage
+          key={Math.random()}
+          idType="id"
+          problem={problem}
+          allProblemTags={allProblemTags}
+          requestedLocale={requestedLocale}
+        />
+      );
     }
   }),
   byDisplayId: route({
@@ -1339,13 +1399,20 @@ export default {
       const displayId = parseInt(request.params["displayId"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
       const problem = await fetchData("displayId", displayId);
-      if (problem === null) {
+      const allProblemTags = await fetchDataAllProblemTags();
+      if (problem === null || allProblemTags == null) {
         // TODO: Display an error page
         return null;
       }
 
       return (
-        <ProblemEditPage key={Math.random()} idType="displayId" problem={problem} requestedLocale={requestedLocale} />
+        <ProblemEditPage
+          key={Math.random()}
+          idType="displayId"
+          problem={problem}
+          allProblemTags={allProblemTags}
+          requestedLocale={requestedLocale}
+        />
       );
     }
   })

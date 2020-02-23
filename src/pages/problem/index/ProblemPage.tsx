@@ -43,6 +43,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
   const { requestError, response } = await ProblemApi.getProblem({
     [idType]: id,
     localizedContentsOfLocale: locale,
+    tagsOfLocale: locale,
     samples: true,
     judgeInfo: true,
     statistics: true,
@@ -107,13 +108,6 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   const timeLimit = getLimit(props.problem.judgeInfo, "timeLimit");
   const memoryLimit = getLimit(props.problem.judgeInfo, "memoryLimit");
-
-  const randomTagCount = Math.round(Math.random() * 4);
-  const tags = useState(
-    ["NOIP", "模板", "图论", "素数", "线段树", "计算几何"]
-      .sort(() => Math.random() - 0.5)
-      .filter((_, i) => i <= randomTagCount)
-  )[0];
 
   // Begin toggle tags
   const [showTags, setShowTags] = useState(appState.showTagsInProblemSet);
@@ -395,24 +389,31 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     {memoryLimit + " MiB"}
                   </Label>
                 )}
-                <Label
-                  size={isMobile ? "small" : null}
-                  color="grey"
-                  as="a"
-                  onClick={toggleTags}
-                  className={style.toggleTagsLabel}
-                >
-                  {!showTags ? _("problem.show_tags") : _("problem.hide_tags")}
-                  <Icon name={"caret down"} style={{ transform: showTags && "rotateZ(-90deg)" }} />
-                </Label>
-                {// FIXME: Should we display tags in a <Popup> to prevent overflow the single-line design of <Label>s?
-                showTags && (
+                {props.problem.tagsOfLocale.length > 0 && (
                   <>
-                    {tags.map(tag => (
-                      <Label size={isMobile ? "small" : null} key={tag}>
-                        {tag}
-                      </Label>
-                    ))}
+                    <Label
+                      size={isMobile ? "small" : null}
+                      color="grey"
+                      as="a"
+                      onClick={toggleTags}
+                      className={style.toggleTagsLabel}
+                    >
+                      {!showTags ? _("problem.show_tags") : _("problem.hide_tags")}
+                      <Icon name={"caret down"} style={{ transform: showTags && "rotateZ(-90deg)" }} />
+                    </Label>
+                    {// FIXME: Should we display tags in a <Popup> to prevent overflow the single-line design of <Label>s?
+                    showTags && (
+                      <>
+                        {props.problem.tagsOfLocale.map(tag => (
+                          <Label
+                            size={isMobile ? "small" : null}
+                            key={tag.id}
+                            content={tag.name}
+                            color={tag.color as any}
+                          />
+                        ))}
+                      </>
+                    )}
                   </>
                 )}
               </div>

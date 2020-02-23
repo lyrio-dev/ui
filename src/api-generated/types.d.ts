@@ -43,7 +43,15 @@ declare namespace ApiTypes {
     statement: ApiTypes.ProblemStatementDto;
   }
   export interface CreateProblemResponseDto {
-    error?: "PERMISSION_DENIED" | "FAILED";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM_TAG" | "FAILED";
+    id?: number;
+  }
+  export interface CreateProblemTagRequestDto {
+    localizedNames: ApiTypes.ProblemTagLocalizedNameDto[];
+    color: string;
+  }
+  export interface CreateProblemTagResponseDto {
+    error?: string;
     id?: number;
   }
   export interface DeleteGroupRequestDto {
@@ -58,6 +66,12 @@ declare namespace ApiTypes {
   }
   export interface DeleteJudgeClientResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_JUDGE_CLIENT";
+  }
+  export interface DeleteProblemTagRequestDto {
+    id: number;
+  }
+  export interface DeleteProblemTagResponseDto {
+    error?: "NO_SUCH_PROBLEM_TAG" | "PERMISSION_DENIED";
   }
   export interface DownloadProblemFilesRequestDto {
     problemId: number;
@@ -75,6 +89,12 @@ declare namespace ApiTypes {
     error?: "INVALID_OPERATION" | "NOT_UPLOADED" | "IO_ERROR" | "CHECKSUM_MISMATCH";
     uuid?: string;
   }
+  export interface GetAllProblemTagsRequestDto {
+    locale: "en_US" | "zh_CN";
+  }
+  export interface GetAllProblemTagsResponseDto {
+    tags: ApiTypes.LocalizedProblemTagDto[];
+  }
   export interface GetGroupMetaResponseDto {
     error?: "NO_SUCH_GROUP";
     groupMeta?: ApiTypes.GroupMetaDto;
@@ -85,6 +105,7 @@ declare namespace ApiTypes {
     owner?: boolean;
     localizedContentsOfLocale?: "en_US" | "zh_CN";
     localizedContentsOfAllLocales?: boolean;
+    tagsOfLocale?: "en_US" | "zh_CN";
     samples?: boolean;
     judgeInfo?: boolean;
     testData?: boolean;
@@ -99,12 +120,22 @@ declare namespace ApiTypes {
     owner?: ApiTypes.UserMetaDto;
     localizedContentsOfLocale?: ApiTypes.ProblemLocalizedContentDto;
     localizedContentsOfAllLocales?: ApiTypes.ProblemLocalizedContentDto[];
+    tagsOfLocale?: ApiTypes.LocalizedProblemTagDto[];
     samples?: ApiTypes.ProblemSampleDataMemberDto[];
     judgeInfo?: {};
     testData?: ApiTypes.ProblemFileDto[];
     additionalFiles?: ApiTypes.ProblemFileDto[];
     permissionOfCurrentUser?: ApiTypes.ProblemPermissionOfCurrentUserDto;
     permissions?: ApiTypes.ProblemPermissions;
+  }
+  export interface GetProblemTagDetailRequestDto {
+    id: number;
+  }
+  export interface GetProblemTagDetailResponseDto {
+    error?: string;
+    id?: number;
+    color?: string;
+    localizedNames?: ApiTypes.ProblemTagLocalizedNameDto[];
   }
   export interface GetSelfMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
@@ -140,6 +171,12 @@ declare namespace ApiTypes {
   }
   export interface ListJudgeClientsResponseDto {
     judgeClients?: ApiTypes.JudgeClientInfoDto[];
+  }
+  export interface LocalizedProblemTagDto {
+    id: number;
+    name: string;
+    color: string;
+    nameLocale: "en_US" | "zh_CN";
   }
   export interface LoginRequestDto {
     username: string;
@@ -211,6 +248,11 @@ declare namespace ApiTypes {
   export interface ProblemStatementDto {
     localizedContents: ApiTypes.ProblemLocalizedContentDto[];
     samples: ApiTypes.ProblemSampleDataMemberDto[];
+    problemTagIds: number[];
+  }
+  export interface ProblemTagLocalizedNameDto {
+    name: string;
+    locale: "en_US" | "zh_CN";
   }
   export interface ProblemUserPermissionDto {
     user: ApiTypes.UserMetaDto;
@@ -234,7 +276,8 @@ declare namespace ApiTypes {
   export interface QueryProblemSetResponseItemDto {
     meta: ApiTypes.ProblemMetaDto;
     title: string;
-    titleLocale: "en_US" | "zh_CN";
+    tags: ApiTypes.LocalizedProblemTagDto[];
+    resultLocale: "en_US" | "zh_CN";
   }
   export interface QuerySubmissionRequestDto {
     locale: "en_US" | "zh_CN";
@@ -436,9 +479,18 @@ declare namespace ApiTypes {
     problemId: number;
     localizedContents: ApiTypes.UpdateProblemRequestUpdatingLocalizedContentDto[];
     samples?: ApiTypes.ProblemSampleDataMemberDto[];
+    problemTagIds: number[];
   }
   export interface UpdateProblemStatementResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "FAILED";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "NO_SUCH_PROBLEM_TAG" | "FAILED";
+  }
+  export interface UpdateProblemTagRequestDto {
+    id: number;
+    localizedNames: ApiTypes.ProblemTagLocalizedNameDto[];
+    color: string;
+  }
+  export interface UpdateProblemTagResponseDto {
+    error?: "NO_SUCH_PROBLEM_TAG" | "PERMISSION_DENIED";
   }
   export interface UpdateUserProfileRequestDto {
     userId: number;

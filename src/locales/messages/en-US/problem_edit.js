@@ -20,6 +20,8 @@ module.exports = {
     }
   },
   header_samples: "Samples",
+  tags_placeholder: "Search tags to add ...",
+  no_addable_tags: "No tags to add.",
   content_editor: {
     title: "Title",
     preview_all: "Preview",

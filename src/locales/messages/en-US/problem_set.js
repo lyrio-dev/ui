@@ -5,5 +5,6 @@ module.exports = {
   add_problem: "Add Problem",
   column_title: "Problem",
   column_submission_count: "Submissions",
-  column_accepted_rate: "Acceptance"
+  column_accepted_rate: "Acceptance",
+  non_public: "Non-Public"
 };

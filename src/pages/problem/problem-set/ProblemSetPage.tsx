@@ -13,15 +13,12 @@ import toast from "@/utils/toast";
 
 import Pagination from "@/components/Pagination";
 
-interface ProblemRecord {
-  id: number;
-  displayId: number;
+interface ProblemRecord extends ApiTypes.ProblemMetaDto {
   title: string;
-  submissionCount: number;
-  acceptedRate: number;
   tags: {
     id: number;
     name: string;
+    color: string;
   }[];
 }
 
@@ -37,22 +34,12 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[],
     return [null, null, null];
   }
 
-  const testTags = ["NOIP", "模板", "图论", "素数", "线段树", "计算几何"];
-
-  function randomTags() {
-    const randomTagCount = Math.round(Math.random() * 4);
-    return testTags.sort(() => Math.random() - 0.5).filter((_, i) => i <= randomTagCount);
-  }
-
   return [
     response.count,
     response.result.map(item => ({
-      id: item.meta.id,
-      displayId: item.meta.displayId,
+      ...item.meta,
       title: item.title,
-      submissionCount: item.meta.submissionCount,
-      acceptedRate: item.meta.acceptedSubmissionCount / item.meta.submissionCount || 0,
-      tags: randomTags().map((name, id) => ({ id, name }))
+      tags: item.tags
     })),
     response.createProblemPermission
   ];
@@ -168,23 +155,40 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {props.problems.map(problem => (
-                  <Table.Row className={style.row} key={problem.id}>
-                    <Table.Cell>
-                      <b>{problem.displayId}</b>
-                    </Table.Cell>
-                    <Table.Cell textAlign="left" className={style.problemTitleCell}>
-                      <Link href={`/problem/${problem.displayId}`}>{problem.title}</Link>
-                      <div className={style.tags} style={{ display: appState.showTagsInProblemSet ? null : "none" }}>
-                        {problem.tags.map(tag => (
-                          <Label key={tag.id} content={tag.name} />
-                        ))}
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>{problem.submissionCount}</Table.Cell>
-                    <Table.Cell>{Math.ceil(problem.acceptedRate * 100 || 0).toFixed(2)}%</Table.Cell>
-                  </Table.Row>
-                ))}
+                {props.problems.map(problem => {
+                  return (
+                    <Table.Row className={style.row} key={problem.id}>
+                      <Table.Cell>
+                        <b>{problem.displayId ? problem.displayId : "P" + problem.id}</b>
+                      </Table.Cell>
+                      <Table.Cell textAlign="left" className={style.problemTitleCell}>
+                        <Link
+                          href={problem.displayId ? `/problem/${problem.displayId}` : `/problem/by-id/${problem.id}`}
+                        >
+                          {problem.title}
+                        </Link>
+                        {!problem.isPublic && (
+                          <Label
+                            className={style.labelNonPublic}
+                            icon="eye slash"
+                            size="small"
+                            color="red"
+                            content={_("problem_set.non_public")}
+                          />
+                        )}
+                        <div className={style.tags} style={{ display: appState.showTagsInProblemSet ? null : "none" }}>
+                          {problem.tags.map(tag => (
+                            <Label key={tag.id} size="small" content={tag.name} color={tag.color as any} />
+                          ))}
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell>{problem.submissionCount}</Table.Cell>
+                      <Table.Cell>
+                        {Math.ceil((problem.acceptedSubmissionCount / problem.submissionCount) * 100 || 0).toFixed(2)}%
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table>
           </Grid.Column>

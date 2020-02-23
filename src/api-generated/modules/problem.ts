@@ -28,6 +28,16 @@ export type RenameProblemFileRequestDto = ApiTypes.RenameProblemFileRequestDto;
 export type RenameProblemFileResponseDto = ApiTypes.RenameProblemFileResponseDto;
 export type UpdateProblemJudgeInfoRequestDto = ApiTypes.UpdateProblemJudgeInfoRequestDto;
 export type UpdateProblemJudgeInfoResponseDto = ApiTypes.UpdateProblemJudgeInfoResponseDto;
+export type GetAllProblemTagsRequestDto = ApiTypes.GetAllProblemTagsRequestDto;
+export type GetAllProblemTagsResponseDto = ApiTypes.GetAllProblemTagsResponseDto;
+export type CreateProblemTagRequestDto = ApiTypes.CreateProblemTagRequestDto;
+export type CreateProblemTagResponseDto = ApiTypes.CreateProblemTagResponseDto;
+export type GetProblemTagDetailRequestDto = ApiTypes.GetProblemTagDetailRequestDto;
+export type GetProblemTagDetailResponseDto = ApiTypes.GetProblemTagDetailResponseDto;
+export type UpdateProblemTagRequestDto = ApiTypes.UpdateProblemTagRequestDto;
+export type UpdateProblemTagResponseDto = ApiTypes.UpdateProblemTagResponseDto;
+export type DeleteProblemTagRequestDto = ApiTypes.DeleteProblemTagRequestDto;
+export type DeleteProblemTagResponseDto = ApiTypes.DeleteProblemTagResponseDto;
 
 export const queryProblemSet = createPostApi<QueryProblemSetRequestDto, QueryProblemSetResponseDto>(
   "problem/queryProblemSet"
@@ -62,3 +72,18 @@ export const updateProblemJudgeInfo = createPostApi<
   UpdateProblemJudgeInfoRequestDto,
   UpdateProblemJudgeInfoResponseDto
 >("problem/updateProblemJudgeInfo");
+export const getAllProblemTags = createPostApi<GetAllProblemTagsRequestDto, GetAllProblemTagsResponseDto>(
+  "problem/getAllProblemTags"
+);
+export const createProblemTag = createPostApi<CreateProblemTagRequestDto, CreateProblemTagResponseDto>(
+  "problem/createProblemTag"
+);
+export const getProblemTagDetail = createPostApi<GetProblemTagDetailRequestDto, GetProblemTagDetailResponseDto>(
+  "problem/getProblemTagDetail"
+);
+export const updateProblemTag = createPostApi<UpdateProblemTagRequestDto, UpdateProblemTagResponseDto>(
+  "problem/updateProblemTag"
+);
+export const deleteProblemTag = createPostApi<DeleteProblemTagRequestDto, DeleteProblemTagResponseDto>(
+  "problem/deleteProblemTag"
+);
