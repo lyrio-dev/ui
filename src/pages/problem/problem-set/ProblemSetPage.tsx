@@ -10,6 +10,7 @@ import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
+import tagColors from "../tagColors";
 
 import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
@@ -40,7 +41,10 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[],
     response.result.map(item => ({
       ...item.meta,
       title: item.title,
-      tags: item.tags
+      tags: item.tags.sort((a, b) => {
+        if (a.color != b.color) return tagColors.indexOf(a.color) - tagColors.indexOf(b.color);
+        return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
+      })
     })),
     response.permissionCreateProblem,
     response.permissionManageTags

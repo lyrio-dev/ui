@@ -23,8 +23,7 @@ import toast from "@/utils/toast";
 import { appState } from "@/appState";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
-
-const allColors = ["red", "blue", "black", "purple", "orange", "yellow", "pink", "green", "olive", "teal", "violet"];
+import tagColors from "../tagColors";
 
 interface TagProps {
   disabled: boolean;
@@ -375,7 +374,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
             selection
             inline
             value={editingTagColor}
-            options={allColors.map(color => ({
+            options={tagColors.map(color => ({
               key: color,
               value: color,
               text: (
