@@ -1,0 +1,100 @@
+.dialogHeader {
+  position: relative;
+}
+
+.dialogHeaderInfo {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: normal;
+  opacity: 0.5;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.header {
+  height: 32px;
+  margin: 0 !important;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+
+  .tag {
+    margin-left: 8px !important;
+  }
+}
+
+.colorDropdown {
+  margin-bottom: 0 !important;
+}
+
+.addButton {
+  margin-left: auto !important;
+}
+
+.submitButton {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+
+  .addButton ~ & {
+    margin-left: 8px !important;
+  }
+}
+
+.tagsSegment {
+  height: 30vh;
+  min-height: 200px;
+  overflow: visible;
+  overflow-y: overlay;
+  width: calc(100% + 42px);
+  padding-top: 21px;
+  padding-right: 21px;
+  padding-bottom: 21px;
+  padding-left: 21px;
+  margin-top: -21px;
+  margin-left: -21px;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+.tag {
+  margin: 2px !important;
+}
+
+.deleteTagPopup {
+  left: 8px !important;
+}
+
+.menu {
+  border-radius: 0 !important;
+  height: 43px;
+
+  > :global(.item) {
+    border-radius: 0 !important;
+
+    &:first-child {
+      padding: .92857143em .8em !important;
+    }
+  }
+
+  > :last-child::before {
+    display: none;
+  }
+}
+
+.itemLocale {
+  width: 160px;
+}
+
+.itemName {
+  flex-grow: 1 !important;
+}
+
+.divAddLanguageAndSubmit {
+  display: flex;
+  align-items: center;
+}
