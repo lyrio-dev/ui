@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Search, ButtonGroup, Dropdown, Checkbox, Grid, Table, Label, Button } from "semantic-ui-react";
+import React, { useEffect, useState, useRef } from "react";
+import { Search, ButtonGroup, Dropdown, Checkbox, Grid, Table, Label, Button, Header } from "semantic-ui-react";
 import { mount, route } from "navi";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
@@ -12,6 +12,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 
 import Pagination from "@/components/Pagination";
+import ProblemTagManager from "./ProblemTagManager";
 
 interface ProblemRecord extends ApiTypes.ProblemMetaDto {
   title: string;
@@ -22,7 +23,7 @@ interface ProblemRecord extends ApiTypes.ProblemMetaDto {
   }[];
 }
 
-async function fetchData(currentPage: number): Promise<[number, ProblemRecord[], boolean]> {
+async function fetchData(currentPage: number): Promise<[number, ProblemRecord[], boolean, boolean]> {
   const { requestError, response } = await ProblemApi.queryProblemSet({
     locale: appState.locale,
     skipCount: PROBLEMS_PER_PAGE * (currentPage - 1),
@@ -31,7 +32,7 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[],
 
   if (requestError || response.error) {
     toast.error(requestError || response.error);
-    return [null, null, null];
+    return [null, null, null, null];
   }
 
   return [
@@ -41,7 +42,8 @@ async function fetchData(currentPage: number): Promise<[number, ProblemRecord[],
       title: item.title,
       tags: item.tags
     })),
-    response.createProblemPermission
+    response.permissionCreateProblem,
+    response.permissionManageTags
   ];
 }
 
@@ -52,7 +54,8 @@ interface ProblemSetPageProps {
   totalCount: number;
   currentPage: number;
   problems: ProblemRecord[];
-  createProblemPermission: boolean;
+  permissionCreateProblem: boolean;
+  permissionManageTags: boolean;
 }
 
 let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
@@ -65,6 +68,8 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   const navigation = useNavigation();
 
   const isMobile = appState.isScreenWidthIn(0, 768);
+
+  const refOnOpenTagManager = useRef<() => Promise<boolean>>();
 
   function changePage(page: number) {
     navigation.navigate({
@@ -105,19 +110,42 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     </>
   );
 
-  const headerAddButton = props.createProblemPermission && (
-    <Button
-      size="tiny"
-      className={"labeled icon " + style.addButton}
-      icon="plus"
-      content={_("problem_set.add_problem")}
-      as={Link}
-      href="/problem/new"
-    />
+  // The tag manager couldn't display correctly without 540px screen width
+  const [openTagManagerPending, setOpenTagManagerPending] = useState(false);
+  const headerButtons = (
+    <div className={style.headerButtons}>
+      {props.permissionManageTags && appState.isScreenWidthIn(540, Infinity) && (
+        <Button
+          primary
+          size="tiny"
+          className="labeled icon"
+          icon="tag"
+          content={_("problem_set.manage_tags")}
+          loading={openTagManagerPending}
+          onClick={async () => {
+            if (openTagManagerPending) return;
+            setOpenTagManagerPending(true);
+            await refOnOpenTagManager.current();
+            setOpenTagManagerPending(false);
+          }}
+        />
+      )}
+      {props.permissionCreateProblem && (
+        <Button
+          size="tiny"
+          className="labeled icon"
+          icon="plus"
+          content={_("problem_set.add_problem")}
+          as={Link}
+          href="/problem/new"
+        />
+      )}
+    </div>
   );
 
   return (
     <>
+      <ProblemTagManager refOpen={refOnOpenTagManager} />
       <Grid>
         {isMobile ? (
           <>
@@ -127,7 +155,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             <Grid.Row className={style.secondRow}>
               <Grid.Column width={16} className={style.showTagsCheckboxAndAddButtonContainer}>
                 {headerShowTagsCheckbox}
-                {headerAddButton}
+                {headerButtons}
               </Grid.Column>
             </Grid.Row>
           </>
@@ -136,7 +164,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             <Grid.Column width={5}>{headerSearch}</Grid.Column>
             <Grid.Column width={11} className={style.headerRightControls}>
               {headerShowTagsCheckbox}
-              {headerAddButton}
+              {headerButtons}
             </Grid.Column>
           </Grid.Row>
         )}
@@ -207,7 +235,7 @@ export default {
   public: route({
     async getView(request) {
       const page = parseInt(request.query.page) || 1;
-      const [count, problems, createProblemPermission] = await fetchData(page);
+      const [count, problems, permissionCreateProblem, permissionManageTags] = await fetchData(page);
       if (count === null) {
         // TODO: Display an error page
         return null;
@@ -218,7 +246,8 @@ export default {
           totalCount={count}
           currentPage={page}
           problems={problems}
-          createProblemPermission={createProblemPermission}
+          permissionCreateProblem={permissionCreateProblem}
+          permissionManageTags={permissionManageTags}
         />
       );
     }

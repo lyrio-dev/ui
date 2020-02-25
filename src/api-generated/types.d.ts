@@ -89,6 +89,11 @@ declare namespace ApiTypes {
     error?: "INVALID_OPERATION" | "NOT_UPLOADED" | "IO_ERROR" | "CHECKSUM_MISMATCH";
     uuid?: string;
   }
+  export interface GetAllProblemTagsOfAllLocalesRequestDto {}
+  export interface GetAllProblemTagsOfAllLocalesResponseDto {
+    error?: string;
+    tags?: ApiTypes.ProblemTagWithAllLocalesDto[];
+  }
   export interface GetAllProblemTagsRequestDto {
     locale: "en_US" | "zh_CN";
   }
@@ -254,6 +259,11 @@ declare namespace ApiTypes {
     name: string;
     locale: "en_US" | "zh_CN";
   }
+  export interface ProblemTagWithAllLocalesDto {
+    id?: number;
+    color?: string;
+    localizedNames?: ApiTypes.ProblemTagLocalizedNameDto[];
+  }
   export interface ProblemUserPermissionDto {
     user: ApiTypes.UserMetaDto;
     permissionLevel: 1 | 2;
@@ -271,7 +281,8 @@ declare namespace ApiTypes {
     error?: "TAKE_TOO_MANY";
     result?: ApiTypes.QueryProblemSetResponseItemDto[];
     count?: number;
-    createProblemPermission?: boolean;
+    permissionCreateProblem?: boolean;
+    permissionManageTags?: boolean;
   }
   export interface QueryProblemSetResponseItemDto {
     meta: ApiTypes.ProblemMetaDto;

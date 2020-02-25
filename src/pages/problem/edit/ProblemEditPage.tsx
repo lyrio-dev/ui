@@ -1153,8 +1153,15 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   const [tagIds, setTagIds] = useState(props.problem.tagsOfLocale.map(problemTag => problemTag.id));
 
-  function searchTags(options: { problemTag: ApiTypes.LocalizedProblemTagDto }[], query: string) {
-    return options.filter(option => option.problemTag.name.startsWith(query));
+  function searchTags(options: { text: string }[], query: string) {
+    query = query.toLowerCase();
+    const result = options
+      .filter(option => option.text.toLowerCase().indexOf(query) !== -1)
+      .sort((a, b) => (a.text < b.text ? -1 : a.text > b.text ? 1 : 0));
+    return [
+      ...result.filter(option => option.text.toLowerCase().startsWith(query)),
+      ...result.filter(option => !option.text.toLowerCase().startsWith(query))
+    ];
   }
 
   const [defaultLocale, setDefaultLocale] = useState(
