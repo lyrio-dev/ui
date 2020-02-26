@@ -4,6 +4,11 @@ module.exports = {
     non_public: "未公开",
     no_display_id: "未设置 ID"
   },
+  fileio: {
+    fileio: "文件 IO",
+    input: "输入文件",
+    output: "输出文件"
+  },
   show_tags: "显示标签",
   hide_tags: "隐藏标签",
   type: {

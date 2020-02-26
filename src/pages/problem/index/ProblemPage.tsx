@@ -112,6 +112,9 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   const timeLimit = getLimit(props.problem.judgeInfo, "timeLimit");
   const memoryLimit = getLimit(props.problem.judgeInfo, "memoryLimit");
+  const fileIo =
+    props.problem.judgeInfo &&
+    (props.problem.judgeInfo as { fileIo: { inputFilename: string; outputFilename: string } }).fileIo;
 
   // Begin toggle tags
   const [showTags, setShowTags] = useState(appState.showTagsInProblemSet);
@@ -392,6 +395,37 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     <Icon name="microchip" />
                     {memoryLimit + " MiB"}
                   </Label>
+                )}
+                {fileIo && (
+                  <Popup
+                    trigger={
+                      <Label size={isMobile ? "small" : null} color="orange">
+                        <Icon name="file" />
+                        {_(`problem.fileio.fileio`)}
+                      </Label>
+                    }
+                    content={
+                      <table className={style.fileIo}>
+                        <tbody>
+                          <tr>
+                            <td align="right" className={style.fileIoName}>
+                              <strong>{_(`problem.fileio.input`)}</strong>
+                            </td>
+                            <td>{fileIo.inputFilename}</td>
+                          </tr>
+                          <tr>
+                            <td align="right" className={style.fileIoName}>
+                              <strong>{_(`problem.fileio.output`)}</strong>
+                            </td>
+                            <td>{fileIo.outputFilename}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    }
+                    hoverable
+                    on="hover"
+                    position="bottom center"
+                  />
                 )}
                 {props.problem.tagsOfLocale.length > 0 && (
                   <>
