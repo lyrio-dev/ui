@@ -202,6 +202,7 @@
     border: none !important;
     border-radius: 0 !important;
     flex-grow: 1;
+    flex-shrink: 1;
   
     input {
       height: 100%;
@@ -232,6 +233,14 @@
       display: flex;
       align-items: center;
       width: 100%;
+
+      .filename {
+        max-width: calc(100% - 120px);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        direction: rtl;
+      }
 
       .fileSize {
         opacity: 0.35;

@@ -148,7 +148,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
               <>
                 <Icon className={style.iconInputOrOutput} name="sign in" />
                 <Icon name={getFileIcon(file.filename)} />
-                {file.filename}
+                <div className={style.filename}>{file.filename}</div>
                 <div className={style.fileSize}>{formatFileSize(file.size)}</div>
               </>
             )
@@ -224,7 +224,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
               <>
                 <Icon className={style.iconInputOrOutput} name="sign out" />
                 <Icon name={getFileIcon(file.filename)} />
-                {file.filename}
+                <div className={style.filename}>{file.filename}</div>
                 <div className={style.fileSize}>{formatFileSize(file.size)}</div>
               </>
             )
