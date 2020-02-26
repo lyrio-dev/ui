@@ -890,6 +890,17 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     <>
       <Header as="h2">
         <strong>{_("problem_files.header_testdata")}</strong>
+        <Button
+          className={style.back_to_problem}
+          primary
+          as={Link}
+          href={
+            props.idType === "id"
+              ? `/problem/by-id/${props.problem.meta.id}`
+              : `/problem/${props.problem.meta.displayId}`
+          }
+          content={_("problem_files.back_to_problem")}
+        />
       </Header>
       <FileTable
         hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
@@ -944,22 +955,6 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
             </Grid.Row>
           </>
         )}
-        <Grid.Row>
-          <Grid.Column width={16} textAlign="center">
-            <Button
-              primary
-              icon="backward"
-              as={Link}
-              href={
-                props.idType === "id"
-                  ? `/problem/by-id/${props.problem.meta.id}`
-                  : `/problem/${props.problem.meta.displayId}`
-              }
-              content={_("problem_files.back_to_problem")}
-              labelPosition="left"
-            />
-          </Grid.Column>
-        </Grid.Row>
       </Grid>
     </>
   );
