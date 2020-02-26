@@ -126,6 +126,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
   useConfirmUnload(() => modified);
 
   const [tags, setTags] = useState<Record<number, ApiTypes.ProblemTagWithAllLocalesDto>>({});
+  const tagsCount = Object.keys(tags).length;
 
   const tagLocalizedNames = Object.fromEntries(
     Object.entries(tags).map(([i, tag]) => {
@@ -343,16 +344,18 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         <>
           {_("problem_tag_manager.title")}
           <div className={style.dialogHeaderInfo}>
-            {_("problem_tag_manager.tag_count", { count: Object.keys(tags).length.toString() })}
+            {_("problem_tag_manager.tag_count", { count: tagsCount.toString() })}
           </div>
         </>
       }
     />,
     <>
-      <div className={style.tagsSegment}>
-        {Object.entries(tagsByColor).map(([color, tagIDs]) => (
-          <p key={color}>{tagIDs.map(i => getTagLabel(i))}</p>
-        ))}
+      <div className={style.tagsSegment + (tagsCount === 0 ? " " + style.noTags : "")}>
+        {tagsCount === 0 ? (
+          <div>{_("problem_tag_manager.no_tags")}</div>
+        ) : (
+          Object.entries(tagsByColor).map(([color, tagIDs]) => <p key={color}>{tagIDs.map(i => getTagLabel(i))}</p>)
+        )}
       </div>
       <Form>
         <div className={style.headerContainer}>

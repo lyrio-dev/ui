@@ -5,6 +5,7 @@ module.exports = {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_PROBLEM_TAG: "无此题目标签。"
   },
+  no_tags: "暂无标签",
   new_tag: "新建标签",
   edit_tag: "编辑标签",
   name_placeholder: "标签名",

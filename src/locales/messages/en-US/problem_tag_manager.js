@@ -5,6 +5,7 @@ module.exports = {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_PROBLEM_TAG: "No such problem tag."
   },
+  no_tags: "No Tags",
   new_tag: "New Tag",
   edit_tag: "Edit Tag",
   name_placeholder: "Tag name",
