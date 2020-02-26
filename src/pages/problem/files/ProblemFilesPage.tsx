@@ -199,7 +199,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
             trigger={<span>{status}</span>}
             content={<Button onClick={props.file.upload.cancel}>{_("problem_files.cancel_upload")}</Button>}
             on="hover"
-            mouseLeaveDelay={1000}
+            hoverable
             position="top center"
           />
         </>
