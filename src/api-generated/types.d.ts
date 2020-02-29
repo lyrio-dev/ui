@@ -335,7 +335,8 @@ declare namespace ApiTypes {
   }
   export interface QuerySubmissionStatisticsRequestDto {
     locale: "en_US" | "zh_CN";
-    problemId: number;
+    problemId?: number;
+    problemDisplayId?: number;
     statisticsType: "Fastest" | "MinMemory" | "MinAnswerSize" | "Earlist";
     skipCount: number;
     takeCount: number;
@@ -344,6 +345,7 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_PROBLEM" | "TAKE_TOO_MANY";
     submissions?: ApiTypes.SubmissionMetaDto[];
     count?: number;
+    scores?: number[];
   }
   export interface RegisterRequestDto {
     username: string;

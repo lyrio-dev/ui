@@ -663,7 +663,12 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 <Menu.Item
                   name={_("problem.action.statistics")}
                   icon="sort content ascending"
-                  onClick={() => console.log("statistics")}
+                  as={Link}
+                  href={
+                    props.idType === "id"
+                      ? `/submissions/statistics/by-id/${props.problem.meta.id}/fastest`
+                      : `/submissions/statistics/${props.problem.meta.displayId}/fastest`
+                  }
                 />
                 <Menu.Item
                   name={_("problem.action.discussion")}
