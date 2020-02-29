@@ -274,21 +274,32 @@ declare namespace ApiTypes {
   }
   export interface QueryProblemSetRequestDto {
     locale: "en_US" | "zh_CN";
+    keyword?: string;
+    tagIds?: number[];
+    ownerId?: number;
+    nonpublic?: boolean;
     skipCount: number;
     takeCount: number;
   }
   export interface QueryProblemSetResponseDto {
-    error?: "TAKE_TOO_MANY";
+    error?: "PERMISSION_DENIED" | "TAKE_TOO_MANY";
     result?: ApiTypes.QueryProblemSetResponseItemDto[];
     count?: number;
-    permissionCreateProblem?: boolean;
-    permissionManageTags?: boolean;
+    filterTags?: ApiTypes.LocalizedProblemTagDto[];
+    filterOwner?: ApiTypes.UserMetaDto;
+    permissions?: ApiTypes.QueryProblemSetResponsePermissionDto;
   }
   export interface QueryProblemSetResponseItemDto {
     meta: ApiTypes.ProblemMetaDto;
     title: string;
     tags: ApiTypes.LocalizedProblemTagDto[];
     resultLocale: "en_US" | "zh_CN";
+  }
+  export interface QueryProblemSetResponsePermissionDto {
+    createProblem?: boolean;
+    manageTags?: boolean;
+    filterByOwner?: boolean;
+    filterNonpublic?: boolean;
   }
   export interface QuerySubmissionRequestDto {
     locale: "en_US" | "zh_CN";

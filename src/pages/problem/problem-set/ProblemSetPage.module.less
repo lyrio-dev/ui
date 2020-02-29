@@ -1,16 +1,115 @@
+// PC
 .headerRow {
   height: 68px;
+  margin-top: -12px;
+  display: flex;
+  align-items: center;
 }
 
 .headerRightControls {
-  height: 100%;
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: flex-end;
+  flex-grow: 1;
 }
 
-.topPagination {
-  margin-bottom: -0.6rem;
+// Mobile
+.headerSearchRow, .headerControlRow {
+  display: flex;
+  align-items: center;
+}
+
+.headerControlRow {
+  margin-top: 16px;
+  margin-bottom: 7px;
+}
+
+.search :global(.results) {
+  width: 100% !important;
+}
+
+.searchUserResult {
+  display: flex;
+  align-items: center;
+
+  .avatar {
+    width: 27.5px !important;
+    height: 27.5px !important;
+    flex-shrink: 0;
+  }
+
+  .username {
+    font-weight: bolder;
+    margin-left: 10px;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.searchMenu {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 8px !important;
+
+  .searchMenuItem {
+    height: 40px !important;
+    width: 40px !important;
+
+    > :global(.icon) {
+      opacity: 0.5 !important;
+    }
+
+    &:hover, &:global(.active) {
+      > :global(.icon) {
+        opacity: 0.7 !important;
+      }
+    }
+  }
+}
+
+.headerSearchFiltersRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  > strong {
+    margin-right: 10px;
+  }
+
+  :global(.ui.label) {
+    margin: 2px !important;
+  }
+}
+
+.tagsList {
+  height: 300px;
+  overflow: overlay;
+  margin-top: 15px !important;
+  margin-bottom: 28px !important;
+
+  .tag {
+    margin: 2px !important;
+  }
+
+  .placeholder {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    opacity: 0.6;
+  }
+}
+
+.pagination:not(:empty) {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 18px;
+}
+
+.topPagination:empty {
+  margin-top: 15px;
 }
 
 .tableHeaderRow {
@@ -50,7 +149,6 @@
 
   .search {
     width: 280px;
-    height: 28px;
     display: inline-block;
 
     :global(.ui.input) {
@@ -60,16 +158,19 @@
 }
 
 @media only screen and (max-width: 767px) {
-  .secondRow {
-    padding: 0.5rem 0 !important;
-  }
-
-  .showTagsCheckboxAndAddButtonContainer {
-    display: flex !important;
-    align-items: center;
+  .search {
+    flex-grow: 1;
   }
 
   .headerButtons {
     margin-left: auto;
+  }
+
+  .headerSearchFiltersRow:not(:empty) {
+    margin-top: 15px;
+  }
+
+  .tagsList {
+    margin-bottom: 18px !important;
   }
 }

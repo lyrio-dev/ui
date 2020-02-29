@@ -23,7 +23,7 @@ import toast from "@/utils/toast";
 import { appState } from "@/appState";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
-import tagColors from "../tagColors";
+import { tagColors, sortTagColors } from "../problemTag";
 
 interface TagProps {
   disabled: boolean;
@@ -136,7 +136,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
     })
   );
 
-  const colors = Array.from(new Set(Object.values(tags).map(tag => tag.color))).sort();
+  const colors = sortTagColors(Array.from(new Set(Object.values(tags).map(tag => tag.color))));
   const tagsByColor = Object.fromEntries(
     colors.map(color => [
       color,

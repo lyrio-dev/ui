@@ -35,7 +35,7 @@ import copyToClipboard from "@/utils/copy-to-clipboard";
 import { isValidDisplayId } from "@/utils/validators";
 import PermissionManager from "@/components/PermissionManager";
 import { codeLanguageOptions, CodeLanguage, CodeLanguageOptionType } from "@/interfaces/CodeLanguage";
-import tagColors from "../tagColors";
+import { sortTags } from "../problemTag";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -55,10 +55,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     return null;
   }
 
-  response.tagsOfLocale.sort((a, b) => {
-    if (a.color != b.color) return tagColors.indexOf(a.color) - tagColors.indexOf(b.color);
-    return a.name < b.name ? -1 : a.name > b.name ? 1 : 0;
-  });
+  sortTags(response.tagsOfLocale);
   return response;
 }
 
@@ -448,6 +445,13 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                             key={tag.id}
                             content={tag.name}
                             color={tag.color as any}
+                            as={Link}
+                            href={{
+                              pathname: "/problems",
+                              query: {
+                                tagIds: tag.id.toString()
+                              }
+                            }}
                           />
                         ))}
                       </>

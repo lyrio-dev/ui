@@ -4,6 +4,7 @@ import { Router, View } from "react-navi";
 
 import AppLayout from "./layouts/AppLayout";
 import getRoute from "./utils/getRoute";
+import { appState } from "./appState";
 
 const routes = mount({
   "/": lazy(() => import("./pages/home")),
@@ -20,7 +21,7 @@ const AppRouter: React.FC = () => {
     <Router routes={routes}>
       <AppLayout>
         <Suspense fallback={null}>
-          <View />
+          <View key={appState.locale} />
         </Suspense>
       </AppLayout>
     </Router>
