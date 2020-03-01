@@ -8,6 +8,8 @@ module.exports = {
   },
   compilation_message: "编译信息",
   system_message: "系统信息",
+  sample: "样例",
+  sample_testcase: "样例",
   subtask: {
     title: "子任务",
     score: "得分："

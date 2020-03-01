@@ -15,7 +15,8 @@ import {
   Form,
   Message,
   Loader,
-  TextArea
+  TextArea,
+  Checkbox
 } from "semantic-ui-react";
 import { route } from "navi";
 import { useNavigation, Link } from "react-navi";
@@ -93,6 +94,7 @@ interface SubmissionContent {
   language: CodeLanguage;
   code: string;
   languageOptions: any;
+  skipSamples?: boolean;
 }
 
 let ProblemPage: React.FC<ProblemPageProps> = props => {
@@ -615,6 +617,14 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                       );
                   }
                 })}
+                {props.problem.judgeInfo && props.problem.judgeInfo["runSamples"] && (
+                  <Checkbox
+                    className={style.skipSamples}
+                    label={_("problem.submit.skip_samples")}
+                    checked={submissionContent.skipSamples}
+                    onChange={(e, { checked }) => updateSubmissionContent("skipSamples", checked)}
+                  />
+                )}
                 <Button
                   className={style.submitButton}
                   primary

@@ -8,6 +8,8 @@ module.exports = {
   },
   compilation_message: "Compilation Message",
   system_message: "System Message",
+  sample: "Samples",
+  sample_testcase: "Sample",
   subtask: {
     title: "Subtask",
     score: "Score"

@@ -66,6 +66,7 @@ module.exports = {
   submit: {
     back_to_statement: "返回题面",
     language: "语言",
+    skip_samples: "跳过样例",
     submit: "提交"
   },
   permission_level: {

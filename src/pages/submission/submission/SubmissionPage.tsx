@@ -74,6 +74,13 @@ interface SubmissionProgressMessage {
   resultDetail?: SubmissionResult<unknown>;
 }
 
+interface TestcaseProgressReference {
+  // If !waiting && !running && !testcaseHash, it's "Skipped"
+  waiting?: boolean;
+  running?: boolean;
+  testcaseHash?: string;
+}
+
 interface SubmissionProgress<TestcaseResult> {
   progressType: SubmissionProgressType;
 
@@ -89,18 +96,15 @@ interface SubmissionProgress<TestcaseResult> {
   systemMessage?: string;
 
   // testcaseHash = hash(IF, OF, TL, ML) for traditional
+  //                hash(ID, OD, TL, ML) for samples
   // ->
   // result
   testcaseResult?: Record<string, TestcaseResult>;
+  samples?: TestcaseProgressReference[];
   subtasks?: {
     score: number;
     fullScore: number;
-    testcases: {
-      // If !waiting && !running && !testcaseHash, it's "Skipped"
-      waiting?: boolean;
-      running?: boolean;
-      testcaseHash?: string;
-    }[];
+    testcases: TestcaseProgressReference[];
   }[];
 }
 
@@ -112,9 +116,11 @@ interface SubmissionResult<TestcaseResult> {
   // For SystemError and ConfigurationError
   systemMessage?: string;
   // testcaseHash = hash(IF, OF, TL, ML) for traditional
+  //                hash(ID, OD, TL, ML) for samples
   // ->
   // result
   testcaseResult?: Record<string, TestcaseResult>;
+  samples?: string[];
   subtasks?: {
     score: number;
     fullScore: number;
@@ -167,18 +173,15 @@ export interface SubmissionFullInfo<TestcaseResult> {
   systemMessage?: string;
 
   // testcaseHash = hash(IF, OF, TL, ML) for traditional
+  //                hash(ID, OD, TL, ML) for samples
   // ->
   // result
   testcaseResult?: Record<string, TestcaseResult>;
+  samples?: TestcaseProgressReference[];
   subtasks?: {
     score: number;
     fullScore: number;
-    testcases: {
-      // If !waiting && !running && !testcaseHash, it's "Skipped"
-      waiting?: boolean;
-      running?: boolean;
-      testcaseHash?: string;
-    }[];
+    testcases: TestcaseProgressReference[];
   }[];
 }
 
@@ -186,6 +189,16 @@ function parseResult(
   meta: ApiTypes.SubmissionMetaDto,
   result: SubmissionResult<SubmissionTestcaseResultTraditional>
 ): SubmissionFullInfo<SubmissionTestcaseResultTraditional> {
+  const toTestcaseProgressReference = (testcaseHash: string) =>
+    testcaseHash
+      ? {
+          testcaseHash: testcaseHash
+        }
+      : {
+          // Skipped
+          waiting: false,
+          running: false
+        };
   return {
     ...result,
     progressType: SubmissionProgressType.Finished,
@@ -193,21 +206,12 @@ function parseResult(
     score: meta.score,
     timeUsed: meta.timeUsed,
     memoryUsed: meta.memoryUsed,
+    samples: result.samples && result.samples.map(toTestcaseProgressReference),
     subtasks:
       result.subtasks &&
       result.subtasks.map(subtask => ({
         ...subtask,
-        testcases: subtask.testcases.map(testcase =>
-          testcase
-            ? {
-                testcaseHash: testcase
-              }
-            : {
-                // Skipped
-                waiting: false,
-                running: false
-              }
-        )
+        testcases: subtask.testcases.map(toTestcaseProgressReference)
       }))
   };
 }
@@ -400,6 +404,30 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const isMobile = appState.isScreenWidthIn(0, 768);
   const isNarrowMobile = appState.isScreenWidthIn(0, 425);
 
+  const samples = (fullInfo && fullInfo.samples) || [];
+  const samplesRunning = samples.some(sample => sample.running);
+  const samplesFinishedCount = samples.filter(sample => !sample.running && !sample.waiting).length;
+  const samplesDisplayInfo = {
+    status: samplesFinishedCount < samples.length ? (samplesRunning ? "Running" : "Waiting") : null,
+    statusText: ""
+  };
+  if (samplesDisplayInfo.status == null) {
+    // Samples finished
+    for (const sample of samples) {
+      if (!sample.testcaseHash) {
+        samplesDisplayInfo.status = "Skipped";
+        break;
+      } else if (fullInfo.testcaseResult[sample.testcaseHash].status !== "Accepted") {
+        samplesDisplayInfo.status = fullInfo.testcaseResult[sample.testcaseHash].status;
+        break;
+      }
+    }
+
+    if (samplesDisplayInfo.status == null) samplesDisplayInfo.status = "Accepted";
+  } else {
+    samplesDisplayInfo.statusText = samplesDisplayInfo.status + " " + samplesFinishedCount + "/" + samples.length;
+  }
+
   const subtasks = (fullInfo && fullInfo.subtasks) || [];
   const subtaskDisplayInfo: {
     status: string;
@@ -451,28 +479,177 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     return s.endsWith(".0") ? s.slice(0, -2) : s;
   }
 
-  const subtaskList = subtasks.map((subtask, i) => ({
-    key: i,
-    // If a subtask is unexpandable, make it unable to be "active"
-    [!subtaskDisplayInfo[i].expandable ? "active" : ""]: false,
+  const getTestcasesAccordionPanels = (testcases: TestcaseProgressReference[], isSample: boolean = false) =>
+    testcases.map((testcase, i) => {
+      const testcaseResult = testcase.testcaseHash && fullInfo.testcaseResult[testcase.testcaseHash];
+      let status: string, expandable: boolean;
+      if (testcase.waiting) {
+        status = "Waiting";
+        expandable = false;
+      } else if (testcase.running) {
+        status = "Running";
+        expandable = false;
+      } else if (!testcaseResult) {
+        status = "Skipped";
+        expandable = false;
+      } else {
+        status = testcaseResult.status;
+        expandable = true;
+      }
+
+      return {
+        key: i,
+        // If a testcase is unexpandable, make it unable to be "active"
+        [!expandable ? "active" : ""]: false,
+        title: (() => {
+          const columnTitle = (width: SemanticWIDTHS) => (
+            <Grid.Column className={style.testcaseColumnTitle} width={width}>
+              <Icon name="dropdown" />
+              {isSample ? _("submission.sample_testcase") : _("submission.testcase.title")} #{i + 1}
+            </Grid.Column>
+          );
+
+          const columnStatus = (width: SemanticWIDTHS) => (
+            <Grid.Column className={style.testcaseColumnStatus} width={width}>
+              <StatusText status={status} />
+            </Grid.Column>
+          );
+
+          const columnScore = (width: SemanticWIDTHS) =>
+            testcaseResult && (
+              <Grid.Column className={style.testcaseColumnScore} width={width}>
+                <Icon className={style.accordionTitleIcon} name="clipboard check" />
+                {round(testcaseResult.score)} pts
+              </Grid.Column>
+            );
+
+          const columnTime = (width: SemanticWIDTHS) =>
+            testcaseResult && (
+              <Grid.Column className={style.testcaseColumnTime} width={width}>
+                <span
+                  title={
+                    testcaseResult.time == null
+                      ? null
+                      : Math.round(testcaseResult.time || 0) + " ms / " + testcaseResult.testcaseInfo.timeLimit + " ms"
+                  }
+                >
+                  <Icon className={style.accordionTitleIcon} name="clock" />
+                  {Math.round(testcaseResult.time || 0) + " ms"}
+                </span>
+              </Grid.Column>
+            );
+
+          const columnMemory = (width: SemanticWIDTHS) =>
+            testcaseResult && (
+              <Grid.Column className={style.testcaseColumnMemory} width={width}>
+                <span
+                  title={
+                    testcaseResult.memory == null
+                      ? null
+                      : (testcaseResult.memory || 0) + " K / " + testcaseResult.testcaseInfo.memoryLimit * 1024 + " K"
+                  }
+                >
+                  <Icon className={style.accordionTitleIcon} name="microchip" />
+                  {formatFileSize((testcaseResult.memory || 0) * 1024)}
+                </span>
+              </Grid.Column>
+            );
+
+          return isMobile ? (
+            <Accordion.Title className={style.accordionTitle + " " + style.accordionTitleTwoRows}>
+              <Grid>
+                <Grid.Row className={style.accordionTitleFirstRow}>
+                  {columnTitle(6)}
+                  {columnStatus(10)}
+                </Grid.Row>
+                {testcase && (
+                  <Grid.Row className={style.accordionTitleSecondRow}>
+                    {columnScore(6)}
+                    {columnTime(5)}
+                    {columnMemory(5)}
+                  </Grid.Row>
+                )}
+              </Grid>
+            </Accordion.Title>
+          ) : (
+            <Accordion.Title className={style.accordionTitle}>
+              <Grid>
+                {columnTitle(3)}
+                {columnStatus(4)}
+                {testcase && (
+                  <>
+                    {columnScore(3)}
+                    {columnTime(3)}
+                    {columnMemory(3)}
+                  </>
+                )}
+              </Grid>
+            </Accordion.Title>
+          );
+        })(),
+        content: !testcaseResult ? null : (
+          <Accordion.Content className={style.accordionContent}>
+            {testcaseResult.input && (
+              <CodeBox
+                title={
+                  <>
+                    <strong>{_("submission.testcase.input")}</strong>
+                    {testcaseResult.testcaseInfo.inputFilename && (
+                      <span
+                        className={"monospace " + style.fileNameWrapper}
+                        onClick={() => onDownload(testcaseResult.testcaseInfo.inputFilename)}
+                      >
+                        <span className={style.fileName}>{testcaseResult.testcaseInfo.inputFilename}</span>
+                        <Icon name="download" />
+                      </span>
+                    )}
+                  </>
+                }
+                content={testcaseResult.input}
+              />
+            )}
+            {testcaseResult.output && (
+              <CodeBox
+                title={
+                  <>
+                    <strong>{_("submission.testcase.output")}</strong>
+                    {testcaseResult.testcaseInfo.outputFilename && (
+                      <span
+                        className={"monospace " + style.fileNameWrapper}
+                        onClick={() => onDownload(testcaseResult.testcaseInfo.outputFilename)}
+                      >
+                        <span className={style.fileName}>{testcaseResult.testcaseInfo.outputFilename}</span>
+                        <Icon name="download" />
+                      </span>
+                    )}
+                  </>
+                }
+                content={testcaseResult.output}
+                download={() => onDownload(testcaseResult.testcaseInfo.outputFilename)}
+              />
+            )}
+            <CodeBox title={_("submission.testcase.user_output")} content={testcaseResult.userOutput} />
+            <CodeBox title={_("submission.testcase.user_error")} content={testcaseResult.userError} />
+            <CodeBox title={_("submission.testcase.grader_message")} content={testcaseResult.graderMessage} />
+            <CodeBox title={_("submission.testcase.system_message")} content={testcaseResult.systemMessage} />
+          </Accordion.Content>
+        )
+      };
+    });
+
+  const getSamplePanel = () => ({
+    key: "samples",
     title: (() => {
       const columnTitle = (width: SemanticWIDTHS) => (
         <Grid.Column width={width}>
           <Icon name="dropdown" />
-          {_("submission.subtask.title")} #{i + 1}
+          {_("submission.sample")}
         </Grid.Column>
       );
 
       const columnStatus = (width: SemanticWIDTHS) => (
         <Grid.Column width={width}>
-          <StatusText status={subtaskDisplayInfo[i].status} statusText={subtaskDisplayInfo[i].statusText} />
-        </Grid.Column>
-      );
-
-      const columnScore = (width: SemanticWIDTHS) => (
-        <Grid.Column width={width}>
-          <Icon className={style.accordionTitleIcon} name="clipboard check" />
-          {round(subtask.score)}/{round(subtask.fullScore)} pts
+          <StatusText status={samplesDisplayInfo.status} statusText={samplesDisplayInfo.statusText} />
         </Grid.Column>
       );
 
@@ -482,7 +659,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             <Grid>
               {columnTitle(3)}
               {columnStatus(4)}
-              {columnScore(3)}
             </Grid>
           </Accordion.Title>
         );
@@ -492,7 +668,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             <Grid>
               {columnTitle(4)}
               {columnStatus(5)}
-              {columnScore(4)}
             </Grid>
           </Accordion.Title>
         );
@@ -502,190 +677,109 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             <Grid>
               {columnTitle(4)}
               {columnStatus(7)}
-              {columnScore(5)}
             </Grid>
           </Accordion.Title>
         );
       } else {
         return (
-          <Accordion.Title className={style.accordionTitle + " " + style.accordionTitleTwoRows}>
+          <Accordion.Title className={style.accordionTitle}>
             <Grid>
-              <Grid.Row className={style.accordionTitleFirstRow}>
-                {columnTitle(6)}
-                {columnStatus(10)}
-              </Grid.Row>
-              <Grid.Row className={style.accordionTitleSecondRow}>{columnScore(5)}</Grid.Row>
+              {columnTitle(6)}
+              {columnStatus(10)}
             </Grid>
           </Accordion.Title>
         );
       }
     })(),
-    content: !subtask.testcases.some(x => x != null) ? null : (
+    content: (
       <Accordion.Content className={style.accordionContent}>
         <Accordion
           className={"styled fluid " + style.subAccordion}
-          panels={subtask.testcases.map((testcase, i) => {
-            const testcaseResult = testcase.testcaseHash && fullInfo.testcaseResult[testcase.testcaseHash];
-            let status: string, expandable: boolean;
-            if (testcase.waiting) {
-              status = "Waiting";
-              expandable = false;
-            } else if (testcase.running) {
-              status = "Running";
-              expandable = false;
-            } else if (!testcaseResult) {
-              status = "Skipped";
-              expandable = false;
-            } else {
-              status = testcaseResult.status;
-              expandable = true;
-            }
-
-            return {
-              key: i,
-              // If a testcase is unexpandable, make it unable to be "active"
-              [!expandable ? "active" : ""]: false,
-              title: (() => {
-                const columnTitle = (width: SemanticWIDTHS) => (
-                  <Grid.Column className={style.testcaseColumnTitle} width={width}>
-                    <Icon name="dropdown" />
-                    {_("submission.testcase.title")} #{i + 1}
-                  </Grid.Column>
-                );
-
-                const columnStatus = (width: SemanticWIDTHS) => (
-                  <Grid.Column className={style.testcaseColumnStatus} width={width}>
-                    <StatusText status={status} />
-                  </Grid.Column>
-                );
-
-                const columnScore = (width: SemanticWIDTHS) =>
-                  testcaseResult && (
-                    <Grid.Column className={style.testcaseColumnScore} width={width}>
-                      <Icon className={style.accordionTitleIcon} name="clipboard check" />
-                      {round(testcaseResult.score)} pts
-                    </Grid.Column>
-                  );
-
-                const columnTime = (width: SemanticWIDTHS) =>
-                  testcaseResult && (
-                    <Grid.Column className={style.testcaseColumnTime} width={width}>
-                      <span
-                        title={
-                          testcaseResult.time == null
-                            ? null
-                            : Math.round(testcaseResult.time || 0) +
-                              " ms / " +
-                              testcaseResult.testcaseInfo.timeLimit +
-                              " ms"
-                        }
-                      >
-                        <Icon className={style.accordionTitleIcon} name="clock" />
-                        {Math.round(testcaseResult.time || 0) + " ms"}
-                      </span>
-                    </Grid.Column>
-                  );
-
-                const columnMemory = (width: SemanticWIDTHS) =>
-                  testcaseResult && (
-                    <Grid.Column className={style.testcaseColumnMemory} width={width}>
-                      <span
-                        title={
-                          testcaseResult.memory == null
-                            ? null
-                            : (testcaseResult.memory || 0) +
-                              " K / " +
-                              testcaseResult.testcaseInfo.memoryLimit * 1024 +
-                              " K"
-                        }
-                      >
-                        <Icon className={style.accordionTitleIcon} name="microchip" />
-                        {formatFileSize((testcaseResult.memory || 0) * 1024)}
-                      </span>
-                    </Grid.Column>
-                  );
-
-                return isMobile ? (
-                  <Accordion.Title className={style.accordionTitle + " " + style.accordionTitleTwoRows}>
-                    <Grid>
-                      <Grid.Row className={style.accordionTitleFirstRow}>
-                        {columnTitle(6)}
-                        {columnStatus(10)}
-                      </Grid.Row>
-                      {testcase && (
-                        <Grid.Row className={style.accordionTitleSecondRow}>
-                          {columnScore(6)}
-                          {columnTime(5)}
-                          {columnMemory(5)}
-                        </Grid.Row>
-                      )}
-                    </Grid>
-                  </Accordion.Title>
-                ) : (
-                  <Accordion.Title className={style.accordionTitle}>
-                    <Grid>
-                      {columnTitle(3)}
-                      {columnStatus(4)}
-                      {testcase && (
-                        <>
-                          {columnScore(3)}
-                          {columnTime(3)}
-                          {columnMemory(3)}
-                        </>
-                      )}
-                    </Grid>
-                  </Accordion.Title>
-                );
-              })(),
-              content: !testcaseResult ? null : (
-                <Accordion.Content className={style.accordionContent}>
-                  {testcaseResult.input && (
-                    <CodeBox
-                      title={
-                        <>
-                          <strong>{_("submission.testcase.input")}</strong>
-                          <span
-                            className={"monospace " + style.fileNameWrapper}
-                            onClick={() => onDownload(testcaseResult.testcaseInfo.inputFilename)}
-                          >
-                            <span className={style.fileName}>{testcaseResult.testcaseInfo.inputFilename}</span>
-                            <Icon name="download" />
-                          </span>
-                        </>
-                      }
-                      content={testcaseResult.input}
-                    />
-                  )}
-                  {testcaseResult.output && (
-                    <CodeBox
-                      title={
-                        <>
-                          <strong>{_("submission.testcase.output")}</strong>
-                          <span
-                            className={"monospace " + style.fileNameWrapper}
-                            onClick={() => onDownload(testcaseResult.testcaseInfo.outputFilename)}
-                          >
-                            <span className={style.fileName}>{testcaseResult.testcaseInfo.outputFilename}</span>
-                            <Icon name="download" />
-                          </span>
-                        </>
-                      }
-                      content={testcaseResult.output}
-                      download={() => onDownload(testcaseResult.testcaseInfo.outputFilename)}
-                    />
-                  )}
-                  <CodeBox title={_("submission.testcase.user_output")} content={testcaseResult.userOutput} />
-                  <CodeBox title={_("submission.testcase.user_error")} content={testcaseResult.userError} />
-                  <CodeBox title={_("submission.testcase.grader_message")} content={testcaseResult.graderMessage} />
-                  <CodeBox title={_("submission.testcase.system_message")} content={testcaseResult.systemMessage} />
-                </Accordion.Content>
-              )
-            };
-          })}
+          panels={getTestcasesAccordionPanels(samples, true)}
         />
       </Accordion.Content>
     )
-  }));
+  });
+
+  const getSubtasksAccordionPanels = () =>
+    subtasks.map((subtask, i) => ({
+      key: i,
+      // If a subtask is unexpandable, make it unable to be "active"
+      [!subtaskDisplayInfo[i].expandable ? "active" : ""]: false,
+      title: (() => {
+        const columnTitle = (width: SemanticWIDTHS) => (
+          <Grid.Column width={width}>
+            <Icon name="dropdown" />
+            {_("submission.subtask.title")} #{i + 1}
+          </Grid.Column>
+        );
+
+        const columnStatus = (width: SemanticWIDTHS) => (
+          <Grid.Column width={width}>
+            <StatusText status={subtaskDisplayInfo[i].status} statusText={subtaskDisplayInfo[i].statusText} />
+          </Grid.Column>
+        );
+
+        const columnScore = (width: SemanticWIDTHS) => (
+          <Grid.Column width={width}>
+            <Icon className={style.accordionTitleIcon} name="clipboard check" />
+            {round(subtask.score)}/{round(subtask.fullScore)} pts
+          </Grid.Column>
+        );
+
+        if (isWideScreen) {
+          return (
+            <Accordion.Title className={style.accordionTitle}>
+              <Grid>
+                {columnTitle(3)}
+                {columnStatus(4)}
+                {columnScore(3)}
+              </Grid>
+            </Accordion.Title>
+          );
+        } else if (!isMobile) {
+          return (
+            <Accordion.Title className={style.accordionTitle}>
+              <Grid>
+                {columnTitle(4)}
+                {columnStatus(5)}
+                {columnScore(4)}
+              </Grid>
+            </Accordion.Title>
+          );
+        } else if (!isNarrowMobile) {
+          return (
+            <Accordion.Title className={style.accordionTitle}>
+              <Grid>
+                {columnTitle(4)}
+                {columnStatus(7)}
+                {columnScore(5)}
+              </Grid>
+            </Accordion.Title>
+          );
+        } else {
+          return (
+            <Accordion.Title className={style.accordionTitle + " " + style.accordionTitleTwoRows}>
+              <Grid>
+                <Grid.Row className={style.accordionTitleFirstRow}>
+                  {columnTitle(6)}
+                  {columnStatus(10)}
+                </Grid.Row>
+                <Grid.Row className={style.accordionTitleSecondRow}>{columnScore(5)}</Grid.Row>
+              </Grid>
+            </Accordion.Title>
+          );
+        }
+      })(),
+      content: (
+        <Accordion.Content className={style.accordionContent}>
+          <Accordion
+            className={"styled fluid " + style.subAccordion}
+            panels={getTestcasesAccordionPanels(subtask.testcases)}
+          />
+        </Accordion.Content>
+      )
+    }));
 
   const answerInfo = (
     <>
@@ -743,10 +837,24 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       {fullInfo &&
         fullInfo.subtasks &&
         fullInfo.subtasks &&
-        (subtaskList.length === 1 ? (
-          subtaskList[0].content
+        (subtasks.length === 1 ? (
+          <Accordion
+            className={"styled fluid " + style.accordion}
+            panels={
+              samples && samples.length > 0
+                ? [getSamplePanel(), ...getTestcasesAccordionPanels(subtasks[0].testcases)]
+                : getTestcasesAccordionPanels(subtasks[0].testcases)
+            }
+          />
         ) : (
-          <Accordion className={"styled fluid " + style.accordion} panels={subtaskList} />
+          <Accordion
+            className={"styled fluid " + style.accordion}
+            panels={
+              samples && samples.length > 0
+                ? [getSamplePanel(), ...getSubtasksAccordionPanels()]
+                : getSubtasksAccordionPanels()
+            }
+          />
         ))}
     </>
   );

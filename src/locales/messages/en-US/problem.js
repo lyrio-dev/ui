@@ -61,6 +61,7 @@ module.exports = {
   submit: {
     back_to_statement: "Back to Statement",
     language: "Langauge",
+    skip_samples: "Skip Samples",
     submit: "Submit"
   },
   permission_level: {
