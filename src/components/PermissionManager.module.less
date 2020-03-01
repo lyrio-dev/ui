@@ -16,19 +16,77 @@
   white-space: pre-wrap;
 }
 
+.columnUsername {
+  :global(.ui.image.header) {
+    display: flex !important;
+    align-items: center;
+
+    img {
+      flex-shrink: 0;
+    }
+
+    :global(.content) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // mobile
+  .emailInMobileView {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.columnGroupName {
+  white-space: nowrap;
+}
+
+.columnDropdown {
+  overflow: visible !important;
+  white-space: nowrap;
+}
+
 .avatar {
   width: 27.5px !important;
   height: 27.5px !important;
 }
 
+// mobile
+.userResultContainer {
+  width: 100%;
+}
+
 .userResult {
+  // mobile
+  &.firstRow {
+    display: flex;
+    align-items: center;
+  }
+
+  // mobile
+  &.email {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   &.avatar {
     margin-right: 10px;
+    flex-shrink: 0;
   }
   
   &.username {
-    width: 35%;
     font-weight: bolder;
+
+    @media only screen and (min-width: 768px) {
+      width: 35%;
+    }
+
+    // mobile
+    @media only screen and (max-width: 767px) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 
@@ -40,4 +98,12 @@
   opacity: 0.5;
   height: calc(33.5px * 1.5);
   font-weight: normal;
+}
+
+.groupName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 18.5px;
+  margin-top: -2px;
+  margin-bottom: -2px;
 }

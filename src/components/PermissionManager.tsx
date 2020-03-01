@@ -12,6 +12,7 @@ import { GroupMeta } from "@/interfaces/GroupMeta";
 import { UserApi, GroupApi } from "@/api";
 import toast from "@/utils/toast";
 import TableCellSearchDropdown from "./TableCellSearchDropdown";
+import { appState } from "@/appState";
 
 type PermissionLevelDetails = Record<number, { title: string /* description: string; */ }>;
 
@@ -71,6 +72,8 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   const [permissions, setPermissions] = useState<PermissionsForResponse>(null);
 
+  const isMobile = appState.isScreenWidthIn(0, 768);
+
   async function onSearchUser(input: string) {
     const { requestError, response } = await UserApi.searchUser({
       query: input,
@@ -82,7 +85,15 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
       return response.userMetas.map(user => ({
         key: user.id,
         data: user,
-        content: (
+        content: isMobile ? (
+          <div className={style.userResultContainer}>
+            <Header as="h4" image className={style.userResult + " " + style.firstRow}>
+              <Image className={style.userResult + " " + style.avatar} src={getUserAvatar(user)} rounded size="tiny" />
+              <div className={style.userResult + " " + style.username}>{user.username}</div>
+            </Header>
+            <div className={style.userResult + " " + style.email}>{user.email}</div>
+          </div>
+        ) : (
           <>
             <Image className={style.userResult + " " + style.avatar} src={getUserAvatar(user)} rounded size="tiny" />
             <div className={style.userResult + " " + style.username}>{user.username}</div>
@@ -153,10 +164,10 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         key: group.id,
         data: group,
         content: (
-          <span className={style.groupName}>
+          <div className={style.groupName}>
             <Icon className={style.groupIcon} name="group" />
             {group.name}
-          </span>
+          </div>
         )
       }));
 
@@ -249,6 +260,22 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     setPendingSubmit(false);
   }
 
+  const getUsernameAndEmailColumns = (user: UserMeta) => (
+    <>
+      <Table.Cell width={isMobile ? 8 : 4} className={style.columnUsername}>
+        <Header as="h4" image>
+          <Image className={style.avatar} src={getUserAvatar(user)} rounded size="mini" />
+          <Header.Content>
+            {user.username}
+            {/* <Header.Subheader>{user.name}</Header.Subheader> */}
+          </Header.Content>
+        </Header>
+        {isMobile && <div className={style.emailInMobileView}>{user.email}</div>}
+      </Table.Cell>
+      {!isMobile && <Table.Cell width={6}>{user.email}</Table.Cell>}
+    </>
+  );
+
   const dialog = useDialog(
     {},
     () => (
@@ -258,7 +285,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         content={
           <>
             {_("components.permission_manager.header")}
-            <div className={style.dialogHeaderInfo}>{props.objectDescription}</div>
+            {!isMobile && <div className={style.dialogHeaderInfo}>{props.objectDescription}</div>}
           </>
         }
       />
@@ -266,37 +293,19 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     () => (
       <>
         <Header as="h4">{_("components.permission_manager.permission_for_users")}</Header>
-        <Table>
+        <Table fixed unstackable>
           <Table.Body>
             <Table.Row>
-              <Table.Cell width={4}>
-                <Header as="h4" image>
-                  <Image className={style.avatar} src={getUserAvatar(permissions.owner)} rounded size="mini" />
-                  <Header.Content>
-                    {permissions.owner.username}
-                    {/* <Header.Subheader>{permissions.owner.name}</Header.Subheader> */}
-                  </Header.Content>
-                </Header>
-              </Table.Cell>
-              <Table.Cell width={6}>{permissions.owner.email}</Table.Cell>
-              <Table.Cell width={4}>{_("components.permission_manager.owner")}</Table.Cell>
+              {getUsernameAndEmailColumns(permissions.owner)}
+              <Table.Cell width={isMobile ? 6 : 4}>{_("components.permission_manager.owner")}</Table.Cell>
               <Table.Cell width={2} textAlign="right">
                 <Icon disabled name="delete" />
               </Table.Cell>
             </Table.Row>
             {permissions.userPermissions.map((userPermission, index) => (
               <Table.Row key={userPermission.user.id}>
-                <Table.Cell>
-                  <Header as="h4" image>
-                    <Image className={style.avatar} src={getUserAvatar(userPermission.user)} rounded size="mini" />
-                    <Header.Content>
-                      {userPermission.user.username}
-                      {/* <Header.Subheader>{userPermission.user.name}</Header.Subheader> */}
-                    </Header.Content>
-                  </Header>
-                </Table.Cell>
-                <Table.Cell>{userPermission.user.email}</Table.Cell>
-                <Table.Cell>
+                {getUsernameAndEmailColumns(userPermission.user)}
+                <Table.Cell className={style.columnDropdown}>
                   <Dropdown
                     value={userPermission.permissionLevel.toString()}
                     options={Object.keys(props.permissionsLevelDetails).map(permissionLevel => ({
@@ -318,7 +327,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
           {props.haveSubmitPermission && (
             <Table.Footer>
               <Table.Row>
-                <Table.HeaderCell colSpan={4}>
+                <Table.HeaderCell colSpan={4} className={style.columnDropdown}>
                   <TableCellSearchDropdown
                     placeholder={_("components.permission_manager.search_users")}
                     onSearch={onSearchUser}
@@ -330,7 +339,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
           )}
         </Table>
         <Header as="h4">{_("components.permission_manager.permission_for_groups")}</Header>
-        <Table compact>
+        <Table compact fixed unstackable>
           <Table.Body>
             {permissions.groupPermissions.length === 0 ? (
               <Table.Row>
@@ -341,11 +350,11 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
             ) : (
               permissions.groupPermissions.map((groupPermission, index) => (
                 <Table.Row key={groupPermission.group.id}>
-                  <Table.Cell className={style.groupName} width={7}>
+                  <Table.Cell className={style.columnGroupName} width={7}>
                     <Icon className={style.groupIcon} name="group" />
                     {groupPermission.group.name}
                   </Table.Cell>
-                  <Table.Cell width={4}>
+                  <Table.Cell width={4} className={style.columnDropdown}>
                     <Dropdown
                       value={groupPermission.permissionLevel.toString()}
                       options={Object.keys(props.permissionsLevelDetails).map(permissionLevel => ({
@@ -368,7 +377,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
           {props.haveSubmitPermission && (
             <Table.Footer>
               <Table.Row>
-                <Table.HeaderCell colSpan={3}>
+                <Table.HeaderCell colSpan={3} className={style.columnDropdown}>
                   <TableCellSearchDropdown
                     placeholder={_("components.permission_manager.search_groups")}
                     onSearch={onSearchGroup}
