@@ -398,7 +398,11 @@ let FileTable: React.FC<FileTableProps> = props => {
 
   return (
     <>
-      <Table color={props.color} className={style.fileTable} unstackable>
+      <Table
+        color={props.color}
+        className={style.fileTable + (!props.hasPermission ? " " + style.noManagePermission : "")}
+        unstackable
+      >
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>

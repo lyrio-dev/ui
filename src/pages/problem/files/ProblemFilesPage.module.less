@@ -5,6 +5,7 @@
 
 @columnWidthSize: 85px;
 @columnWidthOperations: 155px;
+@columnWidthOperationsNoPermission: 65px;
 
 .fileTable {
   table-layout: fixed;
@@ -25,6 +26,10 @@
 
 .fileTableColumnOperations {
   width: @columnWidthOperations;
+
+  .noManagePermission & {
+    width: @columnWidthOperationsNoPermission;
+  }
 }
 
 .fileTableCheckbox {
