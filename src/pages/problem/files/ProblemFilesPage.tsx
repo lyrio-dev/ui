@@ -575,7 +575,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.title = `${idString} - ${_("problem_files.title")}`;
+    appState.title = `${_("problem_files.title")} ${idString}`;
   }, [appState.locale]);
 
   function transformResponseToFileTableItems(fileList: ApiTypes.ProblemFileDto[]): FileTableItem[] {

@@ -672,7 +672,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     if (props.new) {
       appState.title = `${_("problem_edit.title_new")}`;
     } else {
-      appState.title = `${idString} - ${_("problem_edit.title_edit")}`;
+      appState.title = `${_("problem_edit.title_edit")} ${idString}`;
     }
   }, [appState.locale]);
 

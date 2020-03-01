@@ -878,7 +878,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.title = `${idString} - ${_("problem_judge_settings.title")}`;
+    appState.title = `${_("problem_judge_settings.title")} ${idString}`;
   }, [appState.locale]);
 
   function parseJudgeInfo(raw: any) {
