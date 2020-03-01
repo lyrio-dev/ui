@@ -78,6 +78,14 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
   for (let i = 1; i < scores.length; i++) scorePrefixSum[i][1] += scorePrefixSum[i - 1][1];
   for (let i = scores.length - 2; i >= 0; i--) scoreSuffixSum[i][1] += scoreSuffixSum[i + 1][1];
 
+  // To prevent the most important column to be hidden
+  const statisticsField = {
+    [SubmissionStatisticsType.Fastest]: "Time",
+    [SubmissionStatisticsType.MinMemory]: "Memory",
+    [SubmissionStatisticsType.MinAnswerSize]: "AnswerSize",
+    [SubmissionStatisticsType.Earlist]: "SubmitTime"
+  }[props.type];
+
   return (
     <>
       <Header as="h1" className={style.header}>
@@ -117,11 +125,18 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
         <>
           <Table textAlign="center" basic="very" className={style.table} unstackable fixed>
             <Table.Header>
-              <SubmissionHeader page="submissions" />
+              <SubmissionHeader page="statistics" statisticsField={statisticsField as any} />
             </Table.Header>
             <Table.Body>
               {props.response.submissions.map(submission => {
-                return <SubmissionItem key={submission.id} submission={submission} page="submissions" />;
+                return (
+                  <SubmissionItem
+                    key={submission.id}
+                    submission={submission}
+                    page="statistics"
+                    statisticsField={statisticsField as any}
+                  />
+                );
               })}
             </Table.Body>
           </Table>
@@ -147,7 +162,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   xPadding: 10,
                   yPadding: 10,
                   displayColors: false,
-                  titleFontSize: 14,
+                  titleFontSize: 13,
                   bodyFontSize: 13,
                   titleFontStyle: "",
                   callbacks: {
@@ -160,6 +175,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   yAxes: [
                     {
                       ticks: {
+                        beginAtZero: true,
                         padding: 10,
                         maxTicksLimit: 5,
                         fontSize: 13,
@@ -209,7 +225,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   xPadding: 10,
                   yPadding: 10,
                   displayColors: false,
-                  titleFontSize: 14,
+                  titleFontSize: 13,
                   bodyFontSize: 13,
                   titleFontStyle: "",
                   callbacks: {
@@ -224,6 +240,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   yAxes: [
                     {
                       ticks: {
+                        beginAtZero: true,
                         padding: 10,
                         maxTicksLimit: 5,
                         fontSize: 13,
@@ -279,7 +296,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   xPadding: 10,
                   yPadding: 10,
                   displayColors: false,
-                  titleFontSize: 14,
+                  titleFontSize: 13,
                   bodyFontSize: 13,
                   titleFontStyle: "",
                   callbacks: {
@@ -294,6 +311,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   yAxes: [
                     {
                       ticks: {
+                        beginAtZero: true,
                         padding: 10,
                         maxTicksLimit: 5,
                         fontSize: 13,

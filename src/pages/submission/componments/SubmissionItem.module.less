@@ -60,32 +60,92 @@
 }
 
 // responsive
-.submissionsPage {
+.submissionsPage, .statisticsPage {
   @media only screen and (max-width: 1023px) {
-    .columnTime {
-      display: none;
+    &.statisticsPage {
+      .columnStatus {
+        width: 40px !important;
+        text-align: center !important;
+  
+        :global(.statusicon) {
+          margin-right: 0 !important;
+        }
+  
+        :global(.statustext) {
+          display: none;
+        }
+      }
     }
 
-    .columnMemory {
-      display: none;
+    &.submissionsPage {
+      .columnTime {
+        display: none;
+      }
+  
+      .columnMemory {
+        display: none;
+      }
     }
   }
 
   @media only screen and (max-width: 767px) {
-    .columnAnswer {
-      display: none;
+    &.statisticsPage {
+      .columnScore {
+        display: none;
+      }
+    
+      &.statisticsTypeSubmitTime {
+        .columnTime {
+          display: none;
+        }
+
+        .columnMemory {
+          display: none;
+        }
+      }
+
+      &:not(.statisticsTypeSubmitTime) {
+        .columnSubmitTime {
+          display: none;
+        }
+      }
+    }
+
+    &.submissionsPage {
+      .columnAnswer {
+        display: none;
+      }
     }
   }
 
   @media only screen and (max-width: 639px) {
-    .columnStatus {
-      width: 150px !important;
+    &.submissionsPage {
+      .columnStatus {
+        width: 150px !important;
+      }
     }
   }
 
   @media only screen and (max-width: 559px) {
-    .submitter {
-      display: none;
+    &.statisticsPage {
+      &:not(.statisticsTypeTime) .columnTime {
+        display: none;
+      }
+      &:not(.statisticsTypeMemory) .columnMemory {
+        display: none;
+      }
+      &:not(.statisticsTypeAnswer) .columnAnswer {
+        display: none;
+      }
+      &:not(.statisticsTypeSubmitTime) .columnSubmitTime {
+        display: none;
+      }
+    }
+
+    .submissionsPage {
+      .submitter {
+        display: none;
+      }
     }
 
     .columnStatus,
@@ -104,16 +164,18 @@
   }
 
   @media only screen and (max-width: 478px) {
-    .columnStatus {
-      width: 40px !important;
-      text-align: center !important;
-
-      :global(.statusicon) {
-        margin-right: 0 !important;
-      }
-
-      :global(.statustext) {
-        display: none;
+    &.submissionsPage {
+      .columnStatus {
+        width: 40px !important;
+        text-align: center !important;
+  
+        :global(.statusicon) {
+          margin-right: 0 !important;
+        }
+  
+        :global(.statustext) {
+          display: none;
+        }
       }
     }
   }

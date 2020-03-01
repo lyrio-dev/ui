@@ -14,7 +14,8 @@ import { CodeLanguage } from "@/interfaces/CodeLanguage";
 
 interface SubmissionItemProps {
   submission: ApiTypes.SubmissionMetaDto;
-  page: "submission" | "submissions";
+  page: "submission" | "submissions" | "statistics";
+  statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
 
   // This is passed to <StatusText> to override the display text for status
   statusText?: string;
@@ -40,14 +41,19 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   const refAnswerInfoIcon = useRef<HTMLElement>();
 
   return (
-    <Table.Row className={style[props.page + "Page"]}>
+    <Table.Row
+      className={
+        style[props.page + "Page"] +
+        (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
+      }
+    >
       <Table.Cell className={style.columnStatus} textAlign="left">
-        <Link href={props.page === "submissions" ? submissionLink : null}>
+        <Link href={props.page !== "submission" ? submissionLink : null}>
           <StatusText status={submission.status} statusText={props.statusText} />
         </Link>
       </Table.Cell>
       <Table.Cell className={style.columnScore}>
-        <Link href={props.page === "submissions" ? submissionLink : null}>
+        <Link href={props.page !== "submission" ? submissionLink : null}>
           <ScoreText score={submission.score || 0} />
         </Link>
       </Table.Cell>
@@ -80,7 +86,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
                       <Icon name="info circle" />
                     </Ref>
                   )}
-                  {props.page === "submissions" ? (
+                  {props.page !== "submission" ? (
                     <Link href={submissionLink}>{_(`code_language.${submission.codeLanguage}.name`)}</Link>
                   ) : (
                     _(`code_language.${submission.codeLanguage}.name`)
@@ -103,14 +109,20 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
 };
 
 interface SubmissionHeaderProps {
-  page: "submission" | "submissions";
+  page: "submission" | "submissions" | "statistics";
+  statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
 }
 
 export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
   const _ = useIntlMessage();
 
   return (
-    <Table.Row className={style[props.page + "Page"]}>
+    <Table.Row
+      className={
+        style[props.page + "Page"] +
+        (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
+      }
+    >
       <Table.HeaderCell className={style.columnStatus} textAlign="left">
         {_("submission_item.columns.status")}
       </Table.HeaderCell>
