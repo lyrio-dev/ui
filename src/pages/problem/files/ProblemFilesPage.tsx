@@ -26,7 +26,7 @@ import { useDebounce } from "use-debounce";
 
 import style from "./ProblemFilesPage.module.less";
 
-import { ProblemApi, FileApi } from "@/api";
+import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage } from "@/utils/hooks";
@@ -34,8 +34,6 @@ import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
 import openUploadDialog from "@/utils/openUploadDialog";
-import readFile from "@/utils/readFile";
-import sha256 from "@/utils/sha256";
 import pipeStream from "@/utils/pipeStream";
 import { observer } from "mobx-react";
 
@@ -58,21 +56,6 @@ async function fetchData(idType: "id" | "displayId", id: number) {
   }
 
   return response;
-}
-
-async function sha256File(file: File, onProgress: (processedSize: number) => Promise<boolean> | boolean) {
-  const hash = sha256();
-  await hash.init();
-  let readSize = 0;
-  await hash.update(new Uint8Array());
-  await readFile(file, async data => {
-    readSize += data.byteLength;
-    await hash.update(data);
-    if (onProgress(readSize)) {
-      return true;
-    }
-  });
-  return await hash.digest("hex");
 }
 
 interface FileUploadInfo {
@@ -214,7 +197,9 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
     <>
       <Table.Row>
         <Table.Cell className={style.fileTableColumnFilename}>
-          {props.file.upload && props.file.upload.progress && <Progress percent={debouncedUploadProgress} indicating />}
+          {props.file.upload && props.file.upload.progress != null && (
+            <Progress percent={debouncedUploadProgress} indicating />
+          )}
           <div className={style.filename}>
             <Checkbox
               className={style.fileTableCheckbox}
@@ -779,41 +764,24 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     for (const item of uploadingFileList) {
       uploadTasks.push(async () => {
         try {
-          let cancelled = false;
-          const cancel = () => (cancelled = true);
-          const sha256 = await sha256File(item.upload.file, processedSize => {
-            if (cancelled) return true;
-            updateFileUploadInfo(item.uuid, {
-              progressType: "Hashing",
-              progress: (processedSize / item.upload.file.size) * 100,
-              cancel
-            });
-          });
-
-          if (cancelled) {
-            updateFileUploadInfo(item.uuid, {
-              progressType: "Cancelled",
-              cancel: null
-            });
-            return;
-          }
-
           updateFileUploadInfo(item.uuid, {
             progressType: "Requesting",
-            progress: 100
+            progress: 0
           });
 
+          let uuid: string;
           async function tryAddFile(beforeDoUpload: boolean) {
             const { requestError, response } = await ProblemApi.addProblemFile({
               problemId: props.problem.meta.id,
               type,
-              sha256,
-              filename: item.filename
+              size: item.upload.file.size,
+              filename: item.filename,
+              uuid: uuid
             });
             if (requestError) throw requestError;
 
-            if (response.error === "UPLOAD_REQUIRED" && beforeDoUpload) {
-              return response;
+            if (response.uploadInfo && beforeDoUpload) {
+              return response.uploadInfo;
             }
 
             if (response.error) throw _(`problem_files.error.${response.error}`);
@@ -821,10 +789,9 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
             return null;
           }
 
-          const uploadUrlAndUuid = await tryAddFile(true);
-          if (uploadUrlAndUuid) {
+          const uploadUrlInfo = await tryAddFile(true);
+          if (uploadUrlInfo) {
             // If upload is required
-            const { uploadUrl, uploadUuid } = uploadUrlAndUuid;
             const cancelTokenSource = axios.CancelToken.source();
             let cancelled = false;
             const cancel = () => {
@@ -833,16 +800,35 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
               cancelTokenSource.cancel();
             };
 
+            uuid = uploadUrlInfo.uuid;
+
             try {
-              await axios.put(uploadUrl, item.upload.file, {
-                cancelToken: cancelTokenSource.token,
-                onUploadProgress: e =>
-                  updateFileUploadInfo(item.uuid, {
-                    progressType: "Uploading",
-                    progress: (e.loaded / e.total) * 100,
-                    cancel
-                  })
-              });
+              if (uploadUrlInfo.method === "PUT") {
+                await axios.put(uploadUrlInfo.url, item.upload.file, {
+                  cancelToken: cancelTokenSource.token,
+                  onUploadProgress: e =>
+                    updateFileUploadInfo(item.uuid, {
+                      progressType: "Uploading",
+                      progress: (e.loaded / e.total) * 100,
+                      cancel
+                    })
+                });
+              } else {
+                const formData = new FormData();
+                Object.entries(uploadUrlInfo.extraFormData).forEach(([key, value]) =>
+                  formData.append(key, value as string)
+                );
+                formData.append(uploadUrlInfo.fileFieldName, item.upload.file);
+                await axios.post(uploadUrlInfo.url, formData, {
+                  cancelToken: cancelTokenSource.token,
+                  onUploadProgress: e =>
+                    updateFileUploadInfo(item.uuid, {
+                      progressType: "Uploading",
+                      progress: (e.loaded / e.total) * 100,
+                      cancel
+                    })
+                });
+              }
             } catch (e) {
               if (cancelled) {
                 updateFileUploadInfo(item.uuid, {
@@ -854,15 +840,6 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 
               throw e;
             }
-
-            const { requestError, response } = await FileApi.finishUpload({
-              uuid: uploadUuid
-            });
-            if (requestError) throw requestError;
-
-            // This error shouldn't happen even if the network is poor
-            // So show the error code directly
-            if (response.error) throw response.error;
 
             updateFileUploadInfo(item.uuid, {
               progressType: "Requesting",

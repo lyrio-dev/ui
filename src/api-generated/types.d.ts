@@ -12,13 +12,19 @@ declare namespace ApiTypes {
   export interface AddProblemFileRequestDto {
     problemId: number;
     type: "TestData" | "AdditionalFile";
+    size: number;
     filename: string;
-    sha256: string;
+    uuid?: string;
   }
   export interface AddProblemFileResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "UPLOAD_REQUIRED";
-    uploadUrl?: string;
-    uploadUuid?: string;
+    error?:
+      | "NO_SUCH_PROBLEM"
+      | "PERMISSION_DENIED"
+      | "TOO_MANY_FILES"
+      | "TOTAL_SIZE_TOO_LARGE"
+      | "INVALID_OPERATION"
+      | "NOT_UPLOADED";
+    uploadInfo?: ApiTypes.FileUploadInfoDto;
   }
   export interface AddUserToGroupRequestDto {
     userId: number;
@@ -82,12 +88,12 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
     downloadInfo?: ApiTypes.ProblemFileDownloadInfoDto[];
   }
-  export interface FinishUploadRequestDto {
+  export interface FileUploadInfoDto {
     uuid: string;
-  }
-  export interface FinishUploadResponseDto {
-    error?: "INVALID_OPERATION" | "NOT_UPLOADED" | "IO_ERROR" | "CHECKSUM_MISMATCH";
-    uuid?: string;
+    method: "POST" | "PUT";
+    url: string;
+    extraFormData: {};
+    fileFieldName: string;
   }
   export interface GetAllProblemTagsOfAllLocalesRequestDto {}
   export interface GetAllProblemTagsOfAllLocalesResponseDto {
@@ -166,6 +172,9 @@ declare namespace ApiTypes {
     name: string;
     ownerId: number;
   }
+  export interface HeaderParameters {
+    "maintaince-key": ApiTypes.Parameters.MaintainceKey;
+  }
   export interface JudgeClientInfoDto {
     id: number;
     name: string;
@@ -196,6 +205,7 @@ declare namespace ApiTypes {
     export type Email = string;
     export type GetPrivileges = boolean;
     export type GroupId = string;
+    export type MaintainceKey = string;
     export type Query = string;
     export type UserId = string;
     export type Username = string;

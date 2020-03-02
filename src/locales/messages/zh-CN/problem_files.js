@@ -33,6 +33,10 @@ module.exports = {
   error: {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_PROBLEM: "无此题目。",
-    NO_SUCH_FILE: "无此文件。"
+    NO_SUCH_FILE: "无此文件。",
+    TOO_MANY_FILES: "文件数量超出限制，请联系管理员协助上传。",
+    TOTAL_SIZE_TOO_LARGE: "数据总大小超出限制，请联系管理员协助上传。",
+    INVALID_OPERATION: "操作无效，请重试。",
+    NOT_UPLOADED: "找不到已上传的文件。"
   }
 };
