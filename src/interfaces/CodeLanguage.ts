@@ -1,3 +1,5 @@
+import { CodeFormatterLanguage } from "@/utils/CodeFormatter";
+
 export enum CodeLanguage {
   CPP = "cpp"
 }
@@ -19,6 +21,10 @@ export interface CodeLanguageOption {
 
 export const codeLanguageHighlightName: Record<CodeLanguage, string> = {
   [CodeLanguage.CPP]: "cpp"
+};
+
+export const codeLanguageFormatName: Record<CodeLanguage, CodeFormatterLanguage> = {
+  [CodeLanguage.CPP]: "c"
 };
 
 export const codeLanguageOptions: Record<CodeLanguage, CodeLanguageOption[]> = {

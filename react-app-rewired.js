@@ -133,6 +133,11 @@ module.exports = override(
     test: /\.svg$/,
     use: "@svgr/webpack"
   }),
+  addWebpackModuleRule({
+    test: /\.wasm$/,
+    type: "javascript/auto",
+    loader: "file-loader"
+  }),
   addWebWorkerLoader({
     test: /\.worker\.(js|ts)$/,
     use: "workerize-loader",

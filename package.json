@@ -24,6 +24,7 @@
     "chart.js": "^2.9.3",
     "customize-cra": "^0.9.1",
     "dtsgenerator": "^2.3.2",
+    "file-loader": "^5.1.0",
     "flat": "^5.0.0",
     "fs-extra": "^8.1.0",
     "gravatar": "^1.8.0",
@@ -62,6 +63,7 @@
     "use-debounce": "^3.3.0",
     "uuid": "^3.3.3",
     "validator": "^12.1.0",
+    "wastyle": "^0.0.1",
     "web-streams-polyfill": "^2.0.6",
     "workerize-loader": "^1.1.0"
   },

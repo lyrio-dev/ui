@@ -6,6 +6,9 @@ module.exports = {
     NO_SUCH_SUBMISSION: "No such submission.",
     PERMISSION_DENIED: "Permission denied."
   },
+  failed_to_format: "Error formatting code: {error}",
+  format_code: "Format code",
+  show_original_code: "Show original code",
   compilation_message: "Compilation Message",
   system_message: "System Message",
   sample: "Samples",

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Segment, Table, Icon, Accordion, Grid, SemanticWIDTHS, Header, List } from "semantic-ui-react";
+import { Segment, Table, Icon, Accordion, Grid, SemanticWIDTHS, Header, List, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
 import uuid from "uuid";
@@ -15,11 +15,12 @@ import { SubmissionApi, ProblemApi } from "@/api-generated";
 import toast from "@/utils/toast";
 import { useIntlMessage, useSocket } from "@/utils/hooks";
 import { SubmissionHeader, SubmissionItem, SubmissionItemExtraRows } from "../componments/SubmissionItem";
-import { codeLanguageHighlightName } from "@/interfaces/CodeLanguage";
+import { codeLanguageHighlightName, codeLanguageFormatName, CodeLanguage } from "@/interfaces/CodeLanguage";
 import StatusText from "@/components/StatusText";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
+import * as CodeFormatter from "@/utils/CodeFormatter";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -36,6 +37,7 @@ async function fetchData(submissionId: number) {
 }
 
 interface CodeBoxProps {
+  children?: React.ReactNode;
   className?: string;
   title?: React.ReactNode;
   content?: React.ReactNode;
@@ -64,6 +66,55 @@ const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, ref) => {
         </Segment>
       </div>
     )
+  );
+});
+
+interface FormattableCodeBoxProps {
+  className?: string;
+  title?: React.ReactNode;
+  code: string;
+  language: CodeLanguage;
+}
+
+const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxProps>((props, ref) => {
+  const _ = useIntlMessage();
+
+  // TODO: add options
+  const defaultFormatted = true;
+  const options = CodeFormatter.defaultOptions;
+
+  const languageFormattable = !!codeLanguageFormatName[props.language];
+
+  const unformattedCode = props.code;
+  const refFormattedCode = useRef<string>(null);
+
+  const [formatted, setFormatted] = useState(defaultFormatted && languageFormattable);
+
+  // Lazy
+  if (formatted && !refFormattedCode.current) {
+    const [success, result] = CodeFormatter.format(unformattedCode, codeLanguageFormatName[props.language], options);
+    if (!success) {
+      toast.error(_(`submission.failed_to_format`, { error: result }));
+      setFormatted(false);
+    } else refFormattedCode.current = result;
+  }
+
+  return (
+    <CodeBox
+      className={props.className}
+      title={props.title}
+      highlightLanguage={codeLanguageHighlightName[props.language]}
+      content={formatted && refFormattedCode.current != null ? refFormattedCode.current : unformattedCode}
+      ref={ref}
+    >
+      {languageFormattable && (
+        <Button
+          className={style.formatCodeButton}
+          content={!formatted ? _("submission.format_code") : _("submission.show_original_code")}
+          onClick={() => setFormatted(!formatted)}
+        />
+      )}
+    </CodeBox>
   );
 });
 
@@ -818,10 +869,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       {!isWideScreen && (
         <SubmissionItemExtraRows submission={displayMeta} answerInfo={answerInfo} isMobile={isMobile} />
       )}
-      <CodeBox
+      <FormattableCodeBox
         className={style.main}
-        content={content.code}
-        highlightLanguage={codeLanguageHighlightName[content.language]}
+        code={content.code}
+        language={content.language as CodeLanguage}
         ref={refCodeContainer}
       />
       {fullInfo && fullInfo.compile && fullInfo.compile.message && (
@@ -864,6 +915,8 @@ SubmissionPage = observer(SubmissionPage);
 
 export default route({
   async getView(request) {
+    await CodeFormatter.ready;
+
     const queryResult = await fetchData(parseInt(request.params.id) || 0);
     if (queryResult === null) {
       // TODO: Display an error page

@@ -10,4 +10,9 @@ declare module "*.svg" {
   export default ReactComponent;
 }
 
+declare module "*.wasm" {
+  const url: string;
+  export default url;
+}
+
 /// <reference types="react-scripts" />
