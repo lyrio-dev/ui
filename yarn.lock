@@ -1618,10 +1618,10 @@
     semver "^6.3.0"
     tsutils "^3.17.1"
 
-"@wasmer/wasi@^0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@wasmer/wasi/-/wasi-0.9.1.tgz#eb3446b2e998ac9edf07d4910aceedff758a7b0d"
-  integrity sha512-dwwZy0AJ6AQTOjK2EElYae2QeGgFXLJnHxwTWHHJrP6IhcwnYSTV3K3ssrjRVgajhybsaGexifBmRJ1T5thLkw==
+"@wasmer/wasi@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@wasmer/wasi/-/wasi-0.10.0.tgz#883221fae0d4c9ab8220e548b477f149d4bb660a"
+  integrity sha512-9toRqlH9QZDVdAn7xv3cPw/Jkl/agYyqY4TuxcEC0B9TgmuvGI0yj3TNMwbbULMm3Yi8Jla/ErpLTLkhnlhGqQ==
   dependencies:
     browser-process-hrtime "^1.0.0"
     buffer-es6 "^4.9.3"
@@ -2405,13 +2405,6 @@ binary-extensions@^1.0.0:
   version "1.13.1"
   resolved "https://registry.npm.taobao.org/binary-extensions/download/binary-extensions-1.13.1.tgz#598afe54755b2868a5330d2aff9d4ebb53209b65"
   integrity sha1-WYr+VHVbKGilMw0q/51Ou1Mgm2U=
-
-bindings@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
-  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
-  dependencies:
-    file-uri-to-path "1.0.0"
 
 blob@0.0.5:
   version "0.0.5"
@@ -4754,11 +4747,6 @@ file-loader@^5.1.0:
   dependencies:
     loader-utils "^1.4.0"
     schema-utils "^2.5.0"
-
-file-uri-to-path@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
-  integrity sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==
 
 filesize@3.6.1:
   version "3.6.1"
@@ -11469,20 +11457,12 @@ warning@^4.0.2, warning@^4.0.3:
   dependencies:
     loose-envify "^1.0.0"
 
-wasi@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/wasi/-/wasi-0.0.6.tgz#dc262b456c643241194b5669736cb88b2f71039f"
-  integrity sha512-D3f4Q/3LojW1uMloOC1OuFlGy2u22hLqpskAz0OkmoYeWIwVYf8XBuc9ihDGJnNf3lfNvqM4s0030sN0UUXExw==
+wastyle@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/wastyle/-/wastyle-0.0.2.tgz#87fff8d1023dc26546e27ed2663b41e052e16296"
+  integrity sha512-paxgKRQ17IqWs5B0E8QbszwmnwkwHgxy0xGLPEhF/3u2JfePIRF/QneoBovUh3jFR+MdsYD1Y3LVzvUt/f2mGw==
   dependencies:
-    bindings "^1.5.0"
-
-wastyle@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/wastyle/-/wastyle-0.0.1.tgz#d24ef44b554a49305b16077a95c5ce53ac068c34"
-  integrity sha512-/tbsAuSWwl1S1KblYdvop602ToyKx7w87CdSBNeMjqHipVDUTJAUBpNnGKQOB9gG9nPaByI6a5bF2QW5dsg6Ag==
-  dependencies:
-    "@wasmer/wasi" "^0.9.1"
-    wasi "^0.0.6"
+    "@wasmer/wasi" "^0.10.0"
 
 watchpack@^1.6.0:
   version "1.6.0"

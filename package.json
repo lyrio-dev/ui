@@ -63,7 +63,7 @@
     "use-debounce": "^3.3.0",
     "uuid": "^3.3.3",
     "validator": "^12.1.0",
-    "wastyle": "^0.0.1",
+    "wastyle": "^0.0.2",
     "web-streams-polyfill": "^2.0.6",
     "workerize-loader": "^1.1.0"
   },
