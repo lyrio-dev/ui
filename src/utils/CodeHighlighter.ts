@@ -72,12 +72,12 @@ export function tryLoadTreeSitterLanguage(language: CodeLanguage): Promise<Monac
   const promise = new Promise<MonacoTreeSitter.Language>(async resolve => {
     try {
       // Load grammar json and language lib in parallel
-      const parser = new Parser();
       const [grammarJson, languageLib] = await Promise.all([
         promiseGrammarJson,
         Parser.init().then(() => Parser.Language.load(importTreeSitterLanguageLib(language)))
       ]);
 
+      const parser = new Parser();
       parser.setLanguage(languageLib);
 
       const lang = new MonacoTreeSitter.Language(grammarJson, parser);
