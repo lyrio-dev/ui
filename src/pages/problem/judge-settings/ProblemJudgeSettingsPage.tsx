@@ -31,7 +31,7 @@ import { useIntlMessage, useDialog, useConfirmUnload } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
-import CodeEditor from "@/components/CodeEditor";
+import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 
 async function fetchData(idType: "id" | "displayId", id: number) {

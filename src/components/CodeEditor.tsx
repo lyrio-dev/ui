@@ -10,7 +10,7 @@ import style from "./CodeEditor.module.less";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 
-interface CodeEditorProps {
+export interface CodeEditorProps {
   className?: string;
   value: string;
   language: CodeLanguage | string;
@@ -47,7 +47,7 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
 
   const mtsRef = useRef<MonacoTreeSitter>();
   function initialize() {
-    mtsRef.current = new MonacoTreeSitter(editorRef.current, languageObjectRef.current);
+    mtsRef.current = new MonacoTreeSitter(Monaco, editorRef.current, languageObjectRef.current);
   }
 
   // The Monaco Editor's automaticLayout option doesn't work on a initially hidden editor

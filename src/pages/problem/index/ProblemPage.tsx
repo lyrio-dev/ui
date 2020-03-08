@@ -37,7 +37,7 @@ import { isValidDisplayId } from "@/utils/validators";
 import PermissionManager from "@/components/PermissionManager";
 import { codeLanguageOptions, CodeLanguage, CodeLanguageOptionType } from "@/interfaces/CodeLanguage";
 import { sortTags } from "../problemTag";
-import CodeEditor from "@/components/CodeEditor";
+import CodeEditor from "@/components/LazyCodeEditor";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 

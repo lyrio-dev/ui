@@ -44,7 +44,7 @@
     "mobx-utils": "^5.5.3",
     "monaco-editor": "^0.20.0",
     "monaco-editor-webpack-plugin": "^1.9.0",
-    "monaco-tree-sitter": "^0.0.2",
+    "monaco-tree-sitter": "^0.0.3",
     "navi": "^0.13.6",
     "noty": "^3.2.0-beta",
     "object-path": "^0.11.4",

@@ -7492,10 +7492,10 @@ monaco-editor@^0.20.0:
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.20.0.tgz#5d5009343a550124426cb4d965a4d27a348b4dea"
   integrity sha512-hkvf4EtPJRMQlPC3UbMoRs0vTAFAYdzFQ+gpMb8A+9znae1c43q8Mab9iVsgTcg/4PNiLGGn3SlDIa8uvK1FIQ==
 
-monaco-tree-sitter@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/monaco-tree-sitter/-/monaco-tree-sitter-0.0.2.tgz#5cb74adecb1d359e56ec4d7ff197de4552557f2f"
-  integrity sha512-MoUln5tpCHeykgCo1I/1MZ0cRzKsgXcsVRTziy//zltIB42ykgTY6XJuWW2132JK/iz4c7RgIi2K5x1QkDhz8g==
+monaco-tree-sitter@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/monaco-tree-sitter/-/monaco-tree-sitter-0.0.3.tgz#be3a639124c9905935954770174267eceb90352a"
+  integrity sha512-L6OjenzJRysXJd0EbWgBvYKbJO4Lae+/r67BD+CvkQVjZlzH1zD1TFUlGbS7b84RWOWNC9dYcbLYrnpo6cI+LA==
   dependencies:
     lodash.debounce "^4.0.8"
     web-tree-sitter "^0.16.2"
