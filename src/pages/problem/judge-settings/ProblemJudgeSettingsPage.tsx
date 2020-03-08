@@ -31,6 +31,8 @@ import { useIntlMessage, useDialog, useConfirmUnload } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
+import CodeEditor from "@/components/CodeEditor";
+import { HighlightedCodeBox } from "@/components/CodeBox";
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -1221,13 +1223,12 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           }
         />
       )}
-      <Form>
-        <TextArea
-          value={editRawEditorValue}
-          rows={20}
-          onChange={(e, { value }) => setEditRawEditorValue(value as string)}
-        />
-      </Form>
+      <CodeEditor
+        className={style.codeEditor}
+        value={editRawEditorValue}
+        language="yaml"
+        onChange={value => setEditRawEditorValue(value)}
+      />
     </>,
     <>
       <Button content={_("problem_judge_settings.edit_raw.cancel")} onClick={() => editRawDialog.close()} />
@@ -1292,10 +1293,12 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   onClick={onSubmit}
                 />
               </div>
-              <Segment className={style.yamlSegment}>
-                <pre style={{ margin: 0 }}>
-                  <code>{yaml.safeDump(normalizeJudgeInfo(judgeInfo))}</code>
-                </pre>
+              <HighlightedCodeBox
+                className={style.yamlCodeBox}
+                segmentClassName={style.yamlSegment}
+                code={yaml.safeDump(normalizeJudgeInfo(judgeInfo))}
+                language="yaml"
+              >
                 <Button
                   className="icon labeled"
                   id={style.buttonEditRaw}
@@ -1307,7 +1310,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                     editRawDialog.open();
                   }}
                 />
-              </Segment>
+              </HighlightedCodeBox>
             </div>
           </Grid.Column>
           <Grid.Column width={9}>

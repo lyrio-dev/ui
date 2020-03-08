@@ -31,9 +31,13 @@
   margin-right: 10px !important;
 }
 
-.yamlSegment {
-  overflow: overlay;
-  height: calc(100% - 50px);
+.yamlCodeBox {
+  height: 100%;
+
+  .yamlSegment {
+    margin-top: 14px !important;
+    height: calc(100% - 50px);
+  }
 }
 
 #buttonEditRaw {
@@ -62,6 +66,10 @@
 .dialogMessage {
   padding: 1em 0.85em !important;
   white-space: pre-wrap;
+}
+
+.codeEditor {
+  height: calc(100vh - 350px) !important;
 }
 
 .problemTypeField {

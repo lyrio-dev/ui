@@ -1,6 +1,8 @@
 import * as wastyle from "wastyle";
 import astyleBinaryUrl from "wastyle/dist/astyle.wasm";
 
+import { CodeLanguage } from "@/interfaces/CodeLanguage";
+
 let failedMessage: string = null;
 export const ready = (async () => {
   try {
@@ -34,19 +36,23 @@ export const defaultOptions = [
   "break-after-logical"
 ].join(" ");
 
-export type CodeFormatterLanguage = "c" | "cs" | "java";
+const languageToModeMap = {
+  [CodeLanguage.CPP]: "c"
+};
 
-export function format(
-  code: string,
-  language: CodeFormatterLanguage = "c",
-  options: string = defaultOptions
-): [boolean, string] {
+export function isLanguageSupported(language: CodeLanguage) {
+  return !!languageToModeMap[language];
+}
+
+export function format(code: string, language: CodeLanguage, options: string = defaultOptions): [boolean, string] {
   if (failedMessage) return [false, failedMessage];
 
-  let [error, result] = wastyle.format(code, `${options.trim()} mode=${language}`);
+  if (!languageToModeMap[language]) return [false, "Unsupported language"];
+
+  let [error, result] = wastyle.format(code, `${options.trim()} mode=${languageToModeMap[language]}`);
 
   // The space in "#include <file>"
-  result = result.replace(/^#(include|import)[\t ]*(<|")/, (match, p1, p2) => `#${p1} ${p2}`);
+  result = result.replace(/^#(include|import)[\t ]*(<|")/gm, (match, p1, p2) => `#${p1} ${p2}`);
 
   return [error, result];
 }

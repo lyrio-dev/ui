@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Segment, Table, Icon, Accordion, Grid, SemanticWIDTHS, Header, List, Button } from "semantic-ui-react";
+import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
 import uuid from "uuid";
 import AnsiToHtmlConverter from "ansi-to-html";
-import highlight from "highlight.js";
 import { patch } from "jsondiffpatch";
 
-import "highlight.js/styles/tomorrow.css";
 import style from "./SubmissionPage.module.less";
 
 import { appState } from "@/appState";
@@ -15,12 +13,14 @@ import { SubmissionApi, ProblemApi } from "@/api-generated";
 import toast from "@/utils/toast";
 import { useIntlMessage, useSocket } from "@/utils/hooks";
 import { SubmissionHeader, SubmissionItem, SubmissionItemExtraRows } from "../componments/SubmissionItem";
-import { codeLanguageHighlightName, codeLanguageFormatName, CodeLanguage } from "@/interfaces/CodeLanguage";
+import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import StatusText from "@/components/StatusText";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import * as CodeFormatter from "@/utils/CodeFormatter";
+import * as CodeHighlighter from "@/utils/CodeHighlighter";
+import { CodeBox, HighlightedCodeBox } from "@/components/CodeBox";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -36,39 +36,6 @@ async function fetchData(submissionId: number) {
   return response as RemoveOptional<ApiTypes.GetSubmissionDetailResponseDto>;
 }
 
-interface CodeBoxProps {
-  children?: React.ReactNode;
-  className?: string;
-  title?: React.ReactNode;
-  content?: React.ReactNode;
-  highlightLanguage?: string;
-  html?: string;
-  download?: () => void;
-}
-
-const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, ref) => {
-  const html =
-    props.html ||
-    (props.highlightLanguage &&
-      typeof props.content === "string" &&
-      highlight.highlight(props.highlightLanguage, props.content).value);
-  const content = !props.html && !props.highlightLanguage ? props.content : undefined;
-
-  return (
-    (html || content) && (
-      <div className={style.codeBox + (props.className ? " " + props.className : "")}>
-        {props.title && <p>{typeof props.title === "string" ? <strong>{props.title}</strong> : props.title}</p>}
-        <Segment className={style.codeBoxSegment}>
-          {props.children}
-          <pre ref={ref} className={style.codeBoxContent} dangerouslySetInnerHTML={html && { __html: html }}>
-            {content}
-          </pre>
-        </Segment>
-      </div>
-    )
-  );
-});
-
 interface FormattableCodeBoxProps {
   className?: string;
   title?: React.ReactNode;
@@ -83,7 +50,7 @@ const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxPr
   const defaultFormatted = true;
   const options = CodeFormatter.defaultOptions;
 
-  const languageFormattable = !!codeLanguageFormatName[props.language];
+  const languageFormattable = CodeFormatter.isLanguageSupported(props.language);
 
   const unformattedCode = props.code;
   const refFormattedCode = useRef<string>(null);
@@ -92,7 +59,7 @@ const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxPr
 
   // Lazy
   if (formatted && !refFormattedCode.current) {
-    const [success, result] = CodeFormatter.format(unformattedCode, codeLanguageFormatName[props.language], options);
+    const [success, result] = CodeFormatter.format(unformattedCode, props.language, options);
     if (!success) {
       toast.error(_(`submission.failed_to_format`, { error: result }));
       setFormatted(false);
@@ -100,11 +67,11 @@ const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxPr
   }
 
   return (
-    <CodeBox
+    <HighlightedCodeBox
       className={props.className}
       title={props.title}
-      highlightLanguage={codeLanguageHighlightName[props.language]}
-      content={formatted && refFormattedCode.current != null ? refFormattedCode.current : unformattedCode}
+      language={props.language}
+      code={formatted && refFormattedCode.current != null ? refFormattedCode.current : unformattedCode}
       ref={ref}
     >
       {languageFormattable && (
@@ -114,7 +81,7 @@ const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxPr
           onClick={() => setFormatted(!formatted)}
         />
       )}
-    </CodeBox>
+    </HighlightedCodeBox>
   );
 });
 
@@ -676,7 +643,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                   </>
                 }
                 content={testcaseResult.output}
-                download={() => onDownload(testcaseResult.testcaseInfo.outputFilename)}
               />
             )}
             <CodeBox title={_("submission.testcase.user_output")} content={testcaseResult.userOutput} />
@@ -832,6 +798,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       )
     }));
 
+  // TODO: Handle invalid answer content, or check on server
   const answerInfo = (
     <>
       <table className={style.languageOptions}>
@@ -870,20 +837,24 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         <SubmissionItemExtraRows submission={displayMeta} answerInfo={answerInfo} isMobile={isMobile} />
       )}
       <FormattableCodeBox
-        className={style.main}
+        className={style.mainCodeBox}
         code={content.code}
         language={content.language as CodeLanguage}
         ref={refCodeContainer}
       />
       {fullInfo && fullInfo.compile && fullInfo.compile.message && (
         <CodeBox
-          className={style.main}
+          className={style.mainCodeBox}
           title={_("submission.compilation_message")}
           html={ansiToHtml(fullInfo.compile.message)}
         />
       )}
       {fullInfo && fullInfo.systemMessage && (
-        <CodeBox className={style.main} title={_("submission.system_message")} content={fullInfo.systemMessage} />
+        <CodeBox
+          className={style.mainCodeBox}
+          title={_("submission.system_message")}
+          content={fullInfo.systemMessage}
+        />
       )}
       {fullInfo &&
         fullInfo.subtasks &&
@@ -921,6 +892,11 @@ export default route({
     if (queryResult === null) {
       // TODO: Display an error page
       return null;
+    }
+
+    // Load highlight
+    if (queryResult.content && typeof (queryResult.content as any).language === "string") {
+      await CodeHighlighter.tryLoadTreeSitterLanguage((queryResult.content as any).language);
     }
 
     return <SubmissionPage key={uuid()} {...(queryResult as any)} />;

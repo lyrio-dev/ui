@@ -1,6 +1,7 @@
 global.appConfig = require("./app-config");
 
-const { override, fixBabelImports, addWebpackAlias, addWebpackModuleRule, disableEsLint } = require("customize-cra");
+const { override, fixBabelImports, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin, disableEsLint } = require("customize-cra");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 // https://github.com/arackaf/customize-cra/issues/199
 const addLessLoader = (loaderOptions = {}) => config => {
@@ -145,6 +146,12 @@ module.exports = override(
   addWebpackAlias({
     ["@"]: __dirname + "/src"
   }),
+  addWebpackPlugin(new MonacoWebpackPlugin({
+    languages: ["cpp"]
+  })),
+  addBabelPlugin(["prismjs", {
+    "languages": ["yaml", "cpp"]
+  }]),
   fixBabelImports("import", {
     libraryName: "antd",
     libraryDirectory: "es",

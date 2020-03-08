@@ -37,6 +37,7 @@ import { isValidDisplayId } from "@/utils/validators";
 import PermissionManager from "@/components/PermissionManager";
 import { codeLanguageOptions, CodeLanguage, CodeLanguageOptionType } from "@/interfaces/CodeLanguage";
 import { sortTags } from "../problemTag";
+import CodeEditor from "@/components/CodeEditor";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -465,12 +466,12 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
           </Container>
           <Divider className={style.divider} />
           <Container className={style.submitView}>
-            <Form>
-              <TextArea
-                value={submissionContent.code}
-                onChange={(e, { value }) => updateSubmissionContent("code", value)}
-              />
-            </Form>
+            <CodeEditor
+              className={style.editorContainer}
+              language={submissionContent.language}
+              value={submissionContent.code}
+              onChange={value => updateSubmissionContent("code", value)}
+            />
           </Container>
           <Container className={style.statementView}>
             {(() => {
