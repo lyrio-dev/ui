@@ -5,8 +5,7 @@ module.exports = {
     contests: "比赛",
     submissions: "评测",
     members: "用户",
-    discussion: "讨论",
-    help: "帮助"
+    discussion: "讨论"
   },
   header: {
     user: {
@@ -25,5 +24,8 @@ module.exports = {
   localized_content_unavailable: {
     preferred_unavailable: "该内容没有您偏好的语言版本，已为您显示{display_locale}版本。",
     requested_unavailable: "该内容没有所选择的语言版本，已为您显示{display_locale}版本。"
+  },
+  footer: {
+    judge_machine: "评测机状态"
   }
 };

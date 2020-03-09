@@ -184,7 +184,8 @@ declare namespace ApiTypes {
     systemInfo?: {};
   }
   export interface ListJudgeClientsResponseDto {
-    judgeClients?: ApiTypes.JudgeClientInfoDto[];
+    judgeClients: ApiTypes.JudgeClientInfoDto[];
+    hasManagePermission: boolean;
   }
   export interface LocalizedProblemTagDto {
     id: number;

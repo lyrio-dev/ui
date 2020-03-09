@@ -5,8 +5,7 @@ module.exports = {
     contests: "Contests",
     submissions: "Submissions",
     members: "Members",
-    discussion: "Discussion",
-    help: "Help"
+    discussion: "Discussion"
   },
   header: {
     user: {
@@ -25,5 +24,8 @@ module.exports = {
   localized_content_unavailable: {
     preferred_unavailable: "This content is not available in your language, here is the {display_locale} version.",
     requested_unavailable: "This content is not available in selected language, here is the {display_locale} version."
+  },
+  footer: {
+    judge_machine: "Judge Machine"
   }
 };

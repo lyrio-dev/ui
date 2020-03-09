@@ -1,0 +1,52 @@
+.headerWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.header {
+  margin-bottom: 0 !important;
+  flex-grow: 1;
+}
+
+.addButton {
+  margin-left: 10px !important;
+}
+
+.columnStatus {
+  width: 105px;
+
+  td& {
+    display: flex;
+    align-items: center;
+  }
+
+  .onlineStatus {
+    margin-right: 10px !important;
+  }
+}
+
+.columnOperations {
+  width: 110px;
+
+  > :global(.icon) {
+    margin-right: 0 !important;
+  }
+
+  > :global(.icon):not(:first-child) {
+    margin-left: 15px !important;
+  }
+}
+
+.cpuFlags {
+  width: 500px;
+  max-width: calc(100vw - 50px);
+}
+
+.cpuCache {
+  white-space: nowrap;
+}
+
+.cpuCacheName {
+  padding-right: 12px;
+}

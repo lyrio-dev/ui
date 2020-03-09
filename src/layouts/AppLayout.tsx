@@ -75,11 +75,6 @@ let AppLayout: React.FC = props => {
       icon: "comments",
       text: "common.navbar.discussion"
       // url: "/discussion"
-    },
-    help: {
-      icon: "help circle",
-      text: "common.navbar.help"
-      // url: "/help"
     }
   };
 
@@ -138,9 +133,12 @@ let AppLayout: React.FC = props => {
         <Container textAlign="center">
           <div>
             {appConfig.siteName} Powered by{" "}
-            <a href="https://github.com/syzoj/syzoj" target="_blank">
+            <a href="https://github.com/syzoj" target="_blank">
               SYZOJ
             </a>
+          </div>
+          <div className={style.footerLinks}>
+            <Link href="/judge-machine">{_("common.footer.judge_machine")}</Link>
           </div>
           <div className={style.languageSwitchContainer}>
             <Dropdown icon="language">
