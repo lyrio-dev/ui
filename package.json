@@ -5,6 +5,7 @@
     "@svgr/webpack": "^4.3.3",
     "@tanem/react-nprogress": "^3.0.9",
     "@types/chart.js": "^2.9.14",
+    "@types/flat": "^5.0.0",
     "@types/gravatar": "^1.8.0",
     "@types/js-yaml": "^3.12.2",
     "@types/lodash.clonedeep": "^4.5.6",
