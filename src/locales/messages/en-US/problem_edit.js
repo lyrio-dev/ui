@@ -20,7 +20,7 @@ module.exports = {
     }
   },
   header_samples: "Samples",
-  header_tags: "标签",
+  header_tags: "Tags",
   tags_placeholder: "Search tags to add ...",
   no_addable_tags: "No tags to add.",
   content_editor: {

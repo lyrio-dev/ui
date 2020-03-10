@@ -1151,7 +1151,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     defaultEditingLocaleIndex == -1 ? 0 : defaultEditingLocaleIndex
   );
 
-  const [tagIds, setTagIds] = useState(props.problem.tagsOfLocale.map(problemTag => problemTag.id));
+  const [tagIds, setTagIds] = useState(!props.problem ? [] : props.problem.tagsOfLocale.map(problemTag => problemTag.id));
 
   function searchTags(options: { text: string }[], query: string) {
     query = query.toLowerCase();
