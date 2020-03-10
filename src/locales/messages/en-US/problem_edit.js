@@ -52,7 +52,7 @@ module.exports = {
     }
   },
   sample_editor: {
-    add_sample_when_empty: "Add Sample When Empty",
+    add_sample_when_empty: "Add Sample",
     sample_id: "Sample ID",
     warning: {
       not_referenced: 'Not referenced in language "{language}"',
