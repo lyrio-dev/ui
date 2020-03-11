@@ -13,7 +13,8 @@ const App: React.FC = () => {
       <HelmetProvider>
         <Helmet>
           <title>
-            {appState.title} - {appConfig.siteName}
+            {appState.title && `${appState.title} - `}
+            {appConfig.siteName}
           </title>
         </Helmet>
       </HelmetProvider>
