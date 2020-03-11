@@ -321,7 +321,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const _ = useIntlMessage();
 
   useEffect(() => {
-    appState.title = `${_("submission.title")} #${props.meta.id}`;
+    appState.enterNewPage(`${_("submission.title")} #${props.meta.id}`);
   }, [appState.locale]);
 
   const content = props.content as SubmissionContentTraditional;

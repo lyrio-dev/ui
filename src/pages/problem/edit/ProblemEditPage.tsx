@@ -669,11 +669,10 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     !props.new && (props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`);
 
   useEffect(() => {
-    if (props.new) {
-      appState.title = `${_("problem_edit.title_new")}`;
-    } else {
-      appState.title = `${_("problem_edit.title_edit")} ${idString}`;
-    }
+    appState.enterNewPage(
+      props.new ? `${_("problem_edit.title_new")}` : `${_("problem_edit.title_edit")} ${idString}`,
+      false
+    );
   }, [appState.locale]);
 
   const [localizedContents, setLocalizedContents] = useState(

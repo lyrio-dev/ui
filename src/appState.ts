@@ -22,6 +22,19 @@ export class AppState {
     return this.windowWidth >= l && this.windowWidth < r;
   });
 
+  // The current page's title
+  @observable
+  title: string = "";
+
+  // Some pages doesn't support responsive layout, set this to false to display PC page on mobile
+  @observable
+  responsiveLayout: boolean = true;
+
+  enterNewPage(title: string, responsiveLayout: boolean = true) {
+    this.title = title;
+    this.responsiveLayout = responsiveLayout;
+  }
+
   @persist
   @observable
   locale: Locale = Locale.zh_CN;
@@ -38,9 +51,6 @@ export class AppState {
   @persist
   @observable
   showTagsInProblemSet: boolean = false;
-
-  @observable
-  title: string = "";
 
   @observable
   loggedInUser: UserMeta = null;

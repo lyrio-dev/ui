@@ -59,7 +59,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
   const idString = props.idType === "id" ? `P${props.id}` : `#${props.id}`;
 
   useEffect(() => {
-    appState.title = `${_("submission_statistics.title")} ${idString}`;
+    appState.enterNewPage(`${_("submission_statistics.title")} ${idString}`);
   }, [appState.locale]);
 
   function onPageChange(page: number) {

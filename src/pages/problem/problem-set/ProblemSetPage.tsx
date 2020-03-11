@@ -97,7 +97,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   const _ = useIntlMessage();
 
   useEffect(() => {
-    appState.title = _("problem_set.title");
+    appState.enterNewPage(_("problem_set.title"));
   }, [appState.locale]);
 
   const navigation = useNavigation();

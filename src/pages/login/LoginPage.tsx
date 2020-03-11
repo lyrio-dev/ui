@@ -30,7 +30,7 @@ let LoginPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    appState.title = _("login.title");
+    appState.enterNewPage(_("login.title"));
   }, [appState.locale]);
 
   const [formError, setFormError] = useState({ type: null, message: null });

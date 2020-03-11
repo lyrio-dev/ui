@@ -107,7 +107,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.title = `${idString}. ${props.problem.localizedContentsOfLocale.title} - ${_("problem.title")}`;
+    appState.enterNewPage(`${idString}. ${props.problem.localizedContentsOfLocale.title} - ${_("problem.title")}`);
   }, [appState.locale]);
 
   const timeLimit = getLimit(props.problem.judgeInfo, "timeLimit");

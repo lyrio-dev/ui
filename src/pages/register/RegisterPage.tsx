@@ -30,7 +30,7 @@ let RegisterPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    appState.title = _("register.title");
+    appState.enterNewPage(_("register.title"));
   }, [appState.locale]);
 
   const [successMessage, setSuccessMessage] = useState<string>(null);

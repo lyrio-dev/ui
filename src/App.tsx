@@ -12,6 +12,10 @@ const App: React.FC = () => {
     <>
       <HelmetProvider>
         <Helmet>
+          <meta
+            name="viewport"
+            content={appState.responsiveLayout ? "width=device-width, initial-scale=1, maximum-scale=1" : "width=1024"}
+          />
           <title>
             {appState.title && `${appState.title} - `}
             {appConfig.siteName}
