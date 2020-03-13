@@ -16,6 +16,7 @@ import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
 import { useDebouncedCallback } from "use-debounce/lib";
 import getUserAvatar from "@/utils/getUserAvatar";
+import UserSearch from "@/components/UserSearch";
 
 interface ProblemRecord extends ApiTypes.ProblemMetaDto {
   title: string;
@@ -144,35 +145,6 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         .sort((i, j) => (tags[i].name < tags[j].name ? -1 : tags[i].name > tags[j].name ? 1 : 0))
     ])
   );
-
-  // Search user
-  const [searchUserResult, setSearchUserResult] = useState<ApiTypes.UserMetaDto[]>([]);
-  const [searchUserPending, setSearchUserPending] = useState(false);
-  const refSearchUserInput = useRef("");
-  const [onSearchUser] = useDebouncedCallback(async (input: string) => {
-    input = input.trim();
-    if (!input) return;
-    const wildcardStart = input.startsWith("*");
-    if (wildcardStart) input = input.substr(1);
-    if (!input) return;
-
-    // setSearchUserPending(true);
-    refSearchUserInput.current = input;
-
-    const { requestError, response } = await UserApi.searchUser({
-      query: input,
-      wildcard: wildcardStart ? "BOTH" : "END"
-    });
-
-    if (refSearchUserInput.current !== input) return;
-
-    if (requestError) toast.error(requestError);
-    else {
-      setSearchUserResult(response.userMetas);
-    }
-
-    setSearchUserPending(false);
-  }, 500);
 
   function redirectWithFilter(filter: Partial<ProblemSetPageSearchQuery>) {
     navigation.navigate({
@@ -315,35 +287,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         />
       ) : (
         // Search user
-        <Search
-          className={style.search}
-          placeholder={_("problem_set.search_placeholder.user")}
-          value={searchKeyword}
-          noResultsMessage={_("problem_set.no_result_user")}
-          onSearchChange={(e, { value }) => {
-            setSearchKeyword(value);
-            setSearchUserPending(true);
-            onSearchUser(value);
-          }}
-          input={{ iconPosition: "left", fluid: isMobile }}
-          // Workaround Semantic UI's buggy "custom result renderer"
-          results={searchUserResult.map(user => ({
-            key: user.id,
-            title: "",
-            "data-user": user
-          }))}
-          loading={searchUserPending}
-          showNoResults={!searchUserPending}
-          resultRenderer={(result: any) => (
-            <div className={style.searchUserResult}>
-              <Image className={style.avatar} src={getUserAvatar(result["data-user"])} rounded size="tiny" />
-              <div className={style.username}>{result["data-user"].username}</div>
-            </div>
-          )}
-          onResultSelect={(e, { result }: { result: { "data-user": ApiTypes.UserMetaDto } }) =>
-            onAddFilterOwner(result["data-user"].id)
-          }
-        />
+        <UserSearch className={style.search} onResultSelect={user => onAddFilterOwner(user.id)} />
       )}
       <Menu className={style.searchMenu} secondary>
         <Menu.Item

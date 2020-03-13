@@ -2,8 +2,7 @@ module.exports = {
   title: "题库",
   search_placeholder: {
     title: "ID / 题目名 …",
-    tag: "标签名 …",
-    user: "用户名 …"
+    tag: "标签名 …"
   },
   search_icon: {
     tag: "标签",
@@ -11,7 +10,6 @@ module.exports = {
     nonpublic: "未公开"
   },
   no_result_title: "没有符合条件的题目。（未实现）",
-  no_result_user: "没有符合条件的用户。",
   search_filters: "搜索条件",
   no_matching_tags: "没有匹配的标签",
   no_tags: "暂无标签",

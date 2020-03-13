@@ -1,0 +1,52 @@
+.searchContainer {
+  margin-bottom: 26px;
+}
+
+.link {
+  color: #000 !important;
+}
+
+.table {
+  .columnRank {
+    width: 65px;
+  }
+
+  .columnUsername {
+    width: 1px;
+  }
+
+  .columnBio > div {
+    display: inline-block;
+    white-space: normal;
+    max-height: 19.5px;
+    overflow: hidden;
+  }
+
+  .columnAcceptedProblemCount {
+    width: 100px;
+  }
+
+  .columnRating {
+    width: 100px;
+  }
+
+  th, td:not(.bio) {
+    white-space: nowrap;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .columnBio {
+    display: none;
+  }
+
+  .searchContainer {
+    margin-bottom: 11px;
+  }
+}
+
+.pagination:not(:empty) {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 18px;
+}

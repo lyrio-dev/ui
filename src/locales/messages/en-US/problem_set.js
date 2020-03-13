@@ -2,8 +2,7 @@ module.exports = {
   title: "Problem Set",
   search_placeholder: {
     title: "Search ID / title ...",
-    tag: "Search tag ...",
-    user: "Search username ..."
+    tag: "Search tag ..."
   },
   search_icon: {
     tag: "Tag",
@@ -11,7 +10,6 @@ module.exports = {
     nonpublic: "Nonpublic"
   },
   no_result_title: "No matching problems. (not implemented)",
-  no_result_user: "No matching users.",
   search_filters: "Search filters",
   no_matching_tags: "No matching tags",
   no_tags: "No tags",

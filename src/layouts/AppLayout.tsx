@@ -68,8 +68,8 @@ let AppLayout: React.FC = props => {
     },
     members: {
       icon: "users",
-      text: "common.navbar.members"
-      // url: "/members"
+      text: "common.navbar.members",
+      url: "/users"
     },
     discussion: {
       icon: "comments",

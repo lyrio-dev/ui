@@ -27,6 +27,7 @@ const routes = withView(
     "/problem": getRoute(() => import("./pages/problem"), "problem"),
     "/submissions": getRoute(() => import("./pages/submission"), "submissions"),
     "/submission": getRoute(() => import("./pages/submission"), "submission"),
+    "/users": lazy(() => import("./pages/user/users/UsersPage")),
     "/judge-machine": lazy(() => import("./pages/judge-machine"))
   })
 );

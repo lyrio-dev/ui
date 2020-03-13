@@ -4,4 +4,7 @@ export interface UserMeta {
   email: string;
   bio: string;
   isAdmin: boolean;
+  acceptedProblemCount: number;
+  submissionCount: number;
+  rating: number;
 }

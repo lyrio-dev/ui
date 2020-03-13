@@ -163,6 +163,16 @@ declare namespace ApiTypes {
     progress?: {};
     progressSubscriptionKey?: string;
   }
+  export interface GetUserListRequestDto {
+    sortBy: "acceptedProblemCount" | "rating";
+    skipCount: number;
+    takeCount: number;
+  }
+  export interface GetUserListResponseDto {
+    error?: string;
+    userMetas?: ApiTypes.UserMetaDto[];
+    count?: number;
+  }
   export interface GetUserMetaResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
     privileges?: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
@@ -544,5 +554,8 @@ declare namespace ApiTypes {
     email: string;
     bio: string;
     isAdmin: boolean;
+    acceptedProblemCount: number;
+    submissionCount: number;
+    rating: number;
   }
 }
