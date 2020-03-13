@@ -91,13 +91,13 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
               <Image className={style.userResult + " " + style.avatar} src={getUserAvatar(user)} rounded size="tiny" />
               <div className={style.userResult + " " + style.username}>{user.username}</div>
             </Header>
-            <div className={style.userResult + " " + style.email}>{user.email}</div>
+            {user.email && <div className={style.userResult + " " + style.email}>{user.email}</div>}
           </div>
         ) : (
           <>
             <Image className={style.userResult + " " + style.avatar} src={getUserAvatar(user)} rounded size="tiny" />
             <div className={style.userResult + " " + style.username}>{user.username}</div>
-            <div>{user.email}</div>
+            {user.email && <div>{user.email}</div>}
           </>
         )
       }));
@@ -270,7 +270,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
             {/* <Header.Subheader>{user.name}</Header.Subheader> */}
           </Header.Content>
         </Header>
-        {isMobile && <div className={style.emailInMobileView}>{user.email}</div>}
+        {isMobile && user.email && <div className={style.emailInMobileView}>{user.email}</div>}
       </Table.Cell>
       {!isMobile && <Table.Cell width={6}>{user.email}</Table.Cell>}
     </>

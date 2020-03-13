@@ -541,7 +541,11 @@ declare namespace ApiTypes {
     userId: number;
     username?: string;
     email?: string;
-    bio?: string;
+    publicEmail: boolean;
+    bio: string;
+    sexIsFamale: boolean;
+    organization: string;
+    location: string;
     oldPassword?: string;
     password?: string;
   }
@@ -552,10 +556,15 @@ declare namespace ApiTypes {
     id: number;
     username: string;
     email: string;
+    gravatarEmailHash: string;
     bio: string;
+    sexIsFamale: boolean;
+    organization: string;
+    location: string;
     isAdmin: boolean;
     acceptedProblemCount: number;
     submissionCount: number;
     rating: number;
+    registrationTime: string; // date-time
   }
 }
