@@ -27,6 +27,7 @@
     "chart.js": "^2.9.3",
     "css-element-queries": "^1.2.3",
     "customize-cra": "^0.9.1",
+    "dayjs": "^1.8.22",
     "dtsgenerator": "^2.3.2",
     "file-loader": "^5.1.0",
     "flat": "^5.0.0",

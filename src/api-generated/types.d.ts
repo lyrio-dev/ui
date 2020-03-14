@@ -163,6 +163,18 @@ declare namespace ApiTypes {
     progress?: {};
     progressSubscriptionKey?: string;
   }
+  export interface GetUserDetailRequestDto {
+    userId: number;
+    timezoneOffset: number;
+    now: string;
+  }
+  export interface GetUserDetailResponseDto {
+    error?: string;
+    meta?: ApiTypes.UserMetaDto;
+    information?: ApiTypes.UserInformationDto;
+    submissionCountPerDay?: number[];
+    hasPrivilege?: boolean;
+  }
   export interface GetUserListRequestDto {
     sortBy: "acceptedProblemCount" | "rating";
     skipCount: number;
@@ -416,7 +428,7 @@ declare namespace ApiTypes {
     key?: string;
   }
   namespace Responses {
-    export type $200 = ApiTypes.ListJudgeClientsResponseDto;
+    export type $200 = string;
     export type $201 = ApiTypes.ResetJudgeClientKeyResponseDto;
   }
   export interface SearchGroupResponseDto {
@@ -543,14 +555,21 @@ declare namespace ApiTypes {
     email?: string;
     publicEmail: boolean;
     bio: string;
-    sexIsFamale: boolean;
-    organization: string;
-    location: string;
+    information: ApiTypes.UserInformationDto;
     oldPassword?: string;
     password?: string;
   }
   export interface UpdateUserProfileResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "WRONG_OLD_PASSWORD" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
+  }
+  export interface UserInformationDto {
+    sexIsFamale: boolean;
+    organization: string;
+    location: string;
+    url: string;
+    telegram: string;
+    qq: string;
+    github: string;
   }
   export interface UserMetaDto {
     id: number;
@@ -558,9 +577,6 @@ declare namespace ApiTypes {
     email: string;
     gravatarEmailHash: string;
     bio: string;
-    sexIsFamale: boolean;
-    organization: string;
-    location: string;
     isAdmin: boolean;
     acceptedProblemCount: number;
     submissionCount: number;

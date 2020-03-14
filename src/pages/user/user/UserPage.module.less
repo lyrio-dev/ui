@@ -1,0 +1,175 @@
+.avatar {
+  border: 1px solid #e1e4e8;
+  border-radius: 3px;
+  width: 100%;
+  height: auto;
+}
+
+.username {
+  margin-top: 15px !important;
+  margin-bottom: 1px !important;
+}
+
+.bio {
+  margin-bottom: 20px !important;
+}
+
+.editProfileButton {
+  margin-top: 20px !important;
+}
+
+.informationList {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+
+  .informationListItem {
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    .informationListItemIconWrapper {
+      display: inline-block;
+      opacity: 0.6;
+      margin-right: 3px;
+    }
+  }
+}
+
+.socialIcons {
+  margin-top: 20px;
+
+  &:empty {
+    display: none;
+  }
+
+  > .socialIcon {
+    color: rgba(0, 0, 0, 0.87);
+    opacity: 0.6 !important;
+    font-size: 22px !important;
+    margin-right: 12px !important;
+
+    > :global(.icon) {
+      margin-right: 0 !important;
+    }
+
+    &:hover {
+      opacity: 1 !important;
+    }
+  }
+}
+
+.subwayGraphPopup {
+  .submissions {
+    color: #efefef;
+    font-weight: bolder;
+  }
+
+  .date {
+    color: #aaa;
+    margin-left: 8px;
+  }
+}
+
+@subwayGraphCellSize: 14px;
+@subwayGraphMargin: 3px;
+
+.subwayGraphSegment {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+
+  .graphWrapper {
+    direction: rtl;
+    width: calc(100% - 32px);
+    overflow: hidden;
+    margin-left: 16px;
+    margin-right: 16px;
+    text-align: center;
+
+    div[data-level] {
+      width: @subwayGraphCellSize;
+      height: @subwayGraphCellSize;
+
+      > div {
+        width: calc(100% - @subwayGraphMargin);
+        height: calc(100% - @subwayGraphMargin);
+        margin: 0 @subwayGraphMargin @subwayGraphMargin 0;
+      }
+    }
+    div[data-level="0"] > div { background-color: #ebedf0; }
+    div[data-level="1"] > div { background-color: #c6e48b; }
+    div[data-level="2"] > div { background-color: #7bc96f; }
+    div[data-level="3"] > div { background-color: #239a3b; }
+    div[data-level="4"] > div { background-color: #196127; }
+  
+    .graph {
+      display: inline-flex;
+      flex-direction: row;
+      direction: ltr;
+    
+      .label {
+        font-size: 11px;
+        color: #767676;
+      }
+    
+      // Columns
+      > div {
+        width: @subwayGraphCellSize;
+    
+        // Week labels
+        &:first-child {
+          width: 25px;
+          margin-right: 5px;
+          line-height: 12px;
+    
+          > div:nth-child(even) {
+            visibility: hidden;
+          }
+        }
+    
+        > div {
+          height: @subwayGraphCellSize;
+
+          // Month labels
+          &:first-child {
+            overflow: visible;
+            white-space: nowrap;
+            margin-bottom: 8px;
+          }
+        }
+      }
+    }
+
+    .footer {
+      display: flex;
+      padding-left: 8px;
+      padding-right: 8px;
+      direction: ltr;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+
+      .legend {
+        display: inline-flex;
+        align-items: center;
+
+        > span {
+          color: #767676;
+        }
+        
+        > div {
+          margin-top: @subwayGraphMargin;
+          margin-right: @subwayGraphMargin;
+
+          &:first-of-type {
+            margin-left: 8px;
+          }
+
+          &:last-of-type {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+}

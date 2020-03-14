@@ -12,6 +12,8 @@ export type UpdateUserProfileRequestDto = ApiTypes.UpdateUserProfileRequestDto;
 export type UpdateUserProfileResponseDto = ApiTypes.UpdateUserProfileResponseDto;
 export type GetUserListRequestDto = ApiTypes.GetUserListRequestDto;
 export type GetUserListResponseDto = ApiTypes.GetUserListResponseDto;
+export type GetUserDetailRequestDto = ApiTypes.GetUserDetailRequestDto;
+export type GetUserDetailResponseDto = ApiTypes.GetUserDetailResponseDto;
 
 export const searchUser = createGetApi<{ query: string; wildcard?: string }, SearchUserResponseDto>("user/searchUser");
 export const getUserMeta = createGetApi<
@@ -25,3 +27,4 @@ export const updateUserProfile = createPostApi<UpdateUserProfileRequestDto, Upda
   "user/updateUserProfile"
 );
 export const getUserList = createPostApi<GetUserListRequestDto, GetUserListResponseDto>("user/getUserList");
+export const getUserDetail = createPostApi<GetUserDetailRequestDto, GetUserDetailResponseDto>("user/getUserDetail");
