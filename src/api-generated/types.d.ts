@@ -165,7 +165,7 @@ declare namespace ApiTypes {
   }
   export interface GetUserDetailRequestDto {
     userId: number;
-    timezoneOffset: number;
+    timezone: string;
     now: string;
   }
   export interface GetUserDetailResponseDto {

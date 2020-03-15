@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Image, Header, Card, Button, List, Icon, Segment, Popup } from "semantic-ui-react";
+import { Grid, Image, Header, Card, Button, List, Icon, Segment, Popup, Divider } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
 import { Link } from "react-navi";
@@ -18,7 +18,7 @@ async function fetchData(userId: number): Promise<[Date, Required<typeof respons
   const now = new Date();
   const { requestError, response } = await UserApi.getUserDetail({
     userId,
-    timezoneOffset: -new Date().getTimezoneOffset() / 60,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     now: now.toISOString()
   });
 
@@ -44,7 +44,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
   const weeks = 53;
 
   // A week starts from Monday
-  const weekStart = 1;
+  const weekStart = Number(_("user.subway_graph.start_of_week")) || 1;
 
   // If the last column is NOT a full week, the later at most 6 days' blocks will be omitted
   const omittedBlockCount = (((7 - (now.day() - weekStart + 1)) % 7) + 7) % 7;
@@ -68,8 +68,8 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
         <div className={style.graph}>
           <div className={style.weeks}>
             <div />
-            {[1, 2, 3, 4, 5, 6, 7].map(i => (
-              <div className={style.label}>{_(`user.subway_graph.week.${i}`)}</div>
+            {[...new Array(7).keys()].map(i => (
+              <div className={style.label}>{_(`user.subway_graph.week.${(i + weekStart) % 7 || 7}`)}</div>
             ))}
           </div>
           {dataOfWeek.map((weekData, i) => (
@@ -169,13 +169,15 @@ let UserPage: React.FC<UserPageProps> = props => {
           <Image className={style.avatar} src={getUserAvatar(props.meta, 260 * 2)} />
           <Header as="h1" className={style.username} content={props.meta.username} />
           {props.meta.bio && <p className={style.bio}>{props.meta.bio}</p>}
-          {props.hasPrivilege && (
+          {props.hasPrivilege ? (
             <Button
               className={style.editProfileButton}
               fluid
               content={_("user.edit_profile")}
               onClick={() => console.log("edit profile")}
             />
+          ) : (
+            <Divider className={style.editProfileButton} />
           )}
           <List className={style.informationList}>
             {props.information.organization && (

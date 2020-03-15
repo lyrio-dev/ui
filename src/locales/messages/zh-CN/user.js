@@ -7,6 +7,7 @@ module.exports = {
     github: "GitHub"
   },
   subway_graph: {
+    start_of_week: "1",
     week: {
       1: "周一",
       2: "周二",
