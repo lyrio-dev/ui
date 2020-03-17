@@ -3,7 +3,7 @@ import { Table, Form, Icon, Button, Segment, Header } from "semantic-ui-react";
 import { route } from "navi";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import { patch } from "jsondiffpatch";
 
 import style from "./SubmissionsPage.module.less";

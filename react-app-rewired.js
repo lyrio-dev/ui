@@ -132,6 +132,7 @@ module.exports = override(
   addLessLoader(),
   addWebpackModuleRule({
     test: /\.svg$/,
+    issuer: /\.tsx$/,
     use: "@svgr/webpack"
   }),
   addWebpackModuleRule({

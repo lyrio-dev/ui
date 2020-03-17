@@ -21,7 +21,7 @@ import {
 import TextAreaAutoSize from "react-textarea-autosize";
 import { route } from "navi";
 import { useNavigation } from "react-navi";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import update from "immutability-helper";
 
 import style from "./ProblemEditPage.module.less";

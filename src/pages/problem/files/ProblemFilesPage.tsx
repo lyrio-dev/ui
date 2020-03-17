@@ -15,7 +15,7 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-navi";
 import { route } from "navi";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import lodashIsEqual from "lodash.isequal";
 import axios from "axios";
 import { WritableStream } from "web-streams-polyfill/ponyfill/es6";

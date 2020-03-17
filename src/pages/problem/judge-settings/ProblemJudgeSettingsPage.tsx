@@ -19,7 +19,7 @@ import { route } from "navi";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
-import uuid from "uuid/v4";
+import { v4 as uuid } from "uuid";
 import update from "immutability-helper";
 import lodashClonedeep from "lodash.clonedeep";
 

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import AnsiToHtmlConverter from "ansi-to-html";
 import { patch } from "jsondiffpatch";
 
