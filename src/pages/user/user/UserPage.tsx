@@ -69,11 +69,13 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
           <div className={style.weeks}>
             <div />
             {[...new Array(7).keys()].map(i => (
-              <div className={style.label}>{_(`user.subway_graph.week.${(i + weekStart) % 7 || 7}`)}</div>
+              <div key={i} className={style.label}>
+                {_(`user.subway_graph.week.${(i + weekStart) % 7 || 7}`)}
+              </div>
             ))}
           </div>
           {dataOfWeek.map((weekData, i) => (
-            <div>
+            <div key={i}>
               <div className={style.label}>
                 {// If the first month has too less weeks (less than 3), omit its month label
                 // since the space is not enough
@@ -81,7 +83,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
                   _(`user.subway_graph.month.${monthOfWeek[i]}`)}
               </div>
               {weekData.map((dayData, j) => (
-                <div data-level={getLevel(dayData)}>
+                <div key={j} data-level={getLevel(dayData)}>
                   <Popup
                     trigger={<div />}
                     content={
