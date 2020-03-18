@@ -5,13 +5,20 @@
   height: auto;
 }
 
-.username {
-  margin-top: 15px !important;
-  margin-bottom: 1px !important;
+@media only screen and (min-width: 768px) {
+  .username {
+    margin-top: 15px !important;
+    margin-bottom: 1px !important;
+  }
+  
+  .bio {
+    margin-bottom: 20px !important;
+  }
 }
 
-.bio {
-  margin-bottom: 20px !important;
+.cardSide {
+  display: inline-flex !important;
+  align-items: center;
 }
 
 .editProfileButton {
@@ -185,9 +192,14 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  white-space: nowrap;
 
   .item {
-    width: calc(100% / 3);
+    width: calc(100% / 4);
+    @media only screen and (max-width: 767px) {
+      width: calc(100% / 2);
+    }
+
     text-align: center;
 
     .iconWrapper {
@@ -199,6 +211,11 @@
       font-weight: bolder;
     }
   }
+}
+
+.firstStatisticsSegment {
+  border-bottom: none !important;
+  margin-bottom: -14px !important;
 }
 
 .ratingSegment {

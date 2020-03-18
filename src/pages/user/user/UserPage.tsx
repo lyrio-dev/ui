@@ -10,7 +10,6 @@ import style from "./UserPage.module.less";
 import { appState } from "@/appState";
 import { UserApi } from "@/api";
 import toast from "@/utils/toast";
-import { UserMeta } from "@/interfaces/UserMeta";
 import { useIntlMessage } from "@/utils/hooks";
 import getUserAvatar from "@/utils/getUserAvatar";
 import fixChineseSpace from "@/utils/fixChineseSpace";
@@ -158,149 +157,209 @@ let UserPage: React.FC<UserPageProps> = props => {
   const _ = useIntlMessage();
 
   useEffect(() => {
-    appState.enterNewPage(`${props.meta.username}`, false);
+    appState.enterNewPage(`${props.meta.username}`);
   }, []);
+
+  const isMobile = appState.isScreenWidthIn(0, 768);
+
+  const avatar = <Image className={style.avatar} src={getUserAvatar(props.meta, 260 * 2)} />;
+  const meta = (
+    <>
+      <Header as="h1" className={style.username} content={props.meta.username} />
+      {props.meta.bio && <p className={style.bio}>{props.meta.bio}</p>}
+    </>
+  );
+
+  const card = (
+    <>
+      {!isMobile ? (
+        <>
+          {avatar}
+          {meta}
+        </>
+      ) : (
+        <Grid>
+          <Grid.Column className={style.cardSide + " " + style.cardSideAvatar} width={5}>
+            {avatar}
+          </Grid.Column>
+          <Grid.Column className={style.cardSide + " " + style.cardSideMeta} width={11}>
+            <div>{meta}</div>
+          </Grid.Column>
+        </Grid>
+      )}
+      {props.hasPrivilege ? (
+        <Button
+          className={style.editProfileButton}
+          fluid
+          content={_("user.edit_profile")}
+          onClick={() => console.log("edit profile")}
+        />
+      ) : (
+        !isMobile && <Divider className={style.editProfileButton} />
+      )}
+      <List className={style.informationList}>
+        <List.Item className={style.item}>
+          <div className={style.iconWrapper}>
+            <Icon name="time" />
+          </div>
+          <span title={""}>
+            {_("user.joined")}
+            {fixChineseSpace(
+              _.formatDate(props.meta.registrationTime, { year: "numeric", month: "long", day: "numeric" })
+            )}
+          </span>
+        </List.Item>
+        {props.information.organization && (
+          <List.Item className={style.item}>
+            <div className={style.iconWrapper}>
+              <Icon name="users" />
+            </div>
+            <span title={props.information.organization}>{props.information.organization}</span>
+          </List.Item>
+        )}
+        {props.information.location && (
+          <List.Item className={style.item}>
+            <div className={style.iconWrapper}>
+              <Icon name="map marker alternate" />
+            </div>
+            <span title={props.information.location}>{props.information.location}</span>
+          </List.Item>
+        )}
+        {props.information.url && (
+          <List.Item className={style.item}>
+            <div className={style.iconWrapper}>
+              <Icon name="linkify" />
+            </div>
+            <a href={props.information.url} title={props.information.url}>
+              {props.information.url}
+            </a>
+          </List.Item>
+        )}
+      </List>
+      <div className={style.socialIcons}>
+        {props.meta.email && (
+          <Link
+            className={style.socialIcon}
+            href={`mailto:${props.meta.email}`}
+            title={_("user.social.email")}
+            target="_blank"
+          >
+            <Icon name="mail" />
+          </Link>
+        )}
+        {props.information.qq && (
+          <Link
+            className={style.socialIcon}
+            href={`https://wpa.qq.com/msgrd?V=3&Uin=${props.information.qq}`}
+            title={_("user.social.qq")}
+            target="_blank"
+          >
+            <Icon name="qq" />
+          </Link>
+        )}
+        {props.information.telegram && (
+          <Link
+            className={style.socialIcon}
+            href={`https://t.me/${props.information.telegram}`}
+            title={_("user.social.telegram")}
+            target="_blank"
+          >
+            <Icon name="telegram" />
+          </Link>
+        )}
+        {props.information.github && (
+          <Link
+            className={style.socialIcon}
+            href={`https://github.com/${props.information.github}`}
+            title={_("user.social.github")}
+            target="_blank"
+          >
+            <Icon name="github" />
+          </Link>
+        )}
+      </div>
+    </>
+  );
+
+  const statisticsItems = [
+    <div className={style.item}>
+      <div className={style.iconWrapper}>
+        <Icon name="checkmark" />
+      </div>
+      <span className={style.key}>{_("user.statictics.ac_count")}</span>
+      <span className={style.value}>{props.meta.acceptedProblemCount}</span>
+    </div>,
+    <div className={style.item}>
+      <div className={style.iconWrapper}>
+        <Icon name="calendar" />
+      </div>
+      <span className={style.key}>{_("user.statictics.contest_take_part_count")}</span>
+      <span className={style.value}>{0}</span>
+    </div>,
+    <div className={style.item}>
+      <div className={style.iconWrapper}>
+        <Icon name="star" />
+      </div>
+      <span className={style.key}>{_("user.statictics.rating")}</span>
+      <span className={style.value}>{props.meta.rating}</span>
+    </div>,
+    <div className={style.item}>
+      <div className={style.iconWrapper}>
+        <Icon name="signal" />
+      </div>
+      <span className={style.key}>{_("user.statictics.rank")}</span>
+      <span className={style.value}>{props.rank}</span>
+    </div>
+  ];
+  const contents = (
+    <>
+      {!isMobile && <SubwayGraph username={props.meta.username} now={props.now} data={props.submissionCountPerDay} />}
+      {!isMobile ? (
+        <Segment attached="top">
+          <div className={style.statictics}>
+            {statisticsItems[0]}
+            {statisticsItems[1]}
+            {statisticsItems[2]}
+            {statisticsItems[3]}
+          </div>
+        </Segment>
+      ) : (
+        <>
+          <Segment attached="top" className={style.firstStatisticsSegment}>
+            <div className={style.statictics}>
+              {statisticsItems[0]}
+              {statisticsItems[1]}
+            </div>
+          </Segment>
+          <Segment attached>
+            <div className={style.statictics}>
+              {statisticsItems[2]}
+              {statisticsItems[3]}
+            </div>
+          </Segment>
+        </>
+      )}
+      <Segment className={style.ratingSegment} attached="bottom">
+        <Segment placeholder className={style.placeholder}>
+          here be dragons
+        </Segment>
+      </Segment>
+    </>
+  );
 
   return (
     <>
-      <Grid>
-        <Grid.Column width={4}>
-          <Image className={style.avatar} src={getUserAvatar(props.meta, 260 * 2)} />
-          <Header as="h1" className={style.username} content={props.meta.username} />
-          {props.meta.bio && <p className={style.bio}>{props.meta.bio}</p>}
-          {props.hasPrivilege ? (
-            <Button
-              className={style.editProfileButton}
-              fluid
-              content={_("user.edit_profile")}
-              onClick={() => console.log("edit profile")}
-            />
-          ) : (
-            <Divider className={style.editProfileButton} />
-          )}
-          <List className={style.informationList}>
-            <List.Item className={style.item}>
-              <div className={style.iconWrapper}>
-                <Icon name="time" />
-              </div>
-              <span title={""}>
-                {_("user.joined")}
-                {fixChineseSpace(
-                  _.formatDate(props.meta.registrationTime, { year: "numeric", month: "long", day: "numeric" })
-                )}
-              </span>
-            </List.Item>
-            {props.information.organization && (
-              <List.Item className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="users" />
-                </div>
-                <span title={props.information.organization}>{props.information.organization}</span>
-              </List.Item>
-            )}
-            {props.information.location && (
-              <List.Item className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="map marker alternate" />
-                </div>
-                <span title={props.information.location}>{props.information.location}</span>
-              </List.Item>
-            )}
-            {props.information.url && (
-              <List.Item className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="linkify" />
-                </div>
-                <a href={props.information.url} title={props.information.url}>
-                  {props.information.url}
-                </a>
-              </List.Item>
-            )}
-          </List>
-          <div className={style.socialIcons}>
-            {props.meta.email && (
-              <Link
-                className={style.socialIcon}
-                href={`mailto:${props.meta.email}`}
-                title={_("user.social.email")}
-                target="_blank"
-              >
-                <Icon name="mail" />
-              </Link>
-            )}
-            {props.information.qq && (
-              <Link
-                className={style.socialIcon}
-                href={`https://wpa.qq.com/msgrd?V=3&Uin=${props.information.qq}`}
-                title={_("user.social.qq")}
-                target="_blank"
-              >
-                <Icon name="qq" />
-              </Link>
-            )}
-            {props.information.telegram && (
-              <Link
-                className={style.socialIcon}
-                href={`https://t.me/${props.information.telegram}`}
-                title={_("user.social.telegram")}
-                target="_blank"
-              >
-                <Icon name="telegram" />
-              </Link>
-            )}
-            {props.information.github && (
-              <Link
-                className={style.socialIcon}
-                href={`https://github.com/${props.information.github}`}
-                title={_("user.social.github")}
-                target="_blank"
-              >
-                <Icon name="github" />
-              </Link>
-            )}
-          </div>
-        </Grid.Column>
-        <Grid.Column width={12}>
-          <SubwayGraph username={props.meta.username} now={props.now} data={props.submissionCountPerDay} />
-          <Segment attached="top">
-            <div className={style.statictics}>
-              <div className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="checkmark" />
-                </div>
-                <span className={style.key}>{_("user.statictics.ac_count")}</span>
-                <span className={style.value}>{props.meta.acceptedProblemCount}</span>
-              </div>
-              <div className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="calendar" />
-                </div>
-                <span className={style.key}>{_("user.statictics.contest_take_part_count")}</span>
-                <span className={style.value}>{0}</span>
-              </div>
-              <div className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="star" />
-                </div>
-                <span className={style.key}>{_("user.statictics.rating")}</span>
-                <span className={style.value}>{props.meta.rating}</span>
-              </div>
-              <div className={style.item}>
-                <div className={style.iconWrapper}>
-                  <Icon name="signal" />
-                </div>
-                <span className={style.key}>{_("user.statictics.rank")}</span>
-                <span className={style.value}>{props.rank}</span>
-              </div>
-            </div>
-          </Segment>
-          <Segment className={style.ratingSegment} attached="bottom">
-            <Segment placeholder className={style.placeholder}>
-              here be dragons
-            </Segment>
-          </Segment>
-        </Grid.Column>
-      </Grid>
+      {isMobile ? (
+        <>
+          {card}
+          {contents}
+        </>
+      ) : (
+        <Grid>
+          <Grid.Column width={4}>{card}</Grid.Column>
+          <Grid.Column width={12}>{contents}</Grid.Column>
+        </Grid>
+      )}
     </>
   );
 };
