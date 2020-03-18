@@ -32,7 +32,7 @@ import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
-import copyToClipboard from "@/utils/copy-to-clipboard";
+import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
 import PermissionManager from "@/components/PermissionManager";
 import { codeLanguageOptions, CodeLanguage, CodeLanguageOptionType } from "@/interfaces/CodeLanguage";
