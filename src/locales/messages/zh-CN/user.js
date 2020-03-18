@@ -1,5 +1,6 @@
 module.exports = {
   edit_profile: "修改资料",
+  joined: "加入于 ",
   social: {
     email: "电子邮箱",
     qq: "QQ",
@@ -41,5 +42,11 @@ module.exports = {
       less: "少",
       more: "多"
     }
+  },
+  statictics: {
+    ac_count: "通过题目数",
+    contest_take_part_count: "参加比赛数",
+    rating: "积分",
+    rank: "排名"
   }
 };

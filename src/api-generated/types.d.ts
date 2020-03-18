@@ -6,7 +6,7 @@ declare namespace ApiTypes {
     allowedHosts: string[];
   }
   export interface AddJudgeClientResponseDto {
-    error?: string;
+    error?: "PERMISSION_DENIED";
     judgeClient?: ApiTypes.JudgeClientInfoDto;
   }
   export interface AddProblemFileRequestDto {
@@ -45,7 +45,7 @@ declare namespace ApiTypes {
     groupId?: number;
   }
   export interface CreateProblemRequestDto {
-    type: string;
+    type: "TRADITIONAL";
     statement: ApiTypes.ProblemStatementDto;
   }
   export interface CreateProblemResponseDto {
@@ -57,7 +57,7 @@ declare namespace ApiTypes {
     color: string;
   }
   export interface CreateProblemTagResponseDto {
-    error?: string;
+    error?: "PERMISSION_DENIED";
     id?: number;
   }
   export interface DeleteGroupRequestDto {
@@ -97,7 +97,7 @@ declare namespace ApiTypes {
   }
   export interface GetAllProblemTagsOfAllLocalesRequestDto {}
   export interface GetAllProblemTagsOfAllLocalesResponseDto {
-    error?: string;
+    error?: "PERMISSION_DENIED";
     tags?: ApiTypes.ProblemTagWithAllLocalesDto[];
   }
   export interface GetAllProblemTagsRequestDto {
@@ -143,7 +143,7 @@ declare namespace ApiTypes {
     id: number;
   }
   export interface GetProblemTagDetailResponseDto {
-    error?: string;
+    error?: "NO_SUCH_PROBLEM_TAG";
     id?: number;
     color?: string;
     localizedNames?: ApiTypes.ProblemTagLocalizedNameDto[];
@@ -169,10 +169,11 @@ declare namespace ApiTypes {
     now: string;
   }
   export interface GetUserDetailResponseDto {
-    error?: string;
+    error?: "NO_SUCH_USER";
     meta?: ApiTypes.UserMetaDto;
     information?: ApiTypes.UserInformationDto;
     submissionCountPerDay?: number[];
+    rank?: number;
     hasPrivilege?: boolean;
   }
   export interface GetUserListRequestDto {
@@ -181,7 +182,7 @@ declare namespace ApiTypes {
     takeCount: number;
   }
   export interface GetUserListResponseDto {
-    error?: string;
+    error?: "TAKE_TOO_MANY";
     userMetas?: ApiTypes.UserMetaDto[];
     count?: number;
   }
@@ -261,7 +262,7 @@ declare namespace ApiTypes {
   export interface ProblemMetaDto {
     id: number;
     displayId?: number;
-    type: string;
+    type: "TRADITIONAL";
     isPublic: boolean;
     ownerId: number;
     locales: ("en_US" | "zh_CN")[];

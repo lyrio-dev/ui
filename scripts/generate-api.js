@@ -16,7 +16,7 @@ const namespaceName = "ApiTypes";
 const generatedMessage = "// This file is generated automatically, do NOT modify it.\n\n"
 
 function getSchemaName(schema) {
-  return schema["$ref"].split("/").pop();
+  return schema["$ref"] && schema["$ref"].split("/").pop();
 }
 
 function getRequestBodySchemaName(requestBody) {
@@ -103,11 +103,12 @@ function normalizeModuleName(moduleName, forFilename) {
     for (const operationName in tags[moduleName].operations) {
       const operation = tags[moduleName].operations[operationName];
       const path = operation.path.replace("/api/", "");
+      const functionName = operationName.split("_").pop();
 
       if (operation.type === "post") {
         const bodyType = operation.body || "void",
               responseType = operation.response || "void";
-        code += `export const ${operationName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)});\n`;
+        code += `export const ${functionName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)});\n`;
       } else {
         const parameterTypes = operation.parameters
                             && operation.parameters.map(
@@ -115,7 +116,7 @@ function normalizeModuleName(moduleName, forFilename) {
                                ).join(", "),
               parameterType = parameterTypes ? `{ ${parameterTypes} }` : "void",
               responseType = operation.response || "void";
-        code += `export const ${operationName} = createGetApi<${parameterType}, ${responseType}>(${JSON.stringify(path)});\n`;
+        code += `export const ${functionName} = createGetApi<${parameterType}, ${responseType}>(${JSON.stringify(path)});\n`;
       }
     }
 

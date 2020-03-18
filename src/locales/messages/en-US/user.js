@@ -1,5 +1,6 @@
 module.exports = {
   edit_profile: "Edit profile",
+  joined: "Joined ",
   social: {
     email: "E-mail",
     qq: "QQ",
@@ -41,5 +42,11 @@ module.exports = {
       less: "Less",
       more: "More"
     }
+  },
+  statictics: {
+    ac_count: "AC. Problems",
+    contest_take_part_count: "Participation",
+    rating: "Rating",
+    rank: "Rank"
   }
 };

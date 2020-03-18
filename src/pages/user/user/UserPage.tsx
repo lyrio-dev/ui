@@ -13,6 +13,7 @@ import toast from "@/utils/toast";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { useIntlMessage } from "@/utils/hooks";
 import getUserAvatar from "@/utils/getUserAvatar";
+import fixChineseSpace from "@/utils/fixChineseSpace";
 
 async function fetchData(userId: number): Promise<[Date, Required<typeof response>]> {
   const now = new Date();
@@ -149,13 +150,9 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
   );
 };
 
-interface UserPageProps {
+type UserPageProps = ApiTypes.GetUserDetailResponseDto & {
   now: Date;
-  meta: UserMeta;
-  information: ApiTypes.UserInformationDto;
-  submissionCountPerDay: number[];
-  hasPrivilege: boolean;
-}
+};
 
 let UserPage: React.FC<UserPageProps> = props => {
   const _ = useIntlMessage();
@@ -182,25 +179,36 @@ let UserPage: React.FC<UserPageProps> = props => {
             <Divider className={style.editProfileButton} />
           )}
           <List className={style.informationList}>
+            <List.Item className={style.item}>
+              <div className={style.iconWrapper}>
+                <Icon name="time" />
+              </div>
+              <span title={""}>
+                {_("user.joined")}
+                {fixChineseSpace(
+                  _.formatDate(props.meta.registrationTime, { year: "numeric", month: "long", day: "numeric" })
+                )}
+              </span>
+            </List.Item>
             {props.information.organization && (
-              <List.Item className={style.informationListItem}>
-                <div className={style.informationListItemIconWrapper}>
+              <List.Item className={style.item}>
+                <div className={style.iconWrapper}>
                   <Icon name="users" />
                 </div>
                 <span title={props.information.organization}>{props.information.organization}</span>
               </List.Item>
             )}
             {props.information.location && (
-              <List.Item className={style.informationListItem}>
-                <div className={style.informationListItemIconWrapper}>
+              <List.Item className={style.item}>
+                <div className={style.iconWrapper}>
                   <Icon name="map marker alternate" />
                 </div>
                 <span title={props.information.location}>{props.information.location}</span>
               </List.Item>
             )}
             {props.information.url && (
-              <List.Item className={style.informationListItem}>
-                <div className={style.informationListItemIconWrapper}>
+              <List.Item className={style.item}>
+                <div className={style.iconWrapper}>
                   <Icon name="linkify" />
                 </div>
                 <a href={props.information.url} title={props.information.url}>
@@ -251,12 +259,46 @@ let UserPage: React.FC<UserPageProps> = props => {
               </Link>
             )}
           </div>
-          {
-            // TODO: rating, submission & ac statistics
-          }
         </Grid.Column>
         <Grid.Column width={12}>
           <SubwayGraph username={props.meta.username} now={props.now} data={props.submissionCountPerDay} />
+          <Segment attached="top">
+            <div className={style.statictics}>
+              <div className={style.item}>
+                <div className={style.iconWrapper}>
+                  <Icon name="checkmark" />
+                </div>
+                <span className={style.key}>{_("user.statictics.ac_count")}</span>
+                <span className={style.value}>{props.meta.acceptedProblemCount}</span>
+              </div>
+              <div className={style.item}>
+                <div className={style.iconWrapper}>
+                  <Icon name="calendar" />
+                </div>
+                <span className={style.key}>{_("user.statictics.contest_take_part_count")}</span>
+                <span className={style.value}>{0}</span>
+              </div>
+              <div className={style.item}>
+                <div className={style.iconWrapper}>
+                  <Icon name="star" />
+                </div>
+                <span className={style.key}>{_("user.statictics.rating")}</span>
+                <span className={style.value}>{props.meta.rating}</span>
+              </div>
+              <div className={style.item}>
+                <div className={style.iconWrapper}>
+                  <Icon name="signal" />
+                </div>
+                <span className={style.key}>{_("user.statictics.rank")}</span>
+                <span className={style.value}>{props.rank}</span>
+              </div>
+            </div>
+          </Segment>
+          <Segment className={style.ratingSegment} attached="bottom">
+            <Segment placeholder className={style.placeholder}>
+              here be dragons
+            </Segment>
+          </Segment>
         </Grid.Column>
       </Grid>
     </>
