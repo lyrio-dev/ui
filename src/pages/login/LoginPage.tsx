@@ -90,7 +90,7 @@ let LoginPage: React.FC = () => {
         }
       } else {
         // Login success
-        setSuccess(_("login.welcome", { username }));
+        setSuccess(_("login.welcome", { username: response.userMeta.username }));
 
         setTimeout(() => {
           appState.loggedInUser = response.userMeta;
