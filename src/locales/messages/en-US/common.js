@@ -11,6 +11,10 @@ module.exports = {
     user: {
       login: "Login",
       register: "Register",
+      profile: "My profile",
+      problems: "My problems",
+      submissions: "My submissions",
+      edit_profile: "Edit profile",
       settings: "Settings",
       logout: "Logout"
     }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { observer } from "mobx-react";
-import { Link, useNavigation, useLoadingRoute, useCurrentRoute } from "react-navi";
-import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar } from "semantic-ui-react";
+import { Link, useNavigation, useLoadingRoute } from "react-navi";
+import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
 
 import "semantic-ui-css/semantic.min.css";
 import "noty/lib/noty.css";
@@ -18,9 +18,7 @@ import { appState } from "@/appState";
 import { appConfig } from "@/appConfig";
 import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
-
 import { AuthApi } from "@/api";
-import { SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
 
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
@@ -101,9 +99,32 @@ let AppLayout: React.FC = props => {
     </>
   );
 
-  const userMenu = ContainerComponent => (
+  const userMenu = (ContainerComponent: typeof Dropdown | typeof Menu) => (
     <>
       <ContainerComponent.Menu className={style.userMenu}>
+        <ContainerComponent.Item as={Link} href={`/user/${appState.loggedInUser.id}`}>
+          <Icon name="user" />
+          {_("common.header.user.profile")}
+        </ContainerComponent.Item>
+        <ContainerComponent.Item
+          as={Link}
+          href={{ pathname: "/submissions", query: { submitter: appState.loggedInUser.username } }}
+        >
+          <Icon name="hourglass half" />
+          {_("common.header.user.submissions")}
+        </ContainerComponent.Item>
+        <ContainerComponent.Item
+          as={Link}
+          href={{ pathname: "/problems", query: { ownerId: appState.loggedInUser.id } }}
+        >
+          <Icon name="book" />
+          {_("common.header.user.problems")}
+        </ContainerComponent.Item>
+        {ContainerComponent === Dropdown && <Dropdown.Divider />}
+        <ContainerComponent.Item as={Link}>
+          <Icon name="edit" />
+          {_("common.header.user.edit_profile")}
+        </ContainerComponent.Item>
         <ContainerComponent.Item as={Link}>
           <Icon name="cog" />
           {_("common.header.user.settings")}
@@ -164,17 +185,21 @@ let AppLayout: React.FC = props => {
     </>
   );
 
+  const userDropdown = (icon: boolean = true) => (
+    <Menu.Menu position="right">
+      <div className="ui simple dropdown item">
+        {appState.loggedInUser.username}
+        {icon && <i className="dropdown icon"></i>}
+        {userMenu(Dropdown)}
+      </div>
+    </Menu.Menu>
+  );
+
   const topBarItemsForWideScreen = (
     <>
       {navMenuItems}
       {appState.loggedInUser ? (
-        <>
-          <div className={style.userContainer}>
-            <Dropdown text={appState.loggedInUser.username} simple item>
-              {userMenu(Dropdown)}
-            </Dropdown>
-          </div>
-        </>
+        userDropdown()
       ) : (
         <Menu.Item className={style.userContainer}>{loginAndRegisterButtons}</Menu.Item>
       )}
@@ -183,13 +208,7 @@ let AppLayout: React.FC = props => {
 
   const topBarItemsForNarrowScreen = (
     <Menu.Menu position="right">
-      {appState.loggedInUser && (
-        <div className={style.userContainer}>
-          <Dropdown text={appState.loggedInUser.username} simple icon={false} item>
-            {userMenu(Dropdown)}
-          </Dropdown>
-        </div>
-      )}
+      {appState.loggedInUser && userDropdown(false)}
       <Menu.Item icon="bars" onClick={() => setSidebarOpen(true)} />
     </Menu.Menu>
   );

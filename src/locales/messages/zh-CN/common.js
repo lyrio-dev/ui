@@ -11,6 +11,10 @@ module.exports = {
     user: {
       login: "登录",
       register: "注册",
+      profile: "我的资料",
+      problems: "我的题目",
+      submissions: "我的提交",
+      edit_profile: "编辑资料",
       settings: "设置",
       logout: "注销"
     }
