@@ -251,7 +251,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                       trigger={<Icon name="key" title={_("judge_machine.key")} />}
                       content={<code>{judgeClient.key}</code>}
                       on="click"
-                      position="bottom center"
+                      position="left center"
                     />
                     <Popup
                       open={resetPopupOpened === judgeClient.id}
@@ -266,7 +266,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                         />
                       }
                       on="click"
-                      position="bottom center"
+                      position="left center"
                     />
                     <Popup
                       open={deletePopupOpened === judgeClient.id}
@@ -281,7 +281,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                         />
                       }
                       on="click"
-                      position="bottom center"
+                      position="left center"
                     />
                   </Table.Cell>
                 )}
