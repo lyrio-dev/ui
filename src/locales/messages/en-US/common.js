@@ -15,7 +15,7 @@ module.exports = {
       problems: "My problems",
       submissions: "My submissions",
       edit_profile: "Edit profile",
-      settings: "Settings",
+      preference: "Preference",
       logout: "Logout"
     }
   },

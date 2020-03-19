@@ -121,13 +121,13 @@ let AppLayout: React.FC = props => {
           {_("common.header.user.problems")}
         </ContainerComponent.Item>
         {ContainerComponent === Dropdown && <Dropdown.Divider />}
-        <ContainerComponent.Item as={Link}>
+        <ContainerComponent.Item as={Link} href={`/user/${appState.loggedInUser.id}/edit/profile`}>
           <Icon name="edit" />
           {_("common.header.user.edit_profile")}
         </ContainerComponent.Item>
-        <ContainerComponent.Item as={Link}>
+        <ContainerComponent.Item as={Link} href={`/user/${appState.loggedInUser.id}/edit/preference`}>
           <Icon name="cog" />
-          {_("common.header.user.settings")}
+          {_("common.header.user.preference")}
         </ContainerComponent.Item>
         <ContainerComponent.Item onClick={onLogoutClick}>
           <Icon name="power" />

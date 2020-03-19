@@ -190,6 +190,23 @@ declare namespace ApiTypes {
     userMeta?: ApiTypes.UserMetaDto;
     privileges?: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
   }
+  export interface GetUserPreferenceRequestDto {
+    userId: number;
+  }
+  export interface GetUserPreferenceResponseDto {
+    error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
+    meta?: ApiTypes.UserMetaDto;
+    preference?: ApiTypes.UserPreferenceDto;
+  }
+  export interface GetUserProfileRequestDto {
+    userId: number;
+  }
+  export interface GetUserProfileResponseDto {
+    error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
+    meta?: ApiTypes.UserMetaDto;
+    publicEmail?: boolean;
+    information?: ApiTypes.UserInformationDto;
+  }
   export interface GroupMetaDto {
     id: number;
     name: string;
@@ -550,6 +567,13 @@ declare namespace ApiTypes {
   export interface UpdateProblemTagResponseDto {
     error?: "NO_SUCH_PROBLEM_TAG" | "PERMISSION_DENIED";
   }
+  export interface UpdateUserPreferenceRequestDto {
+    userId: number;
+    preference: ApiTypes.UserPreferenceDto;
+  }
+  export interface UpdateUserPreferenceResponseDto {
+    error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
+  }
   export interface UpdateUserProfileRequestDto {
     userId: number;
     username?: string;
@@ -564,7 +588,6 @@ declare namespace ApiTypes {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "WRONG_OLD_PASSWORD" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
   }
   export interface UserInformationDto {
-    sexIsFamale: boolean;
     organization: string;
     location: string;
     url: string;
@@ -583,5 +606,11 @@ declare namespace ApiTypes {
     submissionCount: number;
     rating: number;
     registrationTime: string; // date-time
+  }
+  export interface UserPreferenceDto {
+    locale?: "en_US" | "zh_CN";
+    formatCodeByDefault?: boolean;
+    codeFormatterOptions?: string;
+    languageOptions?: {};
   }
 }

@@ -162,7 +162,13 @@ let UserPage: React.FC<UserPageProps> = props => {
 
   const isMobile = appState.isScreenWidthIn(0, 768);
 
-  const avatar = <Image className={style.avatar} src={getUserAvatar(props.meta, 260 * 2)} />;
+  const avatar = (
+    <div className={style.avatar}>
+      <div>
+        <Image src={getUserAvatar(props.meta, 260 * 2)} />
+      </div>
+    </div>
+  );
   const meta = (
     <>
       <Header as="h1" className={style.username} content={props.meta.username} />
@@ -192,7 +198,8 @@ let UserPage: React.FC<UserPageProps> = props => {
           className={style.editProfileButton}
           fluid
           content={_("user.edit_profile")}
-          onClick={() => console.log("edit profile")}
+          as={Link}
+          href="edit/profile"
         />
       ) : (
         !isMobile && <Divider className={style.editProfileButton} />

@@ -1,8 +1,23 @@
 .avatar {
+  width: 100%;
   border: 1px solid #e1e4e8;
   border-radius: 3px;
-  width: 100%;
-  height: auto;
+
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  > div {
+    width: 100%;
+  
+    &::before {
+      content: "";
+      float: left;
+      padding-top: 100%;
+    }
+  }
 }
 
 @media only screen and (min-width: 768px) {
