@@ -20,9 +20,18 @@ module.exports = {
   profile: {
     avatar: {
       header: "Avatar",
-      gravatar: "Gravatar",
-      qq: "QQ avatar",
-      github: "GitHub avatar"
+      gravatar: {
+        name: "Gravatar"
+      },
+      qq: {
+        name: "QQ avatar",
+        placeholder: "QQ number"
+      },
+      github: {
+        name: "GitHub avatar",
+        placeholder: "GitHub username"
+      },
+      error: "Failed to load your avatar. Please check your internet connection and account name above."
     },
     username: "Username",
     username_notes: "You can't change your username.",
@@ -41,6 +50,7 @@ module.exports = {
     url_placeholder: "Your personal page or blog.",
     qq: "QQ",
     qq_placeholder: "e.g. 12345678",
+    qq_notes: "Your QQ link is: ",
     telegram: "Telegram",
     telegram_placeholder: "Not including '@'",
     telegram_notes: "Your Telegram link is: ",
