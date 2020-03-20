@@ -8,8 +8,8 @@ import { UserApi } from "@/api";
 import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { useDebouncedCallback } from "use-debounce/lib";
-import getUserAvatar from "@/utils/getUserAvatar";
 import { appState } from "@/appState";
+import UserAvatar from "./UserAvatar";
 
 interface UserSearchProps {
   className?: string;
@@ -71,7 +71,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
       showNoResults={!pending}
       resultRenderer={(result: any) => (
         <div className={style.result}>
-          <Image className={style.avatar} src={getUserAvatar(result["data-user"])} rounded size="tiny" />
+          <UserAvatar className={style.avatar} userAvatar={result["data-user"].avatar} imageSize={27.5} rounded />
           <div className={style.username}>{result["data-user"].username}</div>
         </div>
       )}

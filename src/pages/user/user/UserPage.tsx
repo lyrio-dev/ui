@@ -11,8 +11,8 @@ import { appState } from "@/appState";
 import { UserApi } from "@/api";
 import toast from "@/utils/toast";
 import { useIntlMessage } from "@/utils/hooks";
-import getUserAvatar from "@/utils/getUserAvatar";
 import fixChineseSpace from "@/utils/fixChineseSpace";
+import UserAvatar from "@/components/UserAvatar";
 
 async function fetchData(userId: number): Promise<[Date, Required<typeof response>]> {
   const now = new Date();
@@ -165,7 +165,7 @@ let UserPage: React.FC<UserPageProps> = props => {
   const avatar = (
     <div className={style.avatar}>
       <div>
-        <Image src={getUserAvatar(props.meta, 260 * 2)} />
+        <UserAvatar userAvatar={props.meta.avatar} imageSize={260} />
       </div>
     </div>
   );

@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { Table, Button, Popup, Header, Image, Icon, Dropdown } from "semantic-ui-react";
+import { Table, Button, Popup, Header, Icon, Dropdown } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import update from "immutability-helper";
 
 import style from "./PermissionManager.module.less";
 
 import { useIntlMessage, useConfirmUnload, useDialog } from "@/utils/hooks";
-import getUserAvatar from "@/utils/getUserAvatar";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { GroupMeta } from "@/interfaces/GroupMeta";
 import { UserApi, GroupApi } from "@/api";
 import toast from "@/utils/toast";
 import TableCellSearchDropdown from "./TableCellSearchDropdown";
 import { appState } from "@/appState";
+import UserAvatar from "./UserAvatar";
 
 type PermissionLevelDetails = Record<number, { title: string /* description: string; */ }>;
 
@@ -88,14 +88,24 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         content: isMobile ? (
           <div className={style.userResultContainer}>
             <Header as="h4" image className={style.userResult + " " + style.firstRow}>
-              <Image className={style.userResult + " " + style.avatar} src={getUserAvatar(user)} rounded size="tiny" />
+              <UserAvatar
+                className={style.userResult + " " + style.avatar}
+                userAvatar={user.avatar}
+                imageSize={27.5}
+                rounded
+              />
               <div className={style.userResult + " " + style.username}>{user.username}</div>
             </Header>
             {user.email && <div className={style.userResult + " " + style.email}>{user.email}</div>}
           </div>
         ) : (
           <>
-            <Image className={style.userResult + " " + style.avatar} src={getUserAvatar(user)} rounded size="tiny" />
+            <UserAvatar
+              className={style.userResult + " " + style.avatar}
+              userAvatar={user.avatar}
+              imageSize={27.5}
+              rounded
+            />
             <div className={style.userResult + " " + style.username}>{user.username}</div>
             {user.email && <div>{user.email}</div>}
           </>
@@ -264,7 +274,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     <>
       <Table.Cell width={isMobile ? 8 : 4} className={style.columnUsername}>
         <Header as="h4" image>
-          <Image className={style.avatar} src={getUserAvatar(user)} rounded size="mini" />
+          <UserAvatar className={style.avatar} userAvatar={user.avatar} imageSize={27.5} rounded />
           <Header.Content>
             {user.username}
             {/* <Header.Subheader>{user.name}</Header.Subheader> */}

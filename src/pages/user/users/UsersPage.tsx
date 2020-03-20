@@ -13,8 +13,6 @@ import { useIntlMessage } from "@/utils/hooks";
 import { appState } from "@/appState";
 import Pagination from "@/components/Pagination";
 import UserLink from "@/components/UserLink";
-import { useDebouncedCallback } from "use-debounce/lib";
-import getUserAvatar from "@/utils/getUserAvatar";
 import UserSearch from "@/components/UserSearch";
 
 const USERS_PER_PAGE = 30;

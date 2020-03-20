@@ -205,6 +205,7 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
     meta?: ApiTypes.UserMetaDto;
     publicEmail?: boolean;
+    avatarInfo?: string;
     information?: ApiTypes.UserInformationDto;
   }
   export interface GroupMetaDto {
@@ -579,6 +580,7 @@ declare namespace ApiTypes {
     username?: string;
     email?: string;
     publicEmail: boolean;
+    avatarInfo: string;
     bio: string;
     information: ApiTypes.UserInformationDto;
     oldPassword?: string;
@@ -586,6 +588,10 @@ declare namespace ApiTypes {
   }
   export interface UpdateUserProfileResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "WRONG_OLD_PASSWORD" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
+  }
+  export interface UserAvatarDto {
+    type: "gravatar" | "github" | "qq";
+    key: string;
   }
   export interface UserInformationDto {
     organization: string;
@@ -599,8 +605,8 @@ declare namespace ApiTypes {
     id: number;
     username: string;
     email: string;
-    gravatarEmailHash: string;
     bio: string;
+    avatar: ApiTypes.UserAvatarDto;
     isAdmin: boolean;
     acceptedProblemCount: number;
     submissionCount: number;

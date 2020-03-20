@@ -20,9 +20,18 @@ module.exports = {
   profile: {
     avatar: {
       header: "头像",
-      gravatar: "Gravatar",
-      qq: "QQ 头像",
-      github: "GitHub 头像"
+      gravatar: {
+        name: "Gravatar"
+      },
+      qq: {
+        name: "QQ 头像",
+        placeholder: "QQ 号"
+      },
+      github: {
+        name: "GitHub 头像",
+        placeholder: "GitHub 用户名"
+      },
+      error: "无法加载头像，请检查网络连接以及账户名是否正确。"
     },
     username: "用户名",
     username_notes: "用户名不能被修改。",
@@ -41,6 +50,7 @@ module.exports = {
     url_placeholder: "你的个人主页或者博客。",
     qq: "QQ",
     qq_placeholder: "如：12345678",
+    qq_notes: "你的 QQ 链接为：",
     telegram: "Telegram",
     telegram_placeholder: "不含 @ 符号",
     telegram_notes: "你的 Telegram 链接为：",

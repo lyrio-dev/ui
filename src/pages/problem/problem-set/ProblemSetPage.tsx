@@ -14,8 +14,6 @@ import { sortTags, sortTagColors } from "../problemTag";
 
 import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
-import { useDebouncedCallback } from "use-debounce/lib";
-import getUserAvatar from "@/utils/getUserAvatar";
 import UserSearch from "@/components/UserSearch";
 
 interface ProblemRecord extends ApiTypes.ProblemMetaDto {

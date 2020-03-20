@@ -17,6 +17,7 @@ import { observer } from "mobx-react";
 import { route } from "navi";
 import { Link } from "react-navi";
 import { Validator } from "class-validator";
+import md5 from "blueimp-md5";
 
 import style from "./UserEdit.module.less";
 
@@ -24,7 +25,7 @@ import { UserApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
-import getUserAvatar from "@/utils/getUserAvatar";
+import UserAvatar from "@/components/UserAvatar";
 
 enum EditType {
   Profile = "profile",
@@ -52,9 +53,16 @@ async function fetchDataPreference(userId: number) {
   return response;
 }
 
+enum AvatarType {
+  Gravatar = "gravatar",
+  GitHub = "github",
+  QQ = "qq"
+}
+
 interface ProfileViewProps {
   meta: ApiTypes.UserMetaDto;
   publicEmail: boolean;
+  avatarInfo: string;
   information: ApiTypes.UserInformationDto;
 }
 
@@ -75,6 +83,66 @@ let ProfileView: React.FC<ProfileViewProps> = props => {
 
   const [checkUrl, urlInvalid] = useFieldCheckSimple(url, url => !url || new Validator().isURL(url));
 
+  const avatarTypeFromServer = props.avatarInfo.substr(0, props.avatarInfo.indexOf(":")) as AvatarType;
+
+  const [avatarType, setAvatarType] = useState(
+    Object.values(AvatarType).includes(avatarTypeFromServer) ? avatarTypeFromServer : AvatarType.Gravatar
+  );
+  const [avatarKey, setAvatarKey] = useState(props.avatarInfo.slice(props.avatarInfo.indexOf(":") + 1));
+
+  // Don't let the avatar reload too quick, use another state to store the input's value
+  const [avatarKeyValue, setAvatarKeyValue] = useState(avatarKey);
+
+  function changeAvatarType(type: AvatarType) {
+    setAvatarType(type);
+    switch (type) {
+      case AvatarType.Gravatar:
+        resetAvatarKey("");
+        break;
+      case AvatarType.GitHub:
+        resetAvatarKey(github);
+        break;
+      case AvatarType.QQ:
+        resetAvatarKey(qq);
+        break;
+    }
+  }
+
+  function resetAvatarKey(value: string) {
+    if (value !== avatarKey) {
+      setAvatarKey(value);
+      setAvatarKeyValue(value);
+      setAvatarError(false);
+    }
+  }
+
+  function applyAvatarKey() {
+    if (avatarKeyValue !== avatarKey) {
+      setAvatarKey(avatarKeyValue);
+      setAvatarError(false);
+    }
+  }
+
+  function getAvatar(): ApiTypes.UserAvatarDto {
+    switch (avatarType) {
+      case AvatarType.GitHub:
+      case AvatarType.QQ:
+        return {
+          type: avatarType,
+          key: avatarKey
+        };
+      case AvatarType.Gravatar:
+      default:
+        return {
+          type: AvatarType.Gravatar,
+          key: md5((avatarKey || email).trim().toLowerCase())
+        };
+    }
+  }
+  const avatar = getAvatar();
+
+  const [avatarError, setAvatarError] = useState(false);
+
   const [pending, setPending] = useState(false);
   async function onSubmit() {
     if (pending) return;
@@ -88,6 +156,7 @@ let ProfileView: React.FC<ProfileViewProps> = props => {
         username,
         email,
         publicEmail,
+        avatarInfo: avatarType + ":" + avatarKeyValue,
         bio,
         information: {
           organization,
@@ -181,6 +250,15 @@ let ProfileView: React.FC<ProfileViewProps> = props => {
           value={qq}
           onChange={(e, { value }) => value.length < 30 && !pending && setQq(value.trim())}
         />
+        {qq && (
+          <div className={style.notes}>
+            <Icon name="qq" />
+            {_("user_edit.profile.qq_notes")}
+            <a href={`https://wpa.qq.com/msgrd?V=3&Uin=${qq}`} target="_blank">
+              https://wpa.qq.com/msgrd?V=3&Uin={qq}
+            </a>
+          </div>
+        )}
         <Header className={style.header} size="tiny" content={_("user_edit.profile.telegram")} />
         <Input
           fluid
@@ -190,6 +268,7 @@ let ProfileView: React.FC<ProfileViewProps> = props => {
         />
         {telegram && (
           <div className={style.notes}>
+            <Icon name="telegram" />
             {_("user_edit.profile.telegram_notes")}
             <a href={`https://t.me/${telegram}`} target="_blank">
               https://t.me/{telegram}
@@ -205,6 +284,7 @@ let ProfileView: React.FC<ProfileViewProps> = props => {
         />
         {github && (
           <div className={style.notes}>
+            <Icon name="github" />
             {_("user_edit.profile.github_notes")}
             <a href={`https://github.com/${github}`} target="_blank">
               https://github.com/{github}
@@ -221,19 +301,63 @@ let ProfileView: React.FC<ProfileViewProps> = props => {
       </div>
       <div className={style.profileAvatar}>
         <Header className={style.header} size="tiny" content={_("user_edit.profile.avatar.header")} />
-        <Image src={getUserAvatar(props.meta, 480)} className={style.avatar} />
+        <UserAvatar
+          userAvatar={avatar}
+          placeholder={!avatar.key}
+          imageSize={480}
+          className={style.avatar}
+          onError={() => setAvatarError(true)}
+        />
         <List className={style.avatarOptionList}>
           <List.Item>
-            <Radio checked label={_("user_edit.profile.avatar.gravatar")} />
+            <Radio
+              checked={avatarType === AvatarType.Gravatar}
+              onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.Gravatar)}
+              label={_("user_edit.profile.avatar.gravatar.name")}
+            />
           </List.Item>
           <List.Item>
-            <Radio checked={false} label={_("user_edit.profile.avatar.qq")} />
+            <Radio
+              checked={avatarType === AvatarType.QQ}
+              onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.QQ)}
+              label={_("user_edit.profile.avatar.qq.name")}
+            />
           </List.Item>
           <List.Item>
-            <Radio checked={false} label={_("user_edit.profile.avatar.github")} />
+            <Radio
+              checked={avatarType === AvatarType.GitHub}
+              onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.GitHub)}
+              label={_("user_edit.profile.avatar.github.name")}
+            />
           </List.Item>
         </List>
-        <Input className={style.avatarInput} fluid readOnly placeholder={email} />
+        <Input
+          className={style.avatarInput}
+          fluid
+          placeholder={
+            avatarType === AvatarType.Gravatar
+              ? email
+              : avatarType === AvatarType.GitHub
+              ? _("user_edit.profile.avatar.github.placeholder")
+              : _("user_edit.profile.avatar.qq.placeholder")
+          }
+          error={avatarError}
+          value={avatarKeyValue}
+          onChange={(e, { value }) => value.length <= 40 && setAvatarKeyValue(value.trim())}
+          onBlur={applyAvatarKey}
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.keyCode === 13) {
+              e.preventDefault();
+              applyAvatarKey();
+            }
+          }}
+        />
+        {avatarError && (
+          <div className={style.notes}>
+            <Icon name="warning sign" />
+            {_("user_edit.profile.avatar.error")}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -247,6 +371,7 @@ interface UserEditPageProps {
 
   // profile
   publicEmail?: boolean;
+  avatarInfo?: string;
   information?: ApiTypes.UserInformationDto;
 
   // preference
@@ -269,11 +394,11 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
               <Icon name="user" />
               {_("user_edit.menu.profile")}
             </Menu.Item>
-            <Menu.Item active={props.type === EditType.Preference} as={Link} href="../preference">
+            <Menu.Item active={props.type === EditType.Preference} as={Link} /* href="../preference" */>
               <Icon name="setting" />
               {_("user_edit.menu.preference")}
             </Menu.Item>
-            <Menu.Item active={props.type === EditType.Security} as={Link} href="../security">
+            <Menu.Item active={props.type === EditType.Security} as={Link} /* href="../security" */>
               <Icon name="lock" />
               {_("user_edit.menu.security")}
             </Menu.Item>
@@ -285,7 +410,12 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
         </div>
         <div className={style.main}>
           {props.type === EditType.Profile ? (
-            <ProfileView meta={props.meta} publicEmail={props.publicEmail} information={props.information} />
+            <ProfileView
+              meta={props.meta}
+              publicEmail={props.publicEmail}
+              avatarInfo={props.avatarInfo}
+              information={props.information}
+            />
           ) : props.type === EditType.Preference ? null : null}
         </div>
       </div>
