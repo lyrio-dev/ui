@@ -63,9 +63,33 @@
 }
 
 .textarea {
-  resize: none;
+  resize: none !important;
 }
 
 .submit, .header:not(:first-child) {
   margin-top: 22px !important;
+}
+
+.notFullWidth {
+  width: calc(100% - @profileAvatarWidth - @profileMargin) !important;
+}
+
+.halfWidthFieldContainer {
+  @margin: 7px;
+  width: calc(50% - @margin);
+  display: inline-block;
+  margin-top: 14px;
+
+  &:nth-child(odd) {
+    margin-right: @margin;
+  }
+
+  &:nth-child(even) {
+    margin-left: @margin;
+  }
+}
+
+.sectionHeader {
+  padding-bottom: 10px !important;
+  border-bottom: 1px solid #ddd !important;
 }

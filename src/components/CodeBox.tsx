@@ -1,5 +1,5 @@
 import React from "react";
-import { Segment } from "semantic-ui-react";
+import { Segment, SegmentProps } from "semantic-ui-react";
 
 import style from "./CodeBox.module.less";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
@@ -8,6 +8,7 @@ interface CodeBoxProps {
   children?: React.ReactNode;
   className?: string;
   segmentClassName?: string;
+  segment?: SegmentProps;
   title?: React.ReactNode;
   content?: React.ReactNode;
   html?: string;
@@ -20,7 +21,10 @@ export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, re
     (props.html || content) && (
       <div className={style.codeBox + (props.className ? " " + props.className : "")}>
         {props.title && <p>{typeof props.title === "string" ? <strong>{props.title}</strong> : props.title}</p>}
-        <Segment className={style.codeBoxSegment + (props.segmentClassName ? " " + props.segmentClassName : "")}>
+        <Segment
+          className={style.codeBoxSegment + (props.segmentClassName ? " " + props.segmentClassName : "")}
+          {...props.segment}
+        >
           {props.children}
           <pre
             ref={ref}
@@ -39,6 +43,7 @@ interface HighlightedCodeBoxProps {
   children?: React.ReactNode;
   className?: string;
   segmentClassName?: string;
+  segment?: SegmentProps;
   title?: React.ReactNode;
   code: string;
   language: string;
@@ -50,6 +55,7 @@ export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCo
     <CodeBox
       className={props.className}
       segmentClassName={props.segmentClassName}
+      segment={props.segment}
       title={props.title}
       html={html}
       ref={ref}

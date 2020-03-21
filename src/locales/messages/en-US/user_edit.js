@@ -60,5 +60,35 @@ module.exports = {
     submit: "Submit",
     error_invalid_url: "Invalid URL.",
     success: "Profile updated successfully."
+  },
+  preference: {
+    locale: {
+      header: "Language",
+      system: "Preferred system language",
+      system_default: "Browser default ({name})",
+      system_notes:
+        "Changing language in the page footer only affects your local browser. Changing here will affect your account's logins everywhere.",
+      content: "Preferred content language",
+      content_default: "Same as system language ({name})",
+      content_notes:
+        "If the selected language is not available for some contents, we'll display the default language versions of them."
+    },
+    code_language: {
+      header: "Programming Language",
+      language: "Default language",
+      content_notes: "Setting default language here will affect the defaults on submitting problems."
+    },
+    code_formatter: {
+      header: "Code Formatter",
+      astyle_options: "Astyle options",
+      format_code_by_default: "Format code by default",
+      notes_before: "The options apply to formatting code on submission page. Please refer to",
+      notes_link: "Astyle documentation",
+      notes_after: "for help.",
+      preview: "Preview",
+      error: "Invalid options"
+    },
+    submit: "Submit",
+    success: "Preference updated successfully."
   }
 };

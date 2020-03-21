@@ -45,3 +45,25 @@ export const codeLanguageOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
     }
   ]
 };
+
+export const getDefaultCodeLanguageOptions = (codeLanguage: CodeLanguage): Record<string, unknown> =>
+  Object.fromEntries(codeLanguageOptions[codeLanguage].map(({ name, defaultValue }) => [name, defaultValue]));
+
+export const filterValidLanguageOptions = (
+  codeLanguage: CodeLanguage,
+  inputOptions: Record<string, unknown>
+): Record<string, unknown> =>
+  Object.assign(
+    {},
+    getDefaultCodeLanguageOptions(codeLanguage),
+    Object.fromEntries(
+      Object.entries(inputOptions || ({} as Record<string, unknown>)).filter(([name, value]) => {
+        const option = codeLanguageOptions[codeLanguage].find(option => option.name === name);
+        if (!option) return false;
+        switch (option.type) {
+          case CodeLanguageOptionType.Select:
+            return option.values.includes(value as string);
+        }
+      })
+    )
+  );

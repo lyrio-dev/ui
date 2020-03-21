@@ -37,6 +37,7 @@ let AppLayout: React.FC = props => {
       toast.error(requestError);
     } else {
       appState.token = appState.loggedInUser = null;
+      appState.userPreference = {};
       navigation.refresh();
     }
   }
@@ -168,7 +169,7 @@ let AppLayout: React.FC = props => {
                   <Dropdown.Item
                     key={locale}
                     onClick={() => {
-                      appState.locale = locale;
+                      appState.localLocale = locale;
                       navigation.refresh();
                     }}
                     flag={localeMeta[locale].flag}

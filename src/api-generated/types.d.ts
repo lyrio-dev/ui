@@ -106,6 +106,11 @@ declare namespace ApiTypes {
   export interface GetAllProblemTagsResponseDto {
     tags: ApiTypes.LocalizedProblemTagDto[];
   }
+  export interface GetCurrentUserAndPreferenceResponseDto {
+    userMeta?: ApiTypes.UserMetaDto;
+    userPreference?: ApiTypes.UserPreferenceDto;
+    serverPreference?: ApiTypes.PreferenceConfig;
+  }
   export interface GetGroupMetaResponseDto {
     error?: "NO_SUCH_GROUP";
     groupMeta?: ApiTypes.GroupMetaDto;
@@ -147,9 +152,6 @@ declare namespace ApiTypes {
     id?: number;
     color?: string;
     localizedNames?: ApiTypes.ProblemTagLocalizedNameDto[];
-  }
-  export interface GetSelfMetaResponseDto {
-    userMeta?: ApiTypes.UserMetaDto;
   }
   export interface GetSubmissionDetailRequestDto {
     submissionId: string;
@@ -240,7 +242,6 @@ declare namespace ApiTypes {
   }
   export interface LoginResponseDto {
     error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER" | "WRONG_PASSWORD";
-    userMeta?: ApiTypes.UserMetaDto;
     token?: string;
   }
   namespace Parameters {
@@ -253,6 +254,7 @@ declare namespace ApiTypes {
     export type Username = string;
     export type Wildcard = "START" | "END" | "BOTH";
   }
+  export interface PreferenceConfig {}
   export interface ProblemContentSectionDto {
     sectionTitle: string;
     type: "TEXT" | "SAMPLE";
@@ -406,7 +408,6 @@ declare namespace ApiTypes {
   }
   export interface RegisterResponseDto {
     error?: "ALREADY_LOGGEDIN" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
-    userMeta?: ApiTypes.UserMetaDto;
     token?: string;
   }
   export interface RemoveProblemFilesRequestDto {
@@ -614,9 +615,11 @@ declare namespace ApiTypes {
     registrationTime: string; // date-time
   }
   export interface UserPreferenceDto {
-    locale?: "en_US" | "zh_CN";
-    formatCodeByDefault?: boolean;
+    systemLocale?: "en_US" | "zh_CN";
+    contentLocale?: "en_US" | "zh_CN";
+    doNotFormatCodeByDefault?: boolean;
     codeFormatterOptions?: string;
-    languageOptions?: {};
+    defaultCodeLanguage?: string;
+    defaultCodeLanguageOptions?: {};
   }
 }

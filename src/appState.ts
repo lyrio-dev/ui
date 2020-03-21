@@ -2,8 +2,17 @@ import { observable, computed } from "mobx";
 import { computedFn } from "mobx-utils";
 import { create, persist } from "mobx-persist";
 
-import { UserMeta } from "./interfaces/UserMeta";
 import { Locale } from "./interfaces/Locale";
+
+function getBrowserLocale(): Locale {
+  const supportedLocales: string[] = Object.values(Locale);
+  return (
+    (navigator.languages.map(s => s.replace("-", "_")).find(locale => supportedLocales.includes(locale)) as Locale) ||
+    Locale.en_US
+  );
+}
+
+export const browserDefaultLocale = getBrowserLocale();
 
 export class AppState {
   constructor() {
@@ -35,13 +44,22 @@ export class AppState {
     this.responsiveLayout = responsiveLayout;
   }
 
+  // The locale set by user on the page footer, saved in current browser
   @persist
   @observable
-  locale: Locale = Locale.zh_CN;
+  localLocale: Locale = null;
 
   @computed
-  get localeHyphen(): string {
-    return this.locale.replace("_", "-");
+  get locale(): Locale {
+    if (this.localLocale && this.localLocale === (this.userPreference.systemLocale || browserDefaultLocale)) {
+      setTimeout(() => (this.localLocale = null), 0);
+    }
+    return this.localLocale || (this.userPreference.systemLocale as Locale) || browserDefaultLocale;
+  }
+
+  @computed
+  get contentLocale(): Locale {
+    return (this.userPreference.contentLocale as Locale) || this.locale;
   }
 
   @persist
@@ -53,7 +71,13 @@ export class AppState {
   showTagsInProblemSet: boolean = false;
 
   @observable
-  loggedInUser: UserMeta = null;
+  loggedInUser: ApiTypes.UserMetaDto = null;
+
+  @observable
+  userPreference: ApiTypes.UserPreferenceDto = {};
+
+  @observable
+  serverPreference: ApiTypes.PreferenceConfig = {};
 }
 
 const hydrate = create({

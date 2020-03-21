@@ -90,14 +90,23 @@ let LoginPage: React.FC = () => {
         }
       } else {
         // Login success
-        setSuccess(_("login.welcome", { username: response.userMeta.username }));
+        appState.token = response.token;
 
-        setTimeout(() => {
-          appState.loggedInUser = response.userMeta;
-          appState.token = response.token;
+        {
+          const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
+          if (requestError) toast.error(requestError);
+          else if (!response.userMeta) location.reload();
 
-          redirect();
-        }, 1000);
+          setSuccess(_("login.welcome", { username: response.userMeta.username }));
+
+          setTimeout(() => {
+            appState.loggedInUser = response.userMeta;
+            appState.userPreference = response.userPreference;
+            appState.serverPreference = response.serverPreference;
+
+            redirect();
+          }, 1000);
+        }
 
         return;
       }

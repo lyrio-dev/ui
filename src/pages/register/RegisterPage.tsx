@@ -172,12 +172,19 @@ let RegisterPage: React.FC = () => {
         // Register success
         setSuccessMessage(_("register.success", { username }));
 
-        setTimeout(() => {
-          appState.loggedInUser = response.userMeta;
-          appState.token = response.token;
+        {
+          const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
+          if (requestError) toast.error(requestError);
+          else if (!response.userMeta) location.reload();
 
-          redirect();
-        }, 1000);
+          setTimeout(() => {
+            appState.loggedInUser = response.userMeta;
+            appState.userPreference = response.userPreference;
+            appState.serverPreference = response.serverPreference;
+
+            redirect();
+          }, 1000);
+        }
 
         return;
       }

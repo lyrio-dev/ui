@@ -10,10 +10,11 @@ import { loadLocaleData } from "./locales";
 
 const routes = withView(
   async () => {
-    const localeData = await loadLocaleData(appState.localeHyphen);
+    const localeHyphen = appState.locale.replace("_", "-");
+    const localeData = await loadLocaleData(localeHyphen);
     return (
-      <IntlProvider locale={appState.localeHyphen} messages={localeData}>
-        <AppLayout>
+      <IntlProvider locale={localeHyphen} messages={localeData}>
+        <AppLayout key={localeHyphen}>
           <View />
         </AppLayout>
       </IntlProvider>

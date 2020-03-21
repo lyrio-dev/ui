@@ -46,9 +46,8 @@ interface FormattableCodeBoxProps {
 const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxProps>((props, ref) => {
   const _ = useIntlMessage();
 
-  // TODO: add options
-  const defaultFormatted = true;
-  const options = CodeFormatter.defaultOptions;
+  const defaultFormatted = !appState.userPreference.doNotFormatCodeByDefault;
+  const options = appState.userPreference.codeFormatterOptions || CodeFormatter.defaultOptions;
 
   const languageFormattable = CodeFormatter.isLanguageSupported(props.language);
 

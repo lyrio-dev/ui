@@ -35,7 +35,13 @@ import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
 import PermissionManager from "@/components/PermissionManager";
-import { codeLanguageOptions, CodeLanguage, CodeLanguageOptionType } from "@/interfaces/CodeLanguage";
+import {
+  codeLanguageOptions,
+  CodeLanguage,
+  CodeLanguageOptionType,
+  filterValidLanguageOptions,
+  getDefaultCodeLanguageOptions
+} from "@/interfaces/CodeLanguage";
 import { sortTags } from "../problemTag";
 import CodeEditor from "@/components/LazyCodeEditor";
 
@@ -277,14 +283,15 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   // Begin submit
   function getPreferredDefaultSubmissionContent(language?: CodeLanguage): SubmissionContent {
-    // TODO
-    if (!language) language = CodeLanguage.CPP;
+    if (!language) language = appState.userPreference.defaultCodeLanguage as CodeLanguage;
+    console.log(filterValidLanguageOptions(language, appState.userPreference.defaultCodeLanguageOptions));
     return {
       language: language,
       code: "",
-      languageOptions: Object.fromEntries(
-        codeLanguageOptions[language].map(({ name, defaultValue }) => [name, defaultValue])
-      )
+      languageOptions:
+        language === appState.userPreference.defaultCodeLanguage
+          ? filterValidLanguageOptions(language, appState.userPreference.defaultCodeLanguageOptions)
+          : getDefaultCodeLanguageOptions(language)
     };
   }
   const [inSubmitView, setInSubmitView] = useState(false);
@@ -481,7 +488,10 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 message = _("common.localized_content_unavailable.requested_unavailable", {
                   display_locale: _(`language.${props.problem.localizedContentsOfLocale.locale}`)
                 });
-              } else if (!props.requestedLocale && props.problem.localizedContentsOfLocale.locale !== appState.locale) {
+              } else if (
+                !props.requestedLocale &&
+                props.problem.localizedContentsOfLocale.locale !== appState.contentLocale
+              ) {
                 message = _("common.localized_content_unavailable.preferred_unavailable", {
                   display_locale: _(`language.${props.problem.localizedContentsOfLocale.locale}`)
                 });
@@ -825,7 +835,7 @@ export default {
     async getView(request) {
       const id = parseInt(request.params["id"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
-      const problem = await fetchData("id", id, requestedLocale || appState.locale);
+      const problem = await fetchData("id", id, requestedLocale || appState.contentLocale);
       if (problem === null) {
         // TODO: Display an error page
         return null;
@@ -838,7 +848,7 @@ export default {
     async getView(request) {
       const displayId = parseInt(request.params["displayId"]);
       const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
-      const problem = await fetchData("displayId", displayId, requestedLocale || appState.locale);
+      const problem = await fetchData("displayId", displayId, requestedLocale || appState.contentLocale);
       if (problem === null) {
         // TODO: Display an error page
         return null;
