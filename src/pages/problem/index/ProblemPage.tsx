@@ -283,8 +283,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   // Begin submit
   function getPreferredDefaultSubmissionContent(language?: CodeLanguage): SubmissionContent {
-    if (!language) language = appState.userPreference.defaultCodeLanguage as CodeLanguage;
-    console.log(filterValidLanguageOptions(language, appState.userPreference.defaultCodeLanguageOptions));
+    if (!language) language = (appState.userPreference.defaultCodeLanguage as CodeLanguage) || CodeLanguage.CPP;
     return {
       language: language,
       code: "",
