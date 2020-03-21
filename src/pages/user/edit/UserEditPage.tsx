@@ -409,7 +409,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
   }
   function setDefaultCodeLanguageOption(name: string, value: unknown) {
     setDefaultCodeLanguageOptions(
-      Object.assign(defaultCodeLanguageOptions, {
+      Object.assign({}, defaultCodeLanguageOptions, {
         [name]: value
       })
     );
