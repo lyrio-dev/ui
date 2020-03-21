@@ -726,6 +726,9 @@ export default route({
 
     const response = await fetchData(parseInt(request.params.userId) || 0);
     if (!response) return null;
+
+    if (type === EditType.Preference) await CodeFormatter.ready;
+
     return <UserEditPage type={type} {...response} />;
   }
 });
