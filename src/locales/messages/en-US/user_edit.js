@@ -76,7 +76,7 @@ module.exports = {
     code_language: {
       header: "Programming Language",
       language: "Default language",
-      content_notes: "Setting default language here will affect the defaults on submitting problems."
+      content_notes: "Setting default language options here will affect the defaults on submitting problems."
     },
     code_formatter: {
       header: "Code Formatter",
