@@ -13,7 +13,6 @@ module.exports = {
   error: {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_USER: "无此用户。",
-    WRONG_OLD_PASSWORD: "旧密码错误。",
     DUPLICATE_USERNAME: "用户名已被使用。",
     DUPLICATE_EMAIL: "电子邮箱已被使用。"
   },
@@ -88,5 +87,28 @@ module.exports = {
     },
     submit: "提交",
     success: "偏好设置修改成功。"
+  },
+  security: {
+    password: {
+      header: "修改密码",
+      old: "旧密码",
+      new: "新密码",
+      retype: "确认密码",
+      invalid_password: "无效的密码。",
+      empty_new_password: "新密码不能为空。",
+      empty_retype_password: "确认密码不能为空。",
+      wrong_old_password: "旧密码错误。",
+      passwords_do_not_match: "密码不一致。",
+      success: "修改密码成功。",
+      submit: "提交"
+    },
+    email: {
+      header: "修改邮箱",
+      email: "邮箱",
+      invalid_email: "无效的邮箱地址。",
+      duplicate_email: "该邮箱地址已被占用。",
+      success: "修改邮箱地址成功。",
+      submit: "提交"
+    }
   }
 };

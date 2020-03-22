@@ -13,7 +13,6 @@ module.exports = {
   error: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_USER: "No such user.",
-    WRONG_OLD_PASSWORD: "Wrong old password.",
     DUPLICATE_USERNAME: "Username already taken.",
     DUPLICATE_EMAIL: "Email already used."
   },
@@ -90,5 +89,28 @@ module.exports = {
     },
     submit: "Submit",
     success: "Preference updated successfully."
+  },
+  security: {
+    password: {
+      header: "Change password",
+      old: "Old password",
+      new: "New password",
+      retype: "Retype password",
+      invalid_password: "Invalid password.",
+      empty_new_password: "Password can't be empty.",
+      empty_retype_password: "Retype password can't be empty",
+      wrong_old_password: "Wrong old password.",
+      passwords_do_not_match: "Passwords mismatch.",
+      success: "Password changed successfully.",
+      submit: "Submit"
+    },
+    email: {
+      header: "Change email",
+      email: "Email",
+      invalid_email: "Invalid email address.",
+      duplicate_email: "This email address has already been occupied.",
+      success: "Email changed successfully.",
+      submit: "Submit"
+    }
   }
 };

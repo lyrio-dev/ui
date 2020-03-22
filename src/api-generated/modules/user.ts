@@ -20,6 +20,12 @@ export type GetUserPreferenceRequestDto = ApiTypes.GetUserPreferenceRequestDto;
 export type GetUserPreferenceResponseDto = ApiTypes.GetUserPreferenceResponseDto;
 export type UpdateUserPreferenceRequestDto = ApiTypes.UpdateUserPreferenceRequestDto;
 export type UpdateUserPreferenceResponseDto = ApiTypes.UpdateUserPreferenceResponseDto;
+export type GetUserSecuritySettingsRequestDto = ApiTypes.GetUserSecuritySettingsRequestDto;
+export type GetUserSecuritySettingsResponseDto = ApiTypes.GetUserSecuritySettingsResponseDto;
+export type UpdateUserPasswordRequestDto = ApiTypes.UpdateUserPasswordRequestDto;
+export type UpdateUserPasswordResponseDto = ApiTypes.UpdateUserPasswordResponseDto;
+export type UpdateUserEmailRequestDto = ApiTypes.UpdateUserEmailRequestDto;
+export type UpdateUserEmailResponseDto = ApiTypes.UpdateUserEmailResponseDto;
 
 export const searchUser = createGetApi<{ query: string; wildcard?: string }, SearchUserResponseDto>("user/searchUser");
 export const getUserMeta = createGetApi<
@@ -40,4 +46,14 @@ export const getUserPreference = createPostApi<GetUserPreferenceRequestDto, GetU
 );
 export const updateUserPreference = createPostApi<UpdateUserPreferenceRequestDto, UpdateUserPreferenceResponseDto>(
   "user/updateUserPreference"
+);
+export const getUserSecuritySettings = createPostApi<
+  GetUserSecuritySettingsRequestDto,
+  GetUserSecuritySettingsResponseDto
+>("user/getUserSecuritySettings");
+export const updateUserPassword = createPostApi<UpdateUserPasswordRequestDto, UpdateUserPasswordResponseDto>(
+  "user/updateUserPassword"
+);
+export const updateUserEmail = createPostApi<UpdateUserEmailRequestDto, UpdateUserEmailResponseDto>(
+  "user/updateUserEmail"
 );

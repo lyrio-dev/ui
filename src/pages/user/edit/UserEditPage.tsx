@@ -15,10 +15,14 @@ enum EditType {
   Security = "security"
 }
 
+type DataTypes =
+  | ApiTypes.GetUserProfileResponseDto
+  | ApiTypes.GetUserPreferenceResponseDto
+  | ApiTypes.GetUserSecuritySettingsResponseDto;
 interface UserEditPageProps {
   type: EditType;
-  data: ApiTypes.GetUserProfileResponseDto | ApiTypes.GetUserPreferenceResponseDto;
-  view: React.FC<ApiTypes.GetUserProfileResponseDto | ApiTypes.GetUserPreferenceResponseDto>;
+  data: DataTypes;
+  view: React.FC<DataTypes>;
 }
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
@@ -43,7 +47,7 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
               <Icon name="setting" />
               {_("user_edit.menu.preference")}
             </Menu.Item>
-            <Menu.Item active={props.type === EditType.Security} as={Link} /* href="../security" */>
+            <Menu.Item active={props.type === EditType.Security} as={Link} href="../security">
               <Icon name="lock" />
               {_("user_edit.menu.security")}
             </Menu.Item>
@@ -71,7 +75,7 @@ export default route({
     const { fetchData, View } = await {
       [EditType.Profile]: import("./ProfileView"),
       [EditType.Preference]: import("./PreferenceView"),
-      [EditType.Security]: null
+      [EditType.Security]: import("./SecurityView")
     }[type];
 
     const response = await fetchData(parseInt(request.params.userId) || 0);

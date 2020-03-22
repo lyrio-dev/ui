@@ -210,6 +210,13 @@ declare namespace ApiTypes {
     avatarInfo?: string;
     information?: ApiTypes.UserInformationDto;
   }
+  export interface GetUserSecuritySettingsRequestDto {
+    userId: number;
+  }
+  export interface GetUserSecuritySettingsResponseDto {
+    error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
+    meta?: ApiTypes.UserMetaDto;
+  }
   export interface GroupMetaDto {
     id: number;
     name: string;
@@ -569,6 +576,21 @@ declare namespace ApiTypes {
   export interface UpdateProblemTagResponseDto {
     error?: "NO_SUCH_PROBLEM_TAG" | "PERMISSION_DENIED";
   }
+  export interface UpdateUserEmailRequestDto {
+    userId: number;
+    email: string;
+  }
+  export interface UpdateUserEmailResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "DUPLICATE_EMAIL";
+  }
+  export interface UpdateUserPasswordRequestDto {
+    userId: number;
+    oldPassword?: string;
+    password: string;
+  }
+  export interface UpdateUserPasswordResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "WRONG_OLD_PASSWORD";
+  }
   export interface UpdateUserPreferenceRequestDto {
     userId: number;
     preference: ApiTypes.UserPreferenceDto;
@@ -584,11 +606,9 @@ declare namespace ApiTypes {
     avatarInfo: string;
     bio: string;
     information: ApiTypes.UserInformationDto;
-    oldPassword?: string;
-    password?: string;
   }
   export interface UpdateUserProfileResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "WRONG_OLD_PASSWORD" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
   }
   export interface UserAvatarDto {
     type: "gravatar" | "github" | "qq";
