@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon, Form, Header, Input, Checkbox, TextArea, Button, List, Radio } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Validator } from "class-validator";
@@ -37,6 +37,12 @@ interface ProfileViewProps {
 
 const ProfileView: React.FC<ProfileViewProps> = props => {
   const _ = useIntlMessage();
+
+  const [titleUsername, setTitleUsername] = useState(props.meta.username);
+
+  useEffect(() => {
+    appState.enterNewPage(`${_(`user_edit.profile.title`)} - ${titleUsername}`, false);
+  }, [appState.locale, titleUsername]);
 
   const [username, setUsername] = useState(props.meta.username);
   const [email, setEmail] = useState(props.meta.email);
@@ -141,6 +147,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
       else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
       else {
         toast.success(_("user_edit.preference.success"));
+        setTitleUsername(username);
 
         if (appState.loggedInUser.id === props.meta.id) {
           appState.loggedInUser.username = username;

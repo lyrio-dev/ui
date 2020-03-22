@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
@@ -27,10 +27,6 @@ interface UserEditPageProps {
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
   const _ = useIntlMessage();
-
-  useEffect(() => {
-    appState.enterNewPage(`${_(`user_edit.title.${props.type}`)} - ${props.data.meta.username}`, false);
-  }, [appState.locale]);
 
   const View = props.view;
 

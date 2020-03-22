@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Header, Checkbox, TextArea, Button, Select, Flag } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { useNavigation } from "react-navi";
@@ -41,6 +41,10 @@ interface PreferenceViewProps {
 const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const _ = useIntlMessage();
   const navigation = useNavigation();
+
+  useEffect(() => {
+    appState.enterNewPage(`${_(`user_edit.preference.title`)} - ${props.meta.username}`, false);
+  }, [appState.locale]);
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.systemLocale || null) as Locale);
   const [contentLocale, setContentLocale] = useState<Locale>((props.preference.contentLocale || null) as Locale);

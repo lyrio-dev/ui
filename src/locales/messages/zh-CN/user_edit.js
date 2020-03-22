@@ -1,9 +1,4 @@
 module.exports = {
-  title: {
-    profile: "修改个人资料",
-    preference: "偏好设置",
-    security: "安全设置"
-  },
   menu: {
     profile: "个人资料",
     preference: "偏好设置",
@@ -19,6 +14,7 @@ module.exports = {
     DUPLICATE_EMAIL: "电子邮箱已被使用。"
   },
   profile: {
+    title: "修改个人资料",
     avatar: {
       header: "头像",
       gravatar: {
@@ -63,6 +59,7 @@ module.exports = {
     success: "个人资料修改成功。"
   },
   preference: {
+    title: "偏好设置",
     locale: {
       header: "语言",
       system: "偏好系统语言",
@@ -91,6 +88,7 @@ module.exports = {
     success: "偏好设置修改成功。"
   },
   security: {
+    title: "安全设置",
     password: {
       header: "修改密码",
       old: "旧密码",

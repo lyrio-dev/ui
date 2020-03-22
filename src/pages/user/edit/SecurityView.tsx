@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header, Button, Input } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Validator } from "class-validator";
@@ -27,6 +27,10 @@ interface SecurityViewProps {
 
 const SecurityView: React.FC<SecurityViewProps> = props => {
   const _ = useIntlMessage();
+
+  useEffect(() => {
+    appState.enterNewPage(`${_(`user_edit.security.title`)} - ${props.meta.username}`, false);
+  }, [appState.locale]);
 
   // Start change password
   const [oldPassword, setOldPassword] = useState("");
