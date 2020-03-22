@@ -149,10 +149,10 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
         toast.success(_("user_edit.preference.success"));
         setTitleUsername(username);
 
-        if (appState.loggedInUser.id === props.meta.id) {
-          appState.loggedInUser.username = username;
-          appState.loggedInUser.email = email;
-          appState.loggedInUser.bio = bio;
+        if (appState.currentUser.id === props.meta.id) {
+          appState.currentUser.username = username;
+          appState.currentUser.email = email;
+          appState.currentUser.bio = bio;
         }
       }
     }
@@ -160,7 +160,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     setPending(false);
   }
 
-  const hasPrivilege = appState.loggedInUser.isAdmin;
+  const hasPrivilege = appState.currentUser.isAdmin;
 
   return (
     <div className={style.profileContainer}>

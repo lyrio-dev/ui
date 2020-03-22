@@ -654,10 +654,10 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                       className={style.menuItemImportant}
                       name={_("problem.action.submit")}
                       icon="paper plane"
-                      onClick={appState.loggedInUser ? openSubmitView : null}
+                      onClick={appState.currentUser ? openSubmitView : null}
                     />
                   }
-                  disabled={!!appState.loggedInUser}
+                  disabled={!!appState.currentUser}
                   content={
                     <Button primary content={_("problem.action.login_to_submit")} onClick={() => navigateToLogin()} />
                   }

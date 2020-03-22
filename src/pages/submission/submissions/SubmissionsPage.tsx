@@ -118,7 +118,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
       query.problemId = Number(queryProblemId.substr(1));
     if (queryProblemId && !queryProblemId.toUpperCase().startsWith("P"))
       query.problemDisplayId = Number(queryProblemId);
-    if (filterMySubmissions) query.submitter = appState.loggedInUser.username;
+    if (filterMySubmissions) query.submitter = appState.currentUser.username;
     else if (querySubmitter) query.submitter = querySubmitter;
     if (queryCodeLanguage) query.codeLanguage = queryCodeLanguage;
     if (queryStatus) query.status = queryStatus;
@@ -284,7 +284,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             content={isWideScreen ? _("submissions.query.filter") : null}
             onClick={() => onFilter(false)}
           />
-          {appState.loggedInUser && (
+          {appState.currentUser && (
             <Button
               className={(isWideScreen ? "labeled icon " : "") + style.mySubmissions}
               primary

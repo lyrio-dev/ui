@@ -26,7 +26,7 @@ let RegisterPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (appState.loggedInUser) redirect();
+    if (appState.currentUser) redirect();
   }, []);
 
   useEffect(() => {
@@ -178,7 +178,7 @@ let RegisterPage: React.FC = () => {
           else if (!response.userMeta) location.reload();
 
           setTimeout(() => {
-            appState.loggedInUser = response.userMeta;
+            appState.currentUser = response.userMeta;
             appState.userPreference = response.userPreference;
             appState.serverPreference = response.serverPreference;
 

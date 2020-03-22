@@ -122,8 +122,8 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
       else {
         toast.success(_("user_edit.security.email.success"));
 
-        if (props.meta.id === appState.loggedInUser.id) {
-          appState.loggedInUser.email = email;
+        if (props.meta.id === appState.currentUser.id) {
+          appState.currentUser.email = email;
         }
       }
     }

@@ -71,7 +71,7 @@ export class AppState {
   showTagsInProblemSet: boolean = false;
 
   @observable
-  loggedInUser: ApiTypes.UserMetaDto = null;
+  currentUser: ApiTypes.UserMetaDto = null;
 
   @observable
   userPreference: ApiTypes.UserPreferenceDto = {};

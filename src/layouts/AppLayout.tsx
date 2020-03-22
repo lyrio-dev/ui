@@ -36,7 +36,7 @@ let AppLayout: React.FC = props => {
     if (requestError) {
       toast.error(requestError);
     } else {
-      appState.token = appState.loggedInUser = null;
+      appState.token = appState.currentUser = null;
       appState.userPreference = {};
       navigation.refresh();
     }
@@ -103,30 +103,30 @@ let AppLayout: React.FC = props => {
   const userMenu = (ContainerComponent: typeof Dropdown | typeof Menu) => (
     <>
       <ContainerComponent.Menu className={style.userMenu}>
-        <ContainerComponent.Item as={Link} href={`/user/${appState.loggedInUser.id}`}>
+        <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}`}>
           <Icon name="user" />
           {_("common.header.user.profile")}
         </ContainerComponent.Item>
         <ContainerComponent.Item
           as={Link}
-          href={{ pathname: "/submissions", query: { submitter: appState.loggedInUser.username } }}
+          href={{ pathname: "/submissions", query: { submitter: appState.currentUser.username } }}
         >
           <Icon name="hourglass half" />
           {_("common.header.user.submissions")}
         </ContainerComponent.Item>
         <ContainerComponent.Item
           as={Link}
-          href={{ pathname: "/problems", query: { ownerId: appState.loggedInUser.id } }}
+          href={{ pathname: "/problems", query: { ownerId: appState.currentUser.id } }}
         >
           <Icon name="book" />
           {_("common.header.user.problems")}
         </ContainerComponent.Item>
         {ContainerComponent === Dropdown && <Dropdown.Divider />}
-        <ContainerComponent.Item as={Link} href={`/user/${appState.loggedInUser.id}/edit/profile`}>
+        <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/profile`}>
           <Icon name="edit" />
           {_("common.header.user.edit_profile")}
         </ContainerComponent.Item>
-        <ContainerComponent.Item as={Link} href={`/user/${appState.loggedInUser.id}/edit/preference`}>
+        <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/preference`}>
           <Icon name="cog" />
           {_("common.header.user.preference")}
         </ContainerComponent.Item>
@@ -189,7 +189,7 @@ let AppLayout: React.FC = props => {
   const userDropdown = (icon: boolean = true) => (
     <Menu.Menu position="right">
       <div className="ui simple dropdown item">
-        {appState.loggedInUser.username}
+        {appState.currentUser.username}
         {icon && <i className="dropdown icon"></i>}
         {userMenu(Dropdown)}
       </div>
@@ -199,7 +199,7 @@ let AppLayout: React.FC = props => {
   const topBarItemsForWideScreen = (
     <>
       {navMenuItems}
-      {appState.loggedInUser ? (
+      {appState.currentUser ? (
         userDropdown()
       ) : (
         <Menu.Item className={style.userContainer}>{loginAndRegisterButtons}</Menu.Item>
@@ -209,7 +209,7 @@ let AppLayout: React.FC = props => {
 
   const topBarItemsForNarrowScreen = (
     <Menu.Menu position="right">
-      {appState.loggedInUser && userDropdown(false)}
+      {appState.currentUser && userDropdown(false)}
       <Menu.Item icon="bars" onClick={() => setSidebarOpen(true)} />
     </Menu.Menu>
   );
@@ -233,9 +233,9 @@ let AppLayout: React.FC = props => {
             {appConfig.siteName}
           </Menu.Item>
           <Menu.Item>
-            {appState.loggedInUser ? (
+            {appState.currentUser ? (
               <>
-                <Menu.Header>{appState.loggedInUser.username}</Menu.Header>
+                <Menu.Header>{appState.currentUser.username}</Menu.Header>
                 {userMenu(Menu)}
               </>
             ) : (

@@ -108,6 +108,13 @@ declare namespace ApiTypes {
   }
   export interface GetCurrentUserAndPreferenceResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
+    userPrivileges?: (
+      | "MANAGE_USER"
+      | "MANAGE_USER_GROUP"
+      | "MANAGE_PROBLEM"
+      | "MANAGE_CONTEST"
+      | "MANAGE_DISCUSSION"
+    )[];
     userPreference?: ApiTypes.UserPreferenceDto;
     serverPreference?: ApiTypes.PreferenceConfig;
   }

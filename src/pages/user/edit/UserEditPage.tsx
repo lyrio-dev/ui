@@ -30,7 +30,7 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
   const View = props.view;
 
-  const isEditingCurrentUser = props.data.meta.id === appState.loggedInUser.id;
+  const isEditingCurrentUser = props.data.meta.id === appState.currentUser.id;
 
   return (
     <>

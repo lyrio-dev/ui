@@ -26,7 +26,7 @@ let LoginPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (appState.loggedInUser) redirect();
+    if (appState.currentUser) redirect();
   }, []);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ let LoginPage: React.FC = () => {
           setSuccess(_("login.welcome", { username: response.userMeta.username }));
 
           setTimeout(() => {
-            appState.loggedInUser = response.userMeta;
+            appState.currentUser = response.userMeta;
             appState.userPreference = response.userPreference;
             appState.serverPreference = response.serverPreference;
 

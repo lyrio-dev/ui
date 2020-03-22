@@ -203,9 +203,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     // A non-privileged user can only filter "nonpublic" if the "owner" itself is applied.
     // If the "owner" filter is not applied, it should be applied.
     if (props.searchQuery.nonpublic) return;
-    if (!props.response.permissions.filterNonpublic && appState.loggedInUser) {
+    if (!props.response.permissions.filterNonpublic && appState.currentUser) {
       redirectWithFilter({
-        ownerId: appState.loggedInUser.id,
+        ownerId: appState.currentUser.id,
         nonpublic: true
       });
     } else {
@@ -305,7 +305,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           />
         )}
         {(props.response.permissions.filterNonpublic ||
-          (appState.loggedInUser && props.searchQuery.ownerId === appState.loggedInUser.id)) && (
+          (appState.currentUser && props.searchQuery.ownerId === appState.currentUser.id)) && (
           <Menu.Item
             className={style.searchMenuItem}
             icon="eye slash"

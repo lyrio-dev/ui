@@ -98,7 +98,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
     else {
       toast.success(_("user_edit.preference.success"));
 
-      if (appState.loggedInUser.id === props.meta.id) {
+      if (appState.currentUser.id === props.meta.id) {
         if (appState.userPreference.systemLocale !== systemLocale) {
           appState.userPreference.systemLocale = systemLocale;
           navigation.refresh();
