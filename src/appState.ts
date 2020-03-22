@@ -80,7 +80,7 @@ export class AppState {
   userPreference: ApiTypes.UserPreferenceDto = {};
 
   @observable
-  serverPreference: ApiTypes.PreferenceConfig = {};
+  serverPreference: ApiTypes.PreferenceConfig = null;
 }
 
 const hydrate = create({

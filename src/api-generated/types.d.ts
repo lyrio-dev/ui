@@ -268,7 +268,12 @@ declare namespace ApiTypes {
     export type Username = string;
     export type Wildcard = "START" | "END" | "BOTH";
   }
-  export interface PreferenceConfig {}
+  export interface PreferenceConfig {
+    allowUserChangeUsername: boolean;
+    allowEveryoneCreateProblem: boolean;
+    allowOwnerManageProblemPermission: boolean;
+    allowOwnerDeleteProblem: boolean;
+  }
   export interface ProblemContentSectionDto {
     sectionTitle: string;
     type: "TEXT" | "SAMPLE";

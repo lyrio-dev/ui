@@ -161,20 +161,23 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   }
 
   const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
+  const allowUserChangeUsername = appState.serverPreference.allowUserChangeUsername;
 
   return (
     <div className={style.profileContainer}>
       <div className={style.profileMain}>
         <Header className={style.header} size="tiny" content={_("user_edit.profile.username")} />
         <Input
-          readOnly={!hasPrivilege}
+          readOnly={!(hasPrivilege || allowUserChangeUsername)}
           fluid
           value={username}
           onChange={(e, { value }) => !pending && setUsername(value)}
         />
-        <div className={style.notes}>
-          {_(!hasPrivilege ? "user_edit.profile.username_notes" : "user_edit.profile.username_notes_admin")}
-        </div>
+        {!(allowUserChangeUsername && props.meta.id === appState.currentUser.id) && (
+          <div className={style.notes}>
+            {_(!hasPrivilege ? "user_edit.profile.username_notes" : "user_edit.profile.username_notes_admin")}
+          </div>
+        )}
         <Header className={style.header} size="tiny" content={_("user_edit.profile.email")} />
         <Input readOnly={!hasPrivilege} fluid value={email} onChange={(e, { value }) => !pending && setEmail(value)} />
         <Checkbox

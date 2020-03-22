@@ -11,6 +11,6 @@ export default async function initApp() {
     appState.currentUser = response.userMeta;
     appState.currentUserPrivileges = response.userPrivileges || [];
     appState.userPreference = response.userPreference || {};
-    appState.serverPreference = response.serverPreference || {};
+    appState.serverPreference = response.serverPreference;
   }
 }
