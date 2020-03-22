@@ -10,6 +10,8 @@ module.exports = {
     security: "Security"
   },
   back_to_profile: "Back to profile",
+  back_to_profile_of_user: "Bask to the user's profile",
+  admin_warning: "You're viewing and editing another user with your privilege.",
   error: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_USER: "No such user.",

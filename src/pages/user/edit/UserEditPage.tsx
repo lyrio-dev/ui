@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Menu, Icon } from "semantic-ui-react";
+import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
 import { Link } from "react-navi";
@@ -34,6 +34,8 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
   const View = props.view;
 
+  const isEditingCurrentUser = props.data.meta.id === appState.loggedInUser.id;
+
   return (
     <>
       <div className={style.container}>
@@ -52,9 +54,12 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
               {_("user_edit.menu.security")}
             </Menu.Item>
           </Menu>
+          {!isEditingCurrentUser && (
+            <Message className={style.adminWarning} content={_("user_edit.admin_warning")} warning />
+          )}
           <Link href="../..">
             <Icon name="arrow left" />
-            {_("user_edit.back_to_profile")}
+            {!isEditingCurrentUser ? _("user_edit.back_to_profile_of_user") : _("user_edit.back_to_profile")}
           </Link>
         </div>
         <div className={style.main}>

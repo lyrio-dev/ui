@@ -10,6 +10,8 @@ module.exports = {
     security: "安全"
   },
   back_to_profile: "返回个人资料",
+  back_to_profile_of_user: "返回该用户个人资料",
+  admin_warning: "您正在使用管理权限查看与编辑其它用户的资料。",
   error: {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_USER: "无此用户。",

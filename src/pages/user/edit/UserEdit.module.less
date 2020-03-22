@@ -10,12 +10,19 @@
 
     :global(.menu) {
       width: @menuWidth !important;
+      margin-right: 0 !important;
+      margin-left: 0 !important;
     }
   }
 
   .main {
     width: calc(100% - @menuWidth - @margin);
   }
+}
+
+.adminWarning {
+  padding-left: 14px !important;
+  padding-right: 14px !important;
 }
 
 @profileAvatarWidth: 240px;
