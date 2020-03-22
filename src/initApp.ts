@@ -9,6 +9,7 @@ export default async function initApp() {
     // Get current logged in user's meta
     const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
     appState.currentUser = response.userMeta;
+    appState.currentUserPrivileges = response.userPrivileges || [];
     appState.userPreference = response.userPreference || {};
     appState.serverPreference = response.serverPreference || {};
   }

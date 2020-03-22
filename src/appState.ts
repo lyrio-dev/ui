@@ -74,6 +74,9 @@ export class AppState {
   currentUser: ApiTypes.UserMetaDto = null;
 
   @observable
+  currentUserPrivileges: ApiTypes.GetCurrentUserAndPreferenceResponseDto["userPrivileges"] = [];
+
+  @observable
   userPreference: ApiTypes.UserPreferenceDto = {};
 
   @observable

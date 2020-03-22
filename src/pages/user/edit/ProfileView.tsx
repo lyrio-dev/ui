@@ -160,7 +160,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     setPending(false);
   }
 
-  const hasPrivilege = appState.currentUser.isAdmin;
+  const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
 
   return (
     <div className={style.profileContainer}>
