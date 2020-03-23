@@ -32,6 +32,8 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     appState.enterNewPage(`${_(`user_edit.security.title`)} - ${props.meta.username}`, false);
   }, [appState.locale]);
 
+  const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
+
   // Start change password
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -67,13 +69,13 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     if (pendingChangePassword) return;
     setPendingChangePassword(true);
 
-    if (oldPasswordInvalid || newPasswordInvalid || retypePasswordInvalid) {
+    if ((oldPasswordInvalid && !hasPrivilege) || newPasswordInvalid || retypePasswordInvalid) {
     } else if (!newPassword) setEmptyNewPassword(true);
     else if (!retypePassword) setEmptyRetypePassword(true);
     else {
       const { requestError, response } = await UserApi.updateUserPassword({
         userId: props.meta.id,
-        oldPassword: oldPassword,
+        oldPassword: oldPassword || null,
         password: newPassword
       });
       if (requestError) toast.error(requestError);
@@ -136,23 +138,27 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     <>
       <form>
         <Header className={style.sectionHeader} size="large" content={_("user_edit.security.password.header")} />
-        <Header className={style.header} size="tiny" content={_("user_edit.security.password.old")} />
         <input readOnly type="text" hidden autoComplete="username" value={props.meta.username} />
-        <Input
-          className={style.notFullWidth}
-          fluid
-          value={oldPassword}
-          type="password"
-          autoComplete="current-password"
-          onChange={(e, { value }) => !pendingChangePassword && (setOldPassword(value), setWrongOldPassword(false))}
-          onBlur={checkPasswordInputs}
-          error={oldPasswordInvalid || wrongOldPassword}
-        />
-        <div className={style.notes}>
-          {wrongOldPassword
-            ? _("user_edit.security.password.wrong_old_password")
-            : oldPasswordInvalid && _("user_edit.security.password.invalid_password")}
-        </div>
+        {!hasPrivilege && (
+          <>
+            <Header className={style.header} size="tiny" content={_("user_edit.security.password.old")} />
+            <Input
+              className={style.notFullWidth}
+              fluid
+              value={oldPassword}
+              type="password"
+              autoComplete="current-password"
+              onChange={(e, { value }) => !pendingChangePassword && (setOldPassword(value), setWrongOldPassword(false))}
+              onBlur={checkPasswordInputs}
+              error={oldPasswordInvalid || wrongOldPassword}
+            />
+            <div className={style.notes}>
+              {wrongOldPassword
+                ? _("user_edit.security.password.wrong_old_password")
+                : oldPasswordInvalid && _("user_edit.security.password.invalid_password")}
+            </div>
+          </>
+        )}
         <Header className={style.header} size="tiny" content={_("user_edit.security.password.new")} />
         <Input
           className={style.notFullWidth}
