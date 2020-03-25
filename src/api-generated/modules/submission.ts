@@ -12,6 +12,10 @@ export type GetSubmissionDetailRequestDto = ApiTypes.GetSubmissionDetailRequestD
 export type GetSubmissionDetailResponseDto = ApiTypes.GetSubmissionDetailResponseDto;
 export type QuerySubmissionStatisticsRequestDto = ApiTypes.QuerySubmissionStatisticsRequestDto;
 export type QuerySubmissionStatisticsResponseDto = ApiTypes.QuerySubmissionStatisticsResponseDto;
+export type RejudgeSubmissionRequestDto = ApiTypes.RejudgeSubmissionRequestDto;
+export type RejudgeSubmissionResponseDto = ApiTypes.RejudgeSubmissionResponseDto;
+export type CancelSubmissionRequestDto = ApiTypes.CancelSubmissionRequestDto;
+export type CancelSubmissionResponseDto = ApiTypes.CancelSubmissionResponseDto;
 
 export const submit = createPostApi<SubmitRequestDto, SubmitResponseDto>("submission/submit");
 export const querySubmission = createPostApi<QuerySubmissionRequestDto, QuerySubmissionResponseDto>(
@@ -24,3 +28,9 @@ export const querySubmissionStatistics = createPostApi<
   QuerySubmissionStatisticsRequestDto,
   QuerySubmissionStatisticsResponseDto
 >("submission/querySubmissionStatistics");
+export const rejudgeSubmission = createPostApi<RejudgeSubmissionRequestDto, RejudgeSubmissionResponseDto>(
+  "submission/rejudgeSubmission"
+);
+export const cancelSubmission = createPostApi<CancelSubmissionRequestDto, CancelSubmissionResponseDto>(
+  "submission/cancelSubmission"
+);

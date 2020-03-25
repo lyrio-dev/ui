@@ -18,6 +18,7 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
   ConfigurationError: "code",
   SystemError: "server",
   CompilationError: "code",
+  Canceled: "remove",
   FileError: "file outline",
   RuntimeError: "bomb",
   TimeLimitExceeded: "clock",

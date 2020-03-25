@@ -1,5 +1,11 @@
 module.exports = {
   title: "Submission",
+  cancel: "Cancel",
+  confirm_cancel: "Confirm cancel",
+  success_cancel: "Successfully canceled.",
+  rejudge: "Rejudge",
+  confirm_rejudge: "Confirm rejudge",
+  success_rejudge: "Successfully rejudged.",
   error: {
     NO_SUCH_PROBLEM: "No such problem.",
     NO_SUCH_FILE: "No such file.",

@@ -33,6 +33,12 @@ declare namespace ApiTypes {
   export interface AddUserToGroupResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "NO_SUCH_GROUP" | "USER_ALREADY_IN_GROUP";
   }
+  export interface CancelSubmissionRequestDto {
+    submissionId: number;
+  }
+  export interface CancelSubmissionResponseDto {
+    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
+  }
   export interface CheckAvailabilityResponseDto {
     usernameAvailable?: boolean;
     emailAvailable?: boolean;
@@ -171,6 +177,8 @@ declare namespace ApiTypes {
     result?: {};
     progress?: {};
     progressSubscriptionKey?: string;
+    permissionRejudge?: boolean;
+    permissionCancel?: boolean;
   }
   export interface GetUserDetailRequestDto {
     userId: number;
@@ -384,6 +392,7 @@ declare namespace ApiTypes {
       | "Pending"
       | "ConfigurationError"
       | "SystemError"
+      | "Canceled"
       | "CompilationError"
       | "FileError"
       | "RuntimeError"
@@ -428,6 +437,12 @@ declare namespace ApiTypes {
   export interface RegisterResponseDto {
     error?: "ALREADY_LOGGEDIN" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
     token?: string;
+  }
+  export interface RejudgeSubmissionRequestDto {
+    submissionId: number;
+  }
+  export interface RejudgeSubmissionResponseDto {
+    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
   }
   export interface RemoveProblemFilesRequestDto {
     problemId: number;
@@ -532,6 +547,7 @@ declare namespace ApiTypes {
       | "Pending"
       | "ConfigurationError"
       | "SystemError"
+      | "Canceled"
       | "CompilationError"
       | "FileError"
       | "RuntimeError"

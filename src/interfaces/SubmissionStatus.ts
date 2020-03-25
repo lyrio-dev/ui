@@ -13,6 +13,7 @@ export enum SubmissionStatus {
   JudgementFailed = "JudgementFailed",
   ConfigurationError = "ConfigurationError",
   SystemError = "SystemError",
+  Canceled = "Canceled",
   Pending = "Pending"
 }
 
@@ -21,6 +22,7 @@ export enum SubmissionStatusAll {
 
   ConfigurationError = "ConfigurationError",
   SystemError = "SystemError",
+  Canceled = "Canceled",
 
   CompilationError = "CompilationError",
 

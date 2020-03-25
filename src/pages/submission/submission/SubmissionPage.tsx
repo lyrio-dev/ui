@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button } from "semantic-ui-react";
+import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Header, Popup, Ref } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { route } from "navi";
 import { v4 as uuid } from "uuid";
 import AnsiToHtmlConverter from "ansi-to-html";
 import { patch } from "jsondiffpatch";
+import { useNavigation } from "react-navi";
 
 import style from "./SubmissionPage.module.less";
 
@@ -88,7 +89,7 @@ interface SubmissionProgressMessage {
   progressMeta?: SubmissionProgressType;
   progressDetail?: SubmissionProgress<unknown>;
   resultMeta?: Partial<ApiTypes.SubmissionMetaDto>;
-  resultDetail?: SubmissionResult<unknown>;
+  resultDetail?: SubmissionResult<unknown>; // null if the result is "Canceled"
 }
 
 interface TestcaseProgressReference {
@@ -290,7 +291,7 @@ function parseProgress(
     ...progress,
     status,
     statusText,
-    score,
+    score: Math.round(score),
     timeUsed,
     memoryUsed
   };
@@ -308,6 +309,8 @@ interface SubmissionPageProps {
   result: SubmissionResult<unknown>;
   progress?: SubmissionProgress<unknown>;
   progressSubscriptionKey?: string;
+  permissionRejudge: boolean;
+  permissionCancel: boolean;
 }
 
 // Convert the compiler's message to HTML
@@ -318,6 +321,7 @@ function ansiToHtml(ansi: string) {
 
 let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const _ = useIntlMessage();
+  const navigation = useNavigation();
 
   useEffect(() => {
     appState.enterNewPage(`${_("submission.title")} #${props.meta.id}`);
@@ -329,10 +333,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   // score, status, time, memory are in the full info
   // score and status are in this meta, but we still use them in full info
   const meta = props.meta;
+  const [pending, setPending] = useState(meta.status === "Pending");
   const stateFullInfo = useState(
-    props.meta.status === "Pending"
+    pending
       ? parseProgress(props.progress as SubmissionProgress<SubmissionTestcaseResultTraditional>)
-      : parseResult(meta, props.result as SubmissionResult<SubmissionTestcaseResultTraditional>)
+      : parseResult(meta, (props.result || {}) as SubmissionResult<SubmissionTestcaseResultTraditional>)
   );
   const [fullInfo, setFullInfo] = stateFullInfo;
 
@@ -355,14 +360,15 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
 
         const [fullInfo, setFullInfo] = refStateFullInfo.current;
 
-        if (message.resultDetail) {
+        if (message.resultMeta) {
+          setPending(false);
           setFullInfo(
             parseResult(
               {
                 ...meta,
                 ...message.resultMeta
               },
-              message.resultDetail as SubmissionResult<SubmissionTestcaseResultTraditional>
+              (message.resultDetail || {}) as SubmissionResult<SubmissionTestcaseResultTraditional>
             )
           );
         } else {
@@ -815,6 +821,116 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     </>
   );
 
+  const [operationPending, setOperationPending] = useState(false);
+
+  async function onCancel() {
+    if (operationPending) return;
+    setOperationPending(true);
+
+    const { requestError, response } = await SubmissionApi.cancelSubmission({
+      submissionId: meta.id
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else {
+      toast.success(_("submission.success_cancel"));
+      setCancelPopupOpen(false);
+    }
+
+    setOperationPending(false);
+  }
+
+  async function onRejudge() {
+    if (operationPending) return;
+    setOperationPending(true);
+
+    const { requestError, response } = await SubmissionApi.rejudgeSubmission({
+      submissionId: meta.id
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else {
+      toast.success(_("submission.success_rejudge"));
+      navigation.refresh();
+      setRejudgePopupOpen(false);
+    }
+
+    setOperationPending(false);
+  }
+
+  const statusNodeRef = useRef<HTMLElement>();
+
+  const [operationsPopupOpen, setOperationsPopupOpen] = useState(false);
+  const [cancelPopupOpen, setCancelPopupOpen] = useState(false);
+  const [rejudgePopupOpen, setRejudgePopupOpen] = useState(false);
+
+  const showRejudge = props.permissionRejudge;
+  const showCancel = props.permissionCancel && pending;
+
+  const statusPopup = (statusNode: JSX.Element) =>
+    !showRejudge && !showCancel ? (
+      statusNode
+    ) : (
+      <>
+        <Ref innerRef={e => e && e.tagName === "TD" && (statusNodeRef.current = e)}>
+          <Popup
+            trigger={statusNode}
+            open={operationsPopupOpen}
+            onOpen={() => !cancelPopupOpen && !rejudgePopupOpen && setOperationsPopupOpen(true)}
+            onClose={() => setOperationsPopupOpen(false)}
+            disabled={operationPending}
+            hoverable
+            content={
+              <div className={style.operations}>
+                {showCancel && (
+                  <Button
+                    content={_("submission.cancel")}
+                    onClick={() => (setOperationsPopupOpen(false), setCancelPopupOpen(true))}
+                  />
+                )}
+                {showRejudge && (
+                  <Button
+                    content={_("submission.rejudge")}
+                    primary
+                    onClick={() => (setOperationsPopupOpen(false), setRejudgePopupOpen(true))}
+                  />
+                )}
+              </div>
+            }
+            position="bottom left"
+            on="hover"
+          />
+        </Ref>
+        {showCancel && (
+          <Popup
+            open={cancelPopupOpen}
+            onClose={() => setCancelPopupOpen(false)}
+            context={statusNodeRef.current}
+            content={
+              <Button negative content={_("submission.confirm_cancel")} loading={operationPending} onClick={onCancel} />
+            }
+            position="bottom left"
+          />
+        )}
+        {showRejudge && (
+          <Popup
+            open={rejudgePopupOpen}
+            onClose={() => setRejudgePopupOpen(false)}
+            context={statusNodeRef.current}
+            content={
+              <Button
+                negative
+                content={_("submission.confirm_rejudge")}
+                loading={operationPending}
+                onClick={onRejudge}
+              />
+            }
+            position="bottom left"
+          />
+        )}
+      </>
+    );
+
   return (
     <>
       {!isMobile && (
@@ -828,12 +944,18 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
               statusText={fullInfo.statusText}
               answerInfo={answerInfo}
               page="submission"
+              statusPopup={statusPopup}
             />
           </Table.Body>
         </Table>
       )}
       {!isWideScreen && (
-        <SubmissionItemExtraRows submission={displayMeta} answerInfo={answerInfo} isMobile={isMobile} />
+        <SubmissionItemExtraRows
+          submission={displayMeta}
+          answerInfo={answerInfo}
+          isMobile={isMobile}
+          statusPopup={statusPopup}
+        />
       )}
       <FormattableCodeBox
         className={style.mainCodeBox}

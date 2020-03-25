@@ -22,6 +22,9 @@ interface SubmissionItemProps {
 
   // Mouse hover on "answer" column to display
   answerInfo?: React.ReactNode;
+
+  // Mouse hover on "status" to display
+  statusPopup?: (statusNode: React.ReactElement) => React.ReactNode;
 }
 
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
@@ -47,11 +50,13 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
         (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
       }
     >
-      <Table.Cell className={style.columnStatus} textAlign="left">
-        <Link href={props.page !== "submission" ? submissionLink : null}>
-          <StatusText status={submission.status} statusText={props.statusText} />
-        </Link>
-      </Table.Cell>
+      {(props.statusPopup || (x => x))(
+        <Table.Cell className={style.columnStatus} textAlign="left">
+          <Link href={props.page !== "submission" ? submissionLink : null}>
+            <StatusText status={submission.status} statusText={props.statusText} />
+          </Link>
+        </Table.Cell>
+      )}
       <Table.Cell className={style.columnScore}>
         <Link href={props.page !== "submission" ? submissionLink : null}>
           <ScoreText score={submission.score || 0} />
@@ -144,8 +149,13 @@ export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
 // < 768  has more rows
 interface SubmissionItemExtraRowsProps {
   submission: ApiTypes.SubmissionMetaDto;
-  answerInfo?: React.ReactNode;
   isMobile: boolean;
+
+  // Mouse hover on "answer" column to display
+  answerInfo?: React.ReactNode;
+
+  // Mouse hover on "status" to display
+  statusPopup?: (statusNode: React.ReactElement) => React.ReactNode;
 }
 
 export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = props => {
@@ -161,7 +171,7 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
     ? `/problem/${submission.problem.displayId}`
     : `/problem/by-id/${submission.problem.id}`;
 
-  const columnStatus = (
+  const columnStatus = (props.statusPopup || (x => x))(
     <div className={style.extraRowsColumnStatus}>
       <StatusText status={submission.status} />
     </div>

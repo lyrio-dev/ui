@@ -1,5 +1,11 @@
 module.exports = {
   title: "提交记录",
+  cancel: "取消",
+  confirm_cancel: "确认取消",
+  success_cancel: "成功取消评测。",
+  rejudge: "重测",
+  confirm_rejudge: "确认重测",
+  success_rejudge: "成功重新评测。",
   error: {
     NO_SUCH_PROBLEM: "无此题目。",
     NO_SUCH_FILE: "无此文件。",
