@@ -1,19 +1,19 @@
 module.exports = {
-  title: "统计",
-  header: "满分提交",
+  title: "統計",
+  header: "満点の提出",
   type: {
-    Fastest: "最快",
-    MinMemory: "最小内存",
-    MinAnswerSize: "最短",
-    Earlist: "最早"
+    Fastest: "最も速い",
+    MinMemory: "最も小さいメモリー",
+    MinAnswerSize: "最も短い",
+    Earlist: "最も早い"
   },
-  empty: "暂无提交",
-  empty_goback: "返回",
-  header_score_distribution: "得分分布",
-  header_score_prefix_sum: "前缀和",
-  header_score_suffix_sum: "后缀和",
+  empty: "提出はまだない",
+  empty_goback: "戻る",
+  header_score_distribution: "得点分布",
+  header_score_prefix_sum: "prefix sum",
+  header_score_suffix_sum: "suffix sum",
   chart_tooltip: {
-    score: "分数：",
+    score: "得点：",
     count: "数量："
   }
 };

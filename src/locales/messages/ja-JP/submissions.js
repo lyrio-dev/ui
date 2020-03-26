@@ -1,24 +1,24 @@
 module.exports = {
-  title: "提交记录",
+  title: "提出歴史",
   query: {
-    problem_id: "题目",
-    submitter: "提交者",
-    code_language: "语言",
-    code_language_all: "不限语言",
-    status: "状态",
-    status_all: "不限状态",
-    filter: "筛选",
-    my_submissions: "我的提交"
+    problem_id: "問題",
+    submitter: "提出者",
+    code_language: "言語",
+    code_language_all: "全ての言語",
+    status: "状態",
+    status_all: "全ての状態",
+    filter: "検索",
+    my_submissions: "マイ提出"
   },
   query_error: {
-    INVALID_PROBLEM_ID: "无效的题目 ID。",
-    INVALID_USERNAME: "无效的用户名。",
-    NO_SUCH_PROBLEM: "无此题目。",
-    NO_SUCH_USER: "无此用户。"
+    INVALID_PROBLEM_ID: "問題 IDは無効です。",
+    INVALID_USERNAME: "ユザー名は無効です。",
+    NO_SUCH_PROBLEM: "この問題は存在しません。",
+    NO_SUCH_USER: "このユザー名は存在しません。"
   },
   empty: {
-    message_filtered: "找不到符合条件的提交",
-    message_not_filtered: "暂无提交",
-    goback: "返回"
+    message_filtered: "制限を満たす提出はまだない",
+    message_not_filtered: "提出はまだない",
+    goback: "戻る"
   }
 };

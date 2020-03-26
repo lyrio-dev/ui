@@ -1,36 +1,36 @@
 module.exports = {
-  title: "提交记录",
-  cancel: "取消",
-  confirm_cancel: "确认取消",
-  success_cancel: "成功取消评测。",
-  rejudge: "重测",
-  confirm_rejudge: "确认重测",
-  success_rejudge: "成功重新评测。",
+  title: "提出歴史",
+  cancel: "キャンセル",
+  confirm_cancel: "キャンセルを確認",
+  success_cancel: "ジャッジのキャンセルは完成しました。",
+  rejudge: "リージャッジ",
+  confirm_rejudge: "リージャッジを確認",
+  success_rejudge: "リージャッジは完成しました。",
   error: {
-    NO_SUCH_PROBLEM: "无此题目。",
-    NO_SUCH_FILE: "无此文件。",
-    NO_SUCH_SUBMISSION: "无此提交记录。",
-    PERMISSION_DENIED: "权限不足。"
+    NO_SUCH_PROBLEM: "この問題は存在しません。",
+    NO_SUCH_FILE: "このファイルは存在しません。",
+    NO_SUCH_SUBMISSION: "この提出は存在しません。",
+    PERMISSION_DENIED: "パーミッションは足りない。"
   },
-  failed_to_format: "格式化代码出错：{error}",
-  format_code: "格式化代码",
-  show_original_code: "显示原始代码",
-  compilation_message: "编译信息",
-  system_message: "系统信息",
-  sample: "样例",
-  sample_testcase: "样例",
+  failed_to_format: "コードの格式化は失敗しました：{error}",
+  format_code: "コードを格式化にする",
+  show_original_code: "コードをディスプレイする",
+  compilation_message: "コンパイルの情報",
+  system_message: "システムのインフォ",
+  sample: "例",
+  sample_testcase: "例",
   subtask: {
-    title: "子任务",
-    score: "得分："
+    title: "サブタスク",
+    score: "得点："
   },
   testcase: {
-    title: "测试点",
-    score: "得分：",
-    input: "输入文件",
-    output: "答案文件",
-    user_output: "你的输出",
-    user_error: "你的标准错误输出",
-    grader_message: "评分器信息",
-    system_message: "系统信息"
+    title: "テスト点",
+    score: "得点：",
+    input: "入力ファイル",
+    output: "答えのファイル",
+    user_output: "あなたの出力",
+    user_error: "あなたの違い",
+    grader_message: "ジャッジサーバーの情報",
+    system_message: "システムのインフォ"
   }
 };
