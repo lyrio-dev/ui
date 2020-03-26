@@ -1,89 +1,89 @@
 module.exports = {
-  title: "评测设置",
-  header: "评测设置",
-  back_to_problem: "返回",
-  confirm_back_to_problem: "放弃修改并返回",
-  submit: "提交",
-  no_submit_permission: "无提交权限",
-  submit_success: "提交成功。",
+  title: "ジャッジ設定",
+  header: "ジャッジ設定",
+  back_to_problem: "戻る",
+  confirm_back_to_problem: "諦めて戻る",
+  submit: "確認する",
+  no_submit_permission: "パーミッションは足りない",
+  submit_success: "成功で確認しました。",
   submit_error: {
-    NO_SUCH_PROBLEM: "无此题目。",
-    PERMISSION_DENIED: "权限不足。"
+    NO_SUCH_PROBLEM: "この問題は存在しません。",
+    PERMISSION_DENIED: "パーミッションは足りない。"
   },
   edit_raw: {
-    edit_raw: "编辑源代码",
-    parse_error: "YAML 解析错误",
-    cancel: "取消",
-    ok: "确定"
+    edit_raw: "コードをエディットする",
+    parse_error: "YAML パースは失敗しました",
+    cancel: "キャンセル",
+    ok: "確認"
   },
-  problem_type: "题目类型",
+  problem_type: "問題のタイプ",
   problem_types: {
-    TRADITIONAL: "传统"
+    TRADITIONAL: "伝統"
   },
-  switch: "切换",
-  time_limit: "时间限制",
-  memory_limit: "内存限制",
-  input_file: "输入文件",
-  output_file: "输出文件",
-  use_standard_io: "使用标准输入输出",
-  standard_input: "标准输入",
-  standard_output: "标准输出",
-  run_samples: "评测时测试样例",
-  subtask: "子任务",
-  single_subtask: "单个子任务",
-  subtask_testcases_count: "{count} 测试点",
+  switch: "スイッチする",
+  time_limit: "時間制限",
+  memory_limit: "メモリー制限",
+  input_file: "入力ファイル",
+  output_file: "出力ファイル",
+  use_standard_io: "標準入力出力を使用する",
+  standard_input: "標準入力",
+  standard_output: "標準出力",
+  run_samples: "入力出力例はジャッジしますか",
+  subtask: "サブタスク",
+  single_subtask: "シングルサブタスク",
+  subtask_testcases_count: "サブタスク {count} ",
   subtask_type: {
-    Sum: "各测试点分数求和",
-    GroupMin: "各测试点分数取最小值",
-    GroupMul: "各测试点分数按百分比相乘"
+    Sum: "各得点は足す",
+    GroupMin: "各得点に最小の得点",
+    GroupMul: "各得点は百分率で掛ける"
   },
   subtask_options: {
-    sort: "排序",
-    move_up: "上移",
-    move_down: "下移",
-    add_before: "在之前添加子任务",
-    add_after: "在之后添加子任务",
-    add_testcase: "添加测试点",
-    delete: "删除",
-    confirm_delete: "确认删除"
+    sort: "並べ替える",
+    move_up: "上に移る",
+    move_down: "下に移る",
+    add_before: "前にサブタスクを追加する",
+    add_after: "後にサブタスクを追加する",
+    add_testcase: "テスト点を追加する",
+    delete: "削除する",
+    confirm_delete: "削除を確認する"
   },
   auto_add_testcases: {
-    auto_add_testcases: "自动添加测试点",
-    subtask: "子任务",
+    auto_add_testcases: "オートにテスト点は追加する",
+    subtask: "サブタスク",
     help:
-      "输入正则表达式以匹配文件名，使用捕获组来表示输入输出文件名中相同的部分。\n如果两个文件名分别被输入、输出的正则表达式匹配，且其每个捕获组的文本对应相同，则它们成为一组测试点。",
-    input_file: "输入文件",
-    output_file: "输出文件",
-    can_not_compile_for_input: "无法编译用于输入文件的正则表达式：{message}",
-    can_not_compile_for_output: "无法编译用于输出文件的正则表达式：{message}",
-    no_capturing_groups: "无捕获组。你需要在正则表达式中使用捕获组以帮助我们关联输入与输出文件。",
+      "正規表現を入力してテスト点は追加する",
+    input_file: "入力ファイル",
+    output_file: "出力ファイル",
+    can_not_compile_for_input: "入力ファイルの正規表現はコンパイルできません：{message}",
+    can_not_compile_for_output: "出力ファイルの正規表現はコンパイルできません：{message}",
+    no_capturing_groups: "キャプチャグループは存在しません。正規表現の中は使って入力ファイルと出力ファイルをリンクする。",
     capturing_groups_do_not_match:
-      "捕获组数量不匹配，在输入文件中有 {countInInputFilename} 个，但在输出文件中有 {countInOutputFilename} 个。",
-    empty_regex: "输入正则表达式以进行匹配。",
-    matches_count: "共匹配到 {count} 个测试点。",
-    column_input_file: "输入文件",
-    column_output_file: "输出文件",
-    close: "关闭",
-    append: "追加测试点",
-    replace: "替换子任务",
-    confirm_replace: "确认替换"
+      "キャプチャグループ数は同じではありません，入力ファイルは {countInInputFilename} つである，出力ファイルは {countInOutputFilename} つです。",
+    empty_regex: "正規表現を入力してください。",
+    matches_count: "共にテスト点は {count} つ見つけました。",
+    column_input_file: "入力ファイル",
+    column_output_file: "出力ファイル",
+    close: "クローズ",
+    append: "テスト点は追加する",
+    replace: "サブタスクは変更する",
+    confirm_replace: "変更は確認する"
   },
-  expand_testcases: "展开测试点",
-  hide_testcases: "隐藏测试点",
-  no_testcases: "暂无测试点",
+  expand_testcases: "テスト点をディスプレイする",
+  hide_testcases: "テスト点を隠す",
+  no_testcases: "テスト点はまだない",
   testcase: {
-    input_file: "输入文件",
-    output_file: "输出文件"
+    input_file: "入力ファイル",
+    output_file: "出力ファイル"
   },
   testcase_add: {
-    before: "在此测试点前",
-    after: "在此测试点后"
+    before: "このテスト点の前",
+    after: "このテスト点の後"
   },
   testcase_options: {
-    move_up: "上移",
-    move_down: "下移",
-    delete: "删除",
-    confirm_delete: "确认删除"
+    move_up: "上に移る",
+    move_down: "下に移る",
+    delete: "削除する",
+    confirm_delete: "削除を確認する"
   },
-  dependencies: "依赖子任务"
+  dependencies: "サブタスクに依存する"
 };

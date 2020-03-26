@@ -13,6 +13,10 @@ const localeMeta: Record<Locale, LocaleMeta> = {
   [Locale.en_US]: {
     name: "English",
     flag: "us"
+  },
+  [Locale.ja_JP]: {
+    name: "日本語",
+    flag: "jp"
   }
 };
 

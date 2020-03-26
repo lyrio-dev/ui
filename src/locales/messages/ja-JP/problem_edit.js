@@ -1,72 +1,72 @@
 module.exports = {
-  title_edit: "编辑题目",
-  title_new: "新建题目",
-  header_edit: "编辑题目 {idString}",
-  header_new: "新建题目",
-  back_to_problem: "返回",
-  confirm_back_to_problem: "放弃修改并返回",
-  submit: "提交",
-  no_submit_permission: "无提交权限",
-  submit_success: "提交成功。",
+  title_edit: "問題編集",
+  title_new: "新規作成",
+  header_edit: "問題を編集する {idString}",
+  header_new: "题目を新規作成",
+  back_to_problem: "戻る",
+  confirm_back_to_problem: "諦めて戻る",
+  submit: "アプロード",
+  no_submit_permission: "パーミッションは足りない",
+  submit_success: "成功でアプロードしました。",
   submit_error: {
     create: {
-      FAILED: "创建题目失败，发生了未知错误。",
-      PERMISSION_DENIED: "权限不足。"
+      FAILED: "失敗しました。",
+      PERMISSION_DENIED: "パーミッションは足りない。"
     },
     update: {
-      FAILED: "更新题目失败，发生了未知错误。",
-      NO_SUCH_PROBLEM: "无此题目。",
-      PERMISSION_DENIED: "权限不足。"
+      FAILED: "失敗しました。",
+      NO_SUCH_PROBLEM: "この問題はない。",
+      PERMISSION_DENIED: "パーミッションは足りない。"
     }
   },
-  header_samples: "样例",
-  header_tags: "标签",
-  tags_placeholder: "搜索标签 …",
-  no_addable_tags: "没有可以添加的标签。",
+  header_samples: "入力出力例",
+  header_tags: "タッグ",
+  tags_placeholder: "タッグを検索する …",
+  no_addable_tags: "制限を満すタッグは存在しません。",
   content_editor: {
-    title: "标题",
-    preview_all: "预览",
-    default: "设为默认语言",
-    confirm_apply_template: "确认应用模板",
-    confirm_delete: "确认删除语言",
-    section_title: "栏目标题",
-    preview: "预览",
+    title: "タイトル",
+    preview_all: "プレビュー",
+    default: "デフォルト言語を設置します",
+    confirm_apply_template: "テンプレートの使用を確認する",
+    confirm_delete: "言語の削除を確認する",
+    section_title: "セクションのタイトル",
+    preview: "プレビュー",
     add_section: {
-      before_this_section: "在此栏目前",
-      after_this_section: "在此栏目后"
+      before_this_section: "セクションの前",
+      after_this_section: "セクションの後"
     },
-    section_content: "栏目内容",
-    new_sample: "新建样例",
-    sample_input: "样例输入",
-    sample_output: "样例输出",
-    sample_explanation: "样例解释",
+    section_content: "セクションの内容",
+    new_sample: "例を追加します",
+    sample_input: "入力例",
+    sample_output: "出力例",
+    sample_explanation: "例の解釈",
     section_options: {
-      move_up: "上移",
-      move_down: "下移",
-      delete: "删除",
-      confirm_delete: "确认删除"
+      move_up: "上に移る",
+      move_down: "下に移る",
+      delete: "削除",
+      confirm_delete: "削除を確認する"
     },
     section_type: {
-      text: "文本",
-      sample: "样例"
+      text: "テキスト",
+      sample: "例"
     }
   },
   sample_editor: {
-    add_sample_when_empty: "添加样例",
-    sample_id: "样例编号",
+    add_sample_when_empty: "样例を追加する",
+    sample_id: "例の番号",
     warning: {
-      not_referenced: "未在语言「{language}」中引用过",
-      multiple_references: "在语言「{language}」中引用了 {referenceCount} 次"
+      not_referenced: "言語「{language}」で参照されない",
+      multiple_references: "言語「{language}」で {referenceCount} 回　参照される"
     },
     add_sample: {
-      before_this_sample: "在此样例前",
-      after_this_sample: "在此样例后"
+      before_this_sample: "例の前に位置する",
+      after_this_sample: "例の后に位置する"
     },
     options: {
-      move_up: "上移",
-      move_down: "下移",
-      delete: "删除",
-      confirm_delete: "确认删除"
+      move_up: "上に移る",
+      move_down: "下に移る",
+      delete: "削除",
+      confirm_delete: "削除を確認する"
     }
   }
 };

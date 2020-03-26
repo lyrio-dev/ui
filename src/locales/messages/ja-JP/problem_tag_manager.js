@@ -1,22 +1,22 @@
 module.exports = {
-  title: "标签管理",
-  tag_count: "共 {count} 个标签",
+  title: "タッグ管理",
+  tag_count: "共には タッグ{count}つ があります",
   error: {
-    PERMISSION_DENIED: "权限不足。",
-    NO_SUCH_PROBLEM_TAG: "无此题目标签。"
+    PERMISSION_DENIED: "パーミッションは足りない。",
+    NO_SUCH_PROBLEM_TAG: "このタッグは存在しません。"
   },
-  no_tags: "暂无标签",
-  new_tag: "新建标签",
-  edit_tag: "编辑标签",
-  name_placeholder: "标签名",
-  default_language: "默认",
-  add_language: "添加语言",
-  confirm_discard_unsaved: "放弃未保存的编辑",
-  new_tag_button: "新建标签",
-  submit: "保存",
-  success_create: "创建成功。",
-  success_update: "保存成功。",
-  confirm_delete_language: "确认删除语言",
-  confirm_delete_tag: "确认删除标签",
-  close: "关闭"
+  no_tags: "タッグはまだない",
+  new_tag: "タッグは追加する",
+  edit_tag: "タッグをエディタする",
+  name_placeholder: "タッグ名",
+  default_language: "デフォルト",
+  add_language: "言語を追加する",
+  confirm_discard_unsaved: "セーブしない編集を諦める",
+  new_tag_button: "タッグは追加する",
+  submit: "セーブする",
+  success_create: "成功で追加する。",
+  success_update: "成功でセーブする。",
+  confirm_delete_language: "言語の削除を確認する",
+  confirm_delete_tag: "タッグの削除を確認する",
+  close: "クローズ"
 };
