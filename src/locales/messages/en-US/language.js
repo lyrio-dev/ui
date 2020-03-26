@@ -1,5 +1,5 @@
 module.exports = {
-  zh_CN: "中文（简体）",
+  zh_CN: "Chinese (Simplified)",
   en_US: "English",
-  ja_JP: "日本語"
+  ja_JP: "Japanese"
 };
