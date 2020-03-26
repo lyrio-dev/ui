@@ -15,8 +15,10 @@ module.exports = {
   no_files: "ファイルはまだない",
   files_count_and_size: "共には ファイルが{count}つである ，サイズが{totalSize}です",
   files_count_and_size_narrow: "共には ファイルが{count} つである\nサイズが {totalSize}です",
-  files_count_and_size_with_uploading: "共に ファイルが{count} つである，サイズが {totalSize}です。 {uploadingCount} つはアプロードしています",
-  files_count_and_size_with_uploading_narrow: "共に ファイルが{count} つである\nサイズが {totalSize}です\n {uploadingCount} つはアプロードしています",
+  files_count_and_size_with_uploading:
+    "共に ファイルが{count} つである，サイズが {totalSize}です。 {uploadingCount} つはアプロードしています",
+  files_count_and_size_with_uploading_narrow:
+    "共に ファイルが{count} つである\nサイズが {totalSize}です\n {uploadingCount} つはアプロードしています",
   selected_files_count_and_size: "ファイルは {count} つ選んでいる，サイズが {totalSize}です",
   selected_files_count_and_size_narrow: "ファイルは {count} つ選んでいる\nサイズが {totalSize}です",
   upload: "アプロードする",
