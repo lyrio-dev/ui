@@ -408,7 +408,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         >
           <Menu.Item className={style.itemLocale}>
             <Flag name={localeMeta[locale].flag as any} />
-            {localeMeta[locale].name}
+            {_(`language.${locale}`)}
           </Menu.Item>
           <Menu.Item className={style.itemName}>
             <Input
