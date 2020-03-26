@@ -2,7 +2,8 @@ module.exports = {
   menu: {
     profile: "个人资料",
     preference: "偏好设置",
-    security: "安全"
+    security: "安全",
+    privilege: "特权"
   },
   back_to_profile: "返回个人资料",
   back_to_profile_of_user: "返回该用户个人资料",
@@ -11,7 +12,8 @@ module.exports = {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_USER: "无此用户。",
     DUPLICATE_USERNAME: "用户名已被使用。",
-    DUPLICATE_EMAIL: "电子邮箱已被使用。"
+    DUPLICATE_EMAIL: "电子邮箱已被使用。",
+    FAILED: "未知错误。"
   },
   profile: {
     title: "修改个人资料",
@@ -110,5 +112,34 @@ module.exports = {
       success: "修改邮箱地址成功。",
       submit: "提交"
     }
+  },
+  privilege: {
+    title: "特权",
+    header: "特权",
+    privileges: {
+      MANAGE_USER: {
+        name: "管理用户",
+        notes: "可以修改其他用户的个人资料、偏好设置以及安全设置。"
+      },
+      MANAGE_USER_GROUP: {
+        name: "管理用户组",
+        notes: "可以创建、编辑或删除用户组，管理用户组的成员。"
+      },
+      MANAGE_PROBLEM: {
+        name: "管理题目",
+        notes: "可以浏览、编辑所有题目与提交记录，设置题目是否公开以及删除题目。"
+      },
+      MANAGE_CONTEST: {
+        name: "管理比赛",
+        notes: "等做好了比赛功能我再想想这里该写啥。"
+      },
+      MANAGE_DISCUSSION: {
+        name: "管理讨论",
+        notes: "等做好了讨论功能我再想想这里该写啥。"
+      }
+    },
+    admin_only: "仅管理员可修改用户特权。",
+    submit: "提交",
+    success: "特权修改成功。"
   }
 };

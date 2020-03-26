@@ -12,13 +12,15 @@ import { useIntlMessage } from "@/utils/hooks";
 enum EditType {
   Profile = "profile",
   Preference = "preference",
-  Security = "security"
+  Security = "security",
+  Privilege = "privilege"
 }
 
 type DataTypes =
   | ApiTypes.GetUserProfileResponseDto
   | ApiTypes.GetUserPreferenceResponseDto
-  | ApiTypes.GetUserSecuritySettingsResponseDto;
+  | ApiTypes.GetUserSecuritySettingsResponseDto
+  | ApiTypes.GetUserMetaResponseDto;
 interface UserEditPageProps {
   type: EditType;
   data: DataTypes;
@@ -31,6 +33,9 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
   const View = props.view;
 
   const isEditingCurrentUser = props.data.meta.id === appState.currentUser.id;
+
+  const showPrivilegeTab =
+    appState.currentUserPrivileges.length > 0 || appState.currentUser.isAdmin || props.type === EditType.Privilege;
 
   return (
     <>
@@ -49,6 +54,12 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
               <Icon name="lock" />
               {_("user_edit.menu.security")}
             </Menu.Item>
+            {showPrivilegeTab && (
+              <Menu.Item active={props.type === EditType.Privilege} as={Link} href="../privilege">
+                <Icon name="key" />
+                {_("user_edit.menu.privilege")}
+              </Menu.Item>
+            )}
           </Menu>
           {!isEditingCurrentUser && (
             <Message className={style.adminWarning} content={_("user_edit.admin_warning")} warning />
@@ -76,7 +87,8 @@ export default route({
     const { fetchData, View } = await {
       [EditType.Profile]: import("./ProfileView"),
       [EditType.Preference]: import("./PreferenceView"),
-      [EditType.Security]: import("./SecurityView")
+      [EditType.Security]: import("./SecurityView"),
+      [EditType.Privilege]: import("./PrivilegeView")
     }[type];
 
     const response = await fetchData(parseInt(request.params.userId) || 0);

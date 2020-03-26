@@ -1,13 +1,9 @@
 module.exports = {
-  title: {
-    profile: "Edit profile",
-    preference: "Preference",
-    security: "Security settings"
-  },
   menu: {
     profile: "Profile",
     preference: "Preference",
-    security: "Security"
+    security: "Security",
+    privilege: "Privileges"
   },
   back_to_profile: "Back to profile",
   back_to_profile_of_user: "Bask to the user's profile",
@@ -16,7 +12,8 @@ module.exports = {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_USER: "No such user.",
     DUPLICATE_USERNAME: "Username already taken.",
-    DUPLICATE_EMAIL: "Email already used."
+    DUPLICATE_EMAIL: "Email already used.",
+    FAILED: "Unknown error."
   },
   profile: {
     avatar: {
@@ -114,5 +111,34 @@ module.exports = {
       success: "Email changed successfully.",
       submit: "Submit"
     }
+  },
+  privilege: {
+    title: "Privileges",
+    header: "Privileges",
+    privileges: {
+      MANAGE_USER: {
+        name: "Manage user",
+        notes: "Modify other user's profile, preference and security settings."
+      },
+      MANAGE_USER_GROUP: {
+        name: "Manage user group",
+        notes: "Create, edit and delete user groups. Manage user groups' members."
+      },
+      MANAGE_PROBLEM: {
+        name: "Manage problem",
+        notes: "View, edit all problems and submissions, set problem public or not and delete problems."
+      },
+      MANAGE_CONTEST: {
+        name: "Manage contest",
+        notes: "Placeholder."
+      },
+      MANAGE_DISCUSSION: {
+        name: "Manage discussion",
+        notes: "Placeholder."
+      }
+    },
+    admin_only: "Only admins can change user's privileges.",
+    submit: "Submit",
+    success: "Privileges updated successfully"
   }
 };

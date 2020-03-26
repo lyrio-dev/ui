@@ -100,3 +100,24 @@
   padding-bottom: 10px !important;
   border-bottom: 1px solid #ddd !important;
 }
+
+.privilegeRow {
+  display: flex;
+  margin-top: 12px;
+
+  :global(.checkbox) {
+    width: 250px;
+  }
+
+  .notes {
+    margin-top: 0;
+  }
+}
+
+.notesAdminOnly {
+  margin-top: 14px;
+
+  + :global(.button) {
+    margin-top: 14px !important;
+  }
+}

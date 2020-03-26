@@ -203,8 +203,14 @@ declare namespace ApiTypes {
     userMetas?: ApiTypes.UserMetaDto[];
     count?: number;
   }
+  export interface GetUserMetaRequestDto {
+    userId?: number;
+    username?: string;
+    getPrivileges?: boolean;
+  }
   export interface GetUserMetaResponseDto {
-    userMeta?: ApiTypes.UserMetaDto;
+    error?: "NO_SUCH_USER";
+    meta?: ApiTypes.UserMetaDto;
     privileges?: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
   }
   export interface GetUserPreferenceRequestDto {
@@ -268,11 +274,9 @@ declare namespace ApiTypes {
   }
   namespace Parameters {
     export type Email = string;
-    export type GetPrivileges = boolean;
     export type GroupId = string;
     export type MaintainceKey = string;
     export type Query = string;
-    export type UserId = string;
     export type Username = string;
     export type Wildcard = "START" | "END" | "BOTH";
   }
