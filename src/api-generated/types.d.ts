@@ -107,7 +107,7 @@ declare namespace ApiTypes {
     tags?: ApiTypes.ProblemTagWithAllLocalesDto[];
   }
   export interface GetAllProblemTagsRequestDto {
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface GetAllProblemTagsResponseDto {
     tags: ApiTypes.LocalizedProblemTagDto[];
@@ -132,9 +132,9 @@ declare namespace ApiTypes {
     id?: number;
     displayId?: number;
     owner?: boolean;
-    localizedContentsOfLocale?: "en_US" | "zh_CN";
+    localizedContentsOfLocale?: "en_US" | "zh_CN" | "ja_JP";
     localizedContentsOfAllLocales?: boolean;
-    tagsOfLocale?: "en_US" | "zh_CN";
+    tagsOfLocale?: "en_US" | "zh_CN" | "ja_JP";
     samples?: boolean;
     judgeInfo?: boolean;
     testData?: boolean;
@@ -168,7 +168,7 @@ declare namespace ApiTypes {
   }
   export interface GetSubmissionDetailRequestDto {
     submissionId: string;
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface GetSubmissionDetailResponseDto {
     error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
@@ -203,8 +203,14 @@ declare namespace ApiTypes {
     userMetas?: ApiTypes.UserMetaDto[];
     count?: number;
   }
+  export interface GetUserMetaRequestDto {
+    userId?: number;
+    username?: string;
+    getPrivileges?: boolean;
+  }
   export interface GetUserMetaResponseDto {
-    userMeta?: ApiTypes.UserMetaDto;
+    error?: "NO_SUCH_USER";
+    meta?: ApiTypes.UserMetaDto;
     privileges?: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
   }
   export interface GetUserPreferenceRequestDto {
@@ -256,7 +262,7 @@ declare namespace ApiTypes {
     id: number;
     name: string;
     color: string;
-    nameLocale: "en_US" | "zh_CN";
+    nameLocale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface LoginRequestDto {
     username: string;
@@ -268,11 +274,9 @@ declare namespace ApiTypes {
   }
   namespace Parameters {
     export type Email = string;
-    export type GetPrivileges = boolean;
     export type GroupId = string;
     export type MaintainceKey = string;
     export type Query = string;
-    export type UserId = string;
     export type Username = string;
     export type Wildcard = "START" | "END" | "BOTH";
   }
@@ -302,7 +306,7 @@ declare namespace ApiTypes {
     permissionLevel: 1 | 2;
   }
   export interface ProblemLocalizedContentDto {
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
     title: string;
     contentSections: ApiTypes.ProblemContentSectionDto[];
   }
@@ -312,7 +316,7 @@ declare namespace ApiTypes {
     type: "TRADITIONAL";
     isPublic: boolean;
     ownerId: number;
-    locales: ("en_US" | "zh_CN")[];
+    locales: ("en_US" | "zh_CN" | "ja_JP")[];
     submissionCount?: number;
     acceptedSubmissionCount?: number;
   }
@@ -338,7 +342,7 @@ declare namespace ApiTypes {
   }
   export interface ProblemTagLocalizedNameDto {
     name: string;
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface ProblemTagWithAllLocalesDto {
     id?: number;
@@ -354,7 +358,7 @@ declare namespace ApiTypes {
     wildcard?: ApiTypes.Parameters.Wildcard;
   }
   export interface QueryProblemSetRequestDto {
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
     keyword?: string;
     tagIds?: number[];
     ownerId?: number;
@@ -374,7 +378,7 @@ declare namespace ApiTypes {
     meta: ApiTypes.ProblemMetaDto;
     title: string;
     tags: ApiTypes.LocalizedProblemTagDto[];
-    resultLocale: "en_US" | "zh_CN";
+    resultLocale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface QueryProblemSetResponsePermissionDto {
     createProblem?: boolean;
@@ -383,7 +387,7 @@ declare namespace ApiTypes {
     filterNonpublic?: boolean;
   }
   export interface QuerySubmissionRequestDto {
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
     problemId: number;
     problemDisplayId: number;
     submitter: string;
@@ -416,7 +420,7 @@ declare namespace ApiTypes {
     progressSubscriptionKey?: string;
   }
   export interface QuerySubmissionStatisticsRequestDto {
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
     problemId?: number;
     problemDisplayId?: number;
     statisticsType: "Fastest" | "MinMemory" | "MinAnswerSize" | "Earlist";
@@ -583,7 +587,7 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
   }
   export interface UpdateProblemRequestUpdatingLocalizedContentDto {
-    locale: "en_US" | "zh_CN";
+    locale: "en_US" | "zh_CN" | "ja_JP";
     title?: string;
     contentSections?: ApiTypes.ProblemContentSectionDto[];
   }
@@ -663,8 +667,8 @@ declare namespace ApiTypes {
     registrationTime: string; // date-time
   }
   export interface UserPreferenceDto {
-    systemLocale?: "en_US" | "zh_CN";
-    contentLocale?: "en_US" | "zh_CN";
+    systemLocale?: "en_US" | "zh_CN" | "ja_JP";
+    contentLocale?: "en_US" | "zh_CN" | "ja_JP";
     doNotFormatCodeByDefault?: boolean;
     codeFormatterOptions?: string;
     defaultCodeLanguage?: string;

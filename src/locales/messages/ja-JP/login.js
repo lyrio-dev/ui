@@ -11,9 +11,9 @@ module.exports = {
   empty_username: "ユザー名を入力してください",
   invalid_username: "無効なユーザ名",
   empty_password: "パスウードを入力してください",
-  invalid_password: "無効なパスウード（長さは 6から 32までになければならない）",
+  invalid_password: "無効なパスウード（長さは 6 から 32 までになければならない）",
   already_loggedin: "すでにログインしています。",
   no_such_user: "ユザーは存在しません。",
   wrong_password: "パスウードは正しくないです",
-  welcome: "お帰りなさい，{username}さん！"
+  welcome: "お帰りなさい，{username} さん！"
 };

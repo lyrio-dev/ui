@@ -31,7 +31,7 @@ module.exports = {
   run_samples: "入力出力例はジャッジしますか",
   subtask: "サブタスク",
   single_subtask: "シングルサブタスク",
-  subtask_testcases_count: "サブタスク {count} ",
+  subtask_testcases_count: "{count}",
   subtask_type: {
     Sum: "各得点は足す",
     GroupMin: "各得点に最小の得点",

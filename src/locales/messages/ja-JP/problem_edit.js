@@ -56,7 +56,7 @@ module.exports = {
     sample_id: "例の番号",
     warning: {
       not_referenced: "言語「{language}」で参照されない",
-      multiple_references: "言語「{language}」で {referenceCount} 回　参照される"
+      multiple_references: "言語「{language}」で {referenceCount} 回参照される"
     },
     add_sample: {
       before_this_sample: "例の前に位置する",

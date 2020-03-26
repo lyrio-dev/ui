@@ -26,5 +26,5 @@ module.exports = {
   response_already_loggedin: "すでにログインしました。",
   response_duplicate_username: "このユザー名はもう存在します。",
   response_duplicate_email: "このメールのアカウントはもう存在します。",
-  success: "新規登録は完成しました，{username}さん！"
+  success: "新規登録は完成しました，{username} さん！"
 };

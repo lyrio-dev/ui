@@ -1,6 +1,6 @@
 module.exports = {
   title: "タッグ管理",
-  tag_count: "共には タッグ{count}つ があります",
+  tag_count: "共には タッグ {count} つ があります",
   error: {
     PERMISSION_DENIED: "パーミッションは足りない。",
     NO_SUCH_PROBLEM_TAG: "このタッグは存在しません。"

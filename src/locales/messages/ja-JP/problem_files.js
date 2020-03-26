@@ -13,14 +13,14 @@ module.exports = {
   new_filename: "新しいファイル名",
   rename: "名を変更する",
   no_files: "ファイルはまだない",
-  files_count_and_size: "共には ファイルが{count}つである ，サイズが{totalSize}です",
-  files_count_and_size_narrow: "共には ファイルが{count} つである\nサイズが {totalSize}です",
+  files_count_and_size: "共には ファイルが {count} つである ，サイズが {totalSize} です",
+  files_count_and_size_narrow: "共には ファイルが {count} つである\nサイズが {totalSize} です",
   files_count_and_size_with_uploading:
-    "共に ファイルが{count} つである，サイズが {totalSize}です。 {uploadingCount} つはアプロードしています",
+    "共に ファイルが {count} つである，サイズが {totalSize} です。{uploadingCount} つはアプロードしています",
   files_count_and_size_with_uploading_narrow:
-    "共に ファイルが{count} つである\nサイズが {totalSize}です\n {uploadingCount} つはアプロードしています",
-  selected_files_count_and_size: "ファイルは {count} つ選んでいる，サイズが {totalSize}です",
-  selected_files_count_and_size_narrow: "ファイルは {count} つ選んでいる\nサイズが {totalSize}です",
+    "共に ファイルが {count} つである\nサイズが {totalSize} です\n{uploadingCount} つはアプロードしています",
+  selected_files_count_and_size: "ファイルは {count} つ選んでいる，サイズが {totalSize} です",
+  selected_files_count_and_size_narrow: "ファイルは {count} つ選んでいる\nサイズが {totalSize} です",
   upload: "アプロードする",
   confirm_override_question: "本当に以下のファイルをオーバーライドしますか？",
   confirm_override: "確認する",
@@ -36,8 +36,8 @@ module.exports = {
     PERMISSION_DENIED: "パーミッションは足りない。",
     NO_SUCH_PROBLEM: "この問題は存在しません。",
     NO_SUCH_FILE: "このファイルは存在しません。",
-    TOO_MANY_FILES: "ファイル数は制限をオーバーしました，adminに手伝いを頼んでください。",
-    TOTAL_SIZE_TOO_LARGE: "データのサイズは制限をオーバーしました，adminに手伝いを頼んでください。",
+    TOO_MANY_FILES: "ファイル数は制限をオーバーしました，管理者に手伝いを頼んでください。",
+    TOTAL_SIZE_TOO_LARGE: "データのサイズは制限をオーバーしました，管理者に手伝いを頼んでください。",
     INVALID_OPERATION: "無効な操作です，やり直してください。",
     NOT_UPLOADED: "アプロードしたファイルは存在しません。"
   }

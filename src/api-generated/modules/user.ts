@@ -5,6 +5,7 @@
 import { createGetApi, createPostApi } from "@/api";
 
 export type SearchUserResponseDto = ApiTypes.SearchUserResponseDto;
+export type GetUserMetaRequestDto = ApiTypes.GetUserMetaRequestDto;
 export type GetUserMetaResponseDto = ApiTypes.GetUserMetaResponseDto;
 export type SetUserPrivilegesRequestDto = ApiTypes.SetUserPrivilegesRequestDto;
 export type SetUserPrivilegesResponseDto = ApiTypes.SetUserPrivilegesResponseDto;
@@ -28,10 +29,7 @@ export type UpdateUserEmailRequestDto = ApiTypes.UpdateUserEmailRequestDto;
 export type UpdateUserEmailResponseDto = ApiTypes.UpdateUserEmailResponseDto;
 
 export const searchUser = createGetApi<{ query: string; wildcard?: string }, SearchUserResponseDto>("user/searchUser");
-export const getUserMeta = createGetApi<
-  { userId?: string; username?: string; getPrivileges?: string },
-  GetUserMetaResponseDto
->("user/getUserMeta");
+export const getUserMeta = createPostApi<GetUserMetaRequestDto, GetUserMetaResponseDto>("user/getUserMeta");
 export const setUserPrivileges = createPostApi<SetUserPrivilegesRequestDto, SetUserPrivilegesResponseDto>(
   "user/setUserPrivileges"
 );

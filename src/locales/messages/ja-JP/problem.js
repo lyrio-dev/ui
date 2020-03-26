@@ -2,7 +2,7 @@ module.exports = {
   title: "問題",
   meta_labels: {
     non_public: "掲載しません",
-    no_display_id: "IDはまだ与えない"
+    no_display_id: "ID はまだ与えない"
   },
   fileio: {
     fileio: "ファイル IO",
@@ -29,8 +29,8 @@ module.exports = {
     judge_settings: "ジャッジ設定",
     permission_manage: "パーミッション管理",
     permission_manager_description: "問題 {idString}",
-    set_display_id: "問題 IDを与える",
-    set_display_id_new: "新しい ID（空またはゾロとしたら、IDは削除する）",
+    set_display_id: "問題 ID を与える",
+    set_display_id_new: "新しい ID（空またはゾロとしたら、ID は削除する）",
     set_display_id_submit: "設置",
     set_public: "掲載します",
     set_non_public: "不掲載をする",
@@ -42,13 +42,13 @@ module.exports = {
     set_public: {
       PERMISSION_DENIED: "パーミッションは足りない。",
       NO_SUCH_PROBLEM: "問題は存在しません。",
-      NO_DISPLAY_ID: "IDを設定してください。"
+      NO_DISPLAY_ID: "ID を設定してください。"
     },
     set_display_id: {
-      INVALID_DISPLAY_ID: "IDは整数なければなりません。",
+      INVALID_DISPLAY_ID: "ID は整数なければなりません。",
       PERMISSION_DENIED: "パーミッションは足りない。",
       NO_SUCH_PROBLEM: "問題は存在しません。",
-      PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "掲載する問題は IDを持たなければなりません。",
+      PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "掲載する問題は ID を持たなければなりません。",
       DUPLICATE_DISPLAY_ID: "ID {displayId} をもう使っています。"
     },
     get_permissions: {
