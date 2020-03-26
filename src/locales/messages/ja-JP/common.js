@@ -1,6 +1,6 @@
 module.exports = {
   navbar: {
-    home: "マイ ページ",
+    home: "ホームページ",
     problem_set: "問題",
     contests: "コンテスト",
     submissions: "提出結果",
