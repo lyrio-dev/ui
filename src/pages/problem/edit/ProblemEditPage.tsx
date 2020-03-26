@@ -650,6 +650,39 @@ const sectionsTemplate: Record<Locale, LocalizedContentSection[]> = {
       type: "TEXT",
       text: ""
     }
+  ],
+  [Locale.ja_JP]: [
+    {
+      uuid: uuid(),
+      sectionTitle: "問題文",
+      type: "TEXT",
+      text: ""
+    },
+    {
+      uuid: uuid(),
+      sectionTitle: "入力",
+      type: "TEXT",
+      text: ""
+    },
+    {
+      uuid: uuid(),
+      sectionTitle: "出力",
+      type: "TEXT",
+      text: ""
+    },
+    {
+      uuid: uuid(),
+      sectionTitle: "例",
+      type: "SAMPLE",
+      sampleId: 0,
+      text: ""
+    },
+    {
+      uuid: uuid(),
+      sectionTitle: "制約",
+      type: "TEXT",
+      text: ""
+    }
   ]
 };
 
