@@ -50,13 +50,13 @@ module.exports = {
   auto_add_testcases: {
     auto_add_testcases: "オートにテスト点は追加する",
     subtask: "サブタスク",
-    help:
-      "正規表現を入力してテスト点は追加する",
+    help: "正規表現を入力してテスト点は追加する",
     input_file: "入力ファイル",
     output_file: "出力ファイル",
     can_not_compile_for_input: "入力ファイルの正規表現はコンパイルできません：{message}",
     can_not_compile_for_output: "出力ファイルの正規表現はコンパイルできません：{message}",
-    no_capturing_groups: "キャプチャグループは存在しません。正規表現の中は使って入力ファイルと出力ファイルをリンクする。",
+    no_capturing_groups:
+      "キャプチャグループは存在しません。正規表現の中は使って入力ファイルと出力ファイルをリンクする。",
     capturing_groups_do_not_match:
       "キャプチャグループ数は同じではありません，入力ファイルは {countInInputFilename} つである，出力ファイルは {countInOutputFilename} つです。",
     empty_regex: "正規表現を入力してください。",
