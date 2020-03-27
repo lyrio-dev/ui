@@ -8,6 +8,7 @@ export default async function initApp() {
   if (appState.token) {
     // Get current logged in user's meta
     const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
+    if (requestError) throw new Error(requestError);
     appState.currentUser = response.userMeta;
     appState.currentUserPrivileges = response.userPrivileges || [];
     appState.userPreference = response.userPreference || {};
