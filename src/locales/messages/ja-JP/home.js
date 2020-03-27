@@ -1,3 +1,3 @@
 module.exports = {
-  title: "ホームページ"
+  title: "ホーム"
 };

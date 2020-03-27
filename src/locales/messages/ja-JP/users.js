@@ -1,11 +1,11 @@
 module.exports = {
-  title: "ユザー",
+  title: "ユーザ",
   error: {
     TAKE_TOO_MANY: "[TBT] Requested number of items per page exceeds the limit."
   },
   rank: "ランキング",
-  username: "ユザー名",
+  username: "ユーザ名",
   bio: "自己紹介",
-  accepted_problem_count: "問題解決数",
+  accepted_problem_count: "解いた問題数",
   rating: "レーティング"
 };

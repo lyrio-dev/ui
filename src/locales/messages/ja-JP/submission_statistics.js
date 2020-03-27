@@ -7,18 +7,18 @@ module.exports = {
   },
   header: "満点の提出",
   type: {
-    Fastest: "最も速い",
-    MinMemory: "最も小さいメモリー",
-    MinAnswerSize: "最も短い",
-    Earlist: "最も早い"
+    Fastest: "実行時間順",
+    MinMemory: "使用メモリ順",
+    MinAnswerSize: "コード長順",
+    Earlist: "提出日時順"
   },
-  empty: "提出はまだない",
+  empty: "提出はありません",
   empty_goback: "戻る",
   header_score_distribution: "得点分布",
   header_score_prefix_sum: "prefix sum",
   header_score_suffix_sum: "suffix sum",
   chart_tooltip: {
     score: "得点：",
-    count: "数量："
+    count: "個数："
   }
 };
