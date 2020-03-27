@@ -1,0 +1,5 @@
+{
+    "siteName": "Demo",
+    "apiEndpoint": "https://api.demo.syzoj.org:52000",
+    "crossOrigin": true
+}

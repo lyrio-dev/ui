@@ -41,38 +41,196 @@ function escapeHTML(str) {
     }[tag] || tag)
   );
 }
+
+const appConfig = htmlWebpackPlugin.options.appConfig;
+
+htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
+  if (tag.tagName === "script") {
+    if (!tag.attributes) tag.attributes = {};
+    tag.attributes.onerror = "handleLoadingError()";
+  }
+})
 %>
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link href="https://fonts.googleapis.com/css?family=Saira:500&display=block" rel="stylesheet">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <script>
-    window._appConfig = <%= safeStringify(global.appConfig) %>;
-    </script>
+  <link href="https://fonts.googleapis.com/css?family=Saira:500&display=block" rel="stylesheet">
 
-    <% if (global.appConfig.crossOrigin) { %>
-    <script
-      src="<%= escapeHTML(global.appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
-      data-slave="<%= escapeHTML(global.appConfig.apiEndpoint + "api/cors/") %>"
-    >
-    </script>
-    <% } %>
+  <!-- Styles for error screen -->
+  <style id="error-style">
+    #error {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999999999;
+      width: calc(100vw - 28px);
+      margin: 0 14px 0 14px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: rgba(0, 0, 0, 0.5);
+      font-family: "Helvetica Neue", Helvetica, Roboto, "Segoe", Tahoma, sans-serif;
+      overflow: auto;
+    }
 
-    <title><%= global.appConfig.siteName %></title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+    #error::before,
+    #error::after {
+      content: "";
+      flex-basis: 90px;
+      flex-shrink: 999999999;
+    }
+
+    #error ::selection {
+      background-color: #cce2ff;
+    }
+
+    #error-title {
+      display: flex;
+      align-items: center;
+      color: rgba(0, 0, 0, 0.87);
+      margin: 32px 0 25px 0;
+    }
+
+    #error-icon {
+      width: 50px;
+      position: relative;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 0, 0, 0.5);
+      margin-right: 20px;
+    }
+
+    #error-icon::after,
+    #error-icon::before {
+      position: absolute;
+      content: "";
+      width: 5%;
+      left: 47.5%;
+      top: 15%;
+      height: 70%;
+      background-color: rgba(0, 0, 0, 0.5);
+      transform: rotate(-45deg);
+    }
+
+    #error-icon::before {
+      transform: rotate(45deg);
+    }
+
+    #error h1 {
+      font-weight: normal;
+      margin: 0;
+    }
+
+    #error p {
+      margin: 7px 0 7px 0;
+      font-size: 14px;
+    }
+
+    #error pre {
+      box-sizing: border-box;
+      max-width: 100%;
+      overflow: auto;
+      margin: 25px 0 0 0;
+      background: #f3f3f3;
+      padding: 13px;
+      flex-shrink: 1;
+    }
+
+    #error-footer {
+      font-size: 13px;
+      color: rgba(0, 0, 0, 0.4);
+      margin: 25px 0 25px 0;
+    }
+
+    #error a {
+      color: #4183c4;
+      text-decoration: none;
+    }
+
+    #error a:hover {
+      color: #1e70bf;
+    }
+  </style>
+
+  <!-- Initialize application config -->
+  <script>
+    window.appConfig = <%= safeStringify(appConfig) %>;
+  </script>
+
+  <!-- Handle script errors -->
+  <script>
+    function fatalError(messages, stack) {
+      var error = document.getElementById("error");
+      if (error.style.display === "") return;
+
+      var root = document.getElementById("root");
+      if (root) document.body.removeChild(root);
+
+      var styles = document.getElementsByTagName("style");
+      for (var i = styles.length - 1; i >= 0; i--) {
+        if (styles[i].id === "error-style") continue;
+        styles[i].parentNode.removeChild(styles[i]);
+      }
+
+      var footer = document.getElementById("error-footer");
+
+      for (var i in messages) {
+        var p = document.createElement("p");
+        p.innerText = messages[i];
+        error.insertBefore(p, footer);
+      }
+
+      if (stack) {
+        var pre = document.createElement("pre");
+        pre.innerText = stack;
+        error.insertBefore(pre, footer);
+      }
+
+      error.style.display = "";
+    }
+
+    function handleLoadingError() {
+      fatalError([
+        "There's an error loading the application. Please check your network connection.",
+        "加载应用程序时出现错误，请检查您的网络连接。"
+      ]);
+    }
+  </script>
+
+  <title><%= appConfig.siteName %></title>
+
+  <%= htmlWebpackPlugin.tags.headTags %>
+</head>
+
+<body>
+  <div id="root"></div>
+  <div id="error" style="display: none; ">
+    <div id="error-title">
+      <div id="error-icon"></div>
+      <h1>Error</h1>
+    </div>
+    <div id="error-footer">
+      Powered by <a href="https://github.com/syzoj" target="_blank">SYZOJ</a>
+    </div>
+  </div>
+  <% if (appConfig.crossOrigin) { %>
+  <script
+    src="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
+    data-slave="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/") %>"
+    onerror="handleLoadingError()"
+  >
+  </script>
+  <% } %>
+  <%= htmlWebpackPlugin.tags.bodyTags %>
+</body>
+
 </html>

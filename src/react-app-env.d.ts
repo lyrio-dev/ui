@@ -15,4 +15,14 @@ declare module "*.wasm" {
   export default url;
 }
 
+interface Window {
+  appConfig: {
+    siteName: string;
+    apiEndpoint: string;
+    crossOrigin: boolean;
+  };
+
+  fatalError(messages: string[], stack?: string): void;
+}
+
 /// <reference types="react-scripts" />
