@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Grid, Image, Header, Card, Button, List, Icon, Segment, Popup, Divider } from "semantic-ui-react";
+import React, { useEffect } from "react";
+import { Grid, Header, Button, List, Icon, Segment, Popup, Divider } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { route } from "navi";
 import { Link } from "react-navi";
 import dayjs from "dayjs";
+import { FormattedMessage } from "react-intl";
 
 import style from "./UserPage.module.less";
 
 import { appState } from "@/appState";
 import { UserApi } from "@/api";
-import toast from "@/utils/toast";
 import { useIntlMessage } from "@/utils/hooks";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 async function fetchData(userId: number): Promise<[Date, Required<typeof response>]> {
   const now = new Date();
@@ -22,10 +22,8 @@ async function fetchData(userId: number): Promise<[Date, Required<typeof respons
     now: now.toISOString()
   });
 
-  if (requestError) {
-    toast.error(requestError);
-    return [null, null];
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`user.error.${response.error}`} />));
 
   return [now, response as Required<typeof response>];
 }
@@ -373,15 +371,9 @@ let UserPage: React.FC<UserPageProps> = props => {
 
 UserPage = observer(UserPage);
 
-export default route({
-  async getView(request) {
-    const userId = parseInt(request.params.userId) || 0;
-    const [now, response] = await fetchData(userId);
+export default defineRoute(async request => {
+  const userId = parseInt(request.params.userId) || 0;
+  const [now, response] = await fetchData(userId);
 
-    if (!response) {
-      return null;
-    }
-
-    return <UserPage now={now} {...response} />;
-  }
+  return <UserPage now={now} {...response} />;
 });

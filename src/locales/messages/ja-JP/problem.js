@@ -38,30 +38,13 @@ module.exports = {
     set_non_public_confirm: "不掲載を確認する",
     delete: "削除"
   },
-  action_error: {
-    set_public: {
-      PERMISSION_DENIED: "パーミッションは足りない。",
-      NO_SUCH_PROBLEM: "問題は存在しません。",
-      NO_DISPLAY_ID: "ID を設定してください。"
-    },
-    set_display_id: {
-      INVALID_DISPLAY_ID: "ID は整数なければなりません。",
-      PERMISSION_DENIED: "パーミッションは足りない。",
-      NO_SUCH_PROBLEM: "問題は存在しません。",
-      PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "掲載する問題は ID を持たなければなりません。",
-      DUPLICATE_DISPLAY_ID: "ID {displayId} をもう使っています。"
-    },
-    get_permissions: {
-      PERMISSION_DENIED: "パーミッションは足りない。",
-      NO_SUCH_PROBLEM: "この問題は存在しません。"
-    },
-    set_permissions: {
-      NO_SUCH_PROBLEM: "この問題は存在しません。"
-    },
-    submit: {
-      PERMISSION_DENIED: "パーミッションは足りない。",
-      NO_SUCH_PROBLEM: "この問題は存在しません。"
-    }
+  error: {
+    PERMISSION_DENIED: "パーミッションは足りない。",
+    NO_SUCH_PROBLEM: "問題は存在しません。",
+    NO_DISPLAY_ID: "ID を設定してください。",
+    INVALID_DISPLAY_ID: "ID は整数なければなりません。",
+    PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "掲載する問題は ID を持たなければなりません。",
+    DUPLICATE_DISPLAY_ID: "ID {displayId} をもう使っています。"
   },
   submit: {
     back_to_statement: "戻る",

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Header, Checkbox, TextArea, Button, Select, Flag } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { useNavigation } from "react-navi";
+import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
@@ -20,13 +21,12 @@ import {
   getDefaultCodeLanguageOptions
 } from "@/interfaces/CodeLanguage";
 import { HighlightedCodeBox } from "@/components/CodeBox";
+import { RouteError } from "@/AppRouter";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserPreference({ userId });
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`user_edit.error.${response.error}`} />));
 
   await CodeFormatter.ready;
 

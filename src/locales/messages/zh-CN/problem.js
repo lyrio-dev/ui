@@ -38,30 +38,13 @@ module.exports = {
     set_non_public_confirm: "确认取消公开",
     delete: "删除"
   },
-  action_error: {
-    set_public: {
-      PERMISSION_DENIED: "权限不足。",
-      NO_SUCH_PROBLEM: "无此题目。",
-      NO_DISPLAY_ID: "请先设置题目 ID。"
-    },
-    set_display_id: {
-      INVALID_DISPLAY_ID: "ID 必须为整数。",
-      PERMISSION_DENIED: "权限不足。",
-      NO_SUCH_PROBLEM: "当前题目不存在。",
-      PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "已公开的题目必须拥有 ID。",
-      DUPLICATE_DISPLAY_ID: "ID {displayId} 已被使用。"
-    },
-    get_permissions: {
-      PERMISSION_DENIED: "权限不足。",
-      NO_SUCH_PROBLEM: "无此题目。"
-    },
-    set_permissions: {
-      NO_SUCH_PROBLEM: "无此题目。"
-    },
-    submit: {
-      PERMISSION_DENIED: "权限不足。",
-      NO_SUCH_PROBLEM: "无此题目。"
-    }
+  error: {
+    PERMISSION_DENIED: "权限不足。",
+    NO_SUCH_PROBLEM: "无此题目。",
+    NO_DISPLAY_ID: "请先设置题目 ID。",
+    INVALID_DISPLAY_ID: "ID 必须为整数。",
+    PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "已公开的题目必须拥有 ID。",
+    DUPLICATE_DISPLAY_ID: "ID {displayId} 已被使用。"
   },
   submit: {
     back_to_statement: "返回题面",

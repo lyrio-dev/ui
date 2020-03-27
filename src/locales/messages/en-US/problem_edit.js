@@ -8,16 +8,10 @@ module.exports = {
   submit: "Submit",
   no_submit_permission: "No Permission",
   submit_success: "Successfully submitted.",
-  submit_error: {
-    create: {
-      FAILED: "Failed to create new problem due to unknown error.",
-      PERMISSION_DENIED: "Permission denied."
-    },
-    update: {
-      FAILED: "Failed to update problem due to unknown error.",
-      NO_SUCH_PROBLEM: "No such problem.",
-      PERMISSION_DENIED: "Permission denied."
-    }
+  error: {
+    FAILED: "Unknown error.",
+    NO_SUCH_PROBLEM: "No such problem.",
+    PERMISSION_DENIED: "Permission denied."
   },
   header_samples: "Samples",
   header_tags: "Tags",

@@ -6,7 +6,7 @@ module.exports = {
   submit: "確認する",
   no_submit_permission: "パーミッションは足りない",
   submit_success: "成功で確認しました。",
-  submit_error: {
+  error: {
     NO_SUCH_PROBLEM: "この問題は存在しません。",
     PERMISSION_DENIED: "パーミッションは足りない。"
   },

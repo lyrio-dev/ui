@@ -1,5 +1,9 @@
 module.exports = {
   title: "Problem Set",
+  error: {
+    PERMISSION_DENIED: "Permission denied.",
+    TAKE_TOO_MANY: "Requested number of items per page exceeds the limit."
+  },
   search_placeholder: {
     title: "Search ID / title ...",
     tag: "Search tag ..."

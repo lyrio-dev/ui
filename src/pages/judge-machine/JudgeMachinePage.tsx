@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Table, Header, Button, Segment, Label, Popup, Icon, Form } from "semantic-ui-react";
-import { route } from "navi";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 
@@ -10,6 +9,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import { JudgeClientApi } from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 interface JudgeClientSystemInfo {
   os: string;
@@ -30,7 +30,7 @@ interface JudgeClientSystemInfo {
 
 async function fetchData(): Promise<JudgeMachinePageProps> {
   const { requestError, response } = await JudgeClientApi.listJudgeClients();
-  if (requestError) toast.error(requestError);
+  if (requestError) throw new RouteError(requestError);
   else return response;
 }
 
@@ -296,14 +296,4 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
 
 JudgeMachinePage = observer(JudgeMachinePage);
 
-export default route({
-  async getView(request) {
-    const props = await fetchData();
-    if (!props) {
-      // TODO: Display an error page
-      return null;
-    }
-
-    return <JudgeMachinePage {...props} />;
-  }
-});
+export default defineRoute(async request => <JudgeMachinePage {...await fetchData()} />);

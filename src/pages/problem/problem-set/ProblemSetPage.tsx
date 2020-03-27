@@ -1,20 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Search, Checkbox, Table, Label, Button, Header, Menu, Segment, Loader, Icon, Image } from "semantic-ui-react";
-import { route } from "navi";
+import { Search, Checkbox, Table, Label, Button, Header, Menu, Segment, Loader, Icon } from "semantic-ui-react";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "./ProblemSetPage.module.less";
 
-import { ProblemApi, UserApi } from "@/api";
+import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { sortTags, sortTagColors } from "../problemTag";
+import { FormattedMessage } from "react-intl";
 
 import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
 import UserSearch from "@/components/UserSearch";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 interface ProblemRecord extends ApiTypes.ProblemMetaDto {
   title: string;
@@ -44,10 +45,8 @@ async function fetchData(
   if (searchQuery.nonpublic) requestBody.nonpublic = true;
   const { requestError, response } = await ProblemApi.queryProblemSet(requestBody);
 
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return [null, null];
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`problem_set.error.${response.error}`} />));
 
   return [
     response.result.map(item => ({
@@ -523,26 +522,18 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
 
 ProblemSetPage = observer(ProblemSetPage);
 
-export default {
-  public: route({
-    async getView(request) {
-      const page = parseInt(request.query.page) || 1;
-      const searchQuery = parseSearchQuery(request.query);
-      const [problems, response] = await fetchData(searchQuery, page);
-      if (response === null) {
-        // TODO: Display an error page
-        return null;
-      }
+export default defineRoute(async request => {
+  const page = parseInt(request.query.page) || 1;
+  const searchQuery = parseSearchQuery(request.query);
+  const [problems, response] = await fetchData(searchQuery, page);
 
-      return (
-        <ProblemSetPage
-          // No key={uuid()}, so the search states are preserved
-          searchQuery={searchQuery}
-          currentPage={page}
-          problems={problems}
-          response={response}
-        />
-      );
-    }
-  })
-};
+  return (
+    <ProblemSetPage
+      // No key={uuid()}, so the search states are preserved
+      searchQuery={searchQuery}
+      currentPage={page}
+      problems={problems}
+      response={response}
+    />
+  );
+});

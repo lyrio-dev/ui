@@ -19,10 +19,10 @@ import {
   List
 } from "semantic-ui-react";
 import TextAreaAutoSize from "react-textarea-autosize";
-import { route } from "navi";
 import { useNavigation } from "react-navi";
 import { v4 as uuid } from "uuid";
 import update from "immutability-helper";
+import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemEditPage.module.less";
 
@@ -33,6 +33,7 @@ import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage, useConfirmUnload } from "@/utils/hooks";
 import { observer } from "mobx-react";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -45,10 +46,8 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
     permissionOfCurrentUser: ["MODIFY"]
   });
 
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`problem_edit.error.${response.error}`} />));
 
   return response;
 }
@@ -58,10 +57,7 @@ async function fetchDataAllProblemTags(): Promise<ApiTypes.LocalizedProblemTagDt
     locale: appState.locale
   });
 
-  if (requestError) {
-    toast.error(requestError);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
 
   return response.tags;
 }
@@ -791,7 +787,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
       if (requestError) toast.error(requestError);
       else if (response.error) {
-        toast.error(_(`problem_edit.submit_error.create.${response.error}`));
+        toast.error(_(`problem_edit.error.${response.error}`));
       } else {
         navigation.navigate(`/problem/by-id/${response.id}`);
       }
@@ -805,7 +801,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
       if (requestError) toast.error(requestError);
       else if (response.error) {
-        toast.error(_(`problem_edit.submit_error.update.${response.error}`));
+        toast.error(_(`problem_edit.error.${response.error}`));
       } else {
         toast.success(_("problem_edit.submit_success"));
         setModified(false);
@@ -1402,59 +1398,39 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 ProblemEditPage = observer(ProblemEditPage);
 
 export default {
-  new: route({
-    async getView(request) {
-      const allProblemTags = await fetchDataAllProblemTags();
-      if (allProblemTags == null) {
-        // TODO: Display an error page
-        return null;
-      }
+  new: defineRoute(async request => {
+    const allProblemTags = await fetchDataAllProblemTags();
 
-      return <ProblemEditPage key={Math.random()} new={true} allProblemTags={allProblemTags} />;
-    }
+    return <ProblemEditPage key={Math.random()} new={true} allProblemTags={allProblemTags} />;
   }),
-  byId: route({
-    async getView(request) {
-      const id = parseInt(request.params["id"]);
-      const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
-      const problem = await fetchData("id", id);
-      const allProblemTags = await fetchDataAllProblemTags();
-      if (problem === null || allProblemTags == null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byId: defineRoute(async request => {
+    const id = parseInt(request.params["id"]);
+    const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
+    const [problem, allProblemTags] = await Promise.all([fetchData("id", id), fetchDataAllProblemTags()]);
 
-      return (
-        <ProblemEditPage
-          key={Math.random()}
-          idType="id"
-          problem={problem}
-          allProblemTags={allProblemTags}
-          requestedLocale={requestedLocale}
-        />
-      );
-    }
+    return (
+      <ProblemEditPage
+        key={Math.random()}
+        idType="id"
+        problem={problem}
+        allProblemTags={allProblemTags}
+        requestedLocale={requestedLocale}
+      />
+    );
   }),
-  byDisplayId: route({
-    async getView(request) {
-      const displayId = parseInt(request.params["displayId"]);
-      const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
-      const problem = await fetchData("displayId", displayId);
-      const allProblemTags = await fetchDataAllProblemTags();
-      if (problem === null || allProblemTags == null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byDisplayId: defineRoute(async request => {
+    const displayId = parseInt(request.params["displayId"]);
+    const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
+    const [problem, allProblemTags] = await Promise.all([fetchData("displayId", displayId), fetchDataAllProblemTags()]);
 
-      return (
-        <ProblemEditPage
-          key={Math.random()}
-          idType="displayId"
-          problem={problem}
-          allProblemTags={allProblemTags}
-          requestedLocale={requestedLocale}
-        />
-      );
-    }
+    return (
+      <ProblemEditPage
+        key={Math.random()}
+        idType="displayId"
+        problem={problem}
+        allProblemTags={allProblemTags}
+        requestedLocale={requestedLocale}
+      />
+    );
   })
 };

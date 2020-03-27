@@ -3,6 +3,7 @@ import { Icon, Form, Header, Input, Checkbox, TextArea, Button, List, Radio } fr
 import { observer } from "mobx-react";
 import { Validator } from "class-validator";
 import md5 from "blueimp-md5";
+import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
@@ -11,13 +12,12 @@ import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
 import UserAvatar from "@/components/UserAvatar";
+import { RouteError } from "@/AppRouter";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserProfile({ userId });
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`user_edit.error.${response.error}`} />));
 
   return response;
 }

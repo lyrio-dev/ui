@@ -15,14 +15,13 @@ import {
   Form,
   Message,
   Loader,
-  TextArea,
   Checkbox
 } from "semantic-ui-react";
-import { route } from "navi";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 import update from "immutability-helper";
 import objectPath from "object-path";
+import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemPage.module.less";
 
@@ -44,6 +43,7 @@ import {
 } from "@/interfaces/CodeLanguage";
 import { sortTags } from "../problemTag";
 import CodeEditor from "@/components/LazyCodeEditor";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -58,10 +58,8 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"]
   });
 
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`problem.error.${response.error}`} />));
 
   sortTags(response.tagsOfLocale);
   return response;
@@ -151,7 +149,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
     setSetDisplayIdPending(true);
 
     if (!isValidDisplayId(setDisplayIdInputValue)) {
-      toast.error(_("problem.action_error.set_display_id.INVALID_DISPLAY_ID"));
+      toast.error(_("problem.error.INVALID_DISPLAY_ID"));
     } else {
       const { requestError, response } = await ProblemApi.setProblemDisplayId({
         problemId: props.problem.meta.id,
@@ -161,7 +159,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
       if (requestError) toast.error(requestError);
       else if (response.error) {
         toast.error(
-          _(`problem.action_error.set_display_id.${response.error}`, {
+          _(`problem.error.${response.error}`, {
             displayId: setDisplayIdInputValue
           })
         );
@@ -207,7 +205,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
     if (requestError) toast.error(requestError);
     else if (response.error) {
-      toast.error(_(`problem.action_error.set_public.${response.error}`));
+      toast.error(_(`problem.error.${response.error}`));
     } else return navigation.refresh();
 
     setSetPublicPending(false);
@@ -228,7 +226,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
       permissions: true
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`problem.action_error.get_permissions.${response.error}`));
+    else if (response.error) toast.error(_(`problem.error.${response.error}`));
     else {
       return {
         owner: response.owner,
@@ -249,8 +247,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
       groupPermissions: groupPermissions as any
     });
     if (requestError) toast.error(requestError);
-    else if (response.error === "NO_SUCH_PROBLEM")
-      toast.error(_("problem.action_error.set_permissions.NO_SUCH_PROBLEM"));
+    else if (response.error === "NO_SUCH_PROBLEM") toast.error(_("problem.error.NO_SUCH_PROBLEM"));
     else if (response.error) return response;
     return true;
   }
@@ -331,7 +328,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
     if (requestError) toast.error(requestError);
     else if (response.error) {
-      toast.error(_(`problem.action_error.submit.${response.error}`));
+      toast.error(_(`problem.error.${response.error}`));
     } else return navigation.navigate(`/submission/${response.submissionId}`);
 
     setSubmitPending(false);
@@ -830,30 +827,18 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 ProblemPage = observer(ProblemPage);
 
 export default {
-  byId: route({
-    async getView(request) {
-      const id = parseInt(request.params["id"]);
-      const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
-      const problem = await fetchData("id", id, requestedLocale || appState.contentLocale);
-      if (problem === null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byId: defineRoute(async request => {
+    const id = parseInt(request.params["id"]);
+    const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
+    const problem = await fetchData("id", id, requestedLocale || appState.contentLocale);
 
-      return <ProblemPage key={Math.random()} idType="id" requestedLocale={requestedLocale} problem={problem} />;
-    }
+    return <ProblemPage key={Math.random()} idType="id" requestedLocale={requestedLocale} problem={problem} />;
   }),
-  byDisplayId: route({
-    async getView(request) {
-      const displayId = parseInt(request.params["displayId"]);
-      const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
-      const problem = await fetchData("displayId", displayId, requestedLocale || appState.contentLocale);
-      if (problem === null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byDisplayId: defineRoute(async request => {
+    const displayId = parseInt(request.params["displayId"]);
+    const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
+    const problem = await fetchData("displayId", displayId, requestedLocale || appState.contentLocale);
 
-      return <ProblemPage key={Math.random()} idType="displayId" requestedLocale={requestedLocale} problem={problem} />;
-    }
+    return <ProblemPage key={Math.random()} idType="displayId" requestedLocale={requestedLocale} problem={problem} />;
   })
 };

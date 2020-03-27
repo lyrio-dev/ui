@@ -14,7 +14,6 @@ import {
   Progress
 } from "semantic-ui-react";
 import { Link } from "react-navi";
-import { route } from "navi";
 import { v4 as uuid } from "uuid";
 import lodashIsEqual from "lodash.isequal";
 import axios from "axios";
@@ -23,6 +22,7 @@ import * as streamsaver from "streamsaver";
 import "streamsaver/examples/zip-stream";
 import pAll from "p-all";
 import { useDebounce } from "use-debounce";
+import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemFilesPage.module.less";
 
@@ -36,6 +36,7 @@ import downloadFile from "@/utils/downloadFile";
 import openUploadDialog from "@/utils/openUploadDialog";
 import pipeStream from "@/utils/pipeStream";
 import { observer } from "mobx-react";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -50,10 +51,8 @@ async function fetchData(idType: "id" | "displayId", id: number) {
     permissionOfCurrentUser: ["MODIFY"]
   });
 
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`problem_files.error.${response.error}`} />));
 
   return response;
 }
@@ -944,28 +943,16 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 ProblemFilesPage = observer(ProblemFilesPage);
 
 export default {
-  byId: route({
-    async getView(request) {
-      const id = parseInt(request.params["id"]);
-      const problem = await fetchData("id", id);
-      if (problem === null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byId: defineRoute(async request => {
+    const id = parseInt(request.params["id"]);
+    const problem = await fetchData("id", id);
 
-      return <ProblemFilesPage key={Math.random()} idType="id" problem={problem} />;
-    }
+    return <ProblemFilesPage key={Math.random()} idType="id" problem={problem} />;
   }),
-  byDisplayId: route({
-    async getView(request) {
-      const displayId = parseInt(request.params["displayId"]);
-      const problem = await fetchData("displayId", displayId);
-      if (problem === null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byDisplayId: defineRoute(async request => {
+    const displayId = parseInt(request.params["displayId"]);
+    const problem = await fetchData("displayId", displayId);
 
-      return <ProblemFilesPage key={Math.random()} idType="displayId" problem={problem} />;
-    }
+    return <ProblemFilesPage key={Math.random()} idType="displayId" problem={problem} />;
   })
 };

@@ -1,4 +1,5 @@
-import { mount } from "navi";
+import { mount, lazy } from "navi";
+
 import getRoute from "@/utils/getRoute";
 
 export default {
@@ -18,6 +19,6 @@ export default {
     "/new": getRoute(() => import("./edit/ProblemEditPage"), "new")
   }),
   problems: mount({
-    "/": getRoute(() => import("./problem-set/ProblemSetPage"), "public")
+    "/": lazy(() => import("./problem-set/ProblemSetPage"))
   })
 };

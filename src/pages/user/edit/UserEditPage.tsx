@@ -1,13 +1,13 @@
 import React from "react";
 import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { route } from "navi";
 import { Link } from "react-navi";
 
 import style from "./UserEdit.module.less";
 
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
+import { defineRoute } from "@/AppRouter";
 
 enum EditType {
   Profile = "profile",
@@ -79,21 +79,18 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
 UserEditPage = observer(UserEditPage);
 
-export default route({
-  async getView(request) {
-    let type = request.params.type as EditType;
-    if (!Object.values(EditType).includes(type)) type = EditType.Profile;
+export default defineRoute(async request => {
+  let type = request.params.type as EditType;
+  if (!Object.values(EditType).includes(type)) type = EditType.Profile;
 
-    const { fetchData, View } = await {
-      [EditType.Profile]: import("./ProfileView"),
-      [EditType.Preference]: import("./PreferenceView"),
-      [EditType.Security]: import("./SecurityView"),
-      [EditType.Privilege]: import("./PrivilegeView")
-    }[type];
+  const { fetchData, View } = await {
+    [EditType.Profile]: import("./ProfileView"),
+    [EditType.Preference]: import("./PreferenceView"),
+    [EditType.Security]: import("./SecurityView"),
+    [EditType.Privilege]: import("./PrivilegeView")
+  }[type];
 
-    const response = await fetchData(parseInt(request.params.userId) || 0);
-    if (!response) return null;
+  const response = await fetchData(parseInt(request.params.userId) || 0);
 
-    return <UserEditPage type={type} data={response} view={View} />;
-  }
+  return <UserEditPage type={type} data={response} view={View} />;
 });

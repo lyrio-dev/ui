@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Header, Button, Input } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Validator } from "class-validator";
+import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
@@ -10,13 +11,12 @@ import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
 import { isValidPassword } from "@/utils/validators";
+import { RouteError } from "@/AppRouter";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserSecuritySettings({ userId });
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`user_edit.error.${response.error}`} />));
 
   return response;
 }

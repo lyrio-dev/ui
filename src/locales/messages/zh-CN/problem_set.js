@@ -1,5 +1,9 @@
 module.exports = {
   title: "题库",
+  error: {
+    PERMISSION_DENIED: "权限不足。",
+    TAKE_TOO_MANY: "请求每页项目数量超出限制。"
+  },
   search_placeholder: {
     title: "ID / 题目名 …",
     tag: "标签名 …"

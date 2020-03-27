@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Table, Search, Image, Icon } from "semantic-ui-react";
+import React, { useEffect } from "react";
+import { Table, Icon } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { route } from "navi";
 import { useNavigation, Link } from "react-navi";
+import { FormattedMessage } from "react-intl";
 
 import style from "./UsersPage.module.less";
 
 import { UserApi } from "@/api";
-import toast from "@/utils/toast";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { useIntlMessage } from "@/utils/hooks";
 import { appState } from "@/appState";
 import Pagination from "@/components/Pagination";
 import UserLink from "@/components/UserLink";
 import UserSearch from "@/components/UserSearch";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 const USERS_PER_PAGE = 30;
 
@@ -29,10 +29,8 @@ async function fetchData(sortBy: SortBy, currentPage: number): Promise<[UserMeta
     takeCount: USERS_PER_PAGE
   });
 
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return [null, null];
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`users.error.${response.error}`} />));
 
   return [response.userMetas, response.count];
 }
@@ -145,20 +143,14 @@ let UsersPage: React.FC<UsersPageProps> = props => {
 
 UsersPage = observer(UsersPage);
 
-export default route({
-  async getView(request) {
-    let page = parseInt(request.query.page) || 1;
-    if (page < 1) page = 1;
+export default defineRoute(async request => {
+  let page = parseInt(request.query.page) || 1;
+  if (page < 1) page = 1;
 
-    let sortBy = request.query.sortBy as SortBy;
-    if (!(sortBy in SortBy)) sortBy = SortBy.rating;
+  let sortBy = request.query.sortBy as SortBy;
+  if (!(sortBy in SortBy)) sortBy = SortBy.rating;
 
-    const [users, count] = await fetchData(sortBy, page);
-    if (!users) {
-      // TODO: Display an error page
-      return null;
-    }
+  const [users, count] = await fetchData(sortBy, page);
 
-    return <UsersPage sortBy={sortBy} users={users} totalCount={count} currentPage={page} />;
-  }
+  return <UsersPage sortBy={sortBy} users={users} totalCount={count} currentPage={page} />;
 });

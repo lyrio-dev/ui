@@ -6,7 +6,7 @@ module.exports = {
   submit: "提交",
   no_submit_permission: "无提交权限",
   submit_success: "提交成功。",
-  submit_error: {
+  error: {
     NO_SUCH_PROBLEM: "无此题目。",
     PERMISSION_DENIED: "权限不足。"
   },

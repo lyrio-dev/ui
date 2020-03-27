@@ -1,5 +1,11 @@
 module.exports = {
   title: "Statistics",
+  error: {
+    NO_SUCH_PROBLEM: "No such problem.",
+    PERMISSION_DENIED: "Permission denied.",
+    TAKE_TOO_MANY: "Requested number of items per page exceeds the limit."
+  },
+
   header: "Accepted Submissions",
   type: {
     Fastest: "Fastest",

@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Header, Popup, Ref } from "semantic-ui-react";
+import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Popup, Ref } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { route } from "navi";
 import { v4 as uuid } from "uuid";
 import AnsiToHtmlConverter from "ansi-to-html";
 import { patch } from "jsondiffpatch";
 import { useNavigation } from "react-navi";
+import { FormattedMessage } from "react-intl";
 
 import style from "./SubmissionPage.module.less";
 
@@ -22,14 +22,16 @@ import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import * as CodeFormatter from "@/utils/CodeFormatter";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
 import { CodeBox, HighlightedCodeBox } from "@/components/CodeBox";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
     submissionId: submissionId.toString(),
     locale: appState.locale
   });
-  if (requestError) toast.error(requestError);
-  else if (response.error) toast.error(`submission.error.${response.error}`);
+
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error) throw new RouteError((<FormattedMessage id={`submission.error.${response.error}`} />));
 
   type RemoveOptional<T> = {
     [K in keyof T]-?: T[K];
@@ -1005,21 +1007,15 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
 
 SubmissionPage = observer(SubmissionPage);
 
-export default route({
-  async getView(request) {
-    await CodeFormatter.ready;
+export default defineRoute(async request => {
+  await CodeFormatter.ready;
 
-    const queryResult = await fetchData(parseInt(request.params.id) || 0);
-    if (queryResult === null) {
-      // TODO: Display an error page
-      return null;
-    }
+  const queryResult = await fetchData(parseInt(request.params.id) || 0);
 
-    // Load highlight
-    if (queryResult.content && typeof (queryResult.content as any).language === "string") {
-      await CodeHighlighter.tryLoadTreeSitterLanguage((queryResult.content as any).language);
-    }
-
-    return <SubmissionPage key={uuid()} {...(queryResult as any)} />;
+  // Load highlight
+  if (queryResult.content && typeof (queryResult.content as any).language === "string") {
+    await CodeHighlighter.tryLoadTreeSitterLanguage((queryResult.content as any).language);
   }
+
+  return <SubmissionPage key={uuid()} {...(queryResult as any)} />;
 });

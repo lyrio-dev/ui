@@ -428,7 +428,7 @@ declare namespace ApiTypes {
     takeCount: number;
   }
   export interface QuerySubmissionStatisticsResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "TAKE_TOO_MANY";
+    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "TAKE_TOO_MANY";
     submissions?: ApiTypes.SubmissionMetaDto[];
     count?: number;
     scores?: number[];

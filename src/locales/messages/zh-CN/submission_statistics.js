@@ -1,5 +1,10 @@
 module.exports = {
   title: "统计",
+  error: {
+    NO_SUCH_PROBLEM: "无此题目。",
+    PERMISSION_DENIED: "权限不足。",
+    TAKE_TOO_MANY: "请求每页项目数量超出限制。"
+  },
   header: "满分提交",
   type: {
     Fastest: "最快",

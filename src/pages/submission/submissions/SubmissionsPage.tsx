@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Form, Icon, Button, Segment, Header } from "semantic-ui-react";
-import { route } from "navi";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
@@ -18,6 +17,7 @@ import { isValidUsername } from "@/utils/validators";
 import StatusText from "@/components/StatusText";
 import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
 import SimplePagination from "@/components/SimplePagination";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 const SUBMISSIONS_PER_PAGE = 10;
 
@@ -53,8 +53,10 @@ async function fetchData(query: SubmissionsQuery) {
     locale: appState.locale,
     takeCount: SUBMISSIONS_PER_PAGE
   });
-  if (requestError) toast.error(requestError);
-  else return response;
+
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+
+  return response;
 }
 
 enum SubmissionProgressType {
@@ -362,15 +364,9 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
 
 SubmissionsPage = observer(SubmissionsPage);
 
-export default route({
-  async getView(request) {
-    const query = normalizeQuery(request.query);
-    const queryResult = await fetchData(query);
-    if (queryResult === null) {
-      // TODO: Display an error page
-      return null;
-    }
+export default defineRoute(async request => {
+  const query = normalizeQuery(request.query);
+  const queryResult = await fetchData(query);
 
-    return <SubmissionsPage key={uuid()} query={query} queryResult={queryResult} />;
-  }
+  return <SubmissionsPage key={uuid()} query={query} queryResult={queryResult} />;
 });

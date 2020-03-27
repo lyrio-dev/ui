@@ -1,12 +1,58 @@
 import React, { Suspense } from "react";
-import { mount, lazy, withView } from "navi";
+import { mount, lazy, withView, route, Resolvable } from "navi";
 import { Router, View } from "react-navi";
 import { IntlProvider } from "react-intl";
+import { v4 as uuid } from "uuid";
 
 import AppLayout from "./layouts/AppLayout";
+import ErrorPage, { ErrorPageProps } from "./pages/error/ErrorPage";
 import getRoute from "./utils/getRoute";
 import { appState } from "./appState";
 import { loadLocaleData } from "./locales";
+
+export class RouteError implements ErrorPageProps {
+  constructor(
+    public message: React.ReactNode,
+    public options: {
+      showRefresh?: true;
+      showBack?: true;
+    } = { showBack: true }
+  ) {}
+}
+
+export function defineRoute(getViewFunction: Resolvable<React.ReactNode>) {
+  return route({
+    async getView() {
+      try {
+        return await getViewFunction.apply(this, arguments);
+      } catch (e) {
+        if (e instanceof RouteError) return <ErrorPage {...e} />;
+
+        if (!(e instanceof Error)) e = new Error(String(e));
+        return <ErrorPage uncaughtError={e} message={null} options={null} />;
+      }
+    }
+  });
+}
+
+class ErrorBoundary extends React.Component<{}, { hasError: boolean; error?: Error }> {
+  constructor(props: unknown) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: unknown) {
+    return { hasError: true, error: error instanceof Error ? error : new Error(String(error)) };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <ErrorPage uncaughtError={this.state.error} message={null} options={null} />;
+    }
+
+    return this.props.children;
+  }
+}
 
 const routes = withView(
   async () => {
@@ -15,7 +61,12 @@ const routes = withView(
     return (
       <IntlProvider locale={localeHyphen} messages={localeData}>
         <AppLayout key={localeHyphen}>
-          <View />
+          <ErrorBoundary
+            // Will be unmounted after router refresh
+            key={uuid()}
+          >
+            <View />
+          </ErrorBoundary>
         </AppLayout>
       </IntlProvider>
     );

@@ -8,16 +8,10 @@ module.exports = {
   submit: "アプロード",
   no_submit_permission: "パーミッションは足りない",
   submit_success: "成功でアプロードしました。",
-  submit_error: {
-    create: {
-      FAILED: "失敗しました。",
-      PERMISSION_DENIED: "パーミッションは足りない。"
-    },
-    update: {
-      FAILED: "失敗しました。",
-      NO_SUCH_PROBLEM: "この問題はない。",
-      PERMISSION_DENIED: "パーミッションは足りない。"
-    }
+  error: {
+    FAILED: "失敗しました。",
+    NO_SUCH_PROBLEM: "この問題はない。",
+    PERMISSION_DENIED: "パーミッションは足りない。"
   },
   header_samples: "入力出力例",
   header_tags: "タッグ",

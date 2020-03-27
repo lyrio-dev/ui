@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 import { Table, Icon, Button, Segment, Header, Dropdown, Menu } from "semantic-ui-react";
-import { route } from "navi";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import { Bar, Line } from "react-chartjs-2";
+import { FormattedMessage } from "react-intl";
 
 import style from "./SubmissionStatisticsPage.module.less";
 
 import { SubmissionApi } from "@/api";
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
-import toast from "@/utils/toast";
 import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
 import Pagination from "@/components/Pagination";
 import { getScoreColor } from "@/components/ScoreText";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 const SUBMISSIONS_PER_PAGE = 10;
 
@@ -40,8 +40,12 @@ async function fetchData(id: number, idType: "id" | "displayId", type: Submissio
     skipCount: SUBMISSIONS_PER_PAGE * (page - 1),
     takeCount: SUBMISSIONS_PER_PAGE
   });
-  if (requestError) toast.error(requestError);
-  else return response;
+
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error)
+    throw new RouteError((<FormattedMessage id={`submission_statistics.error.${response.error}`} />));
+
+  return response;
 }
 
 interface SubmissionStatisticsPageProps {
@@ -366,48 +370,34 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
 SubmissionStatisticsPage = observer(SubmissionStatisticsPage);
 
 export default {
-  byId: route({
-    async getView(request) {
-      const id = parseInt(request.params["id"]);
-      if (!id) return null;
+  byId: defineRoute(async request => {
+    const id = parseInt(request.params["id"]) || 0;
 
-      const type = getType(request.params["type"]);
-      let currentPage = parseInt(request.params.page) || 1;
-      if (currentPage < 1) currentPage = 1;
+    const type = getType(request.params["type"]);
+    let currentPage = parseInt(request.params.page) || 1;
+    if (currentPage < 1) currentPage = 1;
 
-      const response = await fetchData(id, "id", type, currentPage);
-      if (response == null) {
-        // TODO: Display an error page
-        return null;
-      }
+    const response = await fetchData(id, "id", type, currentPage);
 
-      return <SubmissionStatisticsPage id={id} idType="id" type={type} currentPage={currentPage} response={response} />;
-    }
+    return <SubmissionStatisticsPage id={id} idType="id" type={type} currentPage={currentPage} response={response} />;
   }),
-  byDisplayId: route({
-    async getView(request) {
-      const displayId = parseInt(request.params["displayId"]);
-      if (!displayId) return null;
+  byDisplayId: defineRoute(async request => {
+    const displayId = parseInt(request.params["displayId"]) || 0;
 
-      const type = getType(request.params["type"]);
-      let currentPage = parseInt(request.params.page) || 1;
-      if (currentPage < 1) currentPage = 1;
+    const type = getType(request.params["type"]);
+    let currentPage = parseInt(request.params.page) || 1;
+    if (currentPage < 1) currentPage = 1;
 
-      const response = await fetchData(displayId, "displayId", type, currentPage);
-      if (response == null) {
-        // TODO: Display an error page
-        return null;
-      }
+    const response = await fetchData(displayId, "displayId", type, currentPage);
 
-      return (
-        <SubmissionStatisticsPage
-          id={displayId}
-          idType="displayId"
-          type={type}
-          currentPage={currentPage}
-          response={response}
-        />
-      );
-    }
+    return (
+      <SubmissionStatisticsPage
+        id={displayId}
+        idType="displayId"
+        type={type}
+        currentPage={currentPage}
+        response={response}
+      />
+    );
   })
 };

@@ -33,30 +33,13 @@ module.exports = {
     set_non_public_confirm: "Confirm make non-public",
     delete: "Delete"
   },
-  action_error: {
-    set_public: {
-      PERMISSION_DENIED: "Permission denied.",
-      NO_SUCH_PROBLEM: "No such problem.",
-      NO_DISPLAY_ID: "Please set ID first."
-    },
-    set_display_id: {
-      INVALID_DISPLAY_ID: "ID must be an integer.",
-      PERMISSION_DENIED: "Permission denied.",
-      NO_SUCH_PROBLEM: "Current problem doesn't exist.",
-      PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "A public problem must have an ID.",
-      DUPLICATE_DISPLAY_ID: "ID {displayId} has already used."
-    },
-    get_permissions: {
-      PERMISSION_DENIED: "Permission denied.",
-      NO_SUCH_PROBLEM: "No such problem."
-    },
-    set_permissions: {
-      NO_SUCH_PROBLEM: "No such problem."
-    },
-    submit: {
-      PERMISSION_DENIED: "Permission denied.",
-      NO_SUCH_PROBLEM: "No such problem."
-    }
+  error: {
+    PERMISSION_DENIED: "Permission denied.",
+    NO_SUCH_PROBLEM: "No such problem.",
+    NO_DISPLAY_ID: "Please set ID first.",
+    INVALID_DISPLAY_ID: "ID must be an integer.",
+    PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "A public problem must have an ID.",
+    DUPLICATE_DISPLAY_ID: "ID {displayId} has already used."
   },
   submit: {
     back_to_statement: "Back to Statement",

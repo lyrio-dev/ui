@@ -1,4 +1,7 @@
 module.exports = {
+  error: {
+    NO_SUCH_USER: "无此用户。"
+  },
   edit_profile: "修改资料",
   joined: "加入于 ",
   social: {

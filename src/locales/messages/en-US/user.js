@@ -1,4 +1,7 @@
 module.exports = {
+  error: {
+    NO_SUCH_USER: "No such user."
+  },
   edit_profile: "Edit profile",
   joined: "Joined ",
   social: {

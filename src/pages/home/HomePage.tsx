@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { route } from "navi";
 import { observer } from "mobx-react";
 
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
+import { defineRoute } from "@/AppRouter";
 
 let HomePage: React.FC = () => {
   const _ = useIntlMessage();
@@ -17,6 +17,4 @@ let HomePage: React.FC = () => {
 
 HomePage = observer(HomePage);
 
-export default route({
-  view: <HomePage />
-});
+export default defineRoute(async request => <HomePage />);

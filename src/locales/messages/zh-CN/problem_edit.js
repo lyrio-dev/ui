@@ -8,16 +8,10 @@ module.exports = {
   submit: "提交",
   no_submit_permission: "无提交权限",
   submit_success: "提交成功。",
-  submit_error: {
-    create: {
-      FAILED: "创建题目失败，发生了未知错误。",
-      PERMISSION_DENIED: "权限不足。"
-    },
-    update: {
-      FAILED: "更新题目失败，发生了未知错误。",
-      NO_SUCH_PROBLEM: "无此题目。",
-      PERMISSION_DENIED: "权限不足。"
-    }
+  error: {
+    FAILED: "未知错误。",
+    NO_SUCH_PROBLEM: "无此题目。",
+    PERMISSION_DENIED: "权限不足。"
   },
   header_samples: "样例",
   header_tags: "标签",

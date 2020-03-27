@@ -6,7 +6,7 @@ module.exports = {
   submit: "Submit",
   no_submit_permission: "No Permission",
   submit_success: "Successfully submitted.",
-  submit_error: {
+  error: {
     NO_SUCH_PROBLEM: "No such problem.",
     PERMISSION_DENIED: "Permission denied."
   },

@@ -1,27 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Dropdown,
-  Grid,
-  Icon,
-  Header,
-  Menu,
-  Segment,
-  Popup,
-  Button,
-  Form,
-  Message,
-  TextArea,
-  Input,
-  Ref,
-  Table
-} from "semantic-ui-react";
-import { route } from "navi";
+import { Dropdown, Grid, Icon, Header, Menu, Popup, Button, Form, Message, Input, Ref, Table } from "semantic-ui-react";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import { v4 as uuid } from "uuid";
 import update from "immutability-helper";
 import lodashClonedeep from "lodash.clonedeep";
+import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemJudgeSettingsPage.module.less";
 
@@ -33,6 +18,7 @@ import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
+import { defineRoute, RouteError } from "@/AppRouter";
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -42,10 +28,9 @@ async function fetchData(idType: "id" | "displayId", id: number) {
     permissionOfCurrentUser: ["MODIFY"]
   });
 
-  if (requestError || response.error) {
-    toast.error(requestError || response.error);
-    return null;
-  }
+  if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+  else if (response.error)
+    throw new RouteError((<FormattedMessage id={`problem_judge_settings.error.${response.error}`} />));
 
   return response;
 }
@@ -1449,28 +1434,16 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 ProblemJudgeSettingsPage = observer(ProblemJudgeSettingsPage);
 
 export default {
-  byId: route({
-    async getView(request) {
-      const id = parseInt(request.params["id"]);
-      const problem = await fetchData("id", id);
-      if (problem === null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byId: defineRoute(async request => {
+    const id = parseInt(request.params["id"]);
+    const problem = await fetchData("id", id);
 
-      return <ProblemJudgeSettingsPage key={Math.random()} idType="id" problem={problem} />;
-    }
+    return <ProblemJudgeSettingsPage key={Math.random()} idType="id" problem={problem} />;
   }),
-  byDisplayId: route({
-    async getView(request) {
-      const displayId = parseInt(request.params["displayId"]);
-      const problem = await fetchData("displayId", displayId);
-      if (problem === null) {
-        // TODO: Display an error page
-        return null;
-      }
+  byDisplayId: defineRoute(async request => {
+    const displayId = parseInt(request.params["displayId"]);
+    const problem = await fetchData("displayId", displayId);
 
-      return <ProblemJudgeSettingsPage key={Math.random()} idType="displayId" problem={problem} />;
-    }
+    return <ProblemJudgeSettingsPage key={Math.random()} idType="displayId" problem={problem} />;
   })
 };
