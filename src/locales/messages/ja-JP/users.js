@@ -1,7 +1,8 @@
 module.exports = {
   title: "ユーザ",
   error: {
-    TAKE_TOO_MANY: "[TBT] Requested number of items per page exceeds the limit."
+    TAKE_TOO_MANY: "リクエストが制限を超えています。
+    "
   },
   rank: "ランキング",
   username: "ユーザ名",

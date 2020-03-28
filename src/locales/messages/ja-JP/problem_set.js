@@ -1,8 +1,8 @@
 module.exports = {
   title: "問題",
   error: {
-    PERMISSION_DENIED: "[TBT] Permission denied.",
-    TAKE_TOO_MANY: "[TBT] Requested number of items per page exceeds the limit."
+    PERMISSION_DENIED: "権限がありません。",
+    TAKE_TOO_MANY: "リクエストが制限を超えています。"
   },
   search_placeholder: {
     title: "ID / 問題名 …",

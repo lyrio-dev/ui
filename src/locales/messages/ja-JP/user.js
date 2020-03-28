@@ -1,6 +1,6 @@
 module.exports = {
   error: {
-    NO_SUCH_USER: "[TBT] No such user."
+    NO_SUCH_USER: "ユーザが存在しません。"
   },
   edit_profile: "プロファイル設定",
   joined: "入会日時",

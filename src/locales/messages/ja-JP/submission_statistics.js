@@ -1,9 +1,9 @@
 module.exports = {
   title: "統計",
   error: {
-    NO_SUCH_PROBLEM: "[TBT] No such problem.",
-    PERMISSION_DENIED: "[TBT] Permission denied.",
-    TAKE_TOO_MANY: "[TBT] Requested number of items per page exceeds the limit."
+    NO_SUCH_PROBLEM: "問題がありません。",
+    PERMISSION_DENIED: "権限がありません。",
+    TAKE_TOO_MANY: "リクエストが制限を超えています。"
   },
   header: "満点の提出",
   type: {
