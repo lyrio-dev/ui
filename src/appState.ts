@@ -7,8 +7,9 @@ import { Locale } from "./interfaces/Locale";
 function getBrowserLocale(): Locale {
   const supportedLocales: string[] = Object.values(Locale);
   return (
-    (navigator.languages.map(s => s.replace("-", "_")).find(locale => supportedLocales.includes(locale)) as Locale) ||
-    Locale.en_US
+    ((navigator.languages || [navigator.language])
+      .map(s => s.replace("-", "_"))
+      .find(locale => supportedLocales.includes(locale)) as Locale) || Locale.en_US
   );
 }
 

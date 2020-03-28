@@ -1203,7 +1203,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           header={_("problem_judge_settings.edit_raw.parse_error")}
           content={
             <p>
-              <code>{editRawEditorErrorMessage.trimRight()}</code>
+              <code>{editRawEditorErrorMessage.trimEnd()}</code>
             </p>
           }
         />

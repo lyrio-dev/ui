@@ -14,11 +14,19 @@ import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
 import { defineRoute, RouteError } from "@/AppRouter";
 
+function getTimeZone() {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+  } catch {
+    return "";
+  }
+}
+
 async function fetchData(userId: number): Promise<[Date, Required<typeof response>]> {
   const now = new Date();
   const { requestError, response } = await UserApi.getUserDetail({
     userId,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    timezone: getTimeZone(),
     now: now.toISOString()
   });
 

@@ -14,7 +14,14 @@ function patchFetch() {
 }
 
 patchFetch();
-const Parser = require("web-tree-sitter") as typeof import("web-tree-sitter");
+
+// Avoid crashing under browsers without WebAssembly
+let Parser: typeof import("web-tree-sitter");
+try {
+  Parser = require("web-tree-sitter");
+} catch (e) {
+  console.error(`Failed to load web-tree-sitter:`, e);
+}
 
 export enum CodeHighlighterTheme {
   Tomorrow

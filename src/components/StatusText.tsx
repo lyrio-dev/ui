@@ -36,7 +36,7 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
 };
 
 const StatusText: React.FC<StatusTextProps> = props => {
-  const text = props.statusText || props.status.replace(/([A-Z])/g, " $1").trimLeft();
+  const text = props.statusText || props.status.replace(/([A-Z])/g, " $1").trimStart();
   return (
     <span className={"statuscolor " + style[props.status]}>
       <Icon
