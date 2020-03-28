@@ -11696,10 +11696,10 @@ warning@^4.0.2, warning@^4.0.3:
   dependencies:
     loose-envify "^1.0.0"
 
-wastyle@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/wastyle/-/wastyle-0.0.2.tgz#87fff8d1023dc26546e27ed2663b41e052e16296"
-  integrity sha512-paxgKRQ17IqWs5B0E8QbszwmnwkwHgxy0xGLPEhF/3u2JfePIRF/QneoBovUh3jFR+MdsYD1Y3LVzvUt/f2mGw==
+wastyle@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/wastyle/-/wastyle-0.0.3.tgz#7d40b829b0dea07a6a90c52e0ef2d4edfdc2db49"
+  integrity sha512-blhYq2E2S8aujzDykcPCNpVroilZxDIfu11t6D5Z/0H/nv4J+Ek1SaH5zySK4oTTQs41ZukvdR1NiAUa6kfBuQ==
   dependencies:
     "@wasmer/wasi" "^0.10.0"
 

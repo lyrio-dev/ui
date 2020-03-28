@@ -222,6 +222,12 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
       Powered by <a href="https://github.com/syzoj" target="_blank">SYZOJ</a>
     </div>
   </div>
+  <script
+    crossorigin="anonymous"
+    src="https://polyfill.io/v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015"
+    onerror="handleLoadingError()"
+  >
+  </script>
   <% if (appConfig.crossOrigin) { %>
   <script
     src="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
