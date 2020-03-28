@@ -28,7 +28,7 @@ module.exports = {
   use_standard_io: "標準入出力を使用する",
   standard_input: "標準入力",
   standard_output: "標準出力",
-  run_samples: "入出力例をジャッジする",
+  run_samples: "サンプルをジャッジする",
   subtask: "サブタスク",
   single_subtask: "シングルサブタスク",
   subtask_testcases_count: "{count}",

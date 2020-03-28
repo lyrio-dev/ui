@@ -13,8 +13,8 @@ module.exports = {
     PERMISSION_DENIED: "権限がありません。"
   },
   failed_to_format: "コードのフォーマットに失敗しました：{error}",
-  format_code: "フォーマットする",
-  show_original_code: "フォーマットしない",
+  format_code: "コードをフォーマットする",
+  show_original_code: "オリジナルを表示",
   compilation_message: "コンパイルメッセージ",
   system_message: "システムメッセージ",
   sample: "サンプル",

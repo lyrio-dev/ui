@@ -77,10 +77,10 @@ module.exports = {
     code_formatter: {
       header: "コードフォーマット",
       astyle_options: "Astyle オプション",
-      format_code_by_default: "デフォルトでフォーマットする",
+      format_code_by_default: "デフォルトでコードをフォーマットして表示",
       notes_before: "提出ページのコードのフォーマットに使用します。",
-      notes_link: "Astyle リファレンス",
-      notes_after: "",
+      notes_link: "Astyle のリファレンス",
+      notes_after: "を参照してください",
       preview: "プレビュー",
       error: "オプションが間違っています"
     },
