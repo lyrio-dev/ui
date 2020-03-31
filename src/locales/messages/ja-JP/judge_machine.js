@@ -1,11 +1,11 @@
 module.exports = {
   title: "ジャッジサーバー",
   header: "ジャッジサーバー",
-  refresh: "リフレッシュ",
-  add: "加える",
+  refresh: "更新",
+  add: "追加",
   add_new_name: "ジャッジサーバーの名前",
-  confirm_add: "加える",
-  add_success: "成功で加える。",
+  confirm_add: "追加",
+  add_success: "追加に成功しました。",
   status: "状態",
   name: "名前",
   cpu: "CPU",
@@ -15,15 +15,15 @@ module.exports = {
   online: "オンライン",
   offline: "オフライン",
   key: "キー",
-  reset_key: "キーを変更する",
-  confirm_reset_key: "本当にキーを変更しますか",
-  reset_key_success: "成功で変更しました。",
+  reset_key: "キーを変更",
+  confirm_reset_key: "変更する",
+  reset_key_success: "変更に成功しました。",
   delete: "削除",
-  confirm_delete: "本当に削除しますか",
-  delete_success: "成功で削除しました。",
+  confirm_delete: "削除する",
+  delete_success: "削除に成功しました。",
   error: {
-    PERMISSION_DENIED: "パーミッションは足りない。",
+    PERMISSION_DENIED: "権限がありません。",
     NO_SUCH_JUDGE_CLIENT: "このジャッジサーバーは存在しません。"
   },
-  no_judge_machine: "ジャッジサーバーはまだない。"
+  no_judge_machine: "ジャッジサーバーは現在ありません。"
 };

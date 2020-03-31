@@ -1,18 +1,18 @@
 module.exports = {
-  header: "パーミッション管理",
+  header: "権限管理",
   owner: "オーナー",
-  permission_for_users: "ユザー",
-  search_users: "ユザー名を検索してユザーを加える …",
-  permission_for_groups: "ユザー グルプー",
-  no_group_granted: "パーミッションを与えたユザー グループはまだない",
-  search_groups: "ユーザ グルプー名を検索してユーザ グルプーを加える …",
+  permission_for_users: "ユーザ",
+  search_users: "ユーザ名を検索して権限を与える …",
+  permission_for_groups: "ユーザ グループ",
+  no_group_granted: "管理者権限を与えたユーザ グループはありません",
+  search_groups: "ユーザ グループ名を検索して権限を与える …",
   submit: "提出",
-  no_submit_permission: "提出のパーミッションは持っていません",
+  no_submit_permission: "提出の権限を持っていません",
   cancel: "キャンセル",
-  confirm_cancel: "キャンセルを確認する",
+  confirm_cancel: "キャンセル",
   submit_error: {
-    PERMISSION_DENIED: "パーミッションが足りない。",
-    NO_SUCH_USER: " ID が {id} とするユザーは存在しません。",
-    NO_SUCH_GROUP: " ID が {id} とするユザー グループは存在しません。"
+    PERMISSION_DENIED: "権限がありません。",
+    NO_SUCH_USER: " ID が {id} のユーザは存在しません。",
+    NO_SUCH_GROUP: " ID が {id} のユーザ グループは存在しません。"
   }
 };

@@ -1,34 +1,34 @@
 module.exports = {
   title: "問題",
   error: {
-    PERMISSION_DENIED: "[TBT] Permission denied.",
-    TAKE_TOO_MANY: "[TBT] Requested number of items per page exceeds the limit."
+    PERMISSION_DENIED: "権限がありません。",
+    TAKE_TOO_MANY: "リクエストが制限を超えています。"
   },
   search_placeholder: {
     title: "ID / 問題名 …",
-    tag: "タッグ …"
+    tag: "タグ …"
   },
   search_icon: {
-    tag: "タッグ",
-    user: "アプロード者",
-    nonpublic: "掲載しません"
+    tag: "タグ",
+    user: "アップロード者",
+    nonpublic: "非公開"
   },
-  no_result_title: "制限を満たす問題はまだない。（まだ実現しません）",
-  search_filters: "制限を検索する",
-  no_matching_tags: "マッチするタッグは存在しません",
-  no_tags: "タッグはまだない",
-  show_tags: "分類のタッグはディスプレイする",
-  manage_tags: "タッグ管理",
-  add_problem: "問題は追加する",
+  no_result_title: "制限を満たす問題はありません。",
+  search_filters: "フィルタ検索",
+  no_matching_tags: "マッチするタグは存在しません",
+  no_tags: "タグはありません",
+  show_tags: "タグを表示する",
+  manage_tags: "タグ管理",
+  add_problem: "問題を追加する",
   no_problem: {
-    message_search: "制限を満たす問題はまだない",
-    message_no_search: "問題はまだない",
+    message_search: "制限を満たす問題はありません",
+    message_no_search: "問題はありません",
     back: "戻る",
-    clear_filters: "検索の制限をキャンセルする",
-    create: "問題は追加する"
+    clear_filters: "フィルタを消去",
+    create: "問題を追加"
   },
   column_title: "問題",
   column_submission_count: "提出",
-  column_accepted_rate: "解決率",
-  non_public: "掲載しません"
+  column_accepted_rate: "正答率",
+  non_public: "非公開"
 };

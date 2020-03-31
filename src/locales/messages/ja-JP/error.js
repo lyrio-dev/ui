@@ -1,7 +1,7 @@
 module.exports = {
-  title: "[TBT] Error",
-  error: "[TBT] Error",
-  unexpected_error: "[TBT] Unexpected Error",
-  back: "[TBT] Back",
-  refresh: "[TBT] Refresh"
+  title: "エラー",
+  error: "エラーが発生しました",
+  unexpected_error: "予期せぬエラーが発生しました",
+  back: "戻る",
+  refresh: "再読み込み"
 };
