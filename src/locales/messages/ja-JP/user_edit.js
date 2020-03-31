@@ -55,7 +55,7 @@ module.exports = {
     github_placeholder: " @ を含めない",
     github_notes: "あなたの GitHub リンクは：",
     submit: "保存",
-    error_invalid_url: "無効なURLです。",
+    error_invalid_url: "無効な URL です。",
     success: "保存に成功しました。"
   },
   preference: {
