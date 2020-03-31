@@ -111,5 +111,37 @@ module.exports = {
       success: "メールアドレス変更に成功しました。",
       submit: "変更"
     }
+  },
+  privilege: {
+    // NOTE: "Privilege" is NOT "Permission"
+    // "Permission" is granted easily to anyone by a manager/admin or problem's owner to view or edit a problem
+    // "Privilege" is granted to a managers by the admin to take control of a part of the app.
+    title: "[TBT] Privileges",
+    header: "[TBT] Privileges",
+    privileges: {
+      MANAGE_USER: {
+        name: "[TBT] Manage user",
+        notes: "[TBT] Modify other user's profile, preference and security settings."
+      },
+      MANAGE_USER_GROUP: {
+        name: "[TBT] Manage user group",
+        notes: "[TBT] Create, edit and delete user groups. Manage user groups' members."
+      },
+      MANAGE_PROBLEM: {
+        name: "[TBT] Manage problem",
+        notes: "[TBT] View, edit all problems and submissions, set problem public or not and delete problems."
+      },
+      MANAGE_CONTEST: {
+        name: "[TBT] Manage contest",
+        notes: "[TBT] Placeholder."
+      },
+      MANAGE_DISCUSSION: {
+        name: "[TBT] Manage discussion",
+        notes: "[TBT] Placeholder."
+      }
+    },
+    admin_only: "[TBT] Only admins can change user's privileges.",
+    submit: "[TBT] Submit",
+    success: "[TBT] Privileges updated successfully"
   }
 };
