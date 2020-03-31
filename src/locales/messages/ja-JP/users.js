@@ -1,8 +1,7 @@
 module.exports = {
   title: "ユーザ",
   error: {
-    TAKE_TOO_MANY: "リクエストが制限を超えています。
-    "
+    TAKE_TOO_MANY: "リクエストが制限を超えています。"
   },
   rank: "ランキング",
   username: "ユーザ名",
