@@ -15,10 +15,8 @@ module.exports = {
   no_files: "ファイルはありません",
   files_count_and_size: "{count} 個, {totalSize}",
   files_count_and_size_narrow: "{count} 個\n{totalSize}",
-  files_count_and_size_with_uploading:
-    "{count} 個, {totalSize}, {uploadingCount} 個アップロード中",
-  files_count_and_size_with_uploading_narrow:
-    "{count} 個\n{totalSize}\n{uploadingCount} 個アップロード中",
+  files_count_and_size_with_uploading: "{count} 個, {totalSize}, {uploadingCount} 個アップロード中",
+  files_count_and_size_with_uploading_narrow: "{count} 個\n{totalSize}\n{uploadingCount} 個アップロード中",
   selected_files_count_and_size: "{count} 個, {totalSize} 選択中",
   selected_files_count_and_size_narrow: "{count} 個, {totalSize} 選択中",
   upload: "アップロード",
