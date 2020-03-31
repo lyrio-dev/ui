@@ -1,9 +1,9 @@
 module.exports = {
   error: {
-    NO_SUCH_USER: "[TBT] No such user."
+    NO_SUCH_USER: "ユーザが存在しません。"
   },
   edit_profile: "プロファイル設定",
-  joined: "入会時間 ",
+  joined: "入会日時",
   social: {
     email: "メールアドレス",
     qq: "QQ",
@@ -13,42 +13,42 @@ module.exports = {
   subway_graph: {
     start_of_week: "1",
     week: {
-      1: "月曜",
-      2: "火曜",
-      3: "水曜",
-      4: "木曜",
-      5: "金曜",
-      6: "土曜",
-      7: "日曜"
+      1: "月",
+      2: "火",
+      3: "水",
+      4: "木",
+      5: "金",
+      6: "土",
+      7: "日"
     },
     month: {
-      1: "一月",
-      2: "二月",
-      3: "三月",
-      4: "四月",
-      5: "五月",
-      6: "六月",
-      7: "七月",
-      8: "八月",
-      9: "九月",
-      10: "十月",
-      11: "十一月",
-      12: "十二月"
+      1: "1月",
+      2: "2月",
+      3: "3月",
+      4: "4月",
+      5: "5月",
+      6: "6月",
+      7: "7月",
+      8: "8月",
+      9: "9月",
+      10: "10月",
+      11: "11月",
+      12: "12月"
     },
     popup: {
       submission: "{count} 回提出",
       submissions: "{count} 回提出",
-      no_submissions: "提出はまだない"
+      no_submissions: "提出はありません"
     },
-    link: "查询该用户提交",
+    link: "ユーザの提出",
     legend: {
       less: "少",
       more: "多"
     }
   },
   statictics: {
-    ac_count: "問題解決数",
-    contest_take_part_count: "コンテスト参加数",
+    ac_count: "解いた問題数",
+    contest_take_part_count: "コンテスト参加回数",
     rating: "レーティング",
     rank: "ランキング"
   }

@@ -1,9 +1,9 @@
 module.exports = {
   navbar: {
-    home: "ホームページ",
+    home: "ホーム",
     problem_set: "問題",
     contests: "コンテスト",
-    submissions: "提出結果",
+    submissions: "提出一覧",
     members: "ユーザ",
     discussion: "ディスカッション"
   },
@@ -11,25 +11,25 @@ module.exports = {
     user: {
       login: "ログイン",
       register: "新規登録",
-      profile: "プロファイル",
-      problems: "マイ 問題",
-      submissions: "マイ 提出",
+      profile: "マイページ",
+      problems: "自分の問題",
+      submissions: "自分の提出",
       edit_profile: "プロファイル設定",
-      preference: "お気に入り管理",
+      preference: "環境設定",
       logout: "ログアウト"
     }
   },
   toast: {
     success: "成功",
     info: "ヒント",
-    warning: "ワーニング",
+    warning: "警告",
     error: "エラー"
   },
   localized_content_unavailable: {
-    preferred_unavailable: "設定する言語の内容がないから，{display_locale}の内容は掲載します。",
-    requested_unavailable: "選択する言語の内容がないから，{display_locale}の内容は掲載します。"
+    preferred_unavailable: "設定された言語では表示できないため，{display_locale}で表示します。",
+    requested_unavailable: "選択された言語では表示できないため，{display_locale}で表示します。"
   },
   footer: {
-    judge_machine: "ジャッジの状態"
+    judge_machine: "ジャッジサーバーの状態"
   }
 };

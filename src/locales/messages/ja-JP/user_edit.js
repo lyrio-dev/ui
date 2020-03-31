@@ -1,20 +1,20 @@
 module.exports = {
   menu: {
     profile: "プロファイル",
-    preference: "お気に入り管理",
-    security: "安全"
+    preference: "環境設定",
+    security: "セキュリティ"
   },
-  back_to_profile: "マイプロファイルに戻る",
-  back_to_profile_of_user: "このユザーのプロファイルに戻る",
-  admin_warning: "受け持ちのパーミッションで他のユザーのプロファイルをブラウズと管理をしています",
+  back_to_profile: "ユーザページに戻る",
+  back_to_profile_of_user: "このユーザのプロファイルに戻る",
+  admin_warning: "管理者権限で他のユーザのプロファイルを閲覧しています",
   error: {
-    PERMISSION_DENIED: "パーミッションは足りない。",
-    NO_SUCH_USER: "このユザーは存在しない。",
-    DUPLICATE_USERNAME: "このユザー名をつかうユザーはもう存在します。",
-    DUPLICATE_EMAIL: "このメールアドレスを使うユザーはもう存在します。"
+    PERMISSION_DENIED: "権限がありません。",
+    NO_SUCH_USER: "ユーザが存在しません。",
+    DUPLICATE_USERNAME: "このユーザ名はすでに使用されています。",
+    DUPLICATE_EMAIL: "このメールアドレスはすでに使用されています。"
   },
   profile: {
-    title: "プロファイル管理",
+    title: "プロファイル設定",
     avatar: {
       header: "アイコン設定",
       gravatar: {
@@ -28,23 +28,23 @@ module.exports = {
         name: "GitHub アイコン",
         placeholder: "GitHub ID"
       },
-      error: "無効なアイコン，ユーザなが正しいか確認してください。"
+      error: "アイコンを取得できませんでした。ユーザ名が正しいか確認してください。"
     },
     username: "ユーザ名",
-    username_notes: "ユザーなは変更できない。",
-    username_notes_admin: "管理者は誰ものユザーなを変更できます。",
-    email: "メイルアドレス",
-    public_email: "メイルアドレスは掲載する",
-    email_notes: "「安全」のページはメールアドレスを変更してください。",
-    email_notes_admin: "管理者は誰ものメールアドレスを変更できます",
+    username_notes: "ユーザ名は変更できません。",
+    username_notes_admin: "管理者は全員のユーザ名を変更できます。",
+    email: "メールアドレス",
+    public_email: "メールアドレスを公開する",
+    email_notes: "セキュリティのページでメールアドレスを変更できます。",
+    email_notes_admin: "管理者は全員のメールアドレスを変更できます",
     bio: "自己紹介",
-    bio_placeholder: "自己紹介、または気に入るの言葉",
+    bio_placeholder: "自己紹介、お気に入りの言葉など",
     organization: "所属",
     organization_placeholder: "学校、会社など",
-    location: "国",
-    location_placeholder: "地域",
-    url: "あなたのウェブ",
-    url_placeholder: "あなたのブログ、ホームページなど。",
+    location: "場所",
+    location_placeholder: "国や地域",
+    url: "ウェブページ",
+    url_placeholder: "あなたのブログ、ホームページなど",
     qq: "QQ",
     qq_placeholder: "例：12345678",
     qq_notes: "あなたの QQ リンクは：",
@@ -54,61 +54,61 @@ module.exports = {
     github: "GitHub",
     github_placeholder: " @ を含めない",
     github_notes: "あなたの GitHub リンクは：",
-    submit: "確認",
-    error_invalid_url: "無効なウェブ。",
-    success: "設定は成功で完了しました。"
+    submit: "保存",
+    error_invalid_url: "無効なURLです。",
+    success: "保存に成功しました。"
   },
   preference: {
-    title: "お気に入り管理",
+    title: "環境設定",
     locale: {
       header: "言語",
       system: "言語設定",
-      system_default: "ブラウザの同じ（{name}）",
-      system_notes: "ウェブの下で言語を選択のは当前のブラウザだけに適用する，ここではこのアカウントに適用する。",
-      content: "お気に入りの言語",
-      content_default: "システムの同じ（{name}）",
-      content_notes: "選択する言語の内容がないと、デフォルト言語で掲載します"
+      system_default: "ブラウザのデフォルト（{name}）",
+      system_notes: "フッターで言語を選択すると現在のブラウザにだけ適用されます。ここでの設定はアカウントに適用されます。",
+      content: "問題文の言語",
+      content_default: "システムのデフォルト（{name}）",
+      content_notes: "選択した言語の問題文がない場合は、問題のデフォルト言語で表示します"
     },
     code_language: {
       header: "プログラミング言語",
-      language: "デフォルト言語",
-      content_notes: "提出のデフォルト言語。"
+      language: "プログラミング言語",
+      content_notes: "提出言語のデフォルト設定。"
     },
     code_formatter: {
-      header: "コード格式化",
-      astyle_options: "Astyle 変数",
-      format_code_by_default: "デフォルトコード格式化",
-      notes_before: "ここの変数は提出ページのコード掲載に使います",
-      notes_link: "Astyle ファイル",
-      notes_after: "ガイド",
+      header: "コードフォーマット",
+      astyle_options: "Astyle オプション",
+      format_code_by_default: "デフォルトでコードをフォーマットして表示",
+      notes_before: "提出ページのコードのフォーマットに使用します。",
+      notes_link: "Astyle のリファレンス",
+      notes_after: "を参照してください",
       preview: "プレビュー",
-      error: "変数は正しくないです"
+      error: "オプションが間違っています"
     },
-    submit: "確認",
-    success: "お気に入り管理は成功で完了しました。"
+    submit: "保存",
+    success: "保存に成功しました。"
   },
   security: {
-    title: "安全管理",
+    title: "セキュリティ設定",
     password: {
-      header: "パスウード変更",
+      header: "パスワード変更",
       old: "現在のパスワード",
       new: "新しいパスワード",
-      retype: "パスワードの確認",
-      invalid_password: "無効なパスウード。",
-      empty_new_password: "新しいパスウードは入力してください。",
-      empty_retype_password: "確認のパスウードは入力してください。",
-      wrong_old_password: "現在のパスウードは正しくないです。",
-      passwords_do_not_match: "確認のパスウードは新しいパスウードに異なる。",
-      success: "パスウード変更は成功で完了しました。",
-      submit: "確認"
+      retype: "新しいパスワードを再入力",
+      invalid_password: "無効なパスワードです。",
+      empty_new_password: "新しいパスワードを入力してください。",
+      empty_retype_password: "新しいパスワードを再入力してください。",
+      wrong_old_password: "現在のパスワードが違います。",
+      passwords_do_not_match: "パスワードが一致しません。",
+      success: "パスワード変更に成功しました。",
+      submit: "変更"
     },
     email: {
-      header: "メール変更",
-      email: "メール",
-      invalid_email: "無効なメール。",
-      duplicate_email: "このメールを使うユザーはもう存在しまス。",
-      success: "メール変更は成功で完了しました。",
-      submit: "確認"
+      header: "メールアドレス変更",
+      email: "メールアドレス",
+      invalid_email: "無効なメールアドレスです。",
+      duplicate_email: "このメールアドレスはすでに使用されています。",
+      success: "メールアドレス変更に成功しました。",
+      submit: "変更"
     }
   }
 };

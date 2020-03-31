@@ -1,22 +1,22 @@
 module.exports = {
-  title: "タッグ管理",
-  tag_count: "共には タッグ {count} つ があります",
+  title: "タグ管理",
+  tag_count: "タグが {count} 個あります",
   error: {
-    PERMISSION_DENIED: "パーミッションは足りない。",
-    NO_SUCH_PROBLEM_TAG: "このタッグは存在しません。"
+    PERMISSION_DENIED: "権限がありません。",
+    NO_SUCH_PROBLEM_TAG: "タグが存在しません。"
   },
-  no_tags: "タッグはまだない",
-  new_tag: "タッグは追加する",
-  edit_tag: "タッグをエディタする",
-  name_placeholder: "タッグ名",
+  no_tags: "タグがありません",
+  new_tag: "タグを追加",
+  edit_tag: "タグを変更",
+  name_placeholder: "タグ名",
   default_language: "デフォルト",
   add_language: "言語を追加する",
-  confirm_discard_unsaved: "セーブしない編集を諦める",
-  new_tag_button: "タッグは追加する",
-  submit: "セーブする",
-  success_create: "成功で追加する。",
-  success_update: "成功でセーブする。",
-  confirm_delete_language: "言語の削除を確認する",
-  confirm_delete_tag: "タッグの削除を確認する",
-  close: "クローズ"
+  confirm_discard_unsaved: "キャンセル",
+  new_tag_button: "タグを追加",
+  submit: "保存",
+  success_create: "追加に成功しました。",
+  success_update: "保存に成功しました。",
+  confirm_delete_language: "削除する",
+  confirm_delete_tag: "削除する",
+  close: "閉じる"
 };
