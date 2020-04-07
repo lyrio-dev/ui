@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Popup, Ref } from "semantic-ui-react";
+import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Popup, Ref, Menu } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
 import AnsiToHtmlConverter from "ansi-to-html";
@@ -313,6 +313,8 @@ interface SubmissionPageProps {
   progressSubscriptionKey?: string;
   permissionRejudge: boolean;
   permissionCancel: boolean;
+  permissionSetPublic: boolean;
+  permissionDelete: boolean;
 }
 
 // Convert the compiler's message to HTML
@@ -836,9 +838,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     else if (response.error) toast.error(_(`submission.error.${response.error}`));
     else {
       toast.success(_("submission.success_cancel"));
-      setCancelPopupOpen(false);
     }
 
+    setCancelPopupOpen(false);
     setOperationPending(false);
   }
 
@@ -854,9 +856,46 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     else {
       toast.success(_("submission.success_rejudge"));
       navigation.refresh();
-      setRejudgePopupOpen(false);
     }
 
+    setRejudgePopupOpen(false);
+    setOperationPending(false);
+  }
+
+  async function onTogglePublic() {
+    if (operationPending) return;
+    setOperationPending(true);
+
+    const { requestError, response } = await SubmissionApi.setSubmissionPublic({
+      submissionId: meta.id,
+      isPublic: !meta.isPublic
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else {
+      toast.success(_(meta.isPublic ? "submission.success_set_non_public" : "submission.success_set_public"));
+      navigation.refresh();
+    }
+
+    setTogglePublicPopupOpen(false);
+    setOperationPending(false);
+  }
+
+  async function onDelete() {
+    if (operationPending) return;
+    setOperationPending(true);
+
+    const { requestError, response } = await SubmissionApi.deleteSubmission({
+      submissionId: meta.id
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else {
+      toast.success(_("submission.success_delete"));
+      navigation.navigate("/submissions");
+    }
+
+    setDeletePopupOpen(false);
     setOperationPending(false);
   }
 
@@ -865,9 +904,13 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const [operationsPopupOpen, setOperationsPopupOpen] = useState(false);
   const [cancelPopupOpen, setCancelPopupOpen] = useState(false);
   const [rejudgePopupOpen, setRejudgePopupOpen] = useState(false);
+  const [togglePublicPopupOpen, setTogglePublicPopupOpen] = useState(false);
+  const [deletePopupOpen, setDeletePopupOpen] = useState(false);
 
   const showRejudge = props.permissionRejudge;
   const showCancel = props.permissionCancel && pending;
+  const showTogglePublic = props.permissionSetPublic;
+  const showDelete = props.permissionDelete;
 
   const statusPopup = (statusNode: JSX.Element) =>
     !showRejudge && !showCancel ? (
@@ -876,6 +919,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       <>
         <Ref innerRef={e => e && e.tagName === "TD" && (statusNodeRef.current = e)}>
           <Popup
+            className={style.operationsPopup}
             trigger={statusNode}
             open={operationsPopupOpen}
             onOpen={() => !cancelPopupOpen && !rejudgePopupOpen && setOperationsPopupOpen(true)}
@@ -883,21 +927,52 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             disabled={operationPending}
             hoverable
             content={
-              <div className={style.operations}>
+              <Menu vertical className={style.operations}>
                 {showCancel && (
-                  <Button
-                    content={_("submission.cancel")}
+                  <Menu.Item
+                    content={
+                      <>
+                        <Icon name="ban" />
+                        {_("submission.cancel")}
+                      </>
+                    }
                     onClick={() => (setOperationsPopupOpen(false), setCancelPopupOpen(true))}
                   />
                 )}
                 {showRejudge && (
-                  <Button
-                    content={_("submission.rejudge")}
-                    primary
+                  <Menu.Item
+                    content={
+                      <>
+                        <Icon name="refresh" />
+                        {_("submission.rejudge")}
+                      </>
+                    }
                     onClick={() => (setOperationsPopupOpen(false), setRejudgePopupOpen(true))}
                   />
                 )}
-              </div>
+                {showTogglePublic && (
+                  <Menu.Item
+                    content={
+                      <>
+                        <Icon name={meta.isPublic ? "eye slash" : "eye"} />
+                        {_(meta.isPublic ? "submission.set_non_public" : "submission.set_public")}
+                      </>
+                    }
+                    onClick={() => (setOperationsPopupOpen(false), setTogglePublicPopupOpen(true))}
+                  />
+                )}
+                {showDelete && (
+                  <Menu.Item
+                    content={
+                      <>
+                        <Icon name="delete" />
+                        {_("submission.delete")}
+                      </>
+                    }
+                    onClick={() => (setOperationsPopupOpen(false), setDeletePopupOpen(true))}
+                  />
+                )}
+              </Menu>
             }
             position="bottom left"
             on="hover"
@@ -926,6 +1001,33 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                 loading={operationPending}
                 onClick={onRejudge}
               />
+            }
+            position="bottom left"
+          />
+        )}
+        {showTogglePublic && (
+          <Popup
+            open={togglePublicPopupOpen}
+            onClose={() => setTogglePublicPopupOpen(false)}
+            context={statusNodeRef.current}
+            content={
+              <Button
+                positive={!meta.isPublic}
+                content={_(meta.isPublic ? "submission.confirm_set_non_public" : "submission.confirm_set_public")}
+                loading={operationPending}
+                onClick={onTogglePublic}
+              />
+            }
+            position="bottom left"
+          />
+        )}
+        {showDelete && (
+          <Popup
+            open={deletePopupOpen}
+            onClose={() => setDeletePopupOpen(false)}
+            context={statusNodeRef.current}
+            content={
+              <Button negative content={_("submission.confirm_delete")} loading={operationPending} onClick={onDelete} />
             }
             position="bottom left"
           />

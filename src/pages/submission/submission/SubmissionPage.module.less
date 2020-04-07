@@ -1,12 +1,20 @@
-.operations {
-  :global(.ui.button) {
-    &:not(:last-child) {
-      margin-right: 14px !important;
-    }
+.operationsPopup {
+  padding: 0 !important;
+}
 
-    &:last-child {
-      margin-right: 0 !important;
-    }
+.operations {
+  border: none !important;
+  position: relative;
+  z-index: 2;
+  width: 140px !important;
+
+  :global(.item) {
+    padding: 13px 16px !important;
+  }
+
+  :global(.icon) {
+    float: none !important;
+    margin: 0 11px 0 0 !important;
   }
 }
 

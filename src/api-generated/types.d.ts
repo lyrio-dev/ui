@@ -85,6 +85,12 @@ declare namespace ApiTypes {
   export interface DeleteProblemTagResponseDto {
     error?: "NO_SUCH_PROBLEM_TAG" | "PERMISSION_DENIED";
   }
+  export interface DeleteSubmissionRequestDto {
+    submissionId: number;
+  }
+  export interface DeleteSubmissionResponseDto {
+    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
+  }
   export interface DownloadProblemFilesRequestDto {
     problemId: number;
     type: "TestData" | "AdditionalFile";
@@ -179,6 +185,8 @@ declare namespace ApiTypes {
     progressSubscriptionKey?: string;
     permissionRejudge?: boolean;
     permissionCancel?: boolean;
+    permissionSetPublic?: boolean;
+    permissionDelete?: boolean;
   }
   export interface GetUserDetailRequestDto {
     userId: number;
@@ -533,6 +541,13 @@ declare namespace ApiTypes {
   }
   export interface SetProblemPublicResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "NO_DISPLAY_ID";
+  }
+  export interface SetSubmissionPublicRequestDto {
+    submissionId: number;
+    isPublic: boolean;
+  }
+  export interface SetSubmissionPublicResponseDto {
+    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
   }
   export interface SetUserPrivilegesRequestDto {
     userId: number;
