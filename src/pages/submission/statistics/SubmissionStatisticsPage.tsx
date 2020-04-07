@@ -145,12 +145,14 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
             </Table.Body>
           </Table>
           {props.response.count <= SUBMISSIONS_PER_PAGE ? null : (
-            <Pagination
-              totalCount={props.response.count}
-              currentPage={props.currentPage}
-              itemsPerPage={SUBMISSIONS_PER_PAGE}
-              onPageChange={onPageChange}
-            />
+            <div className={style.pagination}>
+              <Pagination
+                totalCount={props.response.count}
+                currentPage={props.currentPage}
+                itemsPerPage={SUBMISSIONS_PER_PAGE}
+                onPageChange={onPageChange}
+              />
+            </div>
           )}
         </>
       )}
