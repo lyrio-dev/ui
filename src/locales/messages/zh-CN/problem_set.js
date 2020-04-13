@@ -30,5 +30,6 @@ module.exports = {
   column_title: "题目",
   column_submission_count: "提交",
   column_accepted_rate: "通过率",
-  non_public: "未公开"
+  non_public: "未公开",
+  no_title: "（无标题）"
 };

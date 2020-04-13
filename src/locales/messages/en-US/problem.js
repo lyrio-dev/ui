@@ -1,5 +1,6 @@
 module.exports = {
   title: "Problem",
+  no_title: "(No title)",
   meta_labels: {
     non_public: "Non-Public",
     no_display_id: "No ID"

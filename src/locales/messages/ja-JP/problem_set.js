@@ -30,5 +30,6 @@ module.exports = {
   column_title: "問題",
   column_submission_count: "提出",
   column_accepted_rate: "正答率",
-  non_public: "非公開"
+  non_public: "非公開",
+  no_title: "[TBT] (No title)"
 };

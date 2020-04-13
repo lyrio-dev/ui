@@ -486,7 +486,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                   </Table.Cell>
                   <Table.Cell textAlign="left" className={style.problemTitleCell}>
                     <Link href={problem.displayId ? `/problem/${problem.displayId}` : `/problem/by-id/${problem.id}`}>
-                      {problem.title}
+                      {problem.title.trim() || _("problem_set.no_title")}
                     </Link>
                     {!problem.isPublic && (
                       <Label

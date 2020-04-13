@@ -109,9 +109,10 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   const isMobile = appState.isScreenWidthIn(0, 768);
 
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
+  const title = props.problem.localizedContentsOfLocale.title.trim() || _("problem.no_title");
 
   useEffect(() => {
-    appState.enterNewPage(`${idString}. ${props.problem.localizedContentsOfLocale.title} - ${_("problem.title")}`);
+    appState.enterNewPage(`${idString}. ${title} - ${_("problem.title")}`);
   }, [appState.locale]);
 
   const timeLimit = getLimit(props.problem.judgeInfo, "timeLimit");
@@ -398,7 +399,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
             <div>
               <Header as="h1">
                 <strong>{idString}</strong>.&nbsp;
-                {props.problem.localizedContentsOfLocale.title}
+                {title}
                 {props.problem.meta.locales.length > 1 && (
                   <Dropdown icon="globe" className={style.languageSelectIcon}>
                     <Dropdown.Menu>

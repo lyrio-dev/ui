@@ -30,5 +30,6 @@ module.exports = {
   column_title: "Problem",
   column_submission_count: "Submissions",
   column_accepted_rate: "Acceptance",
-  non_public: "Non-Public"
+  non_public: "Non-Public",
+  no_title: "(No title)"
 };

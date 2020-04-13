@@ -1,5 +1,6 @@
 module.exports = {
   title: "题目",
+  no_title: "（无标题）",
   meta_labels: {
     non_public: "未公开",
     no_display_id: "未设置 ID"
