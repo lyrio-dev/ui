@@ -36,7 +36,13 @@ module.exports = {
     set_non_public: "非公開",
     set_public_confirm: "公開する",
     set_non_public_confirm: "非公開にする",
-    delete: "削除"
+    delete: "削除",
+    delete_confirm_title: "[TBT] Delete Problem",
+    delete_confirm_content:
+      "[TBT] Are you sure to delete the problem? The submissions, discussions and files of the problem will also be deleted. It may take some time.",
+    delete_confirm: "[TBT] Confirm delete",
+    delete_cancel: "[TBT] Cancel",
+    delete_success: "[TBT] Successfully deleted."
   },
   error: {
     PERMISSION_DENIED: "権限がありません。",

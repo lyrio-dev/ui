@@ -36,7 +36,12 @@ module.exports = {
     set_non_public: "取消公开",
     set_public_confirm: "确认公开",
     set_non_public_confirm: "确认取消公开",
-    delete: "删除"
+    delete: "删除",
+    delete_confirm_title: "删除题目",
+    delete_confirm_content: "确定删除该题目吗？题目的提交记录、讨论、文件也将一并删除。这可能需要花费一些时间。",
+    delete_confirm: "确认删除",
+    delete_cancel: "取消",
+    delete_success: "删除成功"
   },
   error: {
     PERMISSION_DENIED: "权限不足。",

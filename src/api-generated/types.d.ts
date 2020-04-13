@@ -79,6 +79,12 @@ declare namespace ApiTypes {
   export interface DeleteJudgeClientResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_JUDGE_CLIENT";
   }
+  export interface DeleteProblemRequestDto {
+    problemId: number;
+  }
+  export interface DeleteProblemResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
+  }
   export interface DeleteProblemTagRequestDto {
     id: number;
   }

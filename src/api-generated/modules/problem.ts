@@ -40,6 +40,8 @@ export type DeleteProblemTagRequestDto = ApiTypes.DeleteProblemTagRequestDto;
 export type DeleteProblemTagResponseDto = ApiTypes.DeleteProblemTagResponseDto;
 export type GetAllProblemTagsOfAllLocalesRequestDto = ApiTypes.GetAllProblemTagsOfAllLocalesRequestDto;
 export type GetAllProblemTagsOfAllLocalesResponseDto = ApiTypes.GetAllProblemTagsOfAllLocalesResponseDto;
+export type DeleteProblemRequestDto = ApiTypes.DeleteProblemRequestDto;
+export type DeleteProblemResponseDto = ApiTypes.DeleteProblemResponseDto;
 
 export const queryProblemSet = createPostApi<QueryProblemSetRequestDto, QueryProblemSetResponseDto>(
   "problem/queryProblemSet"
@@ -93,3 +95,4 @@ export const getAllProblemTagsOfAllLocales = createPostApi<
   GetAllProblemTagsOfAllLocalesRequestDto,
   GetAllProblemTagsOfAllLocalesResponseDto
 >("problem/getAllProblemTagsOfAllLocales");
+export const deleteProblem = createPostApi<DeleteProblemRequestDto, DeleteProblemResponseDto>("problem/deleteProblem");

@@ -29,7 +29,7 @@ import { ProblemApi, SubmissionApi } from "@/api";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useIntlMessage, useLoginOrRegisterNavigation, useDialog } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
@@ -278,6 +278,57 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   );
   // End Permission Manager
 
+  // Begin delete
+  const [deletePending, setDeletePending] = useState(false);
+  const deleteDialog = useDialog(
+    {
+      basic: true
+    },
+    () => (
+      <>
+        <Header icon="delete" className={style.dialogHeader} content={_("problem.action.delete_confirm_title")} />
+      </>
+    ),
+    () => _("problem.action.delete_confirm_content"),
+    () => (
+      <>
+        <Button
+          basic
+          inverted
+          negative
+          content={_("problem.action.delete_confirm")}
+          loading={deletePending}
+          onClick={onDelete}
+        />
+        <Button
+          basic
+          inverted
+          content={_("problem.action.delete_cancel")}
+          disabled={deletePending}
+          onClick={() => deleteDialog.close()}
+        />
+      </>
+    )
+  );
+
+  async function onDelete() {
+    if (deletePending) return;
+    setDeletePending(true);
+
+    const { requestError, response } = await ProblemApi.deleteProblem({
+      problemId: props.problem.meta.id
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`problem.error.${response.error}`));
+    else {
+      toast.success(_("problem.action.delete_success"));
+      navigation.navigate("/problems");
+    }
+
+    setDeletePending(false);
+  }
+  // End delete
+
   // Begin submit
   function getPreferredDefaultSubmissionContent(language?: CodeLanguage): SubmissionContent {
     if (!language) language = (appState.userPreference.defaultCodeLanguage as CodeLanguage) || CodeLanguage.CPP;
@@ -340,6 +391,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   return (
     <>
       {permissionManager}
+      {deleteDialog.element}
       <div className={style.flexContainer + " " + (inSubmitView ? style.inSubmitView : style.inStatementView)}>
         <div className={style.leftContainer}>
           <Container className={style.headerContainer}>
@@ -745,13 +797,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                 )}
                 {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
                   <Popup
-                    trigger={
-                      <Menu.Item
-                        name={_("problem.action.set_display_id")}
-                        icon="hashtag"
-                        onClick={() => console.log("set_display_id")}
-                      />
-                    }
+                    trigger={<Menu.Item name={_("problem.action.set_display_id")} icon="hashtag" />}
                     content={
                       <Form>
                         <Form.Input
@@ -788,7 +834,6 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                             : _("problem.action.set_public")
                         }
                         icon={props.problem.meta.isPublic ? "eye slash" : "eye"}
-                        onClick={() => console.log("toggle_public")}
                       />
                     }
                     content={
@@ -812,7 +857,7 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     className={style.menuItemDangerous}
                     name={_("problem.action.delete")}
                     icon="delete"
-                    onClick={() => console.log("delete")}
+                    onClick={deleteDialog.open}
                   />
                 )}
               </Menu>

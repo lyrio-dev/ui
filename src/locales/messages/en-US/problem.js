@@ -31,7 +31,13 @@ module.exports = {
     set_non_public: "Make non-public",
     set_public_confirm: "Confirm make public",
     set_non_public_confirm: "Confirm make non-public",
-    delete: "Delete"
+    delete: "Delete",
+    delete_confirm_title: "Delete Problem",
+    delete_confirm_content:
+      "Are you sure to delete the problem? The submissions, discussions and files of the problem will also be deleted. It may take some time.",
+    delete_confirm: "Confirm delete",
+    delete_cancel: "Cancel",
+    delete_success: "Successfully deleted."
   },
   error: {
     PERMISSION_DENIED: "Permission denied.",
