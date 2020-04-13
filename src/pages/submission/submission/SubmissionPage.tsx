@@ -577,7 +577,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                   }
                 >
                   <Icon className={style.accordionTitleIcon} name="microchip" />
-                  {formatFileSize((testcaseResult.memory || 0) * 1024)}
+                  {formatFileSize((testcaseResult.memory || 0) * 1024, 1)}
                 </span>
               </Grid.Column>
             );

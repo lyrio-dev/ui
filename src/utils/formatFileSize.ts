@@ -1,4 +1,4 @@
-export default function formatFileSize(size: number, precision: number = 2) {
+export default function formatFileSize(size: number, precision: number) {
   const units = ["K", "M", "G", "T"];
 
   let unit = "B";

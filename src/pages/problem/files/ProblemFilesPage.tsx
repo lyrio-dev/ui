@@ -210,7 +210,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
             {props.file.filename}
           </div>
         </Table.Cell>
-        {!isMobile && <Table.Cell textAlign="center">{formatFileSize(props.file.size)}</Table.Cell>}
+        {!isMobile && <Table.Cell textAlign="center">{formatFileSize(props.file.size, 1)}</Table.Cell>}
         <Table.Cell className={style.fileTableColumnOperations} textAlign="center">
           {props.file.upload ? (
             getUploadStatus()
@@ -451,7 +451,10 @@ let FileTable: React.FC<FileTableProps> = props => {
                           : "problem_files.selected_files_count_and_size",
                         {
                           count: selectedFilesArray.length.toString(),
-                          totalSize: formatFileSize(selectedFilesArray.reduce((sum, file) => sum + file.size, 0))
+                          totalSize: formatFileSize(
+                            selectedFilesArray.reduce((sum, file) => sum + file.size, 0),
+                            1
+                          )
                         }
                       )}
                     >
@@ -486,14 +489,20 @@ let FileTable: React.FC<FileTableProps> = props => {
                         : "problem_files.files_count_and_size_with_uploading",
                       {
                         count: props.files.length.toString(),
-                        totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0)),
+                        totalSize: formatFileSize(
+                          props.files.reduce((sum, file) => sum + file.size, 0),
+                          1
+                        ),
                         uploadingCount: uploadingCount.toString()
                       }
                     )
                   ) : (
                     _(isMobile ? "problem_files.files_count_and_size_narrow" : "problem_files.files_count_and_size", {
                       count: props.files.length.toString(),
-                      totalSize: formatFileSize(props.files.reduce((sum, file) => sum + file.size, 0))
+                      totalSize: formatFileSize(
+                        props.files.reduce((sum, file) => sum + file.size, 0),
+                        1
+                      )
                     })
                   )}
                 </div>

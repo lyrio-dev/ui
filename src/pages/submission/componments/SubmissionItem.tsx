@@ -74,7 +74,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
       </Table.Cell>
       <Table.Cell className={style.columnTime}>{Math.round(submission.timeUsed || 0) + " ms"}</Table.Cell>
       <Table.Cell className={style.columnMemory} title={(submission.memoryUsed || 0) + " K"}>
-        {formatFileSize((submission.memoryUsed || 0) * 1024, 2)}
+        {formatFileSize((submission.memoryUsed || 0) * 1024, 1)}
       </Table.Cell>
       <Table.Cell className={style.columnAnswer}>
         <Popup
@@ -210,7 +210,7 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
   const columnMemory = (
     <div title={(submission.memoryUsed || 0) + " K"}>
       <Icon name="microchip" />
-      {formatFileSize((submission.memoryUsed || 0) * 1024, 2)}
+      {formatFileSize((submission.memoryUsed || 0) * 1024, 1)}
     </div>
   );
 
