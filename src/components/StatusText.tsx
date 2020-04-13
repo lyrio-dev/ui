@@ -5,14 +5,6 @@ import style from "./StatusText.module.less";
 
 import { SubmissionStatusAll } from "@/interfaces/SubmissionStatus";
 
-interface StatusTextProps {
-  // This is the text to display
-  statusText?: string;
-  // This is the status for icon and color, an enum value, without spaces between each work
-  // If statusText is unset, this will be transformed to the text to display
-  status: string;
-}
-
 const icons: Record<SubmissionStatusAll, SemanticICONS> = {
   Pending: "hourglass half",
   ConfigurationError: "code",
@@ -34,6 +26,28 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
   Running: "spinner",
   Skipped: "fast forward"
 };
+
+interface StatusIconProps {
+  status: string;
+}
+
+export const StatusIcon: React.FC<StatusIconProps> = props => (
+  <span className={"statuscolor " + style[props.status]}>
+    <Icon
+      className={"statusicon" + " " + style.icon}
+      loading={icons[props.status] === "spinner"}
+      name={icons[props.status]}
+    />
+  </span>
+);
+
+interface StatusTextProps {
+  // This is the text to display
+  statusText?: string;
+  // This is the status for icon and color, an enum value, without spaces between each work
+  // If statusText is unset, this will be transformed to the text to display
+  status: string;
+}
 
 const StatusText: React.FC<StatusTextProps> = props => {
   const text = props.statusText || props.status.replace(/([A-Z])/g, " $1").trimStart();

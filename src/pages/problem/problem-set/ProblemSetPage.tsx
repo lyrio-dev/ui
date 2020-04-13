@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Search, Checkbox, Table, Label, Button, Header, Menu, Segment, Loader, Icon } from "semantic-ui-react";
 import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
@@ -16,11 +16,7 @@ import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
-
-interface ProblemRecord extends ApiTypes.ProblemMetaDto {
-  title: string;
-  tags: ApiTypes.LocalizedProblemTagDto[];
-}
+import { StatusIcon } from "@/components/StatusText";
 
 // Parsed from querystring, without pagination
 interface ProblemSetPageSearchQuery {
@@ -33,7 +29,7 @@ interface ProblemSetPageSearchQuery {
 async function fetchData(
   searchQuery: ProblemSetPageSearchQuery,
   currentPage: number
-): Promise<[ProblemRecord[], ApiTypes.QueryProblemSetResponseDto]> {
+): Promise<ApiTypes.QueryProblemSetResponseDto> {
   const requestBody: ApiTypes.QueryProblemSetRequestDto = {
     locale: appState.locale,
     skipCount: PROBLEMS_PER_PAGE * (currentPage - 1),
@@ -48,14 +44,7 @@ async function fetchData(
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError((<FormattedMessage id={`problem_set.error.${response.error}`} />));
 
-  return [
-    response.result.map(item => ({
-      ...item.meta,
-      title: item.title,
-      tags: sortTags(item.tags)
-    })),
-    response
-  ];
+  return response;
 }
 
 function parseSearchQuery(query: Record<string, string>): ProblemSetPageSearchQuery {
@@ -87,7 +76,6 @@ const PROBLEMS_PER_PAGE = 50;
 interface ProblemSetPageProps {
   searchQuery: ProblemSetPageSearchQuery;
   currentPage: number;
-  problems: ProblemRecord[];
   response: ApiTypes.QueryProblemSetResponseDto;
 }
 
@@ -125,22 +113,38 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     else setTags(Object.fromEntries(response.tags.map(tag => [tag.id, tag])));
   }
 
-  const tagEntires =
-    !tags || searchMode !== "tag"
-      ? []
-      : !searchKeyword
-      ? Object.entries(tags)
-      : Object.entries(tags).filter(([tagId, tag]) => tag.name.indexOf(searchKeyword) !== -1);
+  const tagEntires = useMemo(
+    () =>
+      !tags || searchMode !== "tag"
+        ? []
+        : !searchKeyword
+        ? Object.entries(tags)
+        : Object.entries(tags).filter(([tagId, tag]) => tag.name.indexOf(searchKeyword) !== -1),
+    [tags]
+  );
   const tagsCount = tagEntires.length;
-  const colors = sortTagColors(Array.from(new Set(tagEntires.map(([tagId, tag]) => tag.color))));
-  const tagsByColor = Object.fromEntries(
-    colors.map(color => [
-      color,
-      tagEntires
-        .map(([i, tag]) => (tag.color === color ? Number(i) : null))
-        .filter(x => x != null)
-        .sort((i, j) => (tags[i].name < tags[j].name ? -1 : tags[i].name > tags[j].name ? 1 : 0))
-    ])
+  const colors = useMemo(() => sortTagColors(Array.from(new Set(tagEntires.map(([tagId, tag]) => tag.color)))), [tags]);
+  const tagsByColor = useMemo(
+    () =>
+      Object.fromEntries(
+        colors.map(color => [
+          color,
+          tagEntires
+            .map(([i, tag]) => (tag.color === color ? Number(i) : null))
+            .filter(x => x != null)
+            .sort((i, j) => (tags[i].name < tags[j].name ? -1 : tags[i].name > tags[j].name ? 1 : 0))
+        ])
+      ),
+    [tags]
+  );
+
+  const problems = useMemo(
+    () =>
+      props.response.result.map(problem => ({
+        ...problem,
+        tags: sortTags(problem.tags)
+      })),
+    [props.response]
   );
 
   function redirectWithFilter(filter: Partial<ProblemSetPageSearchQuery>) {
@@ -436,7 +440,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         </>
       )}
       <div className={style.topPagination + " " + style.pagination}>{getPagination()}</div>
-      {props.problems.length === 0 ? (
+      {problems.length === 0 ? (
         filtersApplied ? (
           <Segment placeholder>
             <Header icon>
@@ -471,6 +475,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         <Table basic="very" textAlign="center" unstackable>
           <Table.Header>
             <Table.Row className={style.tableHeaderRow}>
+              {appState.currentUser && <Table.HeaderCell width={1}>{_("problem_set.column_status")}</Table.HeaderCell>}
               <Table.HeaderCell width={1}>#</Table.HeaderCell>
               <Table.HeaderCell textAlign="left">{_("problem_set.column_title")}</Table.HeaderCell>
               <Table.HeaderCell width={1}>{_("problem_set.column_submission_count")}</Table.HeaderCell>
@@ -478,40 +483,56 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {props.problems.map(problem => {
-              return (
-                <Table.Row className={style.row} key={problem.id}>
+            {problems.map(problem => (
+              <Table.Row className={style.row} key={problem.meta.id}>
+                {appState.currentUser && (
                   <Table.Cell>
-                    <b>{problem.displayId ? problem.displayId : "P" + problem.id}</b>
-                  </Table.Cell>
-                  <Table.Cell textAlign="left" className={style.problemTitleCell}>
-                    <Link href={problem.displayId ? `/problem/${problem.displayId}` : `/problem/by-id/${problem.id}`}>
-                      {problem.title.trim() || _("problem_set.no_title")}
-                    </Link>
-                    {!problem.isPublic && (
-                      <Label
-                        className={style.labelNonPublic}
-                        icon="eye slash"
-                        size="small"
-                        color="red"
-                        content={_("problem_set.non_public")}
-                        as="a"
-                        // As long as a user can see the "nonpublic" label, it has the permission to filter the
-                        // nonpublic problems
-                        onClick={() => onAddFilterNonpublic()}
-                      />
+                    {problem.submission && (
+                      <Link href={`/submission/${problem.submission.id}`}>
+                        <StatusIcon status={problem.submission.status} />
+                      </Link>
                     )}
-                    <div className={style.tags} style={{ display: appState.showTagsInProblemSet ? null : "none" }}>
-                      {problem.tags.map(tag => getTagLabel(tag))}
-                    </div>
                   </Table.Cell>
-                  <Table.Cell>{problem.submissionCount}</Table.Cell>
-                  <Table.Cell>
-                    {Math.ceil((problem.acceptedSubmissionCount / problem.submissionCount) * 100 || 0).toFixed(2)}%
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
+                )}
+                <Table.Cell>
+                  <b>{problem.meta.displayId ? problem.meta.displayId : "P" + problem.meta.id}</b>
+                </Table.Cell>
+                <Table.Cell textAlign="left" className={style.problemTitleCell}>
+                  <Link
+                    href={
+                      problem.meta.displayId
+                        ? `/problem/${problem.meta.displayId}`
+                        : `/problem/by-id/${problem.meta.id}`
+                    }
+                  >
+                    {problem.title.trim() || _("problem_set.no_title")}
+                  </Link>
+                  {!problem.meta.isPublic && (
+                    <Label
+                      className={style.labelNonPublic}
+                      icon="eye slash"
+                      size="small"
+                      color="red"
+                      content={_("problem_set.non_public")}
+                      as="a"
+                      // As long as a user can see the "nonpublic" label, it has the permission to filter the
+                      // nonpublic problems
+                      onClick={() => onAddFilterNonpublic()}
+                    />
+                  )}
+                  <div className={style.tags} style={{ display: appState.showTagsInProblemSet ? null : "none" }}>
+                    {problem.tags.map(tag => getTagLabel(tag))}
+                  </div>
+                </Table.Cell>
+                <Table.Cell>{problem.meta.submissionCount}</Table.Cell>
+                <Table.Cell>
+                  {Math.ceil((problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0).toFixed(
+                    2
+                  )}
+                  %
+                </Table.Cell>
+              </Table.Row>
+            ))}
           </Table.Body>
         </Table>
       )}
@@ -525,14 +546,13 @@ ProblemSetPage = observer(ProblemSetPage);
 export default defineRoute(async request => {
   const page = parseInt(request.query.page) || 1;
   const searchQuery = parseSearchQuery(request.query);
-  const [problems, response] = await fetchData(searchQuery, page);
+  const response = await fetchData(searchQuery, page);
 
   return (
     <ProblemSetPage
       // No key={uuid()}, so the search states are preserved
       searchQuery={searchQuery}
       currentPage={page}
-      problems={problems}
       response={response}
     />
   );

@@ -27,6 +27,7 @@ module.exports = {
     clear_filters: "清除搜索条件",
     create: "创建题目"
   },
+  column_status: "状态",
   column_title: "题目",
   column_submission_count: "提交",
   column_accepted_rate: "通过率",

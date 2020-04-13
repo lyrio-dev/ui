@@ -27,6 +27,7 @@ module.exports = {
     clear_filters: "Clear Query",
     create: "Create"
   },
+  column_status: "Status",
   column_title: "Problem",
   column_submission_count: "Submissions",
   column_accepted_rate: "Acceptance",

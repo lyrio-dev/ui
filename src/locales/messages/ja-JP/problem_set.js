@@ -27,6 +27,7 @@ module.exports = {
     clear_filters: "フィルタを消去",
     create: "問題を追加"
   },
+  column_status: "[TBT] Status",
   column_title: "問題",
   column_submission_count: "提出",
   column_accepted_rate: "正答率",

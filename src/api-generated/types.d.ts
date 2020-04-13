@@ -393,6 +393,7 @@ declare namespace ApiTypes {
     title: string;
     tags: ApiTypes.LocalizedProblemTagDto[];
     resultLocale: "en_US" | "zh_CN" | "ja_JP";
+    submission?: ApiTypes.SubmissionBasicMetaDto;
   }
   export interface QueryProblemSetResponsePermissionDto {
     createProblem?: boolean;
@@ -561,6 +562,32 @@ declare namespace ApiTypes {
   }
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";
+  }
+  export interface SubmissionBasicMetaDto {
+    id: number;
+    isPublic: boolean;
+    codeLanguage: string;
+    answerSize: number;
+    score: number;
+    status:
+      | "Pending"
+      | "ConfigurationError"
+      | "SystemError"
+      | "Canceled"
+      | "CompilationError"
+      | "FileError"
+      | "RuntimeError"
+      | "TimeLimitExceeded"
+      | "MemoryLimitExceeded"
+      | "OutputLimitExceeded"
+      | "InvalidInteraction"
+      | "PartiallyCorrect"
+      | "WrongAnswer"
+      | "Accepted"
+      | "JudgementFailed";
+    submitTime: string; // date-time
+    timeUsed: number;
+    memoryUsed: number;
   }
   export interface SubmissionMetaDto {
     id: number;
