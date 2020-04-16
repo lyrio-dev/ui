@@ -44,7 +44,7 @@ import {
 import { sortTags } from "../problemTag";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { defineRoute, RouteError } from "@/AppRouter";
-import StatusText from "@/components/StatusText";
+import StatusText, { StatusIcon } from "@/components/StatusText";
 import ScoreText from "@/components/ScoreText";
 
 type Problem = ApiTypes.GetProblemResponseDto;
@@ -402,7 +402,15 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
         <div className={style.leftContainer}>
           <Container className={style.headerContainer}>
             <div>
-              <Header as="h1">
+              <Header as="h1" className={style.header}>
+                {props.problem.lastSubmission.lastAcceptedSubmission && (
+                  <Link
+                    className={style.lastAcceptedSubmission}
+                    href={`/submission/${props.problem.lastSubmission.lastAcceptedSubmission.id}`}
+                  >
+                    <StatusIcon status="Accepted" />
+                  </Link>
+                )}
                 <strong>{idString}</strong>.&nbsp;
                 {title}
                 {props.problem.meta.locales.length > 1 && (
