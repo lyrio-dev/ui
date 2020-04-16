@@ -54,6 +54,8 @@ module.exports = {
     DUPLICATE_DISPLAY_ID: "ID {displayId} は使用されています。"
   },
   submit: {
+    // This must be at most than full-width character characters e.g. "上次提交"
+    last_submission: "[TBT] Last Sub.",
     back_to_statement: "戻る",
     language: "言語",
     skip_samples: "サンプルをスキップする",

@@ -154,6 +154,7 @@ declare namespace ApiTypes {
     statistics?: boolean;
     permissionOfCurrentUser?: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
     permissions?: boolean;
+    lastSubmissionAndLastAcceptedSubmission?: boolean;
   }
   export interface GetProblemResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
@@ -167,7 +168,8 @@ declare namespace ApiTypes {
     testData?: ApiTypes.ProblemFileDto[];
     additionalFiles?: ApiTypes.ProblemFileDto[];
     permissionOfCurrentUser?: ApiTypes.ProblemPermissionOfCurrentUserDto;
-    permissions?: ApiTypes.ProblemPermissions;
+    permissions?: ApiTypes.ProblemPermissionsDto;
+    lastSubmission?: ApiTypes.ProblemLastSubmissionDto;
   }
   export interface GetProblemTagDetailRequestDto {
     id: number;
@@ -319,6 +321,11 @@ declare namespace ApiTypes {
     group: ApiTypes.GroupMetaDto;
     permissionLevel: 1 | 2;
   }
+  export interface ProblemLastSubmissionDto {
+    lastSubmission?: ApiTypes.SubmissionBasicMetaDto;
+    lastSubmissionContent?: {};
+    lastAcceptedSubmission?: ApiTypes.SubmissionBasicMetaDto;
+  }
   export interface ProblemLocalizedContentDto {
     locale: "en_US" | "zh_CN" | "ja_JP";
     title: string;
@@ -341,7 +348,7 @@ declare namespace ApiTypes {
     MANAGE_PUBLICNESS?: boolean;
     DELETE?: boolean;
   }
-  export interface ProblemPermissions {
+  export interface ProblemPermissionsDto {
     userPermissions: ApiTypes.ProblemUserPermissionDto[];
     groupPermissions: ApiTypes.ProblemGroupPermissionDto[];
   }

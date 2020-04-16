@@ -44,6 +44,8 @@ import {
 import { sortTags } from "../problemTag";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { defineRoute, RouteError } from "@/AppRouter";
+import StatusText from "@/components/StatusText";
+import ScoreText from "@/components/ScoreText";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -55,7 +57,8 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     samples: true,
     judgeInfo: true,
     statistics: true,
-    permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"]
+    permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"],
+    lastSubmissionAndLastAcceptedSubmission: true
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
@@ -344,7 +347,9 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
   }
   const [inSubmitView, setInSubmitView] = useState(false);
   const refScrollTopBackup = useRef(0);
-  const [submissionContent, setSubmissionContent] = useState<SubmissionContent>(getPreferredDefaultSubmissionContent());
+  const [submissionContent, setSubmissionContent] = useState<SubmissionContent>(
+    (props.problem.lastSubmission.lastSubmissionContent as SubmissionContent) || getPreferredDefaultSubmissionContent()
+  );
   const scrollView = document.getElementById("scrollView");
 
   function openSubmitView() {
@@ -522,12 +527,14 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
           </Container>
           <Divider className={style.divider} />
           <Container className={style.submitView}>
-            <CodeEditor
-              className={style.editorContainer}
-              language={submissionContent.language}
-              value={submissionContent.code}
-              onChange={value => updateSubmissionContent("code", value)}
-            />
+            <div className={style.editorContainerWrapper}>
+              <CodeEditor
+                className={style.editorContainer}
+                language={submissionContent.language}
+                value={submissionContent.code}
+                onChange={value => updateSubmissionContent("code", value)}
+              />
+            </div>
           </Container>
           <Container className={style.statementView}>
             {(() => {
@@ -694,6 +701,20 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                   content={_("problem.submit.submit")}
                   onClick={onSubmit}
                 />
+                {props.problem.lastSubmission.lastSubmission && (
+                  <div className={style.lastSubmission}>
+                    <Header size="tiny" content={_("problem.submit.last_submission")} />
+                    <Link href={`/submission/${props.problem.lastSubmission.lastSubmission.id}`}>
+                      <StatusText status={props.problem.lastSubmission.lastSubmission.status} />
+                    </Link>
+                    <Link
+                      className={style.scoreText}
+                      href={`/submission/${props.problem.lastSubmission.lastSubmission.id}`}
+                    >
+                      <ScoreText score={props.problem.lastSubmission.lastSubmission.score} />
+                    </Link>
+                  </div>
+                )}
               </Form>
             </div>
             <div className={style.actionMenus + " " + style.statementViewMenu}>

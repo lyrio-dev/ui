@@ -53,6 +53,7 @@ module.exports = {
     DUPLICATE_DISPLAY_ID: "ID {displayId} 已被使用。"
   },
   submit: {
+    last_submission: "上次提交",
     back_to_statement: "返回题面",
     language: "语言",
     skip_samples: "跳过样例",

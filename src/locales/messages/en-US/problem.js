@@ -49,6 +49,7 @@ module.exports = {
     DUPLICATE_DISPLAY_ID: "ID {displayId} has already used."
   },
   submit: {
+    last_submission: "Last Sub.",
     back_to_statement: "Back to Statement",
     language: "Langauge",
     skip_samples: "Skip Samples",

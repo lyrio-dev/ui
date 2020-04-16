@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function formatDateTime(date: Date | string) {
+export default function formatDateTime(date: Date | string): [JSX.Element, string] {
   if (!(date instanceof Date)) date = new Date(date);
   let month = date.getMonth().toString();
   let day = date.getDate().toString();
