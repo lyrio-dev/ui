@@ -15,11 +15,16 @@
     width: 1px;
   }
 
-  .columnBio > div {
-    display: inline-block;
-    white-space: normal;
-    max-height: 19.5px;
-    overflow: hidden;
+  .columnBio {
+    display: flex;
+    justify-content: center;
+
+    > div {
+      display: inline-block;
+      white-space: normal;
+      max-height: 19.5px;
+      overflow: hidden;
+    }
   }
 
   .columnAcceptedProblemCount {
@@ -37,7 +42,7 @@
 
 @media only screen and (max-width: 767px) {
   .columnBio {
-    display: none;
+    display: none !important;
   }
 
   .searchContainer {
