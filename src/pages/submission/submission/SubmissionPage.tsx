@@ -31,7 +31,7 @@ async function fetchData(submissionId: number) {
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`submission.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`submission.error.${response.error}`} />);
 
   type RemoveOptional<T> = {
     [K in keyof T]-?: T[K];

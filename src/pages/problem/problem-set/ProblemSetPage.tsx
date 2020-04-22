@@ -42,7 +42,7 @@ async function fetchData(
   const { requestError, response } = await ProblemApi.queryProblemSet(requestBody);
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`problem_set.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`problem_set.error.${response.error}`} />);
 
   return response;
 }

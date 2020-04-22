@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Header, Button, Input } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { Validator } from "class-validator";
+import { Validator, isEmail } from "class-validator";
 import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
@@ -16,7 +16,7 @@ import { RouteError } from "@/AppRouter";
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserSecuritySettings({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`user_edit.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.error.${response.error}`} />);
 
   return response;
 }
@@ -101,7 +101,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   // Start change email
   // TODO: add email verify
   const [email, setEmail] = useState(props.meta.email);
-  const [checkEmail, emailInvalid] = useFieldCheckSimple(email, value => new Validator().isEmail(value));
+  const [checkEmail, emailInvalid] = useFieldCheckSimple(email, value => isEmail(value));
 
   // Errors
   const [duplicateEmail, setDuplicateEmail] = useState(false);

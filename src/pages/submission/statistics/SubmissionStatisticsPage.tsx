@@ -43,7 +43,7 @@ async function fetchData(id: number, idType: "id" | "displayId", type: Submissio
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error)
-    throw new RouteError((<FormattedMessage id={`submission_statistics.error.${response.error}`} />));
+    throw new RouteError(<FormattedMessage id={`submission_statistics.error.${response.error}`} />);
 
   return response;
 }

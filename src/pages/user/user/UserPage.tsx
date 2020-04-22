@@ -31,7 +31,7 @@ async function fetchData(userId: number): Promise<[Date, Required<typeof respons
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`user.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`user.error.${response.error}`} />);
 
   return [now, response as Required<typeof response>];
 }
@@ -83,10 +83,12 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
           {dataOfWeek.map((weekData, i) => (
             <div key={i}>
               <div className={style.label}>
-                {// If the first month has too less weeks (less than 3), omit its month label
-                // since the space is not enough
-                (i === 0 ? monthOfWeek[2] == monthOfWeek[0] : monthOfWeek[i] != monthOfWeek[i - 1]) &&
-                  _(`user.subway_graph.month.${monthOfWeek[i]}`)}
+                {
+                  // If the first month has too less weeks (less than 3), omit its month label
+                  // since the space is not enough
+                  (i === 0 ? monthOfWeek[2] == monthOfWeek[0] : monthOfWeek[i] != monthOfWeek[i - 1]) &&
+                    _(`user.subway_graph.month.${monthOfWeek[i]}`)
+                }
               </div>
               {weekData.map((dayData, j) => (
                 <div key={j} data-level={getLevel(dayData)}>

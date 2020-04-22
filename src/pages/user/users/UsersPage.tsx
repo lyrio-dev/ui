@@ -30,7 +30,7 @@ async function fetchData(sortBy: SortBy, currentPage: number): Promise<[UserMeta
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`users.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`users.error.${response.error}`} />);
 
   return [response.userMetas, response.count];
 }

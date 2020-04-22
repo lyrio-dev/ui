@@ -47,7 +47,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`problem_edit.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`problem_edit.error.${response.error}`} />);
 
   return response;
 }

@@ -62,7 +62,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`problem.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`problem.error.${response.error}`} />);
 
   sortTags(response.tagsOfLocale);
   return response;
@@ -508,26 +508,28 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                       {!showTags ? _("problem.show_tags") : _("problem.hide_tags")}
                       <Icon name={"caret down"} style={{ transform: showTags && "rotateZ(-90deg)" }} />
                     </Label>
-                    {// FIXME: Should we display tags in a <Popup> to prevent overflow the single-line design of <Label>s?
-                    showTags && (
-                      <>
-                        {props.problem.tagsOfLocale.map(tag => (
-                          <Label
-                            size={isMobile ? "small" : null}
-                            key={tag.id}
-                            content={tag.name}
-                            color={tag.color as any}
-                            as={Link}
-                            href={{
-                              pathname: "/problems",
-                              query: {
-                                tagIds: tag.id.toString()
-                              }
-                            }}
-                          />
-                        ))}
-                      </>
-                    )}
+                    {
+                      // FIXME: Should we display tags in a <Popup> to prevent overflow the single-line design of <Label>s?
+                      showTags && (
+                        <>
+                          {props.problem.tagsOfLocale.map(tag => (
+                            <Label
+                              size={isMobile ? "small" : null}
+                              key={tag.id}
+                              content={tag.name}
+                              color={tag.color as any}
+                              as={Link}
+                              href={{
+                                pathname: "/problems",
+                                query: {
+                                  tagIds: tag.id.toString()
+                                }
+                              }}
+                            />
+                          ))}
+                        </>
+                      )
+                    }
                   </>
                 )}
               </div>
@@ -816,15 +818,17 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
                     }
                   />
                 )}
-                {// Normal users won't interested in permissions
-                // Only show permission manage button when the user have write permission
-                props.problem.permissionOfCurrentUser.MODIFY && (
-                  <Menu.Item onClick={onClickPermissionManage}>
-                    <Icon name="key" />
-                    {_("problem.action.permission_manage")}
-                    <Loader size="tiny" active={permissionManagerLoading} />
-                  </Menu.Item>
-                )}
+                {
+                  // Normal users won't interested in permissions
+                  // Only show permission manage button when the user have write permission
+                  props.problem.permissionOfCurrentUser.MODIFY && (
+                    <Menu.Item onClick={onClickPermissionManage}>
+                      <Icon name="key" />
+                      {_("problem.action.permission_manage")}
+                      <Loader size="tiny" active={permissionManagerLoading} />
+                    </Menu.Item>
+                  )
+                }
                 {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
                   <Popup
                     trigger={<Menu.Item name={_("problem.action.set_display_id")} icon="hashtag" />}

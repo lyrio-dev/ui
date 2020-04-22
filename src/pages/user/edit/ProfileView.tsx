@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon, Form, Header, Input, Checkbox, TextArea, Button, List, Radio } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { Validator } from "class-validator";
+import { isURL } from "class-validator";
 import md5 from "blueimp-md5";
 import { FormattedMessage } from "react-intl";
 
@@ -17,7 +17,7 @@ import { RouteError } from "@/AppRouter";
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserProfile({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`user_edit.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.error.${response.error}`} />);
 
   return response;
 }
@@ -56,7 +56,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   const [qq, setQq] = useState(props.information.qq);
   const [github, setGithub] = useState(props.information.github);
 
-  const [checkUrl, urlInvalid] = useFieldCheckSimple(url, url => !url || new Validator().isURL(url));
+  const [checkUrl, urlInvalid] = useFieldCheckSimple(url, url => !url || isURL(url));
 
   const avatarTypeFromServer = props.avatarInfo.substr(0, props.avatarInfo.indexOf(":")) as AvatarType;
 

@@ -7,7 +7,7 @@ import { CodeLanguage } from "@/interfaces/CodeLanguage";
 // https://github.com/tree-sitter/tree-sitter/issues/559
 function patchFetch() {
   const realFetch = window.fetch;
-  window.fetch = function() {
+  window.fetch = function () {
     if (typeof arguments[0] === "string" && arguments[0].endsWith("tree-sitter.wasm")) arguments[0] = TreeSitterWasmUrl;
     return realFetch.apply(window, arguments);
   };
@@ -146,19 +146,9 @@ export function highlight(code: string, language: string) {
   }
 
   function escapeHtml(text: string) {
-    text = text
-      .split("&")
-      .join("&amp;")
-      .split("<")
-      .join("&lt;")
-      .split(">")
-      .join("&gt;")
-      .split(" ")
-      .join("&nbsp;");
+    text = text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split(" ").join("&nbsp;");
     return text;
   }
 
-  return escapeHtml(code)
-    .split("\n")
-    .join("<br>");
+  return escapeHtml(code).split("\n").join("<br>");
 }

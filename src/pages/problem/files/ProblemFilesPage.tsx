@@ -52,7 +52,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError((<FormattedMessage id={`problem_files.error.${response.error}`} />));
+  else if (response.error) throw new RouteError(<FormattedMessage id={`problem_files.error.${response.error}`} />);
 
   return response;
 }

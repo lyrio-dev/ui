@@ -28,7 +28,7 @@ export class AppState {
   @observable
   windowHeight: number = window.innerHeight;
 
-  isScreenWidthIn = computedFn(function(this: AppState, l: number, r: number) {
+  isScreenWidthIn = computedFn(function (this: AppState, l: number, r: number) {
     return this.windowWidth >= l && this.windowWidth < r;
   });
 

@@ -118,7 +118,14 @@ export function useFieldCheck(
     return fieldValueRef.current;
   }
 
-  return [debounce ? debouncedCheckField : checkField, waitForCheck, getUIValidateStatus, getUIHelp, getCurrentValue];
+  // FIXME: debouncedCheckField won't return a promise
+  return [
+    debounce ? async () => debouncedCheckField() : checkField,
+    waitForCheck,
+    getUIValidateStatus,
+    getUIHelp,
+    getCurrentValue
+  ];
 }
 
 export function useFieldCheckSimple(

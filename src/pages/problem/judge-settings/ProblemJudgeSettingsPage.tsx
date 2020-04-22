@@ -30,7 +30,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error)
-    throw new RouteError((<FormattedMessage id={`problem_judge_settings.error.${response.error}`} />));
+    throw new RouteError(<FormattedMessage id={`problem_judge_settings.error.${response.error}`} />);
 
   return response;
 }
