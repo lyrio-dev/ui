@@ -14,6 +14,7 @@ module.exports = {
       profile: "我的资料",
       problems: "我的题目",
       submissions: "我的提交",
+      groups: "我的用户组",
       edit_profile: "编辑资料",
       preference: "偏好设置",
       logout: "注销"

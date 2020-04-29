@@ -13,6 +13,7 @@ import UserAvatar from "./UserAvatar";
 
 interface UserSearchProps {
   className?: string;
+  placeholder?: string;
   onResultSelect: (user: ApiTypes.UserMetaDto) => void;
 }
 
@@ -52,7 +53,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
   return (
     <Search
       className={style.search + (props.className ? " " + props.className : "")}
-      placeholder={_("components.user_search.placeholder")}
+      placeholder={props.placeholder || _("components.user_search.placeholder")}
       value={searchKeyword}
       noResultsMessage={_("components.user_search.no_result")}
       onSearchChange={(e, { value }) => {

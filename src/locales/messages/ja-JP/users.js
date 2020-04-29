@@ -3,6 +3,7 @@ module.exports = {
   error: {
     TAKE_TOO_MANY: "リクエストが制限を超えています。"
   },
+  manage_groups: "[TBT] Manage groups",
   rank: "ランキング",
   username: "ユーザ名",
   bio: "自己紹介",

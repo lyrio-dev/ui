@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Icon } from "semantic-ui-react";
+import { Table, Icon, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { useNavigation, Link } from "react-navi";
 import { FormattedMessage } from "react-intl";
@@ -60,8 +60,17 @@ let UsersPage: React.FC<UsersPageProps> = props => {
 
   return (
     <>
-      <div className={style.searchContainer}>
+      <div className={style.header}>
         <UserSearch onResultSelect={user => navigation.navigate(`/user/${user.id}`)} />
+        {appState.currentUserHasPrivilege("MANAGE_USER_GROUP") && (
+          <Button
+            primary
+            className={style.manageGroups}
+            content={_("users.manage_groups")}
+            as={Link}
+            href="/users/groups"
+          />
+        )}
       </div>
       <Table unstackable basic="very" textAlign="center" className={style.table}>
         <Table.Header>

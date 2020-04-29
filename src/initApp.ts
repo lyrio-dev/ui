@@ -10,6 +10,7 @@ export default async function initApp() {
     const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
     if (requestError) throw new Error(requestError);
     appState.currentUser = response.userMeta;
+    appState.currentUserJoinedGroupsCount = response.joinedGroupsCount;
     appState.currentUserPrivileges = response.userPrivileges || [];
     appState.userPreference = response.userPreference || {};
     appState.serverPreference = response.serverPreference;

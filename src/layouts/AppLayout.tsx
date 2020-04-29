@@ -122,6 +122,12 @@ let AppLayout: React.FC = props => {
           <Icon name="book" />
           {_("common.header.user.problems")}
         </ContainerComponent.Item>
+        {appState.currentUserJoinedGroupsCount > 0 && (
+          <ContainerComponent.Item as={Link} href="/users/groups">
+            <Icon name="users" />
+            {_("common.header.user.groups")}
+          </ContainerComponent.Item>
+        )}
         {ContainerComponent === Dropdown && <Dropdown.Divider />}
         <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/profile`}>
           <Icon name="edit" />

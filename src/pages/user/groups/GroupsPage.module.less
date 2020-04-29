@@ -1,0 +1,93 @@
+.header {
+  display: flex;
+  margin-bottom: 14px;
+
+  :global(.ui.header) {
+    margin-bottom: 0 !important;
+  }
+
+  .createGroup {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+  }
+}
+
+.memberCount {
+  padding-left: 100px !important;
+  display: flex !important;
+  align-items: center;
+
+  :global(.icon){
+    display: table;
+
+    &:last-child {
+      margin-left: auto !important;
+    }
+  }
+}
+
+.groupItem {
+  padding: 11px 0 !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.usernameCellContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.userAvatar {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  margin-right: 7px;
+}
+
+.memberListSegment {
+  margin-left: -7px !important;
+  margin-right: -7px !important;
+  padding-top: 7px !important;
+  padding-bottom: 0px !important;
+}
+
+.memberListHeader:not(:empty) {
+  margin-top: 7px;
+  display: flex;
+}
+
+.memberList {
+  .memberListHeader:empty + & {
+    margin-top: 0 !important;
+  }
+
+  .memberListHeader:not(:empty) + & tr:first-child {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  tr:last-child {
+    border-bottom: 0 !important;
+    td {
+      padding-bottom: 4px !important;
+    }
+  }
+
+  &:not(:empty) {
+    margin-bottom: 7px !important;
+  }
+}
+
+.renameGroup {
+  margin-left: auto !important;
+  margin-right: 7px !important;
+}
+
+.deleteGroup {
+  margin-right: 0 !important;
+}
+
+.memberOperation {
+  :global(.icon) {
+    cursor: pointer;
+  }
+}

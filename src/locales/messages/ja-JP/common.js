@@ -14,6 +14,7 @@ module.exports = {
       profile: "マイページ",
       problems: "自分の問題",
       submissions: "自分の提出",
+      groups: "[TBT] My groups",
       edit_profile: "プロファイル設定",
       preference: "環境設定",
       logout: "ログアウト"

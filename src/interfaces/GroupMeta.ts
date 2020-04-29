@@ -1,5 +1,1 @@
-export interface GroupMeta {
-  id: number;
-  name: string;
-  ownerId: number;
-}
+export type GroupMeta = ApiTypes.GroupMetaDto;

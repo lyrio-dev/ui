@@ -68,10 +68,9 @@ declare namespace ApiTypes {
   }
   export interface DeleteGroupRequestDto {
     groupId: number;
-    force: boolean;
   }
   export interface DeleteGroupResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_GROUP" | "GROUP_NOT_EMPTY" | "GROUP_HAVE_PRIVILIGE";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_GROUP";
   }
   export interface DeleteJudgeClientRequestDto {
     id: number;
@@ -126,6 +125,7 @@ declare namespace ApiTypes {
   }
   export interface GetCurrentUserAndPreferenceResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
+    joinedGroupsCount?: number;
     userPrivileges?: (
       | "MANAGE_USER"
       | "MANAGE_USER_GROUP"
@@ -135,6 +135,21 @@ declare namespace ApiTypes {
     )[];
     userPreference?: ApiTypes.UserPreferenceDto;
     serverPreference?: ApiTypes.PreferenceConfig;
+  }
+  export interface GetGroupListResponseDto {
+    groups: ApiTypes.GroupMetaDto[];
+    groupsWithAdminPermission: number[];
+  }
+  export interface GetGroupMemberListRequestDto {
+    groupId: number;
+  }
+  export interface GetGroupMemberListResponseDto {
+    error?: "NO_SUCH_GROUP" | "PERMISSION_DENIED";
+    memberList?: ApiTypes.GetGroupMemberListResponseItem[];
+  }
+  export interface GetGroupMemberListResponseItem {
+    userMeta: ApiTypes.UserMetaDto;
+    isGroupAdmin: boolean;
   }
   export interface GetGroupMetaResponseDto {
     error?: "NO_SUCH_GROUP";
@@ -257,7 +272,7 @@ declare namespace ApiTypes {
   export interface GroupMetaDto {
     id: number;
     name: string;
-    ownerId: number;
+    memberCount: number;
   }
   export interface HeaderParameters {
     "maintaince-key": ApiTypes.Parameters.MaintainceKey;
@@ -488,7 +503,14 @@ declare namespace ApiTypes {
       | "NO_SUCH_USER"
       | "NO_SUCH_GROUP"
       | "USER_NOT_IN_GROUP"
-      | "OWNER_OR_GROUP_ADMIN_CAN_NOT_BE_REMOVED";
+      | "GROUP_ADMIN_CAN_NOT_BE_REMOVED";
+  }
+  export interface RenameGroupRequestDto {
+    groupId: number;
+    name: string;
+  }
+  export interface RenameGroupResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_GROUP" | "DUPLICATE_GROUP_NAME";
   }
   export interface RenameProblemFileRequestDto {
     problemId: number;

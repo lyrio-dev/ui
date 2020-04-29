@@ -75,7 +75,17 @@ export class AppState {
   currentUser: ApiTypes.UserMetaDto = null;
 
   @observable
+  currentUserJoinedGroupsCount: number = 0;
+
+  @observable
   currentUserPrivileges: ApiTypes.GetCurrentUserAndPreferenceResponseDto["userPrivileges"] = [];
+
+  currentUserHasPrivilege = computedFn(function (
+    this: AppState,
+    privilege: ApiTypes.GetCurrentUserAndPreferenceResponseDto["userPrivileges"][0]
+  ) {
+    return this.currentUser && (this.currentUser.isAdmin || this.currentUserPrivileges.includes(privilege));
+  });
 
   @observable
   userPreference: ApiTypes.UserPreferenceDto = {};

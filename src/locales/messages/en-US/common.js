@@ -14,6 +14,7 @@ module.exports = {
       profile: "My profile",
       problems: "My problems",
       submissions: "My submissions",
+      groups: "My groups",
       edit_profile: "Edit profile",
       preference: "Preference",
       logout: "Logout"

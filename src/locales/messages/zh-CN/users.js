@@ -3,6 +3,7 @@ module.exports = {
   error: {
     TAKE_TOO_MANY: "请求每页项目数量超出限制。"
   },
+  manage_groups: "管理用户组",
   rank: "排名",
   username: "用户名",
   bio: "个性签名",
