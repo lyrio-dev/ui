@@ -661,7 +661,8 @@ declare namespace ApiTypes {
     judgeInfo?: {};
   }
   export interface UpdateProblemJudgeInfoResponseDto {
-    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
+    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "INVALID_JUDGE_INFO";
+    judgeInfoError?: string[];
   }
   export interface UpdateProblemRequestUpdatingLocalizedContentDto {
     locale: "en_US" | "zh_CN" | "ja_JP";

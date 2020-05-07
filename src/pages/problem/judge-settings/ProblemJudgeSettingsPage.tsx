@@ -1,5 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Dropdown, Grid, Icon, Header, Menu, Popup, Button, Form, Message, Input, Ref, Table } from "semantic-ui-react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import {
+  Dropdown,
+  Grid,
+  Icon,
+  Header,
+  Menu,
+  Popup,
+  Button,
+  Form,
+  Message,
+  Input,
+  Ref,
+  Table,
+  Segment
+} from "semantic-ui-react";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
@@ -624,19 +638,8 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
   }
 
   function sortTestcases() {
-    function extractNumbers(str: string) {
-      const re = /\d+/g,
-        numbers: number[] = [];
-      while (1) {
-        const matchResult = re.exec(str);
-        if (matchResult) numbers.push(Number(matchResult[0]));
-        else break;
-      }
-      return numbers;
-    }
-
     const temp: [number[], Testcase][] = props.subtask.testcases.map(testcase => [
-      extractNumbers(testcase.inputFilename || testcase.outputFilename),
+      (testcase.inputFilename || testcase.outputFilename).match(/\d+/g).map(parseInt),
       testcase
     ]);
     temp.sort(([a], [b]) => {
@@ -881,32 +884,41 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
             }
           : null,
       runSamples: !!raw.runSamples,
-      subtasks: (Array.isArray(raw.subtasks) && raw.subtasks.length > 0 ? (raw.subtasks as any[]) : [null])
-        .map(x => x || {})
-        .map(rawSubtask => ({
-          uuid: uuid(),
-          scoringType: rawSubtask.scoringType in SubtaskScoringType ? rawSubtask.scoringType : SubtaskScoringType.Sum,
-          percentagePoints: Number.isSafeInteger(rawSubtask.percentagePoints) ? rawSubtask.percentagePoints : null,
-          timeLimit: Number.isSafeInteger(rawSubtask.timeLimit) ? rawSubtask.timeLimit : null,
-          memoryLimit: Number.isSafeInteger(rawSubtask.memoryLimit) ? rawSubtask.memoryLimit : null,
-          dependencies: Array.isArray(rawSubtask.dependencies)
-            ? (rawSubtask.dependencies as any[]).filter(id => typeof id === "number" && id >= 0 && id < subtaskCount)
-            : [],
-          testcases: Array.isArray(rawSubtask.testcases)
-            ? (rawSubtask.testcases as any[])
-                .map(x => x || {})
-                .map(rawTestcase => ({
-                  uuid: uuid(),
-                  inputFilename: typeof rawTestcase.inputFilename === "string" ? rawTestcase.inputFilename : "",
-                  outputFilename: typeof rawTestcase.outputFilename === "string" ? rawTestcase.outputFilename : "",
-                  percentagePoints: Number.isSafeInteger(rawTestcase.percentagePoints)
-                    ? rawTestcase.percentagePoints
-                    : null,
-                  timeLimit: Number.isSafeInteger(rawTestcase.timeLimit) ? rawTestcase.timeLimit : null,
-                  memoryLimit: Number.isSafeInteger(rawTestcase.memoryLimit) ? rawTestcase.memoryLimit : null
-                }))
-            : []
-        }))
+      subtasks:
+        Array.isArray(raw.subtasks) && raw.subtasks.length > 0
+          ? (raw.subtasks as any[])
+              .map(x => x || {})
+              .map(rawSubtask => ({
+                uuid: uuid(),
+                scoringType:
+                  rawSubtask.scoringType in SubtaskScoringType ? rawSubtask.scoringType : SubtaskScoringType.Sum,
+                percentagePoints: Number.isSafeInteger(rawSubtask.percentagePoints)
+                  ? rawSubtask.percentagePoints
+                  : null,
+                timeLimit: Number.isSafeInteger(rawSubtask.timeLimit) ? rawSubtask.timeLimit : null,
+                memoryLimit: Number.isSafeInteger(rawSubtask.memoryLimit) ? rawSubtask.memoryLimit : null,
+                dependencies: Array.isArray(rawSubtask.dependencies)
+                  ? (rawSubtask.dependencies as any[]).filter(
+                      id => typeof id === "number" && id >= 0 && id < subtaskCount
+                    )
+                  : [],
+                testcases: Array.isArray(rawSubtask.testcases)
+                  ? (rawSubtask.testcases as any[])
+                      .map(x => x || {})
+                      .map(rawTestcase => ({
+                        uuid: uuid(),
+                        inputFilename: typeof rawTestcase.inputFilename === "string" ? rawTestcase.inputFilename : "",
+                        outputFilename:
+                          typeof rawTestcase.outputFilename === "string" ? rawTestcase.outputFilename : "",
+                        percentagePoints: Number.isSafeInteger(rawTestcase.percentagePoints)
+                          ? rawTestcase.percentagePoints
+                          : null,
+                        timeLimit: Number.isSafeInteger(rawTestcase.timeLimit) ? rawTestcase.timeLimit : null,
+                        memoryLimit: Number.isSafeInteger(rawTestcase.memoryLimit) ? rawTestcase.memoryLimit : null
+                      }))
+                  : []
+              }))
+          : null
     };
     return converted;
   }
@@ -915,17 +927,19 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     const normalized = lodashClonedeep(judgeInfo);
     if (!normalized.runSamples) delete normalized.runSamples;
     if (!normalized.fileIo) delete normalized.fileIo;
-    for (const subtask of normalized.subtasks) {
-      delete subtask.uuid;
-      if (subtask.percentagePoints == null) delete subtask.percentagePoints;
-      if (subtask.timeLimit == null) delete subtask.timeLimit;
-      if (subtask.memoryLimit == null) delete subtask.memoryLimit;
-      if (subtask.dependencies == null || subtask.dependencies.length === 0) delete subtask.dependencies;
-      for (const testcase of subtask.testcases) {
-        delete testcase.uuid;
-        if (testcase.percentagePoints == null) delete testcase.percentagePoints;
-        if (testcase.timeLimit == null) delete testcase.timeLimit;
-        if (testcase.memoryLimit == null) delete testcase.memoryLimit;
+    if (normalized.subtasks) {
+      for (const subtask of normalized.subtasks) {
+        delete subtask.uuid;
+        if (subtask.percentagePoints == null) delete subtask.percentagePoints;
+        if (subtask.timeLimit == null) delete subtask.timeLimit;
+        if (subtask.memoryLimit == null) delete subtask.memoryLimit;
+        if (subtask.dependencies == null || subtask.dependencies.length === 0) delete subtask.dependencies;
+        for (const testcase of subtask.testcases) {
+          delete testcase.uuid;
+          if (testcase.percentagePoints == null) delete testcase.percentagePoints;
+          if (testcase.timeLimit == null) delete testcase.timeLimit;
+          if (testcase.memoryLimit == null) delete testcase.memoryLimit;
+        }
       }
     }
     return normalized;
@@ -1171,7 +1185,13 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     if (requestError) {
       toast.error(requestError);
     } else if (response.error) {
-      toast.error(_(`problem_judge_settings.submit_error.${response.error}`));
+      if (response.error === "INVALID_JUDGE_INFO") {
+        toast.error(
+          _(`problem_judge_settings.error.INVALID_JUDGE_INFO.${response.judgeInfoError[0]}`, response.judgeInfoError)
+        );
+      } else {
+        toast.error(_(`problem_judge_settings.error.${response.error}`));
+      }
     } else {
       toast.success(_("problem_judge_settings.submit_success"));
       setModified(false);
@@ -1180,11 +1200,12 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     setPending(false);
   }
 
-  const sumSpecfiedPercentagePoints = judgeInfo.subtasks
+  const sumSpecfiedPercentagePoints = (judgeInfo.subtasks || [])
     .map(subtask => subtask.percentagePoints)
     .filter(x => x != null)
     .reduce((sum, x) => sum + x, 0);
-  const countUnspecfiedPercentagePoints = judgeInfo.subtasks.filter(subtask => subtask.percentagePoints == null).length;
+  const countUnspecfiedPercentagePoints = (judgeInfo.subtasks || []).filter(subtask => subtask.percentagePoints == null)
+    .length;
   const defaultPercentagePoints =
     (sumSpecfiedPercentagePoints > 100
       ? 0
@@ -1231,6 +1252,42 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
         }}
       />
     </>
+  );
+
+  const autoTestcases = useMemo(
+    () =>
+      props.problem.testData
+        .filter(file => file.filename.toLowerCase().endsWith(".in"))
+        .map<[ApiTypes.ProblemFileDto, ApiTypes.ProblemFileDto, number[]]>(input => [
+          input,
+          props.problem.testData.find(file =>
+            [".out", ".ans"]
+              .map(ext => input.filename.slice(0, -3).toLowerCase() + ext)
+              .includes(file.filename.toLowerCase())
+          ),
+          (input.filename.match(/\d+/g) || []).map(parseInt)
+        ])
+        .filter(([input, outputFile]) => outputFile)
+        .sort(([inputA, outputA, numbersA], [inputB, outputB, numbersB]) => {
+          const firstNonEqualIndex = [...Array(Math.max(numbersA.length, numbersB.length)).keys()].findIndex(
+            i => numbersA[i] !== numbersB[i]
+          );
+          return firstNonEqualIndex === -1
+            ? inputA.filename < inputB.filename
+              ? -1
+              : 1
+            : numbersA[firstNonEqualIndex] - numbersB[firstNonEqualIndex];
+        })
+        .map(([input, output]) => ({
+          inputFilename: input.filename,
+          outputFilename: output.filename
+        })),
+    [props.problem]
+  );
+
+  // Prevent losing subtasks by clicking "auto detect testcases" checkbox and then click again back.
+  const [subtasksBackup, setSubtasksBackup] = useState(
+    judgeInfo.subtasks || [{ scoringType: SubtaskScoringType.Sum, testcases: [], uuid: uuid(), dependencies: [] }]
   );
 
   useConfirmUnload(() => modified);
@@ -1399,8 +1456,25 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   onChange={(e, { checked }) => onUpdate({ runSamples: checked })}
                 />
               </Form.Group>
+              <Form.Group>
+                <Form.Checkbox
+                  width={16}
+                  label={
+                    <label dangerouslySetInnerHTML={{ __html: _("problem_judge_settings.auto_testcases") }}></label>
+                  }
+                  checked={!judgeInfo.subtasks}
+                  onChange={(e, { checked }) => {
+                    if (checked) {
+                      setSubtasksBackup(judgeInfo.subtasks);
+                      onUpdate({ subtasks: null });
+                    } else {
+                      onUpdate({ subtasks: subtasksBackup });
+                    }
+                  }}
+                />
+              </Form.Group>
             </Form>
-            {judgeInfo.subtasks &&
+            {judgeInfo.subtasks ? (
               judgeInfo.subtasks.map((subtask, index) => (
                 <SubtaskEditor
                   key={subtask.uuid}
@@ -1423,7 +1497,35 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   onMoveTestcaseDown={testcaseIndex => onMoveTestcase(index, testcaseIndex, "DOWN")}
                   onAddTestcase={testcaseIndex => onAddTestcase(index, testcaseIndex)}
                 />
-              ))}
+              ))
+            ) : (
+              <Table textAlign="center">
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell width={2}>#</Table.HeaderCell>
+                    <Table.HeaderCell width={7}>{_("problem_judge_settings.testcase.input_file")}</Table.HeaderCell>
+                    <Table.HeaderCell width={7}>{_("problem_judge_settings.testcase.output_file")}</Table.HeaderCell>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {autoTestcases.length > 0 ? (
+                    autoTestcases.map((testcase, i) => (
+                      <Table.Row key={i}>
+                        <Table.Cell>{i + 1}</Table.Cell>
+                        <Table.Cell>{testcase.inputFilename}</Table.Cell>
+                        <Table.Cell>{testcase.outputFilename}</Table.Cell>
+                      </Table.Row>
+                    ))
+                  ) : (
+                    <Table.Row>
+                      <Table.Cell colSpan={3}>
+                        {_("problem_judge_settings.cannot_detect_testcases_from_testdata")}
+                      </Table.Cell>
+                    </Table.Row>
+                  )}
+                </Table.Body>
+              </Table>
+            )}
           </Grid.Column>
         </Grid.Row>
       </Grid>

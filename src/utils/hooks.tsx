@@ -9,12 +9,12 @@ import { appConfig } from "@/appConfig";
 export function useIntlMessage() {
   const intl = useIntl();
   return Object.assign(
-    (id: string, values?: Record<string, string>) =>
+    (id: string, values?: Record<React.ReactText, React.ReactText> | React.ReactText[]) =>
       intl.formatMessage(
         {
           id
         },
-        values
+        values as Record<string, string>
       ),
     intl
   );

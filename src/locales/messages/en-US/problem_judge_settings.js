@@ -8,7 +8,37 @@ module.exports = {
   submit_success: "Successfully submitted.",
   error: {
     NO_SUCH_PROBLEM: "No such problem.",
-    PERMISSION_DENIED: "Permission denied."
+    PERMISSION_DENIED: "Permission denied.",
+    INVALID_JUDGE_INFO: {
+      INVALID_TIME_LIMIT_TASK: "Invalid time limit.",
+      TIME_LIMIT_TOO_LARGE_TASK: "The time {3} ms is too large, please contact the admin.",
+      INVALID_TIME_LIMIT_SUBTASK: "The time limit of subtask {1} is invalid.",
+      TIME_LIMIT_TOO_LARGE_SUBTASK: "The time limit {3} ms of subtask {1} is too large, please contact the admin.",
+      INVALID_TIME_LIMIT_TESTCASE: "The time limit of subtask {1}'s testcase {2} is invalid.",
+      TIME_LIMIT_TOO_LARGE_TESTCASE:
+        "The time limit {3} ms of subtask {1}'s testcase {2} is too large, please contact the admin.",
+      INVALID_MEMORY_LIMIT_TASK: "Invalid memory limit.",
+      MEMORY_LIMIT_TOO_LARGE_TASK: "The memory {3} MiB is too large, please contact the admin.",
+      INVALID_MEMORY_LIMIT_SUBTASK: "The memory limit of subtask {1} is invalid.",
+      MEMORY_LIMIT_TOO_LARGE_SUBTASK: "The memory limit {3} MiB of subtask {1} is too large, please contact the admin.",
+      INVALID_MEMORY_LIMIT_TESTCASE: "The memory limit of subtask {1}'s testcase {2} is invalid.",
+      MEMORY_LIMIT_TOO_LARGE_TESTCASE:
+        "The memory limit {3} MiB of subtask {1}'s testcase {2} is too large, please contact the admin.",
+      INVALID_FILEIO_FILENAME: "The input or output filename {1} is invalid.",
+      NO_TESTCASES: "No testcases.",
+      SUBTASK_HAS_NO_TESTCASES: "Subtask {1} has no testcases.",
+      INVALID_SCORING_TYPE: "Unknown error.",
+      INVALID_POINTS_SUBTASK: "Subtask {1}'s percentage points {2} is invalid.",
+      INVALID_POINTS_TESTCASE: "Subtask {1}'s testcase {2}'s percentage points {2} is invalid.",
+      POINTS_SUM_UP_TO_LARGER_THAN_100_SUBTASKS:
+        "The sum of all subtasks' points is {1}, exceeding the full points 100.",
+      POINTS_SUM_UP_TO_LARGER_THAN_100_TESTCASES:
+        "The sum of subtask {1}'s all testcases' points is {2}, exceeding the full points 100.",
+      INVALID_DEPENDENCY: "Subtask {1}'s dependency subtask ID {2} is invalid",
+      NO_SUCH_INPUT_FILE: "Input file {3} referenced by subtask {1}'s testcase {2} doesn't exist.",
+      NO_SUCH_OUTPUT_FILE: "Output file {3} referenced by subtask {1}'s testcase {2} doesn't exist.",
+      CYCLICAL_SUBTASK_DEPENDENCY: "Cyclical subtask dependency."
+    }
   },
   edit_raw: {
     edit_raw: "Edit Raw",
@@ -29,6 +59,9 @@ module.exports = {
   standard_input: "Standard input",
   standard_output: "Standard output",
   run_samples: "Run samples when judging",
+  auto_testcases:
+    "Detect testcases from testdata files (Match <code>.in</code> and <code>.out</code> files automatically)",
+  cannot_detect_testcases_from_testdata: "Cannot detect testcases from testdata",
   subtask: "Subtask",
   single_subtask: "Single Subtask",
   subtask_testcases_count: "{count} Cases",

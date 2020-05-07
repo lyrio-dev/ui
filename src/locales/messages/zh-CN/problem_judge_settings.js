@@ -8,7 +8,33 @@ module.exports = {
   submit_success: "提交成功。",
   error: {
     NO_SUCH_PROBLEM: "无此题目。",
-    PERMISSION_DENIED: "权限不足。"
+    PERMISSION_DENIED: "权限不足。",
+    INVALID_JUDGE_INFO: {
+      INVALID_TIME_LIMIT_TASK: "时间限制无效。",
+      TIME_LIMIT_TOO_LARGE_TASK: "时间限制 {3} ms 过大，请联系管理员。",
+      INVALID_TIME_LIMIT_SUBTASK: "子任务 {1} 的时间限制无效。",
+      TIME_LIMIT_TOO_LARGE_SUBTASK: "子任务 {1} 的时间限制 {3} ms 过大，请联系管理员。",
+      INVALID_TIME_LIMIT_TESTCASE: "子任务 {1} 的测试点 {2} 的时间限制无效。",
+      TIME_LIMIT_TOO_LARGE_TESTCASE: "子任务 {1} 的测试点 {2} 的时间限制 {3} ms 过大，请联系管理员。",
+      INVALID_MEMORY_LIMIT_TASK: "空间限制无效。",
+      MEMORY_LIMIT_TOO_LARGE_TASK: "空间限制 {3} MiB 过大，请联系管理员。",
+      INVALID_MEMORY_LIMIT_SUBTASK: "子任务 {1} 的空间限制无效。",
+      MEMORY_LIMIT_TOO_LARGE_SUBTASK: "子任务 {1} 的空间限制 {3} MiB 过大，请联系管理员。",
+      INVALID_MEMORY_LIMIT_TESTCASE: "子任务 {1} 的测试点 {2} 的空间限制无效。",
+      MEMORY_LIMIT_TOO_LARGE_TESTCASE: "子任务 {1} 的测试点 {2} 的空间限制 {3} MiB 过大，请联系管理员。",
+      INVALID_FILEIO_FILENAME: "输入或输出文件名 {1} 无效。",
+      NO_TESTCASES: "无测试点。",
+      SUBTASK_HAS_NO_TESTCASES: "子任务 {1} 无测试点。",
+      INVALID_SCORING_TYPE: "未知错误。",
+      INVALID_POINTS_SUBTASK: "子任务 {1} 的分值占比 {2} 无效。",
+      INVALID_POINTS_TESTCASE: "子任务 {1} 的测试点 {2} 的分值占比 {3} 无效。",
+      POINTS_SUM_UP_TO_LARGER_THAN_100_SUBTASKS: "所有子任务的分值占比和为 {1}，超过了满分 100。",
+      POINTS_SUM_UP_TO_LARGER_THAN_100_TESTCASES: "子任务 {1} 所有测试点的分值占比和为 {2}，超过了满分 100。",
+      INVALID_DEPENDENCY: "子任务 {1} 的依赖子任务编号 {2} 无效。",
+      NO_SUCH_INPUT_FILE: "子任务 {1} 的测试点 {2} 所引用的输入文件 {3} 不存在。",
+      NO_SUCH_OUTPUT_FILE: "子任务 {1} 的测试点 {2} 所引用的输出文件 {3} 不存在。",
+      CYCLICAL_SUBTASK_DEPENDENCY: "子任务依赖存在环。"
+    }
   },
   edit_raw: {
     edit_raw: "编辑源代码",
@@ -29,6 +55,8 @@ module.exports = {
   standard_input: "标准输入",
   standard_output: "标准输出",
   run_samples: "评测时测试样例",
+  auto_testcases: "由数据文件自动检测测试点（自动匹配 <code>.in</code> 与 <code>.out</code> 文件）",
+  cannot_detect_testcases_from_testdata: "无法从测试数据中检测测试点",
   subtask: "子任务",
   single_subtask: "单个子任务",
   subtask_testcases_count: "{count} 测试点",
