@@ -42,7 +42,7 @@ module.exports = {
     delete_confirm_content: "确定删除该题目吗？题目的提交记录、讨论、文件也将一并删除。这可能需要花费一些时间。",
     delete_confirm: "确认删除",
     delete_cancel: "取消",
-    delete_success: "删除成功"
+    delete_success: "删除成功。"
   },
   error: {
     PERMISSION_DENIED: "权限不足。",
