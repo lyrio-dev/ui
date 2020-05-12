@@ -33,6 +33,12 @@ module.exports = {
       INVALID_DEPENDENCY: "子任务 {1} 的依赖子任务编号 {2} 无效。",
       NO_SUCH_INPUT_FILE: "子任务 {1} 的测试点 {2} 所引用的输入文件 {3} 不存在。",
       NO_SUCH_OUTPUT_FILE: "子任务 {1} 的测试点 {2} 所引用的输出文件 {3} 不存在。",
+      INVALID_CHECKER_TYPE: "未知错误。",
+      INVALID_CHECKER_OPTIONS: "未知错误。",
+      INVALID_CHECKER_INTERFACE: "未知错误。",
+      INVALID_CHECKER_LANGUAGE: "未知错误。",
+      NO_SUCH_CHECKER_FILE: "检查器文件 {1} 不存在。",
+      INVALID_CHECKER_LANGUAGE_OPTIONS: "未知错误。",
       CYCLICAL_SUBTASK_DEPENDENCY: "子任务依赖存在环。"
     }
   },
@@ -57,6 +63,40 @@ module.exports = {
   run_samples: "评测时测试样例",
   auto_testcases: "由数据文件自动检测测试点（自动匹配 <code>.in</code> 与 <code>.out</code> 文件）",
   cannot_detect_testcases_from_testdata: "无法从测试数据中检测测试点",
+  checker: {
+    checker: "检查器",
+    types: {
+      integers: "整数",
+      floats: "浮点数",
+      lines: "行比较",
+      binary: "二进制比较",
+      custom: "自定义"
+    },
+    config: {
+      floats: {
+        precision: "误差位数",
+        description: "若用户输出的结果与正确答案的绝对误差或相对误差不超过 {value} 则视为正确。"
+      },
+      lines: {
+        case_sensitive: "区分大小写",
+        description: "行末的空白字符与文末的空白行将被忽略。"
+      },
+      custom: {
+        interface: "接口",
+        interfaces: {
+          testlib: "Testlib",
+          legacy: "旧版 SYZOJ",
+          lemon: "Lemon",
+          hustoj: "HustOJ",
+          qduoj: "QDUOJ",
+          domjudge: "DOMjudge"
+        },
+        language: "语言",
+        filename: "文件",
+        filename_no_file: "无文件"
+      }
+    }
+  },
   subtask: "子任务",
   single_subtask: "单个子任务",
   subtask_testcases_count: "{count} 测试点",
@@ -101,7 +141,8 @@ module.exports = {
   no_testcases: "暂无测试点",
   testcase: {
     input_file: "输入文件",
-    output_file: "输出文件"
+    output_file: "输出文件",
+    no_files: "找不到文件。"
   },
   testcase_add: {
     before: "在此测试点前",

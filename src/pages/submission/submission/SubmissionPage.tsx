@@ -163,7 +163,7 @@ interface SubmissionTestcaseResultTraditional {
   output?: string;
   userOutput?: string;
   userError?: string;
-  graderMessage?: string;
+  checkerMessage?: string;
   systemMessage?: string;
 }
 
@@ -656,7 +656,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             )}
             <CodeBox title={_("submission.testcase.user_output")} content={testcaseResult.userOutput} />
             <CodeBox title={_("submission.testcase.user_error")} content={testcaseResult.userError} />
-            <CodeBox title={_("submission.testcase.grader_message")} content={testcaseResult.graderMessage} />
+            <CodeBox title={_("submission.testcase.checker_message")} content={testcaseResult.checkerMessage} />
             <CodeBox title={_("submission.testcase.system_message")} content={testcaseResult.systemMessage} />
           </Accordion.Content>
         )
@@ -1078,7 +1078,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         <CodeBox
           className={style.mainCodeBox}
           title={_("submission.system_message")}
-          content={fullInfo.systemMessage}
+          html={ansiToHtml(fullInfo.systemMessage)}
         />
       )}
       {fullInfo &&

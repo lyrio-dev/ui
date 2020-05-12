@@ -39,6 +39,12 @@ module.exports = {
       INVALID_DEPENDENCY: "[TBT] Subtask {1}'s dependency subtask ID {2} is invalid",
       NO_SUCH_INPUT_FILE: "[TBT] Input file {3} referenced by subtask {1}'s testcase {2} doesn't exist.",
       NO_SUCH_OUTPUT_FILE: "[TBT] Output file {3} referenced by subtask {1}'s testcase {2} doesn't exist.",
+      INVALID_CHECKER_TYPE: "[TBT] Unknown error.",
+      INVALID_CHECKER_OPTIONS: "[TBT] Unknown error.",
+      INVALID_CHECKER_INTERFACE: "[TBT] Unknown error.",
+      INVALID_CHECKER_LANGUAGE: "[TBT] Unknown error.",
+      NO_SUCH_CHECKER_FILE: "[TBT] The checker file {1} doesn't exist.",
+      INVALID_CHECKER_LANGUAGE_OPTIONS: "[TBT] Unknown error.",
       CYCLICAL_SUBTASK_DEPENDENCY: "[TBT] Cyclical subtask dependency."
     }
   },
@@ -64,6 +70,42 @@ module.exports = {
   auto_testcases:
     "[TBT] Detect testcases from testdata files (Match <code>.in</code> and <code>.out</code> files automatically)",
   cannot_detect_testcases_from_testdata: "[TBT] Cannot detect testcases from testdata",
+  checker: {
+    checker: "[TBT] Checker",
+    types: {
+      integers: "[TBT] Integers",
+      floats: "[TBT] Floats",
+      lines: "[TBT] Lines",
+      binary: "[TBT] Binary",
+      custom: "[TBT] Custom"
+    },
+    config: {
+      floats: {
+        precision: "[TBT] Precision",
+        description:
+          "[TBT] The participant's answer is considered correct if its absolute or relative error to the jury's answer is less than {value}."
+      },
+      lines: {
+        case_sensitive: "[TBT] Case Sensitive",
+        description:
+          "[TBT] The blank characters in the end of each line and empty lines in the end of file are ignored."
+      },
+      custom: {
+        interface: "[TBT] Interface",
+        interfaces: {
+          testlib: "[TBT] Testlib",
+          legacy: "[TBT] Old SYZOJ",
+          lemon: "[TBT] Lemon",
+          hustoj: "[TBT] HustOJ",
+          qduoj: "[TBT] QDUOJ",
+          domjudge: "[TBT] DOMjudge"
+        },
+        language: "[TBT] Language",
+        filename: "[TBT] File",
+        filename_no_file: "[TBT] No file"
+      }
+    }
+  },
   subtask: "サブタスク",
   single_subtask: "シングルサブタスク",
   subtask_testcases_count: "{count}",
@@ -108,7 +150,8 @@ module.exports = {
   no_testcases: "テストケースはありません",
   testcase: {
     input_file: "入力ファイル",
-    output_file: "出力ファイル"
+    output_file: "出力ファイル",
+    no_files: "[TBT] Files not found."
   },
   testcase_add: {
     before: "前に追加",

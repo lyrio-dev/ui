@@ -39,7 +39,7 @@ module.exports = {
     output: "Output file",
     user_output: "Your output",
     user_error: "Your standard error output",
-    grader_message: "Grader message",
+    checker_message: "Checker message",
     system_message: "System message"
   }
 };

@@ -102,6 +102,69 @@
   white-space: pre-wrap;
 }
 
+.checkerMenuWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+
+  :global(.header) {
+    margin-bottom: 0 !important;
+  }
+
+  :global(.menu) {
+    margin-left: 14px !important;
+    flex-grow: 1;
+    margin-top: 0 !important;
+  }
+}
+
+.checkerConfig {
+  &:empty {
+    display: none;
+  }
+
+  .description {
+    // margin-top: -10px;
+    font-size: 13px;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  .custom {
+    .fileSelect {
+      :global(.menu) > :global(.item) {
+        padding: 11px 20px 11px 14px !important;
+      }
+
+      .fileIcon {
+        margin-left: -2px !important;
+      }
+    }
+
+    .languageOptions {
+      :global(.field) {
+        @margin: 7px;
+        width: calc(50% - @margin);
+        display: inline-block;
+      
+        &:nth-child(odd) {
+          margin-right: @margin;
+        }
+      
+        &:nth-child(even) {
+          margin-left: @margin;
+        }
+      }
+
+      margin-bottom: -14px;
+    }
+  }
+}
+
+.checkerConfigDescriptionPopup {
+  width: 280px !important;
+  max-width: none !important;
+}
+
 .menu {
   border-radius: 0 !important;
   height: 43px;
@@ -232,7 +295,7 @@
     }
   }
 
-  .itemTestcaseIoFile {
+  .fileSelect {
     :global(.menu) .iconInputOrOutput {
       visibility: hidden;
     }

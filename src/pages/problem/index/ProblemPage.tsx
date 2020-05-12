@@ -39,7 +39,9 @@ import {
   CodeLanguage,
   CodeLanguageOptionType,
   filterValidLanguageOptions,
-  getDefaultCodeLanguageOptions
+  getDefaultCodeLanguageOptions,
+  getPreferredCodeLanguage,
+  getPreferredCodeLanguageOptions
 } from "@/interfaces/CodeLanguage";
 import { sortTags } from "../problemTag";
 import CodeEditor from "@/components/LazyCodeEditor";
@@ -335,14 +337,11 @@ let ProblemPage: React.FC<ProblemPageProps> = props => {
 
   // Begin submit
   function getPreferredDefaultSubmissionContent(language?: CodeLanguage): SubmissionContent {
-    if (!language) language = (appState.userPreference.defaultCodeLanguage as CodeLanguage) || CodeLanguage.CPP;
+    if (!language) language = getPreferredCodeLanguage();
     return {
       language: language,
       code: "",
-      languageOptions:
-        language === appState.userPreference.defaultCodeLanguage
-          ? filterValidLanguageOptions(language, appState.userPreference.defaultCodeLanguageOptions)
-          : getDefaultCodeLanguageOptions(language)
+      languageOptions: getPreferredCodeLanguageOptions(language)
     };
   }
   const [inSubmitView, setInSubmitView] = useState(false);

@@ -39,7 +39,7 @@ module.exports = {
     output: "想定解",
     user_output: "出力",
     user_error: "エラー出力",
-    grader_message: "ジャッジのメッセージ",
+    checker_message: "ジャッジのメッセージ",
     system_message: "システムメッセージ"
   }
 };

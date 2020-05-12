@@ -37,6 +37,12 @@ module.exports = {
       INVALID_DEPENDENCY: "Subtask {1}'s dependency subtask ID {2} is invalid",
       NO_SUCH_INPUT_FILE: "Input file {3} referenced by subtask {1}'s testcase {2} doesn't exist.",
       NO_SUCH_OUTPUT_FILE: "Output file {3} referenced by subtask {1}'s testcase {2} doesn't exist.",
+      INVALID_CHECKER_TYPE: "Unknown error.",
+      INVALID_CHECKER_OPTIONS: "Unknown error.",
+      INVALID_CHECKER_INTERFACE: "Unknown error.",
+      INVALID_CHECKER_LANGUAGE: "Unknown error.",
+      NO_SUCH_CHECKER_FILE: "The checker file {1} doesn't exist.",
+      INVALID_CHECKER_LANGUAGE_OPTIONS: "Unknown error.",
       CYCLICAL_SUBTASK_DEPENDENCY: "Cyclical subtask dependency."
     }
   },
@@ -62,6 +68,41 @@ module.exports = {
   auto_testcases:
     "Detect testcases from testdata files (Match <code>.in</code> and <code>.out</code> files automatically)",
   cannot_detect_testcases_from_testdata: "Cannot detect testcases from testdata",
+  checker: {
+    checker: "Checker",
+    types: {
+      integers: "Integers",
+      floats: "Floats",
+      lines: "Lines",
+      binary: "Binary",
+      custom: "Custom"
+    },
+    config: {
+      floats: {
+        precision: "Precision",
+        description:
+          "The participant's answer is considered correct if its absolute or relative error to the jury's answer is less than {value}."
+      },
+      lines: {
+        case_sensitive: "Case Sensitive",
+        description: "The blank characters in the end of each line and empty lines in the end of file are ignored."
+      },
+      custom: {
+        interface: "Interface",
+        interfaces: {
+          testlib: "Testlib",
+          legacy: "Old SYZOJ",
+          lemon: "Lemon",
+          hustoj: "HustOJ",
+          qduoj: "QDUOJ",
+          domjudge: "DOMjudge"
+        },
+        language: "Language",
+        filename: "File",
+        filename_no_file: "No file"
+      }
+    }
+  },
   subtask: "Subtask",
   single_subtask: "Single Subtask",
   subtask_testcases_count: "{count} Cases",
@@ -107,7 +148,8 @@ module.exports = {
   no_testcases: "No testcases",
   testcase: {
     input_file: "Input file",
-    output_file: "Output file"
+    output_file: "Output file",
+    no_files: "Files not found."
   },
   testcase_add: {
     before: "Before this testcase",

@@ -39,7 +39,7 @@ module.exports = {
     output: "答案文件",
     user_output: "你的输出",
     user_error: "你的标准错误输出",
-    grader_message: "评分器信息",
+    checker_message: "检查器信息",
     system_message: "系统信息"
   }
 };

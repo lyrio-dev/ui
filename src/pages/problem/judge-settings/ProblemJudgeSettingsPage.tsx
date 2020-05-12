@@ -12,7 +12,8 @@ import {
   Input,
   Ref,
   Table,
-  Segment
+  Segment,
+  Checkbox
 } from "semantic-ui-react";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
@@ -33,6 +34,14 @@ import formatFileSize from "@/utils/formatFileSize";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
+import {
+  CodeLanguage,
+  filterValidLanguageOptions,
+  getPreferredCodeLanguageOptions,
+  codeLanguageOptions,
+  CodeLanguageOptionType,
+  checkCodeFileExtension
+} from "@/interfaces/CodeLanguage";
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -86,6 +95,32 @@ interface Subtask {
   dependencies: number[];
 }
 
+interface CheckerTypeIntegers {
+  type: "integers";
+}
+
+interface CheckerTypeFloats {
+  type: "floats";
+  precision: number;
+}
+
+interface CheckerTypeLines {
+  type: "lines";
+  caseSensitive: boolean;
+}
+
+interface CheckerTypeBinary {
+  type: "binary";
+}
+
+interface CheckerTypeCustom {
+  type: "custom";
+  interface: string;
+  language: CodeLanguage;
+  languageOptions: Record<string, unknown>;
+  filename: string;
+}
+
 interface JudgeInfo {
   timeLimit: number;
   memoryLimit: number;
@@ -95,6 +130,7 @@ interface JudgeInfo {
   };
   runSamples: boolean;
   subtasks: Subtask[];
+  checker: CheckerTypeIntegers | CheckerTypeFloats | CheckerTypeLines | CheckerTypeBinary | CheckerTypeCustom;
 }
 
 interface SubtaskEditorTastcaseItemProps {
@@ -136,10 +172,22 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
       >
         <Menu.Item className={style.itemTestcaseTitle}>#{props.testcaseIndex + 1}</Menu.Item>
         <Dropdown
-          className={style.itemSearchDropdown + " " + style.itemTestcaseIoFile}
+          className={style.itemSearchDropdown + " " + style.fileSelect}
           item
-          search
           selection
+          search
+          noResultsMessage={_("problem_judge_settings.testcase.no_files")}
+          text={
+            props.testcase.inputFilename &&
+            !props.testDataFiles.some(file => file.filename === props.testcase.inputFilename)
+              ? ((
+                  <>
+                    <Icon className={style.iconInputOrOutput} name="sign in" />
+                    {props.testcase.inputFilename}
+                  </>
+                ) as any)
+              : undefined
+          }
           placeholder={_("problem_judge_settings.testcase.input_file")}
           value={props.testcase.inputFilename}
           options={props.testDataFiles.map(file => ({
@@ -212,10 +260,22 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
           />
         </Menu.Item>
         <Dropdown
-          className={style.itemSearchDropdown + " " + style.itemTestcaseIoFile}
+          className={style.itemSearchDropdown + " " + style.fileSelect}
           item
-          search
           selection
+          search
+          noResultsMessage={_("problem_judge_settings.testcase.no_files")}
+          text={
+            props.testcase.outputFilename &&
+            !props.testDataFiles.some(file => file.filename === props.testcase.outputFilename)
+              ? ((
+                  <>
+                    <Icon className={style.iconInputOrOutput} name="sign out" />
+                    {props.testcase.outputFilename}
+                  </>
+                ) as any)
+              : undefined
+          }
           placeholder={_("problem_judge_settings.testcase.output_file")}
           value={props.testcase.outputFilename}
           options={props.testDataFiles.map(file => ({
@@ -871,6 +931,55 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     appState.enterNewPage(`${_("problem_judge_settings.title")} ${idString}`, false);
   }, [appState.locale]);
 
+  const CHECKER_TYPES: JudgeInfo["checker"]["type"][] = ["integers", "floats", "lines", "binary", "custom"];
+  const CUSTOM_CHECKER_INTERFACES = ["testlib", "legacy", "lemon", "hustoj", "qduoj", "domjudge"];
+
+  function parseCheckerConfig(checker: Partial<JudgeInfo["checker"]>): JudgeInfo["checker"] {
+    if (!checker || !CHECKER_TYPES.includes(checker.type))
+      return {
+        // default
+        type: "lines",
+        caseSensitive: false
+      };
+
+    switch (checker.type) {
+      case "integers":
+        return { type: "integers" };
+      case "floats":
+        return {
+          type: "floats",
+          precision: Number.isSafeInteger(checker.precision) && checker.precision > 0 ? checker.precision : 4
+        };
+      case "lines":
+        return { type: "lines", caseSensitive: !!checker.caseSensitive };
+      case "binary":
+        return { type: "binary" };
+      case "custom":
+        const language = Object.values(CodeLanguage).includes(checker.language)
+          ? checker.language
+          : Object.values(CodeLanguage)[0];
+        return {
+          type: "custom",
+          interface: CUSTOM_CHECKER_INTERFACES.includes(checker.interface)
+            ? checker.interface
+            : CUSTOM_CHECKER_INTERFACES[0],
+          language: language,
+          languageOptions:
+            language === checker.language
+              ? filterValidLanguageOptions(language, checker.languageOptions)
+              : getPreferredCodeLanguageOptions(language),
+          filename:
+            checker.filename && typeof checker.filename === "string"
+              ? checker.filename
+              : (
+                  props.problem.testData.find(file => checkCodeFileExtension(language, file.filename)) ||
+                  props.problem.testData[0] ||
+                  {}
+                ).filename || ""
+        };
+    }
+  }
+
   function parseJudgeInfo(raw: any) {
     const subtaskCount = Array.isArray(raw.subtasks) ? raw.subtasks.length : 0;
     const converted: JudgeInfo = {
@@ -918,7 +1027,8 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                       }))
                   : []
               }))
-          : null
+          : null,
+      checker: parseCheckerConfig(raw.checker)
     };
     return converted;
   }
@@ -1164,6 +1274,22 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     );
   }
 
+  function onUpdateChecker(config: Partial<JudgeInfo["checker"]>) {
+    onUpdate({
+      checker: Object.assign({}, judgeInfo.checker, config)
+    });
+  }
+
+  const checkerConfigBackup = useRef<Map<typeof CHECKER_TYPES[number], JudgeInfo["checker"]>>(new Map()).current;
+  function onChangeCheckerType(type: typeof CHECKER_TYPES[number]) {
+    if (pending) return;
+
+    if (type === judgeInfo.checker.type) return;
+    checkerConfigBackup.set(judgeInfo.checker.type, judgeInfo.checker);
+
+    onUpdate({ checker: checkerConfigBackup.get(type) || parseCheckerConfig({ type }) });
+  }
+
   function onBackToProblem() {
     if (props.idType === "displayId") {
       navigation.navigate(`/problem/${props.problem.meta.displayId}`);
@@ -1371,7 +1497,6 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                     }
                   ]}
                 />
-
                 <Button
                   disabled
                   className={style.problemTypeSwitchButton}
@@ -1456,6 +1581,150 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   onChange={(e, { checked }) => onUpdate({ runSamples: checked })}
                 />
               </Form.Group>
+              <div className={style.checkerMenuWrapper}>
+                <Header size="tiny" content={_("problem_judge_settings.checker.checker")} />
+                <Menu secondary pointing>
+                  {CHECKER_TYPES.map(type => (
+                    <Menu.Item
+                      key={type}
+                      content={_(`problem_judge_settings.checker.types.${type}`)}
+                      active={judgeInfo.checker.type === type}
+                      onClick={() => judgeInfo.checker.type !== type && onChangeCheckerType(type)}
+                    />
+                  ))}
+                </Menu>
+              </div>
+              <Segment color="grey" className={style.checkerConfig}>
+                {(() => {
+                  const checker = judgeInfo.checker;
+                  switch (checker.type) {
+                    case "integers":
+                      return null;
+                    case "floats":
+                      return (
+                        <>
+                          <Form.Field width={8}>
+                            <label>{_(`problem_judge_settings.checker.config.floats.precision`)}</label>
+                            <Input
+                              value={checker.precision}
+                              onChange={(e, { value }) =>
+                                (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) > 0)) &&
+                                onUpdateChecker({ precision: Number(value) })
+                              }
+                            />
+                          </Form.Field>
+                          <div className={style.description}>
+                            {_("problem_judge_settings.checker.config.floats.description", {
+                              value: `1e-${checker.precision}`
+                            })}
+                          </div>
+                        </>
+                      );
+                    case "lines":
+                      return (
+                        <>
+                          <Form.Checkbox
+                            toggle
+                            label={_(`problem_judge_settings.checker.config.lines.case_sensitive`)}
+                            checked={checker.caseSensitive}
+                            onChange={(e, { checked }) => onUpdateChecker({ caseSensitive: checked })}
+                          />
+                          <div className={style.description}>
+                            {_("problem_judge_settings.checker.config.lines.description")}
+                          </div>
+                        </>
+                      );
+                    case "binary":
+                      return null;
+                    case "custom":
+                      const setLanguageOption = (name: string, value: unknown) => {
+                        onUpdateChecker({
+                          languageOptions: Object.assign({}, checker.languageOptions, {
+                            [name]: value
+                          })
+                        });
+                      };
+                      return (
+                        <div className={style.custom}>
+                          <Form.Select
+                            placeholder={_("problem_judge_settings.checker.config.custom.filename_no_file")}
+                            text={
+                              !props.problem.testData.some(file => file.filename === checker.filename)
+                                ? checker.filename
+                                : undefined
+                            }
+                            open={props.problem.testData.length === 0 ? false : undefined}
+                            className={style.fileSelect}
+                            label={_("problem_judge_settings.checker.config.custom.filename")}
+                            value={checker.filename}
+                            options={props.problem.testData.map(file => ({
+                              key: file.filename,
+                              value: file.filename,
+                              text: (
+                                <>
+                                  <Icon className={style.fileIcon} name={getFileIcon(file.filename)} />
+                                  <div className={style.filename}>{file.filename}</div>
+                                  <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
+                                </>
+                              )
+                            }))}
+                            onChange={(e, { value }) => onUpdateChecker({ filename: value as string })}
+                          />
+                          <Form.Group className={style.threeColumns}>
+                            <Form.Select
+                              width={8}
+                              label={_("problem_judge_settings.checker.config.custom.interface")}
+                              value={checker.interface}
+                              options={CUSTOM_CHECKER_INTERFACES.map(iface => ({
+                                key: iface,
+                                value: iface,
+                                text: _(`problem_judge_settings.checker.config.custom.interfaces.${iface}`)
+                              }))}
+                              onChange={(e, { value }) => onUpdateChecker({ interface: value as any })}
+                            />
+                            <Form.Select
+                              width={8}
+                              label={_("problem_judge_settings.checker.config.custom.language")}
+                              value={checker.language}
+                              options={Object.keys(codeLanguageOptions).map(language => ({
+                                key: language,
+                                value: language,
+                                text: _(`code_language.${language}.name`)
+                              }))}
+                              onChange={(e, { value }) => onUpdateChecker({ language: value as CodeLanguage })}
+                            />
+                          </Form.Group>
+                          <div className={style.languageOptions}>
+                            {codeLanguageOptions[checker.language].map(option => {
+                              switch (option.type) {
+                                case CodeLanguageOptionType.Select:
+                                  return (
+                                    <Form.Select
+                                      label={_(`code_language.${checker.language}.options.${option.name}.name`)}
+                                      fluid
+                                      value={
+                                        checker.languageOptions[option.name] == null
+                                          ? option.defaultValue
+                                          : (checker.languageOptions[option.name] as string)
+                                      }
+                                      options={option.values.map(value => ({
+                                        key: value,
+                                        value: value,
+                                        text: _(
+                                          `code_language.${checker.language}.options.${option.name}.values.${value}`
+                                        )
+                                      }))}
+                                      onChange={(e, { value }) => setLanguageOption(option.name, value)}
+                                    />
+                                  );
+                              }
+                            })}
+                          </div>
+                        </div>
+                      );
+                  }
+                })()}
+              </Segment>
               <Form.Group>
                 <Form.Checkbox
                   width={16}

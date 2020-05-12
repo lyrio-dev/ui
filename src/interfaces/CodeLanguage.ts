@@ -1,3 +1,5 @@
+import { appState } from "@/appState";
+
 export enum CodeLanguage {
   CPP = "cpp"
 }
@@ -15,6 +17,14 @@ export interface CodeLanguageOption {
   type: CodeLanguageOptionType;
   values: string[]; // string[] | undefined
   defaultValue: string; // string | boolean
+}
+
+const codeLanguageExtensions: Record<CodeLanguage, string[]> = {
+  [CodeLanguage.CPP]: [".cpp", ".cc"]
+};
+
+export function checkCodeFileExtension(language: CodeLanguage, filename: string): boolean {
+  return codeLanguageExtensions[language].some(extension => filename.toLowerCase().endsWith(extension));
 }
 
 export const codeLanguageOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
@@ -67,3 +77,11 @@ export const filterValidLanguageOptions = (
       })
     )
   );
+
+export const getPreferredCodeLanguage = () =>
+  (appState.userPreference.defaultCodeLanguage as CodeLanguage) || Object.values(CodeLanguage)[0];
+
+export const getPreferredCodeLanguageOptions = (codeLanguage: CodeLanguage) =>
+  codeLanguage === appState.userPreference.defaultCodeLanguage
+    ? filterValidLanguageOptions(codeLanguage, appState.userPreference.defaultCodeLanguageOptions)
+    : getDefaultCodeLanguageOptions(codeLanguage);
