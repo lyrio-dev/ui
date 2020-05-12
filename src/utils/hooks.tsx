@@ -7,14 +7,17 @@ import SocketIO from "socket.io-client";
 import { appConfig } from "@/appConfig";
 
 export function useIntlMessage() {
+  const removeToBeTranslatedTag = (s: string) => (s.startsWith("[TBT] ") ? s.replace("[TBT] ", "") : s);
   const intl = useIntl();
   return Object.assign(
     (id: string, values?: Record<React.ReactText, React.ReactText> | React.ReactText[]) =>
-      intl.formatMessage(
-        {
-          id
-        },
-        values as Record<string, string>
+      removeToBeTranslatedTag(
+        intl.formatMessage(
+          {
+            id
+          },
+          values as Record<string, string>
+        )
       ),
     intl
   );
