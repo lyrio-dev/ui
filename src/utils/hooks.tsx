@@ -5,6 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 import { useNavigation, useCurrentRoute } from "react-navi";
 import SocketIO from "socket.io-client";
 import { appConfig } from "@/appConfig";
+import { unescapeLocalizedMessage } from "@/locales";
 
 export function useIntlMessage() {
   const removeToBeTranslatedTag = (s: string) => (s.startsWith("[TBT] ") ? s.replace("[TBT] ", "") : s);
@@ -12,11 +13,13 @@ export function useIntlMessage() {
   return Object.assign(
     (id: string, values?: Record<React.ReactText, React.ReactText> | React.ReactText[]) =>
       removeToBeTranslatedTag(
-        intl.formatMessage(
-          {
-            id
-          },
-          values as Record<string, string>
+        unescapeLocalizedMessage(
+          intl.formatMessage(
+            {
+              id
+            },
+            values as Record<string, string>
+          )
         )
       ),
     intl

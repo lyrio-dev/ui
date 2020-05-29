@@ -5,6 +5,16 @@ function extractPath(path: string) {
   return matchResult[1];
 }
 
+export function escapeLocalizedMessage(text: string) {
+  text = text.split("&").join("&amp;").split("<").join("&lt;");
+  return text;
+}
+
+export function unescapeLocalizedMessage(text: string) {
+  text = text.split("&lt;").join("<").split("&amp;").join("&");
+  return text;
+}
+
 export async function loadLocaleData(locale: string): Promise<Record<string, string>> {
   const context = (await import(`./messages/${locale}.js`)).default as __WebpackModuleApi.RequireContext;
   const result = {};
@@ -15,5 +25,7 @@ export async function loadLocaleData(locale: string): Promise<Record<string, str
     result[subpath.split("/").join(".")] = fileData;
   }
 
-  return flatten(result);
+  return Object.fromEntries(
+    Object.entries(flatten(result)).map(([key, value]) => [key, escapeLocalizedMessage(value as string)])
+  );
 }
