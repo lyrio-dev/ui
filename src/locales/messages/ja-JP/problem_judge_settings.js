@@ -45,6 +45,10 @@ module.exports = {
       INVALID_CHECKER_LANGUAGE: "[TBT] Unknown error.",
       NO_SUCH_CHECKER_FILE: "[TBT] The checker file {1} doesn't exist.",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "[TBT] Unknown error.",
+      INVALID_EXTRA_SOURCE_FILES: "[TBT] Unknown error.",
+      INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "[TBT] Unknown error.",
+      INVALID_EXTRA_SOURCE_FILES_DST: "[TBT] Extra source files {3}'s destination filename is invalid.",
+      NO_SUCH_EXTRA_SOURCE_FILES_SRC: "[TBT] Extra source files {3} doesn't exist.",
       CYCLICAL_SUBTASK_DEPENDENCY: "[TBT] Cyclical subtask dependency."
     }
   },
@@ -163,5 +167,13 @@ module.exports = {
     delete: "削除",
     confirm_delete: "削除する"
   },
-  dependencies: "このサブタスクに依存する"
+  dependencies: "このサブタスクに依存する",
+  add_extra_source_files: "[TBT] Add extra source files when compiling",
+  extra_source_files: {
+    title: "[TBT] Extra source files",
+    src: "[TBT] Source",
+    dst: "[TBT] Destination",
+    delete: "[TBT] Delete",
+    confirm_delete: "[TBT] Confirm delete"
+  }
 };

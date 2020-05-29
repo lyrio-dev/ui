@@ -43,6 +43,10 @@ module.exports = {
       INVALID_CHECKER_LANGUAGE: "Unknown error.",
       NO_SUCH_CHECKER_FILE: "The checker file {1} doesn't exist.",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "Unknown error.",
+      INVALID_EXTRA_SOURCE_FILES: "Unknown error.",
+      INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "Unknown error.",
+      INVALID_EXTRA_SOURCE_FILES_DST: "Extra source files {3}'s destination filename is invalid.",
+      NO_SUCH_EXTRA_SOURCE_FILES_SRC: "Extra source files {3} doesn't exist.",
       CYCLICAL_SUBTASK_DEPENDENCY: "Cyclical subtask dependency."
     }
   },
@@ -161,5 +165,13 @@ module.exports = {
     delete: "Delete",
     confirm_delete: "Confirm delete"
   },
-  dependencies: "Subtasks dependent by this subtask"
+  dependencies: "Subtasks dependent by this subtask",
+  add_extra_source_files: "Add extra source files when compiling",
+  extra_source_files: {
+    title: "Extra source files",
+    src: "Source",
+    dst: "Destination",
+    delete: "Delete",
+    confirm_delete: "Confirm delete"
+  }
 };

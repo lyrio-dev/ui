@@ -39,6 +39,10 @@ module.exports = {
       INVALID_CHECKER_LANGUAGE: "未知错误。",
       NO_SUCH_CHECKER_FILE: "检查器文件 {1} 不存在。",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "未知错误。",
+      INVALID_EXTRA_SOURCE_FILES: "未知错误。",
+      INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "未知错误。",
+      INVALID_EXTRA_SOURCE_FILES_DST: "附加源文件 {3} 的目标文件名无效。",
+      NO_SUCH_EXTRA_SOURCE_FILES_SRC: "附加源文件 {3} 不存在。",
       CYCLICAL_SUBTASK_DEPENDENCY: "子任务依赖存在环。"
     }
   },
@@ -154,5 +158,13 @@ module.exports = {
     delete: "删除",
     confirm_delete: "确认删除"
   },
-  dependencies: "依赖子任务"
+  dependencies: "依赖子任务",
+  add_extra_source_files: "编译时加入附加源文件",
+  extra_source_files: {
+    title: "附加源文件",
+    src: "源文件",
+    dst: "目标文件名",
+    delete: "删除",
+    confirm_delete: "确认删除"
+  }
 };

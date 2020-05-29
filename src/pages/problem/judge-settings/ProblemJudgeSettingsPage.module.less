@@ -300,6 +300,22 @@
       visibility: hidden;
     }
 
+    :global(.text) {
+      padding-left: 1px;
+    }
+
+    :global(.text) .iconInputOrOutput {
+      margin-left: -0.5px;
+    }
+
+    :global(.item) .iconFile {
+      margin-right: 11px !important;
+    }
+
+    :global(.item) {
+      padding-right: 17.5px !important;
+    }
+
     :global(.text), :global(.item) {
       display: flex;
       align-items: center;
@@ -436,4 +452,32 @@
     color: rgba(0, 0, 0, 0.85) !important;
     margin: 2px 0 2px 4px !important;
   }
+}
+
+.extraSourceFilesItem {
+  height: 41px;
+
+  .language {
+    width: 110px !important;
+    flex-grow: 0 !important;
+    background: white !important;
+  }
+  
+  :global(#root) & .dropdown {
+    border-left: 1px solid rgba(34, 36, 38, 0.1) !important;
+    width: calc((100% - 110px - 43px) * 0.65) !important;
+  }
+  
+  .input {
+    width: calc((100% - 110px - 43px) * 0.35) !important;
+    padding: 13px !important;
+
+    input:not(:placeholder-shown) + :global(.icon) {
+      opacity: 1 !important;
+    }
+  
+    &::before {
+      left: 0 !important;
+    }
+  }  
 }

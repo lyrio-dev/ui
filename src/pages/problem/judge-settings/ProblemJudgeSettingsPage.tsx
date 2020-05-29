@@ -13,7 +13,7 @@ import {
   Ref,
   Table,
   Segment,
-  Checkbox
+  SemanticICONS
 } from "semantic-ui-react";
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
@@ -131,7 +131,56 @@ interface JudgeInfo {
   runSamples: boolean;
   subtasks: Subtask[];
   checker: CheckerTypeIntegers | CheckerTypeFloats | CheckerTypeLines | CheckerTypeBinary | CheckerTypeCustom;
+  extraSourceFiles?: Partial<Record<CodeLanguage, Record<string, string>>>;
 }
+
+interface FileDropdownProps {
+  className?: string;
+  icon?: SemanticICONS;
+  testDataFiles: ProblemFile[];
+  value: string;
+  placeholder: string;
+  onChange: (value: string) => void;
+}
+
+let FileDropdown: React.FC<FileDropdownProps> = props => {
+  const _ = useIntlMessage();
+
+  return (
+    <Dropdown
+      className={style.itemSearchDropdown + " " + style.fileSelect + (props.className ? " " + props.className : "")}
+      item
+      selection
+      search
+      noResultsMessage={_("problem_judge_settings.testcase.no_files")}
+      text={
+        props.value && !props.testDataFiles.some(file => file.filename === props.value)
+          ? ((
+              <>
+                {props.icon && <Icon className={style.iconInputOrOutput} name={props.icon} />}
+                {props.value}
+              </>
+            ) as any)
+          : undefined
+      }
+      placeholder={props.placeholder}
+      value={props.value}
+      options={props.testDataFiles.map(file => ({
+        key: file.filename,
+        value: file.filename,
+        text: (
+          <>
+            {props.icon && <Icon className={style.iconInputOrOutput} name={props.icon} />}
+            <Icon name={getFileIcon(file.filename)} className={style.iconFile} />
+            <div className={style.filename}>{file.filename}</div>
+            <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
+          </>
+        )
+      }))}
+      onChange={(e, { value }) => props.onChange(value as string)}
+    />
+  );
+};
 
 interface SubtaskEditorTastcaseItemProps {
   testDataFiles: ProblemFile[];
@@ -171,38 +220,12 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
         attached
       >
         <Menu.Item className={style.itemTestcaseTitle}>#{props.testcaseIndex + 1}</Menu.Item>
-        <Dropdown
-          className={style.itemSearchDropdown + " " + style.fileSelect}
-          item
-          selection
-          search
-          noResultsMessage={_("problem_judge_settings.testcase.no_files")}
-          text={
-            props.testcase.inputFilename &&
-            !props.testDataFiles.some(file => file.filename === props.testcase.inputFilename)
-              ? ((
-                  <>
-                    <Icon className={style.iconInputOrOutput} name="sign in" />
-                    {props.testcase.inputFilename}
-                  </>
-                ) as any)
-              : undefined
-          }
+        <FileDropdown
+          icon="sign in"
+          testDataFiles={props.testDataFiles}
           placeholder={_("problem_judge_settings.testcase.input_file")}
           value={props.testcase.inputFilename}
-          options={props.testDataFiles.map(file => ({
-            key: file.filename,
-            value: file.filename,
-            text: (
-              <>
-                <Icon className={style.iconInputOrOutput} name="sign in" />
-                <Icon name={getFileIcon(file.filename)} />
-                <div className={style.filename}>{file.filename}</div>
-                <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
-              </>
-            )
-          }))}
-          onChange={(e, { value }) => props.onUpdate({ inputFilename: value as string })}
+          onChange={value => props.onUpdate({ inputFilename: value })}
         />
         <Menu.Menu position="right">
           <Menu.Item className={style.itemTestcaseTimeLimit}>
@@ -259,38 +282,12 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
             }
           />
         </Menu.Item>
-        <Dropdown
-          className={style.itemSearchDropdown + " " + style.fileSelect}
-          item
-          selection
-          search
-          noResultsMessage={_("problem_judge_settings.testcase.no_files")}
-          text={
-            props.testcase.outputFilename &&
-            !props.testDataFiles.some(file => file.filename === props.testcase.outputFilename)
-              ? ((
-                  <>
-                    <Icon className={style.iconInputOrOutput} name="sign out" />
-                    {props.testcase.outputFilename}
-                  </>
-                ) as any)
-              : undefined
-          }
+        <FileDropdown
+          icon="sign out"
+          testDataFiles={props.testDataFiles}
           placeholder={_("problem_judge_settings.testcase.output_file")}
           value={props.testcase.outputFilename}
-          options={props.testDataFiles.map(file => ({
-            key: file.filename,
-            value: file.filename,
-            text: (
-              <>
-                <Icon className={style.iconInputOrOutput} name="sign out" />
-                <Icon name={getFileIcon(file.filename)} />
-                <div className={style.filename}>{file.filename}</div>
-                <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
-              </>
-            )
-          }))}
-          onChange={(e, { value }) => props.onUpdate({ outputFilename: value as string })}
+          onChange={value => props.onUpdate({ outputFilename: value })}
         />
         <Menu.Menu position="right">
           <Menu.Item className={style.itemTestcaseMemoryLimit}>
@@ -1028,7 +1025,8 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   : []
               }))
           : null,
-      checker: parseCheckerConfig(raw.checker)
+      checker: parseCheckerConfig(raw.checker),
+      extraSourceFiles: raw.extraSourceFiles
     };
     return converted;
   }
@@ -1369,8 +1367,9 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
         content={_("problem_judge_settings.edit_raw.ok")}
         onClick={() => {
           try {
-            const parsed = yaml.safeLoad(editRawEditorValue);
-            setJudgeInfo(parseJudgeInfo(parsed));
+            const parsed = parseJudgeInfo(yaml.safeLoad(editRawEditorValue));
+            setExtraSourceFilesArray(extraSourceFilesToArray(parsed.extraSourceFiles));
+            setJudgeInfo(parsed);
             editRawDialog.close();
           } catch (e) {
             setEditRawEditorErrorMessage(e.message);
@@ -1415,6 +1414,96 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const [subtasksBackup, setSubtasksBackup] = useState(
     judgeInfo.subtasks || [{ scoringType: SubtaskScoringType.Sum, testcases: [], uuid: uuid(), dependencies: [] }]
   );
+
+  // Same as above
+  const [extraSourceFilesBackup, setExtraSourceFilesBackup] = useState<JudgeInfo["extraSourceFiles"]>({});
+  function onToggleExtraSourceFiles() {
+    if (pending) return;
+
+    setModified(true);
+
+    if (judgeInfo.extraSourceFiles) {
+      setExtraSourceFilesBackup(judgeInfo.extraSourceFiles);
+      setJudgeInfo(Object.assign({}, judgeInfo, { extraSourceFiles: null }));
+      setExtraSourceFilesArray(null);
+    } else {
+      setJudgeInfo(Object.assign({}, judgeInfo, { extraSourceFiles: extraSourceFilesBackup }));
+      setExtraSourceFilesArray(extraSourceFilesToArray(extraSourceFilesBackup));
+    }
+  }
+
+  // To support inserting empty item, use arrays for editing
+  type ExtraSourceFilesArray = Partial<Record<CodeLanguage, [string, string, string][]>>; // [uuid, dst, src]
+  const [extraSourceFilesArray, setExtraSourceFilesArray] = useState(
+    extraSourceFilesToArray(judgeInfo.extraSourceFiles)
+  );
+  function extraSourceFilesToArray(extraSourceFiles: JudgeInfo["extraSourceFiles"]): ExtraSourceFilesArray {
+    return Object.fromEntries(
+      Object.values(CodeLanguage).map(codeLanguage =>
+        extraSourceFiles
+          ? [codeLanguage, Object.entries(extraSourceFiles[codeLanguage] || {}).map(a => [uuid(), ...a])]
+          : [codeLanguage, []]
+      )
+    );
+  }
+
+  // Update both arrays and judge info
+  function updateExtraSourceFiles(newExtraSourceFiles: ExtraSourceFilesArray) {
+    setModified(true);
+
+    setExtraSourceFilesArray(newExtraSourceFiles);
+    setJudgeInfo(
+      Object.assign({}, judgeInfo, {
+        extraSourceFiles: Object.fromEntries(
+          Object.values(CodeLanguage)
+            .map(codeLanguage =>
+              newExtraSourceFiles[codeLanguage].length > 0
+                ? [codeLanguage, Object.fromEntries(newExtraSourceFiles[codeLanguage].map(a => a.slice(1)))]
+                : null
+            )
+            .filter(x => x)
+        )
+      })
+    );
+  }
+
+  function updateExtraSourceFile(
+    codeLanguage: CodeLanguage,
+    operation: "ADD" | "DEL" | "UPDATE",
+    i?: number,
+    newValue?: { src?: string; dst?: string }
+  ) {
+    if (operation === "ADD") {
+      updateExtraSourceFiles(
+        update(extraSourceFilesArray, {
+          [codeLanguage]: {
+            $push: [[uuid(), "", ""]]
+          }
+        })
+      );
+    } else if (operation === "DEL") {
+      updateExtraSourceFiles(
+        update(extraSourceFilesArray, {
+          [codeLanguage]: {
+            $splice: [[i, 1]]
+          }
+        })
+      );
+    } else {
+      const item = extraSourceFilesArray[codeLanguage][i];
+      const newDst = newValue.dst == null ? item[1] : newValue.dst;
+      const newSrc = newValue.src == null ? item[2] : newValue.src;
+      updateExtraSourceFiles(
+        update(extraSourceFilesArray, {
+          [codeLanguage]: {
+            [i]: {
+              $set: [item[0], newDst, newSrc]
+            }
+          }
+        })
+      );
+    }
+  }
 
   useConfirmUnload(() => modified);
 
@@ -1794,6 +1883,97 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   )}
                 </Table.Body>
               </Table>
+            )}
+            <Form.Checkbox
+              checked={!!judgeInfo.extraSourceFiles}
+              label={_("problem_judge_settings.add_extra_source_files")}
+              onChange={() => onToggleExtraSourceFiles()}
+            />
+            {judgeInfo.extraSourceFiles && (
+              <>
+                <Menu className={style.menu + " " + style.menuSubtaskHeader + " " + style.color_6} attached="top">
+                  <Menu.Item className={style.itemTitle}>
+                    <strong>{_("problem_judge_settings.extra_source_files.title")}</strong>
+                  </Menu.Item>
+                  <Menu.Menu position="right">
+                    <Dropdown item icon="plus" className={`icon ${style.itemWithIcon}`}>
+                      <Dropdown.Menu>
+                        {Object.values(CodeLanguage).map(codeLanguage => (
+                          <Dropdown.Item
+                            key={codeLanguage}
+                            text={_(`code_language.${codeLanguage}.name`)}
+                            onClick={() => updateExtraSourceFile(codeLanguage, "ADD")}
+                          />
+                        ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </Menu.Menu>
+                </Menu>
+                {extraSourceFilesArray &&
+                  Object.entries(extraSourceFilesArray).map(([codeLanguage, files]) =>
+                    files.map(([uuid, dst, src], i) => (
+                      <Menu
+                        className={style.extraSourceFilesItem}
+                        key={uuid}
+                        attached={i == files.length - 1 ? "bottom" : (true as any)}
+                      >
+                        <Menu.Item
+                          className={style.itemTitle + " " + style.language}
+                          style={
+                            i == 0
+                              ? {
+                                  height: 41 * files.length - 1
+                                }
+                              : {
+                                  visibility: "hidden"
+                                }
+                          }
+                        >
+                          {_(`code_language.${codeLanguage}.name`)}
+                        </Menu.Item>
+                        <FileDropdown
+                          className={style.dropdown}
+                          testDataFiles={props.problem.testData}
+                          placeholder={_("problem_judge_settings.extra_source_files.src")}
+                          value={src}
+                          onChange={value => updateExtraSourceFile(codeLanguage as any, "UPDATE", i, { src: value })}
+                        />
+                        <Menu.Item className={style.input}>
+                          <Input
+                            icon="long arrow alternate right"
+                            iconPosition="left"
+                            transparent
+                            placeholder={_("problem_judge_settings.extra_source_files.dst")}
+                            value={dst}
+                            onChange={(e, { value }) =>
+                              updateExtraSourceFile(codeLanguage as any, "UPDATE", i, { dst: value })
+                            }
+                          />
+                        </Menu.Item>
+                        <Menu.Menu position="right">
+                          <Popup
+                            trigger={
+                              <Menu.Item
+                                className={`icon ${style.itemWithIcon}`}
+                                icon="delete"
+                                title={_("problem_judge_settings.extra_source_files.delete")}
+                              />
+                            }
+                            content={
+                              <Button
+                                negative
+                                content={_("problem_judge_settings.extra_source_files.confirm_delete")}
+                                onClick={() => updateExtraSourceFile(codeLanguage as any, "DEL", i)}
+                              />
+                            }
+                            on="click"
+                            position="top center"
+                          />
+                        </Menu.Menu>
+                      </Menu>
+                    ))
+                  )}
+              </>
             )}
           </Grid.Column>
         </Grid.Row>
