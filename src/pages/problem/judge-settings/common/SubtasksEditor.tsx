@@ -13,11 +13,11 @@ import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
 
 interface Testcase {
   uuid: string;
-  inputFilename?: string;
-  outputFilename?: string;
+  inputFile?: string;
+  outputFile?: string;
   timeLimit?: number;
   memoryLimit?: number;
-  percentagePoints?: number;
+  points?: number;
 }
 
 enum SubtaskScoringType {
@@ -32,7 +32,7 @@ interface Subtask {
   memoryLimit?: number;
   testcases: Testcase[];
   scoringType: SubtaskScoringType;
-  percentagePoints?: number;
+  points?: number;
   dependencies: number[];
 }
 
@@ -63,7 +63,7 @@ function randomColorFromUuid(uuid: string) {
 interface SubtaskEditorTastcaseItemProps {
   options: SubtasksEditorOptions;
 
-  testDataFiles: ApiTypes.ProblemFileDto[];
+  testData: ApiTypes.ProblemFileDto[];
   testcaseIndex: number;
   testcaseCount: number;
   testcase: Testcase;
@@ -103,10 +103,10 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
         <TestDataFileSelector
           type="ItemSearchDropdown"
           iconInputOrOutput="sign in"
-          testData={props.testDataFiles}
+          testData={props.testData}
           placeholder={_("problem_judge_settings.subtasks.testcase.input_file")}
-          value={props.testcase.inputFilename}
-          onChange={value => props.onUpdate({ inputFilename: value })}
+          value={props.testcase.inputFile}
+          onChange={value => props.onUpdate({ inputFile: value })}
         />
         <Menu.Menu position="right">
           <Menu.Item className={style.itemTestcaseTimeLimit}>
@@ -155,21 +155,21 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
           <Input
             transparent
             placeholder={props.defaultPercentagePoints}
-            value={props.testcase.percentagePoints == null ? "" : props.testcase.percentagePoints}
+            value={props.testcase.points == null ? "" : props.testcase.points}
             icon="percent"
             onChange={(e, { value }) =>
               (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 100)) &&
-              props.onUpdate({ percentagePoints: value === "" ? null : Number(value) })
+              props.onUpdate({ points: value === "" ? null : Number(value) })
             }
           />
         </Menu.Item>
         <TestDataFileSelector
           type="ItemSearchDropdown"
           iconInputOrOutput="sign out"
-          testData={props.testDataFiles}
+          testData={props.testData}
           placeholder={_("problem_judge_settings.subtasks.testcase.output_file")}
-          value={props.testcase.outputFilename}
-          onChange={value => props.onUpdate({ outputFilename: value })}
+          value={props.testcase.outputFile}
+          onChange={value => props.onUpdate({ outputFile: value })}
         />
         <Menu.Menu position="right">
           <Menu.Item className={style.itemTestcaseMemoryLimit}>
@@ -230,7 +230,7 @@ SubtaskEditorTastcaseItem = observer(SubtaskEditorTastcaseItem);
 interface SubtaskEditorProps {
   options: SubtasksEditorOptions;
 
-  testDataFiles: ApiTypes.ProblemFileDto[];
+  testData: ApiTypes.ProblemFileDto[];
   subtaskIndex: number;
   subtaskCount: number;
   subtask: Subtask;
@@ -261,11 +261,10 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
   const refOptionsButton = useRef(null);
 
   const sumSpecfiedPercentagePoints = props.subtask.testcases
-    .map(testcase => testcase.percentagePoints)
+    .map(testcase => testcase.points)
     .filter(x => x != null)
     .reduce((sum, x) => sum + x, 0);
-  const countUnspecfiedPercentagePoints = props.subtask.testcases.filter(testcase => testcase.percentagePoints == null)
-    .length;
+  const countUnspecfiedPercentagePoints = props.subtask.testcases.filter(testcase => testcase.points == null).length;
   const defaultPercentagePoints =
     (sumSpecfiedPercentagePoints > 100
       ? 0
@@ -361,8 +360,8 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
     if (regexForInput == null || regexForOutput == null) return;
 
-    const matchesForInput = props.testDataFiles.map(file => file.filename.match(regexForInput)).filter(x => x);
-    const matchesForOutput = props.testDataFiles.map(file => file.filename.match(regexForOutput)).filter(x => x);
+    const matchesForInput = props.testData.map(file => file.filename.match(regexForInput)).filter(x => x);
+    const matchesForOutput = props.testData.map(file => file.filename.match(regexForOutput)).filter(x => x);
     const result: [string, string][] = [];
     if (matchesForInput.length > 0 && matchesForOutput.length > 0) {
       const groupCount = matchesForInput[0].length - 1;
@@ -404,8 +403,8 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
   function getNewTestcases(matchResult: [string, string][]): Testcase[] {
     return matchResult.map(m => ({
       uuid: uuid(),
-      inputFilename: m[0],
-      outputFilename: m[1]
+      inputFile: m[0],
+      outputFile: m[1]
     }));
   }
 
@@ -544,7 +543,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
         disabled={autoAddTestcaseMatchResult.length === 0}
         content={_("problem_judge_settings.subtasks.auto_add_testcases.append")}
         onClick={() => {
-          const current = props.subtask.testcases.map(testcase => [testcase.inputFilename, testcase.outputFilename]);
+          const current = props.subtask.testcases.map(testcase => [testcase.inputFile, testcase.outputFile]);
           const toAppend = autoAddTestcaseMatchResult.filter(
             result => !current.some(testcase => result[0] === testcase[0] && result[1] === testcase[1])
           );
@@ -585,7 +584,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
   function sortTestcases() {
     const temp: [number[], Testcase][] = props.subtask.testcases.map(testcase => [
-      (testcase.inputFilename || testcase.outputFilename).match(/\d+/g).map(parseInt),
+      (testcase.inputFile || testcase.outputFile).match(/\d+/g).map(parseInt),
       testcase
     ]);
     temp.sort(([a], [b]) => {
@@ -660,11 +659,11 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
             <Input
               transparent
               placeholder={props.defaultPercentagePoints}
-              value={props.subtask.percentagePoints == null ? "" : props.subtask.percentagePoints}
+              value={props.subtask.points == null ? "" : props.subtask.points}
               icon="percent"
               onChange={(e, { value }) =>
                 (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 100)) &&
-                props.onUpdate({ percentagePoints: value === "" ? null : Number(value) })
+                props.onUpdate({ points: value === "" ? null : Number(value) })
               }
             />
           </Menu.Item>
@@ -758,7 +757,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
           <SubtaskEditorTastcaseItem
             options={props.options}
             key={testcase.uuid}
-            testDataFiles={props.testDataFiles}
+            testData={props.testData}
             testcaseIndex={testcaseIndex}
             testcaseCount={props.subtask.testcases.length}
             testcase={testcase}
@@ -828,8 +827,8 @@ function detectTestcasesFromTestData(testData: ApiTypes.ProblemFileDto[]) {
         : numbersA[firstNonEqualIndex] - numbersB[firstNonEqualIndex];
     })
     .map(([input, output]) => ({
-      inputFilename: input.filename,
-      outputFilename: output.filename
+      inputFile: input.filename,
+      outputFile: output.filename
     }));
 }
 
@@ -849,11 +848,10 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
 
   // For manual subtask editor
   const sumSpecfiedPercentagePoints = (judgeInfo.subtasks || [])
-    .map(subtask => subtask.percentagePoints)
+    .map(subtask => subtask.points)
     .filter(x => x != null)
     .reduce((sum, x) => sum + x, 0);
-  const countUnspecfiedPercentagePoints = (judgeInfo.subtasks || []).filter(subtask => subtask.percentagePoints == null)
-    .length;
+  const countUnspecfiedPercentagePoints = (judgeInfo.subtasks || []).filter(subtask => subtask.points == null).length;
   const defaultPercentagePoints =
     (sumSpecfiedPercentagePoints > 100
       ? 0
@@ -933,7 +931,7 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
           {
             uuid: uuid(),
             scoringType: template.scoringType,
-            percentagePoints: null,
+            points: null,
             timeLimit: template.timeLimit,
             memoryLimit: template.memoryLimit,
             dependencies: template.dependencies,
@@ -994,9 +992,9 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
               0,
               {
                 uuid: uuid(),
-                inputFilename: null,
-                outputFilename: null,
-                percentagePoints: null,
+                inputFile: null,
+                outputFile: null,
+                points: null,
                 timeLimit: null,
                 memoryLimit: null
               }
@@ -1033,7 +1031,7 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
           <SubtaskEditor
             key={subtask.uuid}
             options={props.options}
-            testDataFiles={props.testData}
+            testData={props.testData}
             subtaskIndex={index}
             subtaskCount={judgeInfo.subtasks.length}
             subtask={subtask}
@@ -1067,8 +1065,8 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
               autoTestcases.map((testcase, i) => (
                 <Table.Row key={i}>
                   <Table.Cell>{i + 1}</Table.Cell>
-                  <Table.Cell>{testcase.inputFilename}</Table.Cell>
-                  <Table.Cell>{testcase.outputFilename}</Table.Cell>
+                  <Table.Cell>{testcase.inputFile}</Table.Cell>
+                  <Table.Cell>{testcase.outputFile}</Table.Cell>
                 </Table.Row>
               ))
             ) : (
@@ -1099,9 +1097,7 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
                 uuid: uuid(),
                 scoringType:
                   rawSubtask.scoringType in SubtaskScoringType ? rawSubtask.scoringType : SubtaskScoringType.Sum,
-                percentagePoints: Number.isSafeInteger(rawSubtask.percentagePoints)
-                  ? rawSubtask.percentagePoints
-                  : null,
+                points: Number.isSafeInteger(rawSubtask.points) ? rawSubtask.points : null,
                 timeLimit:
                   options.enableTimeMemoryLimit && Number.isSafeInteger(rawSubtask.timeLimit)
                     ? rawSubtask.timeLimit
@@ -1120,17 +1116,15 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
                       .map(x => x || {})
                       .map(rawTestcase => ({
                         uuid: uuid(),
-                        inputFilename:
-                          options.enableInputFile && typeof rawTestcase.inputFilename === "string"
-                            ? rawTestcase.inputFilename
+                        inputFile:
+                          options.enableInputFile && typeof rawTestcase.inputFile === "string"
+                            ? rawTestcase.inputFile
                             : "",
-                        outputFilename:
-                          options.enableOutputFile && typeof rawTestcase.outputFilename === "string"
-                            ? rawTestcase.outputFilename
+                        outputFile:
+                          options.enableOutputFile && typeof rawTestcase.outputFile === "string"
+                            ? rawTestcase.outputFile
                             : "",
-                        percentagePoints: Number.isSafeInteger(rawTestcase.percentagePoints)
-                          ? rawTestcase.percentagePoints
-                          : null,
+                        points: Number.isSafeInteger(rawTestcase.points) ? rawTestcase.points : null,
                         timeLimit:
                           options.enableTimeMemoryLimit && Number.isSafeInteger(rawTestcase.timeLimit)
                             ? rawTestcase.timeLimit
@@ -1149,15 +1143,15 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
     if (judgeInfo.subtasks) {
       for (const subtask of judgeInfo.subtasks) {
         delete subtask.uuid;
-        if (subtask.percentagePoints == null) delete subtask.percentagePoints;
+        if (subtask.points == null) delete subtask.points;
         if (!options.enableTimeMemoryLimit || subtask.timeLimit == null) delete subtask.timeLimit;
         if (!options.enableTimeMemoryLimit || subtask.memoryLimit == null) delete subtask.memoryLimit;
         if (subtask.dependencies == null || subtask.dependencies.length === 0) delete subtask.dependencies;
         for (const testcase of subtask.testcases) {
           delete testcase.uuid;
-          if (testcase.percentagePoints == null) delete testcase.percentagePoints;
-          if (!options.enableInputFile) delete testcase.inputFilename;
-          if (!options.enableOutputFile) delete testcase.outputFilename;
+          if (testcase.points == null) delete testcase.points;
+          if (!options.enableInputFile) delete testcase.inputFile;
+          if (!options.enableOutputFile) delete testcase.outputFile;
           if (!options.enableTimeMemoryLimit || testcase.timeLimit == null) delete testcase.timeLimit;
           if (!options.enableTimeMemoryLimit || testcase.memoryLimit == null) delete testcase.memoryLimit;
         }
