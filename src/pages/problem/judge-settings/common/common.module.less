@@ -1,0 +1,123 @@
+@color_0: #db2828;
+@color_1: #f2711c;
+@color_2: #fbbd08;
+@color_3: #b5cc18;
+@color_4: #21ba45;
+@color_5: #00b5ad;
+@color_6: #2185d0;
+@color_7: #6435c9;
+@color_8: #a333c8;
+@color_9: #e03997;
+@color_10: #a5673f;
+@color_11: #767676;
+@color_12: #1b1c1d;
+
+.menu {
+  border-radius: 0 !important;
+  height: 43px;
+
+  > :global(.item) {
+    border-radius: 0 !important;
+
+    &:first-child {
+      padding: .92857143em .8em !important;
+    }
+  }
+
+  .itemTitle {
+    width: 120px;
+    flex-grow: 1 !important;
+    white-space: nowrap;
+  
+    &::before {
+      display: none;
+    }
+  }
+
+  .itemWithIcon {
+    width: 43px;
+    padding: 0 !important;
+  }
+}
+
+.menuHeader, .menuFooter {
+  background-color: #f9f9f9 !important;
+}
+
+.menuHeader {
+  border-top: .2em solid !important;
+  border-top-left-radius: .28571429rem !important;
+  border-top-right-radius: .28571429rem !important;
+
+  &.color_0 { border-top-color: @color_0 !important; }
+  &.color_1 { border-top-color: @color_1 !important; }
+  &.color_2 { border-top-color: @color_2 !important; }
+  &.color_3 { border-top-color: @color_3 !important; }
+  &.color_4 { border-top-color: @color_4 !important; }
+  &.color_5 { border-top-color: @color_5 !important; }
+  &.color_6 { border-top-color: @color_6 !important; }
+  &.color_7 { border-top-color: @color_7 !important; }
+  &.color_8 { border-top-color: @color_8 !important; }
+  &.color_9 { border-top-color: @color_9 !important; }
+  &.color_10 { border-top-color: @color_10 !important; }
+  &.color_11 { border-top-color: @color_11 !important; }
+  &.color_12 { border-top-color: @color_12 !important; }
+}
+
+:global(#root) {
+  .itemSearchDropdown {
+    border: none !important;
+    border-radius: 0 !important;
+    flex-grow: 1;
+    flex-shrink: 1;
+      
+    input {
+      height: 100%;
+    }
+  
+    &::before {
+      display: none;
+    }
+
+    :global(.menu) {
+      border-radius: 0 !important;
+      margin-left: -1px;
+      border-bottom-width: 1px !important;
+      width: calc(100% + 1px);
+    }
+
+    :global(.menu) .iconInputOrOutput {
+      visibility: hidden;
+    }
+
+    :global(.text) {
+      padding-left: 1px;
+    }
+
+    :global(.text) .iconInputOrOutput {
+      margin-left: -0.5px;
+    }
+  
+    :global(.dropdown.icon) {
+      top: unset;
+    }
+  }
+}
+
+.dialogHeader {
+  position: relative;
+}
+
+.dialogHeaderInfo {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: normal;
+  opacity: 0.5;
+}
+
+.dialogMessage {
+  padding: 1em 0.85em !important;
+  white-space: pre-wrap;
+}

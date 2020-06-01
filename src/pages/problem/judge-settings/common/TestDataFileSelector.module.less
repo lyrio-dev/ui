@@ -1,0 +1,43 @@
+@import "common.module.less";
+
+:global(#root) {
+  .fileSelect {
+    &.formSelect {
+      :global(.item) {
+        padding-left: 14px !important;
+        padding-right: 19.5px !important;
+      }
+    }
+
+    :global(.item) .iconFile {
+      margin-right: 11px !important;
+    }
+
+    :global(.item) {
+      padding-right: 17.5px !important;
+    }
+
+    :global(.text), :global(.item) {
+      display: flex;
+      align-items: center;
+      width: 100%;
+
+      .filename {
+        max-width: calc(100% - 120px);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        direction: rtl;
+        height: 28px;
+        line-height: 28px;
+        margin-top: -7px;
+        margin-bottom: -7px;
+      }
+
+      .fileSize {
+        opacity: 0.35;
+        margin-left: auto;
+      }
+    }
+  }
+}
