@@ -1,0 +1,70 @@
+@import "common.module.less";
+
+.submitView {
+  display: flex;
+  width: 100%;
+
+  .inStatementView & {
+    display: none;
+  }
+
+  .leftContainer {
+    padding-right: 0;
+  }
+
+  flex-grow: 1;
+
+  @media only screen and (min-width: 768px) {
+    .editorWrapper {
+      height: calc(100vh - 360px);
+      min-height: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+
+    .editorWrapper {
+      height: 60vh;
+    }
+
+    .rightContainer {
+      margin-top: 25px;
+    }
+  }
+}
+
+.actionMenu {
+  margin-bottom: 25px !important;
+}
+
+.skipSamples {
+  margin-top: 19px !important;
+  margin-bottom: -6px !important;
+  display: block !important;
+}
+
+.submitButton {
+  margin-top: 25px !important;
+}
+
+.lastSubmission {
+  margin-top: 19px;
+  display: flex;
+  align-items: center;
+
+  :global(.ui.header) {
+    margin-bottom: 0;
+    margin-right: auto;
+  }
+
+  :global(.statustext) {
+    @media only screen and (max-width: 1023px) and (min-width: 768px) {
+      display: none;
+    }
+  }
+
+  .scoreText {
+    margin-left: 10px;
+  }
+}

@@ -20,8 +20,11 @@ const subtasksEditorOptions: Options<typeof SubtasksEditor> = {
   enableOutputFile: true
 };
 
-type JudgeInfo = JudgeInfoWithMeta & JudgeInfoWithSubtasks & JudgeInfoWithChecker & JudgeInfoWithExtraSourceFiles;
-type TraditionalProblemEditorProps = EditorComponentProps<JudgeInfo>;
+export type JudgeInfoTraditional = JudgeInfoWithMeta &
+  JudgeInfoWithSubtasks &
+  JudgeInfoWithChecker &
+  JudgeInfoWithExtraSourceFiles;
+type TraditionalProblemEditorProps = EditorComponentProps<JudgeInfoTraditional>;
 
 let TraditionalProblemEditor: React.FC<TraditionalProblemEditorProps> = props => {
   return (
@@ -36,7 +39,7 @@ let TraditionalProblemEditor: React.FC<TraditionalProblemEditorProps> = props =>
 
 TraditionalProblemEditor = observer(TraditionalProblemEditor);
 
-const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfo> = {
+const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoTraditional> = {
   parseJudgeInfo(raw, testData) {
     return Object.assign(
       {},

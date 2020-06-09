@@ -1,0 +1,192 @@
+@import "common/common.module.less";
+
+.topContainer {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  margin-bottom: 27.5px;
+
+  .titleSection {
+    flex-grow: 1;
+
+    .header {
+      display: flex;
+      align-items: center;
+
+      .lastAcceptedSubmission {
+        font-size: 0.7em;
+        margin-right: 3px;
+      }
+
+      .languageSelectIcon {
+        margin-left: 10px;
+        font-size: 17px;
+        vertical-align: bottom;
+      }
+    }
+
+    .labels {
+      margin-top: -2px;
+
+      :global(.ui.label) {
+        margin: 2px !important;
+      }
+    }
+
+    .toggleTagsLabel {
+      user-select: none;
+
+      :global(.icon) {
+        cursor: pointer;
+        margin-right: 0 !important;
+        margin-left: .5em !important;
+        font-size: .92857143em !important;
+        transition: transform .3s ease;
+      }
+    }
+  }
+}
+
+.statistic {
+  white-space: nowrap;
+  flex-wrap: nowrap !important;
+  margin: 0 !important;
+  justify-content: center;
+  width: 260px;
+  flex-shrink: 0;
+
+  @media only screen and (max-width: 1023px) and (min-width: 768px) {
+    width: 190px;
+
+    > :global(.ui.statistic) {
+      &:first-child {
+        margin-right: 1em !important;
+      }
+  
+      &:not(:first-child) {
+        margin-left: 1em !important;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    width: min-content;
+    padding-top: 4px;
+    padding-bottom: 14px;
+    margin: 0 auto !important;
+  }
+
+  > :first-child {
+    margin-left: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
+
+.divider {
+  margin: 0 -233333px 37.5px !important;
+}
+
+.statementView {
+  display: flex;
+  width: 100%;
+}
+
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.rightContainer {
+  align-self: start;
+  position: sticky;
+  top: 10px;
+}
+
+.secondActionMenu {
+  margin-top: 40px !important;
+
+  &:empty {
+    margin-top: 0 !important;
+  }
+}
+
+.sample {
+  display: inline-flex !important;
+  flex-direction: column;
+}
+
+.sampleHeader {
+  margin-bottom: 1.5px !important;
+}
+
+.sampleDataSegment {
+  flex-grow: 1;
+  margin-top: 0 !important;
+}
+
+.sampleDataPre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.copySample {
+  display: block;
+  float: right;
+  user-select: none;
+}
+
+.sampleExplanation {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+
+  p {
+    margin-bottom: 1em !important;
+
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .topContainer {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .labels {
+    white-space: initial;
+  }
+
+  .divider {
+    margin-bottom: 25px !important;
+  }
+
+  .sampleInput {
+    padding-right: 0.5rem !important;
+  }
+
+  .sampleOutput {
+    padding-left: 0.5rem !important;
+  }
+
+  .dividerBottom {
+    margin-top: 25px !important;
+  }
+
+  .statementView {
+    display: block;
+  }
+
+  .actionMenusWrapper {
+    margin-top: 20px !important;
+  }
+
+  .secondActionMenu {
+    margin-top: 30px !important;
+
+    &:empty {
+      margin-top: 0 !important;
+    }
+  }
+}
