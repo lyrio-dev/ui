@@ -135,7 +135,9 @@ const overrideHtmlWebpackPluginConfig = options => config => {
 
 module.exports = override(
   disableEsLint(),
-  addLessLoader(),
+  addLessLoader({
+    localIdentName: "[local]_[hash:base64:5]"
+  }),
   addWebpackModuleRule({
     test: /\.svg$/,
     issuer: /\.tsx$/,
