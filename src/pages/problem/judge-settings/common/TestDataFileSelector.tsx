@@ -51,7 +51,7 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
         <>
           {props.iconInputOrOutput && <Icon className={style.iconInputOrOutput} name={props.iconInputOrOutput} />}
           <Icon name={getFileIcon(file.filename)} className={style.iconFile} />
-          <div className={style.filename}>{file.filename}</div>
+          <div className={style.filename}>{"\u200E" + file.filename}</div>
           <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
         </>
       )

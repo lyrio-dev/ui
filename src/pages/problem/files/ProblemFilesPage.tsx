@@ -207,7 +207,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
               onChange={(e, { checked }) => props.onSelect(checked)}
             />
             <Icon name={getFileIcon(props.file.filename)} />
-            {props.file.filename}
+            {"\u200E" + props.file.filename}
           </div>
         </Table.Cell>
         {!isMobile && <Table.Cell textAlign="center">{formatFileSize(props.file.size, 1)}</Table.Cell>}
