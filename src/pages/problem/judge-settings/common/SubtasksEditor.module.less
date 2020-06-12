@@ -10,6 +10,10 @@
   font-size: 0.9em;
 }
 
+.subtasksEditor {
+  margin: 14px 0;
+}
+
 // Add "#root" to force override Semantic UI's styles
 :global(#root) {
   .itemSubtaskTimeLimit, .itemSubtaskMemoryLimit {
@@ -96,6 +100,15 @@
         opacity: 1;
       }
     }
+  }
+}
+
+.outputFileNotNeeded {
+  flex-grow: 1 !important;
+  color: rgb(191, 191, 191, 0.87) !important;
+
+  &::before {
+    display: none !important;
   }
 }
 

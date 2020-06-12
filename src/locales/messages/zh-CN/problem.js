@@ -13,7 +13,8 @@ module.exports = {
   show_tags: "显示标签",
   hide_tags: "隐藏标签",
   type: {
-    TRADITIONAL: "传统"
+    TRADITIONAL: "传统",
+    INTERACTION: "交互"
   },
   statistic: {
     submissions: "提交",

@@ -39,6 +39,13 @@ declare namespace ApiTypes {
   export interface CancelSubmissionResponseDto {
     error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
   }
+  export interface ChangeProblemTypeRequestDto {
+    problemId: number;
+    type: "TRADITIONAL" | "INTERACTION";
+  }
+  export interface ChangeProblemTypeResponseDto {
+    error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "PROBLEM_HAS_SUBMISSION";
+  }
   export interface CheckAvailabilityResponseDto {
     usernameAvailable?: boolean;
     emailAvailable?: boolean;
@@ -51,7 +58,7 @@ declare namespace ApiTypes {
     groupId?: number;
   }
   export interface CreateProblemRequestDto {
-    type: "TRADITIONAL";
+    type: "TRADITIONAL" | "INTERACTION";
     statement: ApiTypes.ProblemStatementDto;
   }
   export interface CreateProblemResponseDto {
@@ -349,7 +356,7 @@ declare namespace ApiTypes {
   export interface ProblemMetaDto {
     id: number;
     displayId?: number;
-    type: "TRADITIONAL";
+    type: "TRADITIONAL" | "INTERACTION";
     isPublic: boolean;
     ownerId: number;
     locales: ("en_US" | "zh_CN" | "ja_JP")[];

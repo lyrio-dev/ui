@@ -38,7 +38,7 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
     )
   );
 
-  function updateJudgeInfo(extraSourceFiles: ExtraSourceFiles) {
+  function updateJudgeInfo(extraSourceFiles: ExtraSourceFiles, isNotByUser?: boolean) {
     props.onUpdateJudgeInfo({
       extraSourceFiles: Object.fromEntries(
         Object.values(CodeLanguage)
@@ -51,7 +51,7 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
       )
     });
   }
-  useEffect(() => updateJudgeInfo(extraSourceFiles), []);
+  useEffect(() => props.judgeInfo.extraSourceFiles && updateJudgeInfo(extraSourceFiles, true), []);
 
   // Update both a local copy and judge info
   function updateExtraSourceFiles(newExtraSourceFiles: ExtraSourceFiles) {

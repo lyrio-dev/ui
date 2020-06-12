@@ -9,6 +9,7 @@ module.exports = {
   error: {
     NO_SUCH_PROBLEM: "問題が存在しません。",
     PERMISSION_DENIED: "権限がありません。",
+    PROBLEM_HAS_SUBMISSION: "[TBT] The type of a problem with submissions can't be switched.",
     INVALID_JUDGE_INFO: {
       INVALID_TIME_LIMIT_TASK: "[TBT] Invalid time limit.",
       TIME_LIMIT_TOO_LARGE_TASK: "[TBT] The time {3} ms is too large, please contact the admin.",
@@ -44,6 +45,12 @@ module.exports = {
       INVALID_CHECKER_INTERFACE: "[TBT] Unknown error.",
       INVALID_CHECKER_LANGUAGE: "[TBT] Unknown error.",
       NO_SUCH_CHECKER_FILE: "[TBT] The checker file {1} doesn't exist.",
+      INVALID_INTERACTOR: "[TBT] Unknown error",
+      INVALID_INTERACTOR_INTERFACE: "[TBT] Unknown error",
+      INVALID_INTERACTOR_SHARED_MEMORY_SIZE: "[TBT] Unknown error",
+      INVALID_INTERACTOR_LANGUAGE_OPTIONS: "[TBT] Unknown error",
+      INVALID_INTERACTOR_LANGUAGE: "[TBT] Unknown error",
+      NO_SUCH_INTERACTOR_FILE: "[TBT] The interactor file {1} doesn't exist.",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "[TBT] Unknown error.",
       INVALID_EXTRA_SOURCE_FILES: "[TBT] Unknown error.",
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "[TBT] Unknown error.",
@@ -59,10 +66,9 @@ module.exports = {
     ok: "保存"
   },
   problem_type: "問題のタイプ",
-  problem_types: {
-    TRADITIONAL: "Batch"
-  },
-  switch: "スイッチする",
+  switch_type: "スイッチする",
+  confirm_switch_type: "[TBT] Confirm switch type",
+  switch_type_success: "[TBT] Successfully switched problem type.",
   meta: {
     time_limit: "時間制限",
     memory_limit: "メモリ制限",
@@ -107,9 +113,21 @@ module.exports = {
       }
     }
   },
+  interactor: {
+    interactor: "[TBT] Interactor",
+    interfaces: {
+      stdio: "[TBT] Standard Input/Output",
+      shm: "[TBT] Shared Memory"
+    },
+    shm_size: "[TBT] Shared Memory Size",
+    language: "[TBT] Language",
+    filename: "[TBT] File",
+    filename_no_file: "[TBT] No file"
+  },
   subtasks: {
     auto_testcases:
       "[TBT] Detect testcases from testdata files (Match <code>.in</code> and <code>.out</code> files automatically)",
+    auto_testcases_no_output: "[TBT] Detect testcases from testdata files (Match <code>.in</code> files automatically)",
     cannot_detect_testcases_from_testdata: "[TBT] Cannot detect testcases from testdata",
     subtask: "サブタスク",
     single_subtask: "シングルサブタスク",
@@ -133,6 +151,8 @@ module.exports = {
       auto_add_testcases: "自動でテストケースを追加",
       subtask: "サブタスク",
       help: "正規表現を使って入力ファイルと出力ファイルを選択し，リンクしてテストケースを追加します。",
+      help_no_output:
+        "[TBT] Enter the regexes to match the filenames. Each matched file will become a testcase's input file.",
       input_file: "入力ファイル",
       output_file: "出力ファイル",
       can_not_compile_for_input: "入力ファイルの正規表現はコンパイルできません：{message}",
@@ -155,7 +175,8 @@ module.exports = {
     no_testcases: "テストケースはありません",
     testcase: {
       input_file: "入力ファイル",
-      output_file: "出力ファイル"
+      output_file: "出力ファイル",
+      output_file_not_needed: "[TBT] Output file is not needed"
     },
     testcase_add: {
       before: "前に追加",

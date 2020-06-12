@@ -8,7 +8,8 @@ module.exports = {
   show_tags: "Show Tags",
   hide_tags: "Hide Tags",
   type: {
-    TRADITIONAL: "Traditional"
+    TRADITIONAL: "Traditional",
+    INTERACTION: "Interaction"
   },
   statistic: {
     submissions: "Subs.",

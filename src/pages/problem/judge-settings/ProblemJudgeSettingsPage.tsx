@@ -16,12 +16,15 @@ import toast from "@/utils/toast";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { ProblemType } from "@/interfaces/ProblemType";
 
 import { ProblemTypeEditorComponent } from "./common/interface";
 import TraditionalProblemEditor from "./types/TraditionalProblemEditor";
+import InteractionProblemEditor from "./types/InteractionProblemEditor";
 
-const problemTypeEditorComponents: Record<string, ProblemTypeEditorComponent> = {
-  TRADITIONAL: TraditionalProblemEditor
+const problemTypeEditorComponents: Record<ProblemType, ProblemTypeEditorComponent> = {
+  [ProblemType.TRADITIONAL]: TraditionalProblemEditor,
+  [ProblemType.INTERACTION]: InteractionProblemEditor
 };
 
 async function fetchData(idType: "id" | "displayId", id: number) {
@@ -74,9 +77,9 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const [pending, setPending] = useState(false);
   const [modified, setModified] = useState(false);
 
-  function onUpdate(delta: unknown) {
+  function onUpdate(delta: unknown, isNotByUser?: boolean) {
     if (pending) return;
-    setModified(true);
+    if (!isNotByUser) setModified(true);
 
     setJudgeInfo(Object.assign({}, judgeInfo, delta));
   }
@@ -163,6 +166,31 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 
   useConfirmUnload(() => modified);
 
+  const [newType, setNewType] = useState(props.problem.meta.type as ProblemType);
+  const [switchProblemPopupOpen, setSwitchProblemPopupOpen] = useState(false);
+  async function onChangeType() {
+    if (pending) return;
+    setPending(true);
+
+    if (newType === props.problem.meta.type) return;
+
+    const { requestError, response } = await ProblemApi.changeProblemType({
+      problemId: props.problem.meta.id,
+      type: newType
+    });
+    setSwitchProblemPopupOpen(false);
+    if (requestError) {
+      toast.error(requestError);
+    } else if (response.error) {
+      toast.error(_(`problem_judge_settings.error.${response.error}`));
+    } else {
+      toast.success(_("problem_judge_settings.switch_type_success"));
+      navigation.refresh();
+    }
+
+    setPending(false);
+  }
+
   return (
     <>
       {editRawDialog.element}
@@ -233,16 +261,31 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                 <Dropdown
                   className={style.dropdown}
                   selection
-                  value="TRADITIONAL"
-                  options={[
-                    {
-                      key: "TRADITIONAL",
-                      value: "TRADITIONAL",
-                      text: _("problem_judge_settings.problem_types.TRADITIONAL")
-                    }
-                  ]}
+                  value={newType}
+                  options={Object.values(ProblemType).map(type => ({
+                    key: type,
+                    value: type,
+                    text: _(`problem.type.${type}`)
+                  }))}
+                  onChange={(e, { value }) => setNewType(value as ProblemType)}
                 />
-                <Button disabled className={style.switchButton} content={_("problem_judge_settings.switch")} />
+                <Popup
+                  trigger={
+                    <Button
+                      disabled={pending || newType === props.problem.meta.type}
+                      className={style.switchButton}
+                      content={_("problem_judge_settings.switch_type")}
+                    />
+                  }
+                  content={
+                    <Button negative content={_("problem_judge_settings.confirm_switch_type")} onClick={onChangeType} />
+                  }
+                  open={switchProblemPopupOpen}
+                  onOpen={() => setSwitchProblemPopupOpen(true)}
+                  onClose={() => setSwitchProblemPopupOpen(false)}
+                  position="top center"
+                  on="click"
+                />
               </Form.Field>
             </Form>
             <ProblemTypeEditorComponent

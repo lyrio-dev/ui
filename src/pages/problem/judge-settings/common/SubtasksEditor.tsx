@@ -42,11 +42,9 @@ export interface JudgeInfoWithSubtasks {
   subtasks: Subtask[];
 }
 
-// TODO: stub
 interface SubtasksEditorOptions {
   // Some of the problem types doesn't have ALL testcase props
-  enableTimeMemoryLimit: boolean;
-  enableInputFile: boolean;
+  enableTimeMemoryLimit: boolean; // TODO: stub
   enableOutputFile: boolean;
 }
 
@@ -163,14 +161,21 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
             }
           />
         </Menu.Item>
-        <TestDataFileSelector
-          type="ItemSearchDropdown"
-          iconInputOrOutput="sign out"
-          testData={props.testData}
-          placeholder={_("problem_judge_settings.subtasks.testcase.output_file")}
-          value={props.testcase.outputFile}
-          onChange={value => props.onUpdate({ outputFile: value })}
-        />
+        {props.options.enableOutputFile ? (
+          <TestDataFileSelector
+            type="ItemSearchDropdown"
+            iconInputOrOutput="sign out"
+            testData={props.testData}
+            placeholder={_("problem_judge_settings.subtasks.testcase.output_file")}
+            value={props.testcase.outputFile}
+            onChange={value => props.onUpdate({ outputFile: value })}
+          />
+        ) : (
+          <Menu.Item
+            className={style.outputFileNotNeeded}
+            content={_("problem_judge_settings.subtasks.testcase.output_file_not_needed")}
+          />
+        )}
         <Menu.Menu position="right">
           <Menu.Item className={style.itemTestcaseMemoryLimit}>
             <Input
@@ -304,6 +309,8 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
     return re === regexForOutput ? "" : re;
   }
 
+  const enableOutputFile = props.options.enableOutputFile;
+
   // Pass the new value via argument
   // Because the states' values are not being updated immediately after setState()
   function autoAddTestcaseDoMatching(input: string, output: string) {
@@ -344,58 +351,67 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
       setAutoAddTestcaseErrorMatching("");
       setAutoAddTestcaseMatchResult([]);
     }
-    try {
-      regexForOutput = new RegExp(output);
-      setAutoAddTestcaseErrorCompileForOutput("");
-    } catch (e) {
-      // If the regex is auto generated, do not show error message
-      if (!outputIsDefault) {
-        setAutoAddTestcaseErrorCompileForOutput(
-          _("problem_judge_settings.subtasks.auto_add_testcases.can_not_compile_for_output", { message: e.message })
-        );
-      } else setAutoAddTestcaseErrorCompileForOutput("");
-      setAutoAddTestcaseErrorMatching("");
-      setAutoAddTestcaseMatchResult([]);
+    if (enableOutputFile) {
+      try {
+        regexForOutput = new RegExp(output);
+        setAutoAddTestcaseErrorCompileForOutput("");
+      } catch (e) {
+        // If the regex is auto generated, do not show error message
+        if (!outputIsDefault) {
+          setAutoAddTestcaseErrorCompileForOutput(
+            _("problem_judge_settings.subtasks.auto_add_testcases.can_not_compile_for_output", { message: e.message })
+          );
+        } else setAutoAddTestcaseErrorCompileForOutput("");
+        setAutoAddTestcaseErrorMatching("");
+        setAutoAddTestcaseMatchResult([]);
+      }
     }
 
-    if (regexForInput == null || regexForOutput == null) return;
+    if (regexForInput == null || (regexForOutput == null && enableOutputFile)) return;
 
-    const matchesForInput = props.testData.map(file => file.filename.match(regexForInput)).filter(x => x);
-    const matchesForOutput = props.testData.map(file => file.filename.match(regexForOutput)).filter(x => x);
-    const result: [string, string][] = [];
-    if (matchesForInput.length > 0 && matchesForOutput.length > 0) {
-      const groupCount = matchesForInput[0].length - 1;
-      if (groupCount !== matchesForOutput[0].length - 1) {
-        setAutoAddTestcaseErrorMatching(
-          _("problem_judge_settings.subtasks.auto_add_testcases.capturing_groups_do_not_match", {
-            countInInputFilename: String(groupCount),
-            countInOutputFilename: String(matchesForOutput[0].length - 1)
-          })
-        );
-      } else if (groupCount === 0) {
-        setAutoAddTestcaseErrorMatching(_("problem_judge_settings.subtasks.auto_add_testcases.no_capturing_groups"));
-      } else {
-        while (matchesForInput.length !== 0) {
-          const currentMatchForInput = matchesForInput.shift();
+    if (!enableOutputFile) {
+      const result: [string, string][] = props.testData
+        .filter(file => file.filename.match(regexForInput))
+        .map(file => [file.filename, null]);
+      setAutoAddTestcaseMatchResult(result);
+    } else {
+      const matchesForInput = props.testData.map(file => file.filename.match(regexForInput)).filter(x => x);
+      const matchesForOutput = props.testData.map(file => file.filename.match(regexForOutput)).filter(x => x);
+      const result: [string, string][] = [];
+      if (matchesForInput.length > 0 && matchesForOutput.length > 0) {
+        const groupCount = matchesForInput[0].length - 1;
+        if (groupCount !== matchesForOutput[0].length - 1) {
+          setAutoAddTestcaseErrorMatching(
+            _("problem_judge_settings.subtasks.auto_add_testcases.capturing_groups_do_not_match", {
+              countInInputFilename: String(groupCount),
+              countInOutputFilename: String(matchesForOutput[0].length - 1)
+            })
+          );
+        } else if (groupCount === 0) {
+          setAutoAddTestcaseErrorMatching(_("problem_judge_settings.subtasks.auto_add_testcases.no_capturing_groups"));
+        } else {
+          while (matchesForInput.length !== 0) {
+            const currentMatchForInput = matchesForInput.shift();
 
-          // Find the matching output filename with the current input filename
-          for (let i = 0; i < matchesForOutput.length; i++) {
-            let foundNonMatch = false;
-            for (let j = 1; j <= groupCount; j++) {
-              if (currentMatchForInput[j] !== matchesForOutput[i][j]) {
-                foundNonMatch = true;
-                break;
+            // Find the matching output filename with the current input filename
+            for (let i = 0; i < matchesForOutput.length; i++) {
+              let foundNonMatch = false;
+              for (let j = 1; j <= groupCount; j++) {
+                if (currentMatchForInput[j] !== matchesForOutput[i][j]) {
+                  foundNonMatch = true;
+                  break;
+                }
+              }
+
+              if (!foundNonMatch) {
+                result.push([currentMatchForInput.input, matchesForOutput[i].input]);
+                matchesForOutput.splice(i, 1);
               }
             }
-
-            if (!foundNonMatch) {
-              result.push([currentMatchForInput.input, matchesForOutput[i].input]);
-              matchesForOutput.splice(i, 1);
-            }
           }
-        }
 
-        setAutoAddTestcaseMatchResult(result);
+          setAutoAddTestcaseMatchResult(result);
+        }
       }
     }
   }
@@ -445,7 +461,13 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
       return (
         <>
-          <p className={style.autoAddTestcasesHelp}>{_("problem_judge_settings.subtasks.auto_add_testcases.help")}</p>
+          <p className={style.autoAddTestcasesHelp}>
+            {_(
+              !props.options.enableOutputFile
+                ? "problem_judge_settings.subtasks.auto_add_testcases.help_no_output"
+                : "problem_judge_settings.subtasks.auto_add_testcases.help"
+            )}
+          </p>
           <Form>
             <Form.Group>
               <Form.Field width={8}>
@@ -461,19 +483,21 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
                   }}
                 />
               </Form.Field>
-              <Form.Field width={8}>
-                <label>{_("problem_judge_settings.subtasks.auto_add_testcases.output_file")}</label>
-                <Input
-                  placeholder={defaultOutput}
-                  value={autoAddTestcaseRegexForOutput}
-                  icon="sign out"
-                  iconPosition="left"
-                  onChange={(e, { value }) => {
-                    setAutoAddTestcaseRegexForOutput(value);
-                    autoAddTestcaseDoMatching(autoAddTestcaseRegexForInput, value);
-                  }}
-                />
-              </Form.Field>
+              {props.options.enableOutputFile && (
+                <Form.Field width={8}>
+                  <label>{_("problem_judge_settings.subtasks.auto_add_testcases.output_file")}</label>
+                  <Input
+                    placeholder={defaultOutput}
+                    value={autoAddTestcaseRegexForOutput}
+                    icon="sign out"
+                    iconPosition="left"
+                    onChange={(e, { value }) => {
+                      setAutoAddTestcaseRegexForOutput(value);
+                      autoAddTestcaseDoMatching(autoAddTestcaseRegexForInput, value);
+                    }}
+                  />
+                </Form.Field>
+              )}
             </Form.Group>
           </Form>
           {autoAddTestcaseError ? (
@@ -499,12 +523,14 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
                   {[1, 2].map(i => (
                     <React.Fragment key={i}>
                       <Table.HeaderCell width={1}>#</Table.HeaderCell>
-                      <Table.HeaderCell width={3}>
+                      <Table.HeaderCell width={props.options.enableOutputFile ? 3 : 6}>
                         {_("problem_judge_settings.subtasks.auto_add_testcases.column_input_file")}
                       </Table.HeaderCell>
-                      <Table.HeaderCell width={3}>
-                        {_("problem_judge_settings.subtasks.auto_add_testcases.column_output_file")}
-                      </Table.HeaderCell>
+                      {props.options.enableOutputFile && (
+                        <Table.HeaderCell width={3}>
+                          {_("problem_judge_settings.subtasks.auto_add_testcases.column_output_file")}
+                        </Table.HeaderCell>
+                      )}
                     </React.Fragment>
                   ))}
                 </Table.Row>
@@ -521,7 +547,9 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
                               <strong>{id + 1}</strong>
                             </Table.Cell>
                             <Table.Cell>{autoAddTestcaseMatchResult[id][0]}</Table.Cell>
-                            <Table.Cell>{autoAddTestcaseMatchResult[id][1]}</Table.Cell>
+                            {props.options.enableOutputFile && (
+                              <Table.Cell>{autoAddTestcaseMatchResult[id][1]}</Table.Cell>
+                            )}
                           </React.Fragment>
                         )
                       )}
@@ -803,33 +831,41 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
 SubtaskEditor = observer(SubtaskEditor);
 
-function detectTestcasesFromTestData(testData: ApiTypes.ProblemFileDto[]) {
-  return testData
-    .filter(file => file.filename.toLowerCase().endsWith(".in"))
-    .map<[ApiTypes.ProblemFileDto, ApiTypes.ProblemFileDto, number[]]>(input => [
-      input,
-      testData.find(file =>
-        [".out", ".ans"]
-          .map(ext => input.filename.slice(0, -3).toLowerCase() + ext)
-          .includes(file.filename.toLowerCase())
-      ),
-      (input.filename.match(/\d+/g) || []).map(parseInt)
-    ])
-    .filter(([input, outputFile]) => outputFile)
-    .sort(([inputA, outputA, numbersA], [inputB, outputB, numbersB]) => {
-      const firstNonEqualIndex = [...Array(Math.max(numbersA.length, numbersB.length)).keys()].findIndex(
-        i => numbersA[i] !== numbersB[i]
-      );
-      return firstNonEqualIndex === -1
-        ? inputA.filename < inputB.filename
-          ? -1
-          : 1
-        : numbersA[firstNonEqualIndex] - numbersB[firstNonEqualIndex];
-    })
-    .map(([input, output]) => ({
-      inputFile: input.filename,
-      outputFile: output.filename
-    }));
+function detectTestcasesFromTestData(testData: ApiTypes.ProblemFileDto[], enableOutputFile: boolean) {
+  if (!enableOutputFile)
+    return testData
+      .filter(file => file.filename.toLowerCase().endsWith(".in"))
+      .map(input => ({
+        inputFile: input.filename,
+        outputFile: null
+      }));
+  else
+    return testData
+      .filter(file => file.filename.toLowerCase().endsWith(".in"))
+      .map<[ApiTypes.ProblemFileDto, ApiTypes.ProblemFileDto, number[]]>(input => [
+        input,
+        testData.find(file =>
+          [".out", ".ans"]
+            .map(ext => input.filename.slice(0, -3).toLowerCase() + ext)
+            .includes(file.filename.toLowerCase())
+        ),
+        (input.filename.match(/\d+/g) || []).map(parseInt)
+      ])
+      .filter(([input, outputFile]) => outputFile)
+      .sort(([inputA, outputA, numbersA], [inputB, outputB, numbersB]) => {
+        const firstNonEqualIndex = [...Array(Math.max(numbersA.length, numbersB.length)).keys()].findIndex(
+          i => numbersA[i] !== numbersB[i]
+        );
+        return firstNonEqualIndex === -1
+          ? inputA.filename < inputB.filename
+            ? -1
+            : 1
+          : numbersA[firstNonEqualIndex] - numbersB[firstNonEqualIndex];
+      })
+      .map(([input, output]) => ({
+        inputFile: input.filename,
+        outputFile: output.filename
+      }));
 }
 
 type SubtasksEditorProps = EditorComponentProps<JudgeInfoWithSubtasks, SubtasksEditorOptions>;
@@ -839,7 +875,9 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
 
   const judgeInfo = props.judgeInfo;
 
-  const autoTestcases = useMemo(() => detectTestcasesFromTestData(props.testData), [props.testData]);
+  const autoTestcases = useMemo(() => detectTestcasesFromTestData(props.testData, props.options.enableOutputFile), [
+    props.testData
+  ]);
 
   // Prevent losing subtasks by toggling "auto detect testcases"
   const [subtasksBackup, setSubtasksBackup] = useState(
@@ -1012,7 +1050,15 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
           <Form.Checkbox
             width={16}
             label={
-              <label dangerouslySetInnerHTML={{ __html: _("problem_judge_settings.subtasks.auto_testcases") }}></label>
+              <label
+                dangerouslySetInnerHTML={{
+                  __html: _(
+                    props.options.enableOutputFile
+                      ? "problem_judge_settings.subtasks.auto_testcases"
+                      : "problem_judge_settings.subtasks.auto_testcases_no_output"
+                  )
+                }}
+              ></label>
             }
             checked={!judgeInfo.subtasks}
             onChange={(e, { checked }) => {
@@ -1027,37 +1073,45 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
         </Form.Group>
       </Form>
       {judgeInfo.subtasks ? (
-        judgeInfo.subtasks.map((subtask, index) => (
-          <SubtaskEditor
-            key={subtask.uuid}
-            options={props.options}
-            testData={props.testData}
-            subtaskIndex={index}
-            subtaskCount={judgeInfo.subtasks.length}
-            subtask={subtask}
-            defaultPercentagePoints={defaultPercentagePoints}
-            defaultTimeLimit={judgeInfo.timeLimit}
-            defaultMemoryLimit={judgeInfo.memoryLimit}
-            onUpdate={updateInfo => onUpdateSubtask(index, updateInfo)}
-            onDelete={() => onDeleteSubtask(index)}
-            onMoveUp={() => onMoveSubtask(index, "UP")}
-            onMoveDown={() => onMoveSubtask(index, "DOWN")}
-            onAddSubtaskBefore={() => onAddSubtask(index, subtask)}
-            onAddSubtaskAfter={() => onAddSubtask(index + 1, subtask)}
-            onUpdateTestcase={(testcaseIndex, updateInfo) => onUpdateTestcase(index, testcaseIndex, updateInfo)}
-            onDeleteTestcase={testcaseIndex => onDeleteTestcase(index, testcaseIndex)}
-            onMoveTestcaseUp={testcaseIndex => onMoveTestcase(index, testcaseIndex, "UP")}
-            onMoveTestcaseDown={testcaseIndex => onMoveTestcase(index, testcaseIndex, "DOWN")}
-            onAddTestcase={testcaseIndex => onAddTestcase(index, testcaseIndex)}
-          />
-        ))
+        <div className={style.subtasksEditor}>
+          {judgeInfo.subtasks.map((subtask, index) => (
+            <SubtaskEditor
+              key={subtask.uuid}
+              options={props.options}
+              testData={props.testData}
+              subtaskIndex={index}
+              subtaskCount={judgeInfo.subtasks.length}
+              subtask={subtask}
+              defaultPercentagePoints={defaultPercentagePoints}
+              defaultTimeLimit={judgeInfo.timeLimit}
+              defaultMemoryLimit={judgeInfo.memoryLimit}
+              onUpdate={updateInfo => onUpdateSubtask(index, updateInfo)}
+              onDelete={() => onDeleteSubtask(index)}
+              onMoveUp={() => onMoveSubtask(index, "UP")}
+              onMoveDown={() => onMoveSubtask(index, "DOWN")}
+              onAddSubtaskBefore={() => onAddSubtask(index, subtask)}
+              onAddSubtaskAfter={() => onAddSubtask(index + 1, subtask)}
+              onUpdateTestcase={(testcaseIndex, updateInfo) => onUpdateTestcase(index, testcaseIndex, updateInfo)}
+              onDeleteTestcase={testcaseIndex => onDeleteTestcase(index, testcaseIndex)}
+              onMoveTestcaseUp={testcaseIndex => onMoveTestcase(index, testcaseIndex, "UP")}
+              onMoveTestcaseDown={testcaseIndex => onMoveTestcase(index, testcaseIndex, "DOWN")}
+              onAddTestcase={testcaseIndex => onAddTestcase(index, testcaseIndex)}
+            />
+          ))}
+        </div>
       ) : (
         <Table textAlign="center">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell width={2}>#</Table.HeaderCell>
-              <Table.HeaderCell width={7}>{_("problem_judge_settings.subtasks.testcase.input_file")}</Table.HeaderCell>
-              <Table.HeaderCell width={7}>{_("problem_judge_settings.subtasks.testcase.output_file")}</Table.HeaderCell>
+              <Table.HeaderCell width={props.options.enableOutputFile ? 7 : 14}>
+                {_("problem_judge_settings.subtasks.testcase.input_file")}
+              </Table.HeaderCell>
+              {props.options.enableOutputFile && (
+                <Table.HeaderCell width={7}>
+                  {_("problem_judge_settings.subtasks.testcase.output_file")}
+                </Table.HeaderCell>
+              )}
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -1066,7 +1120,7 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
                 <Table.Row key={i}>
                   <Table.Cell>{i + 1}</Table.Cell>
                   <Table.Cell>{testcase.inputFile}</Table.Cell>
-                  <Table.Cell>{testcase.outputFile}</Table.Cell>
+                  {props.options.enableOutputFile && <Table.Cell>{testcase.outputFile}</Table.Cell>}
                 </Table.Row>
               ))
             ) : (
@@ -1116,10 +1170,7 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
                       .map(x => x || {})
                       .map(rawTestcase => ({
                         uuid: uuid(),
-                        inputFile:
-                          options.enableInputFile && typeof rawTestcase.inputFile === "string"
-                            ? rawTestcase.inputFile
-                            : "",
+                        inputFile: typeof rawTestcase.inputFile === "string" ? rawTestcase.inputFile : "",
                         outputFile:
                           options.enableOutputFile && typeof rawTestcase.outputFile === "string"
                             ? rawTestcase.outputFile
@@ -1150,7 +1201,6 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
         for (const testcase of subtask.testcases) {
           delete testcase.uuid;
           if (testcase.points == null) delete testcase.points;
-          if (!options.enableInputFile) delete testcase.inputFile;
           if (!options.enableOutputFile) delete testcase.outputFile;
           if (!options.enableTimeMemoryLimit || testcase.timeLimit == null) delete testcase.timeLimit;
           if (!options.enableTimeMemoryLimit || testcase.memoryLimit == null) delete testcase.memoryLimit;

@@ -34,6 +34,7 @@ import toast from "@/utils/toast";
 import { useIntlMessage, useConfirmUnload } from "@/utils/hooks";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { ProblemType } from "@/interfaces/ProblemType";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -735,6 +736,8 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     })()
   );
 
+  const [newProblemType, setNewProblemType] = useState(ProblemType.TRADITIONAL);
+
   const [modified, setModified] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(false);
   async function onSubmit() {
@@ -777,7 +780,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
     if (props.new) {
       const { requestError, response } = await ProblemApi.createProblem({
-        type: "TRADITIONAL",
+        type: newProblemType,
         statement: {
           localizedContents: localizedContentsPayload,
           samples: samplesPayload,
@@ -1209,6 +1212,20 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
           <Grid.Column width={11}>
             <Header as="h1" className={style.headerContainer}>
               {props.new ? `${_("problem_edit.header_new")}` : `${_("problem_edit.header_edit", { idString })}`}
+              {props.new && (
+                <Menu compact className={style.typeDropdown}>
+                  <Dropdown
+                    item
+                    value={newProblemType}
+                    options={Object.values(ProblemType).map(type => ({
+                      text: _(`problem.type.${type}`),
+                      value: type,
+                      key: type
+                    }))}
+                    onChange={(e, { value }) => setNewProblemType(value as ProblemType)}
+                  />
+                </Menu>
+              )}
               <Popup
                 trigger={
                   <Button

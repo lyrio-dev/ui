@@ -9,6 +9,7 @@ module.exports = {
   error: {
     NO_SUCH_PROBLEM: "No such problem.",
     PERMISSION_DENIED: "Permission denied.",
+    PROBLEM_HAS_SUBMISSION: "The type of a problem with submissions can't be switched.",
     INVALID_JUDGE_INFO: {
       INVALID_TIME_LIMIT_TASK: "Invalid time limit.",
       TIME_LIMIT_TOO_LARGE_TASK: "The time {3} ms is too large, please contact the admin.",
@@ -43,6 +44,12 @@ module.exports = {
       INVALID_CHECKER_LANGUAGE: "Unknown error.",
       NO_SUCH_CHECKER_FILE: "The checker file {1} doesn't exist.",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "Unknown error.",
+      INVALID_INTERACTOR: "Unknown error",
+      INVALID_INTERACTOR_INTERFACE: "Unknown error",
+      INVALID_INTERACTOR_SHARED_MEMORY_SIZE: "Unknown error",
+      INVALID_INTERACTOR_LANGUAGE_OPTIONS: "Unknown error",
+      INVALID_INTERACTOR_LANGUAGE: "Unknown error",
+      NO_SUCH_INTERACTOR_FILE: "The interactor file {1} doesn't exist.",
       INVALID_EXTRA_SOURCE_FILES: "Unknown error.",
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "Unknown error.",
       INVALID_EXTRA_SOURCE_FILES_DST: "Extra source files {3}'s destination filename is invalid.",
@@ -57,10 +64,9 @@ module.exports = {
     ok: "OK"
   },
   problem_type: "Problem type",
-  problem_types: {
-    TRADITIONAL: "Traditional"
-  },
-  switch: "Switch",
+  switch_type: "Switch",
+  confirm_switch_type: "Confirm switch type",
+  switch_type_success: "Successfully switched problem type.",
   meta: {
     time_limit: "Time limit",
     memory_limit: "Memory limit",
@@ -104,9 +110,21 @@ module.exports = {
       }
     }
   },
+  interactor: {
+    interactor: "Interactor",
+    interfaces: {
+      stdio: "Standard Input/Output",
+      shm: "Shared Memory"
+    },
+    shm_size: "Shared Memory Size",
+    language: "Language",
+    filename: "File",
+    filename_no_file: "No file"
+  },
   subtasks: {
     auto_testcases:
       "Detect testcases from testdata files (Match <code>.in</code> and <code>.out</code> files automatically)",
+    auto_testcases_no_output: "Detect testcases from testdata files (Match <code>.in</code> files automatically)",
     cannot_detect_testcases_from_testdata: "Cannot detect testcases from testdata",
     subtask: "Subtask",
     single_subtask: "Single Subtask",
@@ -131,6 +149,8 @@ module.exports = {
       subtask: "Subtask",
       help:
         "Enter the regexes to match the filenames. Use capturing groups for the common parts of input/output filenames.\nIf two filenames are matched respectively by the input/output regexes and their capturing groups' text are equal, they become a testcase.",
+      help_no_output:
+        "Enter the regexes to match the filenames. Each matched file will become a testcase's input file.",
       input_file: "Input File",
       output_file: "Output File",
       can_not_compile_for_input: "Couldn't compile your regex for input file: {message}",
@@ -153,7 +173,8 @@ module.exports = {
     no_testcases: "No testcases",
     testcase: {
       input_file: "Input file",
-      output_file: "Output file"
+      output_file: "Output file",
+      output_file_not_needed: "Output file is not needed"
     },
     testcase_add: {
       before: "Before this testcase",

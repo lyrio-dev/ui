@@ -9,6 +9,7 @@ module.exports = {
   error: {
     NO_SUCH_PROBLEM: "无此题目。",
     PERMISSION_DENIED: "权限不足。",
+    PROBLEM_HAS_SUBMISSION: "题目已有提交，不可切换类型。",
     INVALID_JUDGE_INFO: {
       INVALID_TIME_LIMIT_TASK: "时间限制无效。",
       TIME_LIMIT_TOO_LARGE_TASK: "时间限制 {3} ms 过大，请联系管理员。",
@@ -39,6 +40,12 @@ module.exports = {
       INVALID_CHECKER_LANGUAGE: "未知错误。",
       NO_SUCH_CHECKER_FILE: "检查器文件 {1} 不存在。",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "未知错误。",
+      INVALID_INTERACTOR: "未知错误。",
+      INVALID_INTERACTOR_INTERFACE: "未知错误。",
+      INVALID_INTERACTOR_SHARED_MEMORY_SIZE: "未知错误。",
+      INVALID_INTERACTOR_LANGUAGE_OPTIONS: "未知错误。",
+      INVALID_INTERACTOR_LANGUAGE: "未知错误。",
+      NO_SUCH_INTERACTOR_FILE: "交互器文件 {1} 不存在。",
       INVALID_EXTRA_SOURCE_FILES: "未知错误。",
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "未知错误。",
       INVALID_EXTRA_SOURCE_FILES_DST: "附加源文件 {3} 的目标文件名无效。",
@@ -53,10 +60,9 @@ module.exports = {
     ok: "确定"
   },
   problem_type: "题目类型",
-  problem_types: {
-    TRADITIONAL: "传统"
-  },
-  switch: "切换",
+  switch_type: "切换",
+  confirm_switch_type: "确认切换题目类型",
+  switch_type_success: "切换题目类型成功。",
   meta: {
     time_limit: "时间限制",
     memory_limit: "内存限制",
@@ -99,8 +105,20 @@ module.exports = {
       }
     }
   },
+  interactor: {
+    interactor: "交互器",
+    interfaces: {
+      stdio: "标准输入/输出",
+      shm: "共享内存"
+    },
+    shm_size: "共享内存大小",
+    language: "语言",
+    filename: "文件",
+    filename_no_file: "无文件"
+  },
   subtasks: {
     auto_testcases: "由数据文件自动检测测试点（自动匹配 <code>.in</code> 与 <code>.out</code> 文件）",
+    auto_testcases_no_output: "由数据文件自动检测测试点（自动匹配 <code>.in</code> 文件）",
     cannot_detect_testcases_from_testdata: "无法从测试数据中检测测试点",
     subtask: "子任务",
     single_subtask: "单个子任务",
@@ -125,6 +143,7 @@ module.exports = {
       subtask: "子任务",
       help:
         "输入正则表达式以匹配文件名，使用捕获组来表示输入输出文件名中相同的部分。\n如果两个文件名分别被输入、输出的正则表达式匹配，且其每个捕获组的文本对应相同，则它们成为一组测试点。",
+      help_no_output: "输入正则表达式以匹配文件名，每个被匹配的文件会作为一个测试点的输入文件。",
       input_file: "输入文件",
       output_file: "输出文件",
       can_not_compile_for_input: "无法编译用于输入文件的正则表达式：{message}",
@@ -146,7 +165,8 @@ module.exports = {
     no_testcases: "暂无测试点",
     testcase: {
       input_file: "输入文件",
-      output_file: "输出文件"
+      output_file: "输出文件",
+      output_file_not_needed: "不需要输出文件"
     },
     testcase_add: {
       before: "在此测试点前",

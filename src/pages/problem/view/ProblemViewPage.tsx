@@ -37,11 +37,14 @@ import { sortTags } from "../problemTag";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
 
+import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
-import TraditionalProblemView from "./types/TraditionalProblemView";
+import traditionalProblemViews from "./types/TraditionalProblemView";
+import interactionProblemViews from "./types/InteractionProblemView";
 
-const problemTypeViews: Record<string, ProblemTypeView<any>> = {
-  TRADITIONAL: TraditionalProblemView
+const problemTypeViews: Record<ProblemType, ProblemTypeView<any>> = {
+  [ProblemType.TRADITIONAL]: traditionalProblemViews,
+  [ProblemType.INTERACTION]: interactionProblemViews
 };
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
@@ -520,7 +523,14 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                           </pre>
                         </Segment>
                       </Grid.Column>
-                      <Grid.Column className={style.sample + " " + style.sampleOutput}>
+                      <Grid.Column
+                        className={
+                          style.sample +
+                          " " +
+                          style.sampleOutput +
+                          (props.problem.samples[section.sampleId].outputData === "" ? " " + style.empty : "")
+                        }
+                      >
                         <Header size="small" className={style.sampleHeader}>
                           {_("problem.sample.output")}
                           <Label

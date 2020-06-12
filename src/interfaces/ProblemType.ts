@@ -1,0 +1,4 @@
+export enum ProblemType {
+  TRADITIONAL = "TRADITIONAL",
+  INTERACTION = "INTERACTION"
+}

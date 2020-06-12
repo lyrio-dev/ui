@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Icon, Header, Menu, Form, Input, Segment } from "semantic-ui-react";
+import { Header, Menu, Form, Input, Segment } from "semantic-ui-react";
 import { observer } from "mobx-react";
 
 import style from "./CheckerEditor.module.less";

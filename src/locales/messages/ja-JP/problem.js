@@ -13,7 +13,8 @@ module.exports = {
   show_tags: "タグを表示",
   hide_tags: "タグを隠す",
   type: {
-    TRADITIONAL: "Batch"
+    TRADITIONAL: "Batch",
+    INTERACTION: "Interaction"
   },
   statistic: {
     submissions: "提出",
