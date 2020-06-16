@@ -22,15 +22,6 @@ import * as CodeHighlighter from "@/utils/CodeHighlighter";
 import { CodeBox, AnsiCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
-import { ProblemType } from "@/interfaces/ProblemType";
-
-import TraditionalProblemSubmissionView from "./types/TraditionalProblemSubmissionView";
-import InteractionProblemSubmissionView from "./types/InteractionProblemSubmissionView";
-
-const problemTypeSubmissionViews: Record<ProblemType, ProblemTypeSubmissionView> = {
-  [ProblemType.TRADITIONAL]: TraditionalProblemSubmissionView,
-  [ProblemType.INTERACTION]: InteractionProblemSubmissionView
-};
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -1031,7 +1022,16 @@ export default defineRoute(async request => {
 
   const queryResult = await fetchData(parseInt(request.params.id) || 0);
 
-  const ProblemTypeSubmissionView = problemTypeSubmissionViews[queryResult.meta.problem.type];
+  const ProblemTypeSubmissionView: ProblemTypeSubmissionView = (
+    await (() => {
+      switch (queryResult.meta.problem.type) {
+        case "TRADITIONAL":
+          return import("./types/TraditionalProblemSubmissionView");
+        case "INTERACTION":
+          return import("./types/InteractionProblemSubmissionView");
+      }
+    })()
+  ).default;
 
   // Load highlight
   const highlightLanguageList = ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content);

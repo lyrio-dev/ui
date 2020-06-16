@@ -36,16 +36,8 @@ import PermissionManager from "@/components/PermissionManager";
 import { sortTags } from "../problemTag";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
-
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
-import traditionalProblemViews from "./types/TraditionalProblemView";
-import interactionProblemViews from "./types/InteractionProblemView";
-
-const problemTypeViews: Record<ProblemType, ProblemTypeView<any>> = {
-  [ProblemType.TRADITIONAL]: traditionalProblemViews,
-  [ProblemType.INTERACTION]: interactionProblemViews
-};
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -70,6 +62,7 @@ interface ProblemViewPageProps {
   idType: "id" | "displayId";
   requestedLocale: Locale;
   problem: ApiTypes.GetProblemResponseDto;
+  ProblemTypeView: ProblemTypeView<any>;
 }
 
 let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
@@ -294,7 +287,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   }
   // End delete
 
-  const ProblemTypeView = problemTypeViews[props.problem.meta.type];
+  const ProblemTypeView = props.ProblemTypeView;
 
   // Begin submit
   const [inSubmitView, setInSubmitView] = useState(false);
@@ -751,19 +744,48 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
 ProblemViewPage = observer(ProblemViewPage);
 
+async function getProblemTypeView(type: ProblemType): Promise<ProblemTypeView<any>> {
+  return (
+    await (() => {
+      switch (type) {
+        case ProblemType.TRADITIONAL:
+          return import("./types/TraditionalProblemView");
+        case ProblemType.INTERACTION:
+          return import("./types/InteractionProblemView");
+      }
+    })()
+  ).default;
+}
+
 export default {
   byId: defineRoute(async request => {
     const id = parseInt(request.params["id"]);
     const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
     const problem = await fetchData("id", id, requestedLocale || appState.contentLocale);
 
-    return <ProblemViewPage key={uuid()} idType="id" requestedLocale={requestedLocale} problem={problem} />;
+    return (
+      <ProblemViewPage
+        key={uuid()}
+        idType="id"
+        requestedLocale={requestedLocale}
+        problem={problem}
+        ProblemTypeView={await getProblemTypeView(problem.meta.type as ProblemType)}
+      />
+    );
   }),
   byDisplayId: defineRoute(async request => {
     const displayId = parseInt(request.params["displayId"]);
     const requestedLocale: Locale = request.query["locale"] in Locale && (request.query["locale"] as Locale);
     const problem = await fetchData("displayId", displayId, requestedLocale || appState.contentLocale);
 
-    return <ProblemViewPage key={uuid()} idType="displayId" requestedLocale={requestedLocale} problem={problem} />;
+    return (
+      <ProblemViewPage
+        key={uuid()}
+        idType="displayId"
+        requestedLocale={requestedLocale}
+        problem={problem}
+        ProblemTypeView={await getProblemTypeView(problem.meta.type as ProblemType)}
+      />
+    );
   })
 };

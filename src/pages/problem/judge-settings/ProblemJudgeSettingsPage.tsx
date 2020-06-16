@@ -17,15 +17,7 @@ import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
-
 import { ProblemTypeEditorComponent } from "./common/interface";
-import TraditionalProblemEditor from "./types/TraditionalProblemEditor";
-import InteractionProblemEditor from "./types/InteractionProblemEditor";
-
-const problemTypeEditorComponents: Record<ProblemType, ProblemTypeEditorComponent> = {
-  [ProblemType.TRADITIONAL]: TraditionalProblemEditor,
-  [ProblemType.INTERACTION]: InteractionProblemEditor
-};
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -45,6 +37,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
 interface ProblemJudgeSettingsPageProps {
   problem: ApiTypes.GetProblemResponseDto;
   idType?: "id" | "displayId";
+  ProblemTypeEditorComponent: ProblemTypeEditorComponent;
 }
 
 let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props => {
@@ -57,7 +50,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     appState.enterNewPage(`${_("problem_judge_settings.title")} ${idString}`, false);
   }, [appState.locale]);
 
-  const ProblemTypeEditorComponent = problemTypeEditorComponents[props.problem.meta.type];
+  const ProblemTypeEditorComponent = props.ProblemTypeEditorComponent;
 
   function parseJudgeInfo(raw: any) {
     return ProblemTypeEditorComponent.parseJudgeInfo(raw, props.problem.testData);
@@ -304,17 +297,44 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 
 ProblemJudgeSettingsPage = observer(ProblemJudgeSettingsPage);
 
+async function getProblemTypeEditorComponent(type: ProblemType): Promise<ProblemTypeEditorComponent> {
+  return (
+    await (() => {
+      switch (type) {
+        case ProblemType.TRADITIONAL:
+          return import("./types/TraditionalProblemEditor");
+        case ProblemType.INTERACTION:
+          return import("./types/InteractionProblemEditor");
+      }
+    })()
+  ).default;
+}
+
 export default {
   byId: defineRoute(async request => {
     const id = parseInt(request.params["id"]);
     const problem = await fetchData("id", id);
 
-    return <ProblemJudgeSettingsPage key={Math.random()} idType="id" problem={problem} />;
+    return (
+      <ProblemJudgeSettingsPage
+        key={Math.random()}
+        idType="id"
+        problem={problem}
+        ProblemTypeEditorComponent={await getProblemTypeEditorComponent(problem.meta.type as ProblemType)}
+      />
+    );
   }),
   byDisplayId: defineRoute(async request => {
     const displayId = parseInt(request.params["displayId"]);
     const problem = await fetchData("displayId", displayId);
 
-    return <ProblemJudgeSettingsPage key={Math.random()} idType="displayId" problem={problem} />;
+    return (
+      <ProblemJudgeSettingsPage
+        key={Math.random()}
+        idType="displayId"
+        problem={problem}
+        ProblemTypeEditorComponent={await getProblemTypeEditorComponent(problem.meta.type as ProblemType)}
+      />
+    );
   })
 };
