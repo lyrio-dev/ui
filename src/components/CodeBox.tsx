@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Segment, SegmentProps } from "semantic-ui-react";
+import AnsiToHtmlConverter from "ansi-to-html";
 
 import style from "./CodeBox.module.less";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
@@ -63,4 +64,19 @@ export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCo
       {props.children}
     </CodeBox>
   );
+});
+
+interface AnsiCodeBoxProps {
+  className?: string;
+  title?: React.ReactNode;
+  ansiMessage: string;
+}
+
+export const AnsiCodeBox = React.forwardRef<HTMLPreElement, AnsiCodeBoxProps>((props, ref) => {
+  const html = useMemo(() => {
+    const converter = new AnsiToHtmlConverter();
+    return converter.toHtml(props.ansiMessage);
+  }, [props.ansiMessage]);
+
+  return <CodeBox className={style.mainCodeBox} title={props.title} html={html} ref={ref} />;
 });

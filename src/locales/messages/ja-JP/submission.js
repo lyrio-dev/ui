@@ -40,6 +40,7 @@ module.exports = {
     user_output: "出力",
     user_error: "エラー出力",
     checker_message: "ジャッジのメッセージ",
+    interactor_message: "[TBT] Interactor message",
     system_message: "システムメッセージ"
   }
 };

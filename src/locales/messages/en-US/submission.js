@@ -40,6 +40,7 @@ module.exports = {
     user_output: "Your output",
     user_error: "Your standard error output",
     checker_message: "Checker message",
+    interactor_message: "Interactor message",
     system_message: "System message"
   }
 };

@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Popup, Ref, Menu } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
-import AnsiToHtmlConverter from "ansi-to-html";
 import { patch } from "jsondiffpatch";
 import { useNavigation } from "react-navi";
 import { FormattedMessage } from "react-intl";
@@ -14,15 +13,24 @@ import { SubmissionApi, ProblemApi } from "@/api-generated";
 import toast from "@/utils/toast";
 import { useIntlMessage, useSocket } from "@/utils/hooks";
 import { SubmissionHeader, SubmissionItem, SubmissionItemExtraRows } from "../componments/SubmissionItem";
-import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import StatusText from "@/components/StatusText";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import * as CodeFormatter from "@/utils/CodeFormatter";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
-import { CodeBox, HighlightedCodeBox } from "@/components/CodeBox";
+import { CodeBox, AnsiCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
+import { ProblemType } from "@/interfaces/ProblemType";
+
+import TraditionalProblemSubmissionView from "./types/TraditionalProblemSubmissionView";
+import InteractionProblemSubmissionView from "./types/InteractionProblemSubmissionView";
+
+const problemTypeSubmissionViews: Record<ProblemType, ProblemTypeSubmissionView> = {
+  [ProblemType.TRADITIONAL]: TraditionalProblemSubmissionView,
+  [ProblemType.INTERACTION]: InteractionProblemSubmissionView
+};
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -39,59 +47,11 @@ async function fetchData(submissionId: number) {
   return response as RemoveOptional<ApiTypes.GetSubmissionDetailResponseDto>;
 }
 
-interface FormattableCodeBoxProps {
-  className?: string;
-  title?: React.ReactNode;
-  code: string;
-  language: CodeLanguage;
-}
-
-const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxProps>((props, ref) => {
-  const _ = useIntlMessage();
-
-  const defaultFormatted = !appState.userPreference.doNotFormatCodeByDefault;
-  const options = appState.userPreference.codeFormatterOptions || CodeFormatter.defaultOptions;
-
-  const languageFormattable = CodeFormatter.isLanguageSupported(props.language);
-
-  const unformattedCode = props.code;
-  const refFormattedCode = useRef<string>(null);
-
-  const [formatted, setFormatted] = useState(defaultFormatted && languageFormattable);
-
-  // Lazy
-  if (formatted && !refFormattedCode.current) {
-    const [success, result] = CodeFormatter.format(unformattedCode, props.language, options);
-    if (!success) {
-      toast.error(_(`submission.failed_to_format`, { error: result }));
-      setFormatted(false);
-    } else refFormattedCode.current = result;
-  }
-
-  return (
-    <HighlightedCodeBox
-      className={props.className}
-      title={props.title}
-      language={props.language}
-      code={formatted && refFormattedCode.current != null ? refFormattedCode.current : unformattedCode}
-      ref={ref}
-    >
-      {languageFormattable && (
-        <Button
-          className={style.formatCodeButton}
-          content={!formatted ? _("submission.format_code") : _("submission.show_original_code")}
-          onClick={() => setFormatted(!formatted)}
-        />
-      )}
-    </HighlightedCodeBox>
-  );
-});
-
 interface SubmissionProgressMessage {
   progressMeta?: SubmissionProgressType;
-  progressDetail?: SubmissionProgress<unknown>;
+  progressDetail?: SubmissionProgress;
   resultMeta?: Partial<ApiTypes.SubmissionMetaDto>;
-  resultDetail?: SubmissionResult<unknown>; // null if the result is "Canceled"
+  resultDetail?: SubmissionResult; // null if the result is "Canceled"
 }
 
 interface TestcaseProgressReference {
@@ -101,7 +61,7 @@ interface TestcaseProgressReference {
   testcaseHash?: string;
 }
 
-interface SubmissionProgress<TestcaseResult> {
+interface SubmissionProgress<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
   progressType: SubmissionProgressType;
 
   // Only valid when finished
@@ -128,7 +88,7 @@ interface SubmissionProgress<TestcaseResult> {
   }[];
 }
 
-interface SubmissionResult<TestcaseResult> {
+interface SubmissionResult<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
   compile?: {
     success: boolean;
     message: string;
@@ -148,25 +108,6 @@ interface SubmissionResult<TestcaseResult> {
   }[];
 }
 
-interface SubmissionTestcaseResultTraditional {
-  testcaseInfo: {
-    timeLimit: number;
-    memoryLimit: number;
-    inputFilename: string;
-    outputFilename: string;
-  };
-  status: string;
-  score: number;
-  time?: number;
-  memory?: number;
-  input?: string;
-  output?: string;
-  userOutput?: string;
-  userError?: string;
-  checkerMessage?: string;
-  systemMessage?: string;
-}
-
 export enum SubmissionProgressType {
   Preparing,
   Compiling,
@@ -174,7 +115,7 @@ export enum SubmissionProgressType {
   Finished
 }
 
-export interface SubmissionFullInfo<TestcaseResult> {
+export interface SubmissionFullInfo<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
   progressType?: SubmissionProgressType;
 
   // e.g. "Running"
@@ -205,10 +146,10 @@ export interface SubmissionFullInfo<TestcaseResult> {
   }[];
 }
 
-function parseResult(
+function parseResult<T extends TestcaseResultCommon>(
   meta: ApiTypes.SubmissionMetaDto,
-  result: SubmissionResult<SubmissionTestcaseResultTraditional>
-): SubmissionFullInfo<SubmissionTestcaseResultTraditional> {
+  result: SubmissionResult<T>
+): SubmissionFullInfo<T> {
   const toTestcaseProgressReference = (testcaseHash: string) =>
     testcaseHash
       ? {
@@ -236,9 +177,7 @@ function parseResult(
   };
 }
 
-function parseProgress(
-  progress: SubmissionProgress<SubmissionTestcaseResultTraditional>
-): SubmissionFullInfo<SubmissionTestcaseResultTraditional> {
+function parseProgress<T extends TestcaseResultCommon>(progress: SubmissionProgress<T>): SubmissionFullInfo<T> {
   if (!progress) {
     return {
       progressType: null,
@@ -283,8 +222,9 @@ function parseProgress(
     for (const subtask of progress.subtasks) {
       for (const { testcaseHash } of subtask.testcases) {
         if (!testcaseHash) continue;
-        timeUsed += progress.testcaseResult[testcaseHash].time;
-        memoryUsed = Math.max(memoryUsed, progress.testcaseResult[testcaseHash].memory);
+        if (progress.testcaseResult[testcaseHash].time != null) timeUsed += progress.testcaseResult[testcaseHash].time;
+        if (progress.testcaseResult[testcaseHash].memory != null)
+          memoryUsed = Math.max(memoryUsed, progress.testcaseResult[testcaseHash].memory);
       }
     }
   }
@@ -299,28 +239,17 @@ function parseProgress(
   };
 }
 
-interface SubmissionContentTraditional {
-  language: string;
-  code: string;
-  languageOptions: Record<string, string>;
-}
-
 interface SubmissionPageProps {
   meta: ApiTypes.SubmissionMetaDto;
   content: unknown;
-  result: SubmissionResult<unknown>;
-  progress?: SubmissionProgress<unknown>;
+  result: SubmissionResult;
+  progress?: SubmissionProgress;
   progressSubscriptionKey?: string;
   permissionRejudge: boolean;
   permissionCancel: boolean;
   permissionSetPublic: boolean;
   permissionDelete: boolean;
-}
-
-// Convert the compiler's message to HTML
-function ansiToHtml(ansi: string) {
-  const converter = new AnsiToHtmlConverter();
-  return converter.toHtml(ansi);
+  ProblemTypeSubmissionView: ProblemTypeSubmissionView;
 }
 
 let SubmissionPage: React.FC<SubmissionPageProps> = props => {
@@ -331,8 +260,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     appState.enterNewPage(`${_("submission.title")} #${props.meta.id}`);
   }, [appState.locale]);
 
-  const content = props.content as SubmissionContentTraditional;
-
   // The meta only provides fields not changing with progress
   // score, status, time, memory are in the full info
   // score and status are in this meta, but we still use them in full info
@@ -340,8 +267,8 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const [pending, setPending] = useState(meta.status === "Pending");
   const stateFullInfo = useState(
     pending
-      ? parseProgress(props.progress as SubmissionProgress<SubmissionTestcaseResultTraditional>)
-      : parseResult(meta, (props.result || {}) as SubmissionResult<SubmissionTestcaseResultTraditional>)
+      ? parseProgress(props.progress as SubmissionProgress)
+      : parseResult(meta, (props.result || {}) as SubmissionResult)
   );
   const [fullInfo, setFullInfo] = stateFullInfo;
 
@@ -372,11 +299,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                 ...meta,
                 ...message.resultMeta
               },
-              (message.resultDetail || {}) as SubmissionResult<SubmissionTestcaseResultTraditional>
+              (message.resultDetail || {}) as SubmissionResult
             )
           );
         } else {
-          setFullInfo(parseProgress(message.progressDetail as SubmissionProgress<SubmissionTestcaseResultTraditional>));
+          setFullInfo(parseProgress(message.progressDetail as SubmissionProgress));
         }
       });
     },
@@ -506,7 +433,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     return s.endsWith(".0") ? s.slice(0, -2) : s;
   }
 
-  const getTestcasesAccordionPanels = (testcases: TestcaseProgressReference[], isSample: boolean = false) =>
+  const getTestcasesAccordionPanels = (
+    testcases: TestcaseProgressReference[],
+    isSample: boolean,
+    getAdditionalSections: GetAdditionalSectionsCallback
+  ) =>
     testcases.map((testcase, i) => {
       const testcaseResult = testcase.testcaseHash && fullInfo.testcaseResult[testcase.testcaseHash];
       let status: string, expandable: boolean;
@@ -656,14 +587,14 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             )}
             <CodeBox title={_("submission.testcase.user_output")} content={testcaseResult.userOutput} />
             <CodeBox title={_("submission.testcase.user_error")} content={testcaseResult.userError} />
-            <CodeBox title={_("submission.testcase.checker_message")} content={testcaseResult.checkerMessage} />
+            {getAdditionalSections(testcaseResult)}
             <CodeBox title={_("submission.testcase.system_message")} content={testcaseResult.systemMessage} />
           </Accordion.Content>
         )
       };
     });
 
-  const getSamplePanel = () => ({
+  const getSamplePanel = (getAdditionalSections: GetAdditionalSectionsCallback) => ({
     key: "samples",
     title: (() => {
       const columnTitle = (width: SemanticWIDTHS) => (
@@ -721,13 +652,14 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       <Accordion.Content className={style.accordionContent}>
         <Accordion
           className={"styled fluid " + style.subAccordion}
-          panels={getTestcasesAccordionPanels(samples, true)}
+          panels={getTestcasesAccordionPanels(samples, true, getAdditionalSections)}
         />
       </Accordion.Content>
     )
   });
 
-  const getSubtasksAccordionPanels = () =>
+  // TODO: Hide time and memory usage when not present
+  const getSubtasksAccordionPanels = (getAdditionalSections: GetAdditionalSectionsCallback) =>
     subtasks.map((subtask, i) => ({
       key: i,
       // If a subtask is unexpandable, make it unable to be "active"
@@ -801,29 +733,40 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         <Accordion.Content className={style.accordionContent}>
           <Accordion
             className={"styled fluid " + style.subAccordion}
-            panels={getTestcasesAccordionPanels(subtask.testcases)}
+            panels={getTestcasesAccordionPanels(subtask.testcases, false, getAdditionalSections)}
           />
         </Accordion.Content>
       )
     }));
 
-  // TODO: Handle invalid answer content, or check on server
-  const answerInfo = (
-    <>
-      <table className={style.languageOptions}>
-        <tbody>
-          {Object.entries(content.languageOptions).map(([name, value]) => (
-            <tr key={name}>
-              <td align="right" className={style.languageOptionsName}>
-                <strong>{_(`code_language.${content.language}.options.${name}.name`)}</strong>
-              </td>
-              <td>{_(`code_language.${content.language}.options.${name}.values.${value}`)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </>
-  );
+  const getSubtasksView = (getAdditionalSections: GetAdditionalSectionsCallback) =>
+    fullInfo &&
+    fullInfo.subtasks &&
+    fullInfo.subtasks &&
+    (subtasks.length === 1 ? (
+      <Accordion
+        className={"styled fluid " + style.accordion}
+        panels={
+          samples && samples.length > 0
+            ? [
+                getSamplePanel(getAdditionalSections),
+                ...getTestcasesAccordionPanels(subtasks[0].testcases, false, getAdditionalSections)
+              ]
+            : getTestcasesAccordionPanels(subtasks[0].testcases, false, getAdditionalSections)
+        }
+      />
+    ) : (
+      <Accordion
+        className={"styled fluid " + style.accordion}
+        panels={
+          samples && samples.length > 0
+            ? [getSamplePanel(getAdditionalSections), ...getSubtasksAccordionPanels(getAdditionalSections)]
+            : getSubtasksAccordionPanels(getAdditionalSections)
+        }
+      />
+    ));
+
+  const answerInfo = useMemo(() => props.ProblemTypeSubmissionView.getAnswerInfo(props.content, _), [props.content]);
 
   const [operationPending, setOperationPending] = useState(false);
 
@@ -1061,48 +1004,22 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           statusPopup={statusPopup}
         />
       )}
-      <FormattableCodeBox
-        className={style.mainCodeBox}
-        code={content.code}
-        language={content.language as CodeLanguage}
-        ref={refCodeContainer}
+      <props.ProblemTypeSubmissionView
+        fullInfo={fullInfo}
+        content={props.content}
+        getCompilationMessage={() =>
+          fullInfo.compile &&
+          fullInfo.compile.message && (
+            <AnsiCodeBox title={_("submission.compilation_message")} ansiMessage={fullInfo.compile.message} />
+          )
+        }
+        getSystemMessage={() =>
+          fullInfo.systemMessage && (
+            <AnsiCodeBox title={_("submission.system_message")} ansiMessage={fullInfo.systemMessage} />
+          )
+        }
+        getSubtasksView={getSubtasksView}
       />
-      {fullInfo && fullInfo.compile && fullInfo.compile.message && (
-        <CodeBox
-          className={style.mainCodeBox}
-          title={_("submission.compilation_message")}
-          html={ansiToHtml(fullInfo.compile.message)}
-        />
-      )}
-      {fullInfo && fullInfo.systemMessage && (
-        <CodeBox
-          className={style.mainCodeBox}
-          title={_("submission.system_message")}
-          html={ansiToHtml(fullInfo.systemMessage)}
-        />
-      )}
-      {fullInfo &&
-        fullInfo.subtasks &&
-        fullInfo.subtasks &&
-        (subtasks.length === 1 ? (
-          <Accordion
-            className={"styled fluid " + style.accordion}
-            panels={
-              samples && samples.length > 0
-                ? [getSamplePanel(), ...getTestcasesAccordionPanels(subtasks[0].testcases)]
-                : getTestcasesAccordionPanels(subtasks[0].testcases)
-            }
-          />
-        ) : (
-          <Accordion
-            className={"styled fluid " + style.accordion}
-            panels={
-              samples && samples.length > 0
-                ? [getSamplePanel(), ...getSubtasksAccordionPanels()]
-                : getSubtasksAccordionPanels()
-            }
-          />
-        ))}
     </>
   );
 };
@@ -1110,14 +1027,19 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
 SubmissionPage = observer(SubmissionPage);
 
 export default defineRoute(async request => {
-  await CodeFormatter.ready;
+  const promises: Promise<unknown>[] = [CodeFormatter.ready];
 
   const queryResult = await fetchData(parseInt(request.params.id) || 0);
 
-  // Load highlight
-  if (queryResult.content && typeof (queryResult.content as any).language === "string") {
-    await CodeHighlighter.tryLoadTreeSitterLanguage((queryResult.content as any).language);
-  }
+  const ProblemTypeSubmissionView = problemTypeSubmissionViews[queryResult.meta.problem.type];
 
-  return <SubmissionPage key={uuid()} {...(queryResult as any)} />;
+  // Load highlight
+  const highlightLanguageList = ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content);
+  promises.concat((highlightLanguageList || []).map(CodeHighlighter.tryLoadTreeSitterLanguage));
+
+  await Promise.all(promises);
+
+  return (
+    <SubmissionPage key={uuid()} {...(queryResult as any)} ProblemTypeSubmissionView={ProblemTypeSubmissionView} />
+  );
 });

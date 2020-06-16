@@ -40,6 +40,7 @@ module.exports = {
     user_output: "你的输出",
     user_error: "你的标准错误输出",
     checker_message: "检查器信息",
+    interactor_message: "交互器信息",
     system_message: "系统信息"
   }
 };
