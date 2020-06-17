@@ -543,12 +543,12 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                 title={
                   <>
                     <strong>{_("submission.testcase.input")}</strong>
-                    {testcaseResult.testcaseInfo.inputFilename && (
+                    {testcaseResult.testcaseInfo.inputFile && (
                       <span
                         className={"monospace " + style.fileNameWrapper}
-                        onClick={() => onDownload(testcaseResult.testcaseInfo.inputFilename)}
+                        onClick={() => onDownload(testcaseResult.testcaseInfo.inputFile)}
                       >
-                        <span className={style.fileName}>{testcaseResult.testcaseInfo.inputFilename}</span>
+                        <span className={style.fileName}>{testcaseResult.testcaseInfo.inputFile}</span>
                         <Icon name="download" />
                       </span>
                     )}
@@ -562,12 +562,12 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                 title={
                   <>
                     <strong>{_("submission.testcase.output")}</strong>
-                    {testcaseResult.testcaseInfo.outputFilename && (
+                    {testcaseResult.testcaseInfo.outputFile && (
                       <span
                         className={"monospace " + style.fileNameWrapper}
-                        onClick={() => onDownload(testcaseResult.testcaseInfo.outputFilename)}
+                        onClick={() => onDownload(testcaseResult.testcaseInfo.outputFile)}
                       >
-                        <span className={style.fileName}>{testcaseResult.testcaseInfo.outputFilename}</span>
+                        <span className={style.fileName}>{testcaseResult.testcaseInfo.outputFile}</span>
                         <Icon name="download" />
                       </span>
                     )}

@@ -12,8 +12,8 @@ interface SubmissionTestcaseResultTraditional {
   testcaseInfo: {
     timeLimit: number;
     memoryLimit: number;
-    inputFilename: string;
-    outputFilename: string;
+    inputFile: string;
+    outputFile: string;
   };
   status: string;
   score: number;
