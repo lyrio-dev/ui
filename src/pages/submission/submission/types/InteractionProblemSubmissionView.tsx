@@ -43,7 +43,11 @@ const InteractionProblemSubmissionView: React.FC<InteractionProblemSubmissionVie
 
   return (
     <>
-      <FormattableCodeBox code={props.content.code} language={props.content.language} />
+      <FormattableCodeBox
+        code={props.content.code}
+        language={props.content.language}
+        ref={props.refDefaultCopyCodeBox}
+      />
       {props.getCompilationMessage()}
       {props.getSystemMessage()}
       {props.getSubtasksView(testcaseResult => (

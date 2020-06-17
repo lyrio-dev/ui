@@ -316,15 +316,15 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     score: fullInfo.score
   };
 
-  const refCodeContainer = useRef<HTMLPreElement>(null);
+  const refDefaultCopyCodeBox = useRef<HTMLPreElement>(null);
 
   // Ctrl-A to select all code
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (refCodeContainer.current && (event.ctrlKey || event.metaKey) && event.key === "a") {
+      if (refDefaultCopyCodeBox.current && (event.ctrlKey || event.metaKey) && event.key === "a") {
         var sel = window.getSelection();
         var rg = document.createRange();
-        rg.selectNodeContents(refCodeContainer.current);
+        rg.selectNodeContents(refDefaultCopyCodeBox.current);
         sel.removeAllRanges();
         sel.addRange(rg);
         event.preventDefault();
@@ -1010,6 +1010,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           )
         }
         getSubtasksView={getSubtasksView}
+        refDefaultCopyCodeBox={refDefaultCopyCodeBox}
       />
     </>
   );

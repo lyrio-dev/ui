@@ -32,6 +32,7 @@ export interface ProblemTypeSubmissionViewProps<TestcaseResult extends TestcaseR
   getCompilationMessage: () => React.ReactElement;
   getSystemMessage: () => React.ReactElement;
   getSubtasksView: (getAdditionalSections: GetAdditionalSectionsCallback<TestcaseResult>) => React.ReactElement;
+  refDefaultCopyCodeBox: React.Ref<HTMLPreElement>;
 }
 
 export interface ProblemTypeSubmissionViewHelper<SubmissionContent> {
