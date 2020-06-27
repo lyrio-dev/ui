@@ -1,0 +1,3 @@
+siteName: SYZOJ NG
+apiEndpoint: http://syzoj-ng.test
+crossOrigin: true

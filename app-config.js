@@ -1,4 +1,5 @@
 const fs = require("fs");
+const yaml = require("js-yaml");
 
 const filePath = process.env["SYZOJ_NG_APP_CONFIG_FILE"];
 if (!filePath) {
@@ -7,7 +8,7 @@ if (!filePath) {
   );
 }
 
-const appConfig = JSON.parse(fs.readFileSync(filePath).toString("utf-8"));
+const appConfig = yaml.safeLoad(fs.readFileSync(filePath).toString("utf-8"));
 
 if (!appConfig.apiEndpoint.endsWith("/"))
   appConfig.apiEndpoint = appConfig.apiEndpoint + "/";
