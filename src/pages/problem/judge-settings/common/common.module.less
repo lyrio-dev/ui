@@ -121,3 +121,14 @@
   padding: 1em 0.85em !important;
   white-space: pre-wrap;
 }
+
+.labeledInput {
+  :global(.ui.label) {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+  }
+  
+  & > input:not(:focus) {
+    border-right-width: 0 !important;
+  }
+}

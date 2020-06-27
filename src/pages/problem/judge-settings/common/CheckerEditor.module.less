@@ -1,3 +1,5 @@
+@import "common.module.less";
+
 .wrapper {
   margin-bottom: 14px;
 }
@@ -54,8 +56,10 @@
           margin-left: @margin;
         }
       }
+    }
 
-      margin-bottom: -14px;
+    > :last-child {
+      margin-bottom: 0;
     }
   }
 }

@@ -39,6 +39,8 @@ interface InteractorConfig {
   language: CodeLanguage;
   languageOptions: Record<string, unknown>;
   filename: string;
+  timeLimit?: number;
+  memoryLimit?: number;
 }
 
 interface JudgeInfoWithInteractor {
@@ -76,7 +78,9 @@ function parseInteractorConfig(
     filename:
       interactor.filename && typeof interactor.filename === "string"
         ? interactor.filename
-        : (testData.find(file => checkCodeFileExtension(language, file.filename)) || testData[0] || {}).filename || ""
+        : (testData.find(file => checkCodeFileExtension(language, file.filename)) || testData[0] || {}).filename || "",
+    timeLimit: Number.isSafeInteger(interactor.timeLimit) ? interactor.timeLimit : null,
+    memoryLimit: Number.isSafeInteger(interactor.memoryLimit) ? interactor.memoryLimit : null
   };
 }
 
@@ -194,6 +198,40 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
                 }
               })}
             </div>
+            <Form.Group>
+              <Form.Field width={8}>
+                <label>{_("problem_judge_settings.meta.time_limit")}</label>
+                <Input
+                  className={style.labeledInput}
+                  placeholder={props.judgeInfo["timeLimit"]}
+                  value={interactor.timeLimit == null ? "" : interactor.timeLimit}
+                  label="ms"
+                  labelPosition="right"
+                  icon="clock"
+                  iconPosition="left"
+                  onChange={(e, { value }) =>
+                    (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                    onUpdateInteractor({ timeLimit: value === "" ? null : Number(value) })
+                  }
+                />
+              </Form.Field>
+              <Form.Field width={8}>
+                <label>{_("problem_judge_settings.meta.memory_limit")}</label>
+                <Input
+                  className={style.labeledInput}
+                  placeholder={props.judgeInfo["memoryLimit"]}
+                  value={interactor.memoryLimit == null ? "" : interactor.memoryLimit}
+                  label="MiB"
+                  labelPosition="right"
+                  icon="microchip"
+                  iconPosition="left"
+                  onChange={(e, { value }) =>
+                    (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                    onUpdateInteractor({ memoryLimit: value === "" ? null : Number(value) })
+                  }
+                />
+              </Form.Field>
+            </Form.Group>
           </div>
         </Segment>
       </Form>
@@ -220,6 +258,8 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoInteraction> = {
   normalizeJudgeInfo(judgeInfo) {
     MetaEditor.normalizeJudgeInfo(judgeInfo, metaEditorOptions);
     if (!judgeInfo.interactor.sharedMemorySize) delete judgeInfo.interactor.sharedMemorySize;
+    if (judgeInfo.interactor.timeLimit == null) delete judgeInfo.interactor.timeLimit;
+    if (judgeInfo.interactor.memoryLimit == null) delete judgeInfo.interactor.memoryLimit;
     SubtasksEditor.normalizeJudgeInfo(judgeInfo, subtasksEditorOptions);
     ExtraSourceFilesEditor.normalizeJudgeInfo(judgeInfo);
   }

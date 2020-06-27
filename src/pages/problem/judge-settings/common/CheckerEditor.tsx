@@ -40,6 +40,8 @@ interface CheckerTypeCustom {
   language: CodeLanguage;
   languageOptions: Record<string, unknown>;
   filename: string;
+  timeLimit?: number;
+  memoryLimit?: number;
 }
 
 type CheckerConfig = CheckerTypeIntegers | CheckerTypeFloats | CheckerTypeLines | CheckerTypeBinary | CheckerTypeCustom;
@@ -86,7 +88,9 @@ function parseCheckerConfig(checker: Partial<CheckerConfig>, testData: ApiTypes.
           checker.filename && typeof checker.filename === "string"
             ? checker.filename
             : (testData.find(file => checkCodeFileExtension(language, file.filename)) || testData[0] || {}).filename ||
-              ""
+              "",
+        timeLimit: Number.isSafeInteger(checker.timeLimit) ? checker.timeLimit : null,
+        memoryLimit: Number.isSafeInteger(checker.memoryLimit) ? checker.memoryLimit : null
       };
   }
 }
@@ -222,6 +226,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                         case CodeLanguageOptionType.Select:
                           return (
                             <Form.Select
+                              key={option.name}
                               label={_(`code_language.${checker.language}.options.${option.name}.name`)}
                               fluid
                               value={
@@ -240,6 +245,40 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                       }
                     })}
                   </div>
+                  <Form.Group>
+                    <Form.Field width={8}>
+                      <label>{_("problem_judge_settings.meta.time_limit")}</label>
+                      <Input
+                        className={style.labeledInput}
+                        placeholder={props.judgeInfo["timeLimit"]}
+                        value={checker.timeLimit == null ? "" : checker.timeLimit}
+                        label="ms"
+                        labelPosition="right"
+                        icon="clock"
+                        iconPosition="left"
+                        onChange={(e, { value }) =>
+                          (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                          onUpdateChecker({ timeLimit: value === "" ? null : Number(value) })
+                        }
+                      />
+                    </Form.Field>
+                    <Form.Field width={8}>
+                      <label>{_("problem_judge_settings.meta.memory_limit")}</label>
+                      <Input
+                        className={style.labeledInput}
+                        placeholder={props.judgeInfo["memoryLimit"]}
+                        value={checker.memoryLimit == null ? "" : checker.memoryLimit}
+                        label="MiB"
+                        labelPosition="right"
+                        icon="microchip"
+                        iconPosition="left"
+                        onChange={(e, { value }) =>
+                          (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                          onUpdateChecker({ memoryLimit: value === "" ? null : Number(value) })
+                        }
+                      />
+                    </Form.Field>
+                  </Form.Group>
                 </div>
               );
           }
@@ -257,7 +296,12 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithChecker> = {
       checker: parseCheckerConfig(raw.checker, testData)
     };
   },
-  normalizeJudgeInfo() {}
+  normalizeJudgeInfo(judgeInfo) {
+    if (judgeInfo.checker.type === "custom") {
+      if (judgeInfo.checker.timeLimit == null) delete judgeInfo.checker.timeLimit;
+      if (judgeInfo.checker.memoryLimit == null) delete judgeInfo.checker.memoryLimit;
+    }
+  }
 };
 
 export default Object.assign(CheckerEditor, judgeInfoProcessor);
