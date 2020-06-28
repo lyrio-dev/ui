@@ -74,7 +74,7 @@ interface AnsiCodeBoxProps {
 
 export const AnsiCodeBox = React.forwardRef<HTMLPreElement, AnsiCodeBoxProps>((props, ref) => {
   const html = useMemo(() => {
-    const converter = new AnsiToHtmlConverter();
+    const converter = new AnsiToHtmlConverter({ escapeXML: true });
     return converter.toHtml(props.ansiMessage);
   }, [props.ansiMessage]);
 
