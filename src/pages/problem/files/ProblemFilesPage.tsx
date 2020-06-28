@@ -84,7 +84,7 @@ interface FileTableRowProps {
 }
 
 let FileTableRow: React.FC<FileTableRowProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_files");
 
   const [renameOpen, setRenameOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -123,14 +123,14 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
           return (
             <>
               <Icon name="hourglass half" />
-              {_("problem_files.progress_waiting")}
+              {_(".progress_waiting")}
             </>
           );
         case "Hashing":
           return (
             <>
               <Icon name="hashtag" />
-              {_("problem_files.progress_hashing", {
+              {_(".progress_hashing", {
                 progress: formatProgress(debouncedUploadProgress)
               })}
             </>
@@ -139,7 +139,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
           return (
             <>
               <Icon name="cloud upload" />
-              {_("problem_files.progress_uploading", {
+              {_(".progress_uploading", {
                 progress: formatProgress(debouncedUploadProgress)
               })}
             </>
@@ -148,21 +148,21 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
           return (
             <>
               <Icon name="spinner" />
-              {_("problem_files.progress_requesting")}
+              {_(".progress_requesting")}
             </>
           );
         case "Error":
           return (
             <>
               <Icon name="warning sign" />
-              {_("problem_files.progress_error")}
+              {_(".progress_error")}
             </>
           );
         case "Cancelled":
           return (
             <>
               <Icon name="warning circle" />
-              {_("problem_files.progress_cancelled")}
+              {_(".progress_cancelled")}
             </>
           );
       }
@@ -179,7 +179,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
         <>
           <Popup
             trigger={<span>{status}</span>}
-            content={<Button onClick={props.file.upload.cancel}>{_("problem_files.cancel_upload")}</Button>}
+            content={<Button onClick={props.file.upload.cancel}>{_(".cancel_upload")}</Button>}
             on="hover"
             hoverable
             position="top center"
@@ -231,7 +231,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
                       <Form>
                         <Form.Input
                           style={{ width: 230 }}
-                          placeholder={_("problem_files.new_filename")}
+                          placeholder={_(".new_filename")}
                           value={newFilename}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewFilename(e.target.value)}
                           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -242,7 +242,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
                           }}
                         />
                         <Button primary loading={props.pending} onClick={onRename}>
-                          {_("problem_files.rename")}
+                          {_(".rename")}
                         </Button>
                       </Form>
                     }
@@ -257,7 +257,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
                     onClose={() => !props.pending && setDeleteOpen(false)}
                     content={
                       <Button negative loading={props.pending} onClick={onDelete}>
-                        {_("problem_files.confirm_delete")}
+                        {_(".confirm_delete")}
                       </Button>
                     }
                     on="click"
@@ -287,7 +287,7 @@ interface FileTableProps {
 }
 
 let FileTable: React.FC<FileTableProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_files");
 
   const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
 
@@ -397,15 +397,15 @@ let FileTable: React.FC<FileTableProps> = props => {
                 disabled={deleteSelectedPending}
                 onChange={(e, { checked }) => onSelectAll(checked)}
               />
-              {_("problem_files.filename")}
+              {_(".filename")}
             </Table.HeaderCell>
             {!isMobile && (
               <Table.HeaderCell className={style.fileTableColumnSize} textAlign="center">
-                {_("problem_files.size")}
+                {_(".size")}
               </Table.HeaderCell>
             )}
             <Table.HeaderCell textAlign="center" className={style.fileTableColumnOperations}>
-              {props.hasPermission ? _("problem_files.operations_and_status") : _("problem_files.operations")}
+              {props.hasPermission ? _(".operations_and_status") : _(".operations")}
             </Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -413,7 +413,7 @@ let FileTable: React.FC<FileTableProps> = props => {
           {props.files.length === 0 ? (
             <Table.Row>
               <Table.HeaderCell colSpan={isMobile ? 2 : 3} textAlign="center" className={style.filesTableNoFiles}>
-                <Header>{_("problem_files.no_files")}</Header>
+                <Header>{_(".no_files")}</Header>
               </Table.HeaderCell>
             </Table.Row>
           ) : (
@@ -445,35 +445,30 @@ let FileTable: React.FC<FileTableProps> = props => {
                       onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
                       onClose={() => setSelectedInfoDropdownOpen(false)}
                       pointing
-                      text={_(
-                        isMobile
-                          ? "problem_files.selected_files_count_and_size_narrow"
-                          : "problem_files.selected_files_count_and_size",
-                        {
-                          count: selectedFilesArray.length.toString(),
-                          totalSize: formatFileSize(
-                            selectedFilesArray.reduce((sum, file) => sum + file.size, 0),
-                            1
-                          )
-                        }
-                      )}
+                      text={_(isMobile ? ".selected_files_count_and_size_narrow" : ".selected_files_count_and_size", {
+                        count: selectedFilesArray.length.toString(),
+                        totalSize: formatFileSize(
+                          selectedFilesArray.reduce((sum, file) => sum + file.size, 0),
+                          1
+                        )
+                      })}
                     >
                       <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
                         <Dropdown.Item
                           icon="download"
-                          text={_("problem_files.download_as_archive")}
+                          text={_(".download_as_archive")}
                           onClick={() => props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))}
                         />
                         {props.hasPermission && (
                           <Popup
-                            trigger={<Dropdown.Item icon="delete" text={_("problem_files.delete")} />}
+                            trigger={<Dropdown.Item icon="delete" text={_(".delete")} />}
                             open={popupDeleteSelectedOpen}
                             onOpen={() => setPopupDeleteSelectedOpen(true)}
                             onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
                             context={refSelectedInfoDropdown}
                             content={
                               <Button negative loading={deleteSelectedPending} onClick={onDeleteSelected}>
-                                {_("problem_files.confirm_delete")}
+                                {_(".confirm_delete")}
                               </Button>
                             }
                             on="click"
@@ -484,9 +479,7 @@ let FileTable: React.FC<FileTableProps> = props => {
                     </Dropdown>
                   ) : uploadingCount ? (
                     _(
-                      isMobile
-                        ? "problem_files.files_count_and_size_with_uploading_narrow"
-                        : "problem_files.files_count_and_size_with_uploading",
+                      isMobile ? ".files_count_and_size_with_uploading_narrow" : ".files_count_and_size_with_uploading",
                       {
                         count: props.files.length.toString(),
                         totalSize: formatFileSize(
@@ -497,7 +490,7 @@ let FileTable: React.FC<FileTableProps> = props => {
                       }
                     )
                   ) : (
-                    _(isMobile ? "problem_files.files_count_and_size_narrow" : "problem_files.files_count_and_size", {
+                    _(isMobile ? ".files_count_and_size_narrow" : ".files_count_and_size", {
                       count: props.files.length.toString(),
                       totalSize: formatFileSize(
                         props.files.reduce((sum, file) => sum + file.size, 0),
@@ -512,7 +505,7 @@ let FileTable: React.FC<FileTableProps> = props => {
                       <Button
                         className={style.tableFooterButton}
                         icon="upload"
-                        content={_("problem_files.upload")}
+                        content={_(".upload")}
                         labelPosition="left"
                         primary
                         size={"small"}
@@ -525,7 +518,7 @@ let FileTable: React.FC<FileTableProps> = props => {
                     content={
                       <>
                         <p>
-                          <strong>{_("problem_files.confirm_override_question")}</strong>
+                          <strong>{_(".confirm_override_question")}</strong>
                         </p>
                         <List>
                           {overridingFiles.map(filename => (
@@ -538,7 +531,7 @@ let FileTable: React.FC<FileTableProps> = props => {
                             refDoUpload.current();
                           }}
                         >
-                          {_("problem_files.confirm_override")}
+                          {_(".confirm_override")}
                         </Button>
                       </>
                     }
@@ -563,12 +556,12 @@ interface ProblemFilesPageProps {
 }
 
 let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_files");
 
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.enterNewPage(`${_("problem_files.title")} ${idString}`);
+    appState.enterNewPage(`${_(".title")} ${idString}`);
   }, [appState.locale]);
 
   function transformResponseToFileTableItems(fileList: ApiTypes.ProblemFileDto[]): FileTableItem[] {
@@ -612,7 +605,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
       filenameList: filenames
     });
     if (requestError) return toast.error(requestError);
-    if (response.error) return toast.error(`problem_files.error.${response.error}`);
+    if (response.error) return toast.error(`.error.${response.error}`);
 
     const { downloadInfo } = response;
     let i = 0;
@@ -633,7 +626,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         } catch (e) {
           stopDownload();
           toast.error(
-            _("problem_files.download_as_archive_error", {
+            _(".download_as_archive_error", {
               filename: downloadInfo[i].filename,
               error: e.toString()
             })
@@ -688,7 +681,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     }
 
     if (response.error) {
-      toast.error(_(`problem_files.error.${response.error}`));
+      toast.error(_(`.error.${response.error}`));
       return;
     }
 
@@ -721,7 +714,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     }
 
     if (response.error) {
-      toast.error(_(`problem_files.error.${response.error}`));
+      toast.error(_(`.error.${response.error}`));
       return;
     }
 
@@ -792,7 +785,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
               return response.uploadInfo;
             }
 
-            if (response.error) throw _(`problem_files.error.${response.error}`);
+            if (response.error) throw _(`.error.${response.error}`);
 
             return null;
           }
@@ -878,7 +871,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   const fileTableTestdata = (
     <>
       <Header as="h2">
-        <strong>{_("problem_files.header_testdata")}</strong>
+        <strong>{_(".header_testdata")}</strong>
         <Button
           className={style.back_to_problem}
           primary
@@ -888,7 +881,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
               ? `/problem/by-id/${props.problem.meta.id}`
               : `/problem/${props.problem.meta.displayId}`
           }
-          content={_("problem_files.back_to_problem")}
+          content={_(".back_to_problem")}
         />
       </Header>
       <FileTable
@@ -907,7 +900,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   const fileTableAdditionalFile = (
     <>
       <Header as="h2">
-        <strong>{_("problem_files.header_additional_files")}</strong>
+        <strong>{_(".header_additional_files")}</strong>
       </Header>
       <FileTable
         hasPermission={props.problem.permissionOfCurrentUser.MODIFY}

@@ -66,16 +66,16 @@ interface ProblemViewPageProps {
 }
 
 let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem");
   const navigation = useNavigation();
 
   const isMobile = appState.isScreenWidthIn(0, 768);
 
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
-  const title = props.problem.localizedContentsOfLocale.title.trim() || _("problem.no_title");
+  const title = props.problem.localizedContentsOfLocale.title.trim() || _(".no_title");
 
   useEffect(() => {
-    appState.enterNewPage(`${idString}. ${title} - ${_("problem.title")}`);
+    appState.enterNewPage(`${idString}. ${title} - ${_(".title")}`);
   }, [appState.locale]);
 
   // Begin toggle tags
@@ -94,7 +94,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     if (await copyToClipboard(data)) {
       setLastCopiedSample({ id, type });
     } else {
-      toast.error(_("problem.sample.failed_to_copy"));
+      toast.error(_(".sample.failed_to_copy"));
     }
   }
   // End copy sample
@@ -107,7 +107,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     setSetDisplayIdPending(true);
 
     if (!isValidDisplayId(setDisplayIdInputValue)) {
-      toast.error(_("problem.error.INVALID_DISPLAY_ID"));
+      toast.error(_(".error.INVALID_DISPLAY_ID"));
     } else {
       const { requestError, response } = await ProblemApi.setProblemDisplayId({
         problemId: props.problem.meta.id,
@@ -117,7 +117,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       if (requestError) toast.error(requestError);
       else if (response.error) {
         toast.error(
-          _(`problem.error.${response.error}`, {
+          _(`.error.${response.error}`, {
             displayId: setDisplayIdInputValue
           })
         );
@@ -163,7 +163,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
     if (requestError) toast.error(requestError);
     else if (response.error) {
-      toast.error(_(`problem.error.${response.error}`));
+      toast.error(_(`.error.${response.error}`));
     } else return navigation.refresh();
 
     setSetPublicPending(false);
@@ -184,7 +184,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       permissions: true
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`problem.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       return {
         owner: response.owner,
@@ -205,7 +205,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       groupPermissions: groupPermissions as any
     });
     if (requestError) toast.error(requestError);
-    else if (response.error === "NO_SUCH_PROBLEM") toast.error(_("problem.error.NO_SUCH_PROBLEM"));
+    else if (response.error === "NO_SUCH_PROBLEM") toast.error(_(".error.NO_SUCH_PROBLEM"));
     else if (response.error) return response;
     return true;
   }
@@ -220,13 +220,13 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const permissionManager = (
     <PermissionManager
       haveSubmitPermission={props.problem.permissionOfCurrentUser.MANAGE_PERMISSION}
-      objectDescription={_("problem.action.permission_manager_description", { idString })}
+      objectDescription={_(".action.permission_manager_description", { idString })}
       permissionsLevelDetails={{
         1: {
-          title: _("problem.permission_level.read")
+          title: _(".permission_level.read")
         },
         2: {
-          title: _("problem.permission_level.write")
+          title: _(".permission_level.write")
         }
       }}
       refOpen={refOpenPermissionManager}
@@ -244,24 +244,24 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     },
     () => (
       <>
-        <Header icon="delete" className={style.dialogHeader} content={_("problem.action.delete_confirm_title")} />
+        <Header icon="delete" className={style.dialogHeader} content={_(".action.delete_confirm_title")} />
       </>
     ),
-    () => _("problem.action.delete_confirm_content"),
+    () => _(".action.delete_confirm_content"),
     () => (
       <>
         <Button
           basic
           inverted
           negative
-          content={_("problem.action.delete_confirm")}
+          content={_(".action.delete_confirm")}
           loading={deletePending}
           onClick={onDelete}
         />
         <Button
           basic
           inverted
-          content={_("problem.action.delete_cancel")}
+          content={_(".action.delete_cancel")}
           disabled={deletePending}
           onClick={() => deleteDialog.close()}
         />
@@ -277,9 +277,9 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       problemId: props.problem.meta.id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`problem.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("problem.action.delete_success"));
+      toast.success(_(".action.delete_success"));
       navigation.navigate("/problems");
     }
 
@@ -330,7 +330,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
     if (requestError) toast.error(requestError);
     else if (response.error) {
-      toast.error(_(`problem.error.${response.error}`));
+      toast.error(_(`.error.${response.error}`));
     } else navigation.navigate(`/submission/${response.submissionId}`);
 
     setSubmitPending(false);
@@ -343,11 +343,11 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     <Statistic.Group size="small" className={style.statistic}>
       <Statistic>
         <Statistic.Value>{props.problem.meta.acceptedSubmissionCount}</Statistic.Value>
-        <Statistic.Label>{_("problem.statistic.accepted")}</Statistic.Label>
+        <Statistic.Label>{_(".statistic.accepted")}</Statistic.Label>
       </Statistic>
       <Statistic>
         <Statistic.Value>{props.problem.meta.submissionCount}</Statistic.Value>
-        <Statistic.Label>{_("problem.statistic.submissions")}</Statistic.Label>
+        <Statistic.Label>{_(".statistic.submissions")}</Statistic.Label>
       </Statistic>
     </Statistic.Group>
   );
@@ -396,18 +396,18 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
             {!props.problem.meta.isPublic && (
               <Label size={isMobile ? "small" : null} color="red">
                 <Icon name="eye slash" />
-                {_(`problem.meta_labels.non_public`)}
+                {_(`.meta_labels.non_public`)}
               </Label>
             )}
             {!props.problem.meta.displayId && (
               <Label size={isMobile ? "small" : null} color="black">
                 <Icon name="hashtag" />
-                {_(`problem.meta_labels.no_display_id`)}
+                {_(`.meta_labels.no_display_id`)}
               </Label>
             )}
             <Label size={isMobile ? "small" : null} color="teal">
               <Icon name="book" />
-              {_(`problem.type.${props.problem.meta.type}`)}
+              {_(`.type.${props.problem.meta.type}`)}
             </Label>
             <ProblemTypeView.Labels size={isMobile ? "small" : null} judgeInfo={props.problem.judgeInfo} />
             {props.problem.tagsOfLocale.length > 0 && (
@@ -419,7 +419,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   onClick={toggleTags}
                   className={style.toggleTagsLabel}
                 >
-                  {!showTags ? _("problem.show_tags") : _("problem.hide_tags")}
+                  {!showTags ? _(".show_tags") : _(".hide_tags")}
                   <Icon name={"caret down"} style={{ transform: showTags && "rotateZ(-90deg)" }} />
                 </Label>
                 {showTags && (
@@ -491,7 +491,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                     <Grid.Row>
                       <Grid.Column className={style.sample + " " + style.sampleInput}>
                         <Header size="small" className={style.sampleHeader}>
-                          {_("problem.sample.input")}
+                          {_(".sample.input")}
                           <Label
                             size="small"
                             as="a"
@@ -506,8 +506,8 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                             }
                           >
                             {lastCopiedSample.id === section.sampleId && lastCopiedSample.type === "input"
-                              ? _("problem.sample.copied")
-                              : _("problem.sample.copy")}
+                              ? _(".sample.copied")
+                              : _(".sample.copy")}
                           </Label>
                         </Header>
                         <Segment className={style.sampleDataSegment}>
@@ -525,7 +525,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                         }
                       >
                         <Header size="small" className={style.sampleHeader}>
-                          {_("problem.sample.output")}
+                          {_(".sample.output")}
                           <Label
                             size="small"
                             as="a"
@@ -540,8 +540,8 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                             }
                           >
                             {lastCopiedSample.id === section.sampleId && lastCopiedSample.type === "output"
-                              ? _("problem.sample.copied")
-                              : _("problem.sample.copy")}
+                              ? _(".sample.copied")
+                              : _(".sample.copy")}
                           </Label>
                         </Header>
                         <Segment className={style.sampleDataSegment}>
@@ -575,20 +575,18 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 trigger={
                   <Menu.Item
                     className={style.menuItemImportant}
-                    name={_("problem.action.submit")}
+                    name={_(".action.submit")}
                     icon="paper plane"
                     onClick={appState.currentUser ? openSubmitView : null}
                   />
                 }
                 disabled={!!appState.currentUser}
-                content={
-                  <Button primary content={_("problem.action.login_to_submit")} onClick={() => navigateToLogin()} />
-                }
+                content={<Button primary content={_(".action.login_to_submit")} onClick={() => navigateToLogin()} />}
                 on="click"
                 position="top left"
               />
               <Menu.Item
-                name={_("problem.action.submission")}
+                name={_(".action.submission")}
                 icon="list"
                 as={Link}
                 href={{
@@ -604,7 +602,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 }}
               />
               <Menu.Item
-                name={_("problem.action.statistics")}
+                name={_(".action.statistics")}
                 icon="sort content ascending"
                 as={Link}
                 href={
@@ -614,12 +612,12 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 }
               />
               <Menu.Item
-                name={_("problem.action.discussion")}
+                name={_(".action.discussion")}
                 icon="comment alternate"
                 onClick={() => console.log("discussion")}
               />
               <Menu.Item
-                name={_("problem.action.files")}
+                name={_(".action.files")}
                 icon="folder open"
                 as={Link}
                 href={
@@ -632,7 +630,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
               {props.problem.permissionOfCurrentUser.MODIFY && (
                 <Menu.Item
-                  name={_("problem.action.edit")}
+                  name={_(".action.edit")}
                   icon="edit"
                   as={Link}
                   href={{
@@ -650,7 +648,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               )}
               {props.problem.permissionOfCurrentUser.MODIFY && (
                 <Menu.Item
-                  name={_("problem.action.judge_settings")}
+                  name={_(".action.judge_settings")}
                   icon="cog"
                   as={Link}
                   href={
@@ -666,19 +664,19 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 props.problem.permissionOfCurrentUser.MODIFY && (
                   <Menu.Item onClick={onClickPermissionManage}>
                     <Icon name="key" />
-                    {_("problem.action.permission_manage")}
+                    {_(".action.permission_manage")}
                     <Loader size="tiny" active={permissionManagerLoading} />
                   </Menu.Item>
                 )
               }
               {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
                 <Popup
-                  trigger={<Menu.Item name={_("problem.action.set_display_id")} icon="hashtag" />}
+                  trigger={<Menu.Item name={_(".action.set_display_id")} icon="hashtag" />}
                   content={
                     <Form>
                       <Form.Input
                         style={{ width: 230 }}
-                        placeholder={_("problem.action.set_display_id_new")}
+                        placeholder={_(".action.set_display_id_new")}
                         value={setDisplayIdInputValue}
                         autoComplete="username"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSetDisplayIdInputValue(e.target.value)}
@@ -690,7 +688,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                         }}
                       />
                       <Button loading={setDisplayIdPending} onClick={onSetDisplayId}>
-                        {_("problem.action.set_display_id_submit")}
+                        {_(".action.set_display_id_submit")}
                       </Button>
                     </Form>
                   }
@@ -702,11 +700,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 <Popup
                   trigger={
                     <Menu.Item
-                      name={
-                        props.problem.meta.isPublic
-                          ? _("problem.action.set_non_public")
-                          : _("problem.action.set_public")
-                      }
+                      name={props.problem.meta.isPublic ? _(".action.set_non_public") : _(".action.set_public")}
                       icon={props.problem.meta.isPublic ? "eye slash" : "eye"}
                     />
                   }
@@ -716,8 +710,8 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                       color={props.problem.meta.isPublic ? null : "green"}
                       content={
                         props.problem.meta.isPublic
-                          ? _("problem.action.set_non_public_confirm")
-                          : _("problem.action.set_public_confirm")
+                          ? _(".action.set_non_public_confirm")
+                          : _(".action.set_public_confirm")
                       }
                       onClick={() => onSetPublic(!props.problem.meta.isPublic)}
                     />
@@ -729,7 +723,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               {props.problem.permissionOfCurrentUser.DELETE && (
                 <Menu.Item
                   className={style.menuItemDangerous}
-                  name={_("problem.action.delete")}
+                  name={_(".action.delete")}
                   icon="delete"
                   onClick={deleteDialog.open}
                 />

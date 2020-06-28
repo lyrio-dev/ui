@@ -57,13 +57,13 @@ interface SubmissionStatisticsPageProps {
 }
 
 let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission_statistics");
   const navigation = useNavigation();
 
   const idString = props.idType === "id" ? `P${props.id}` : `#${props.id}`;
 
   useEffect(() => {
-    appState.enterNewPage(`${_("submission_statistics.title")} ${idString}`);
+    appState.enterNewPage(`${_(".title")} ${idString}`);
   }, [appState.locale]);
 
   function onPageChange(page: number) {
@@ -93,7 +93,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
   return (
     <>
       <Header as="h1" className={style.header}>
-        {_("submission_statistics.header")}
+        {_(".header")}
         <Menu compact className={style.headerDropdown}>
           <Dropdown
             simple
@@ -102,7 +102,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
             options={Object.values(SubmissionStatisticsType).map(type => ({
               key: type,
               value: type,
-              text: _(`submission_statistics.type.${type}`),
+              text: _(`.type.${type}`),
               onClick: () =>
                 navigation.navigate(
                   props.idType === "id"
@@ -117,11 +117,11 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
         <Segment placeholder>
           <Header icon>
             <Icon name="file" />
-            {_("submission_statistics.empty")}
+            {_(".empty")}
           </Header>
           <Segment.Inline>
             <Button primary onClick={() => navigation.goBack()}>
-              {_("submission_statistics.empty_goback")}
+              {_(".empty_goback")}
             </Button>
           </Segment.Inline>
         </Segment>
@@ -159,7 +159,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
       {scores.length > 0 && (
         <>
           <Header as="h1" textAlign="center" className={style.headerChart}>
-            {_("submission_statistics.header_score_distribution")}
+            {_(".header_score_distribution")}
           </Header>
           <div className={style.chartContainer}>
             <Bar
@@ -172,9 +172,8 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   bodyFontSize: 13,
                   titleFontStyle: "",
                   callbacks: {
-                    title: tooltip =>
-                      tooltip.length === 1 ? _("submission_statistics.chart_tooltip.score") + tooltip[0].label : "",
-                    label: tooltip => _("submission_statistics.chart_tooltip.count") + tooltip.value
+                    title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + tooltip[0].label : ""),
+                    label: tooltip => _(".chart_tooltip.count") + tooltip.value
                   }
                 },
                 scales: {
@@ -222,7 +221,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
             />
           </div>
           <Header as="h1" textAlign="center" className={style.headerChart}>
-            {_("submission_statistics.header_score_prefix_sum")}
+            {_(".header_score_prefix_sum")}
           </Header>
           <div className={style.chartContainer}>
             <Line
@@ -235,11 +234,8 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   bodyFontSize: 13,
                   titleFontStyle: "",
                   callbacks: {
-                    title: tooltip =>
-                      tooltip.length === 1
-                        ? _("submission_statistics.chart_tooltip.score") + "≤ " + tooltip[0].label
-                        : "",
-                    label: tooltip => _("submission_statistics.chart_tooltip.count") + tooltip.value
+                    title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + "≤ " + tooltip[0].label : ""),
+                    label: tooltip => _(".chart_tooltip.count") + tooltip.value
                   }
                 },
                 scales: {
@@ -293,7 +289,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
             />
           </div>
           <Header as="h1" textAlign="center" className={style.headerChart}>
-            {_("submission_statistics.header_score_suffix_sum")}
+            {_(".header_score_suffix_sum")}
           </Header>
           <div className={style.chartContainer}>
             <Line
@@ -306,11 +302,8 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                   bodyFontSize: 13,
                   titleFontStyle: "",
                   callbacks: {
-                    title: tooltip =>
-                      tooltip.length === 1
-                        ? _("submission_statistics.chart_tooltip.score") + "≥ " + tooltip[0].label
-                        : "",
-                    label: tooltip => _("submission_statistics.chart_tooltip.count") + tooltip.value
+                    title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + "≥ " + tooltip[0].label : ""),
+                    label: tooltip => _(".chart_tooltip.count") + tooltip.value
                   }
                 },
                 scales: {

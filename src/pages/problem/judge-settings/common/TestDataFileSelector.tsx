@@ -19,7 +19,7 @@ interface TestDataFileSelectorProps {
 }
 
 const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const uiProps: FormSelectProps | DropdownProps = {
     className:
@@ -35,7 +35,7 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
               {props.iconInputOrOutput && <Icon className={style.iconInputOrOutput} name={props.iconInputOrOutput} />}
               <Popup
                 trigger={<Icon name="warning sign" className={style.iconFile} />}
-                content={_("problem_judge_settings.file_selector.file_not_found_warning")}
+                content={_(".file_selector.file_not_found_warning")}
                 position="top center"
               />
               {props.value}
@@ -60,13 +60,7 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
   };
 
   return props.type === "ItemSearchDropdown" ? (
-    <Dropdown
-      item
-      selection
-      search
-      noResultsMessage={_("problem_judge_settings.file_selector.no_matching_files")}
-      {...uiProps}
-    />
+    <Dropdown item selection search noResultsMessage={_(".file_selector.no_matching_files")} {...uiProps} />
   ) : (
     <Form.Select open={props.testData.length === 0 ? false : undefined} {...(uiProps as FormSelectProps)} />
   );

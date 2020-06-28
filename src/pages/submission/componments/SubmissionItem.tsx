@@ -28,7 +28,7 @@ interface SubmissionItemProps {
 }
 
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission_item");
 
   const submission = props.submission;
   const submissionLink = `/submission/${submission.id}`;
@@ -119,7 +119,7 @@ interface SubmissionHeaderProps {
 }
 
 export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission_item");
 
   return (
     <Table.Row
@@ -129,17 +129,17 @@ export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
       }
     >
       <Table.HeaderCell className={style.columnStatus} textAlign="left">
-        {_("submission_item.columns.status")}
+        {_(".columns.status")}
       </Table.HeaderCell>
-      <Table.HeaderCell className={style.columnScore}>{_("submission_item.columns.score")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnScore}>{_(".columns.score")}</Table.HeaderCell>
       <Table.HeaderCell className={style.columnProblemAndSubmitter} textAlign="left">
-        <div className={style.problem}>{_("submission_item.columns.problem")}</div>
-        <div className={style.submitter}>{_("submission_item.columns.submitter")}</div>
+        <div className={style.problem}>{_(".columns.problem")}</div>
+        <div className={style.submitter}>{_(".columns.submitter")}</div>
       </Table.HeaderCell>
-      <Table.HeaderCell className={style.columnTime}>{_("submission_item.columns.time")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnMemory}>{_("submission_item.columns.memory")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnAnswer}>{_("submission_item.columns.answer")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnSubmitTime}>{_("submission_item.columns.submit_time")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnTime}>{_(".columns.time")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnMemory}>{_(".columns.memory")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnAnswer}>{_(".columns.answer")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnSubmitTime}>{_(".columns.submit_time")}</Table.HeaderCell>
     </Table.Row>
   );
 };
@@ -159,7 +159,7 @@ interface SubmissionItemExtraRowsProps {
 }
 
 export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission_item");
 
   const submission = props.submission;
   const timeString = formatDateTime(submission.submitTime);

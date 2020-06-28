@@ -18,7 +18,7 @@ interface FormattableCodeBoxProps {
 }
 
 const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxProps>((props, ref) => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission");
 
   const defaultFormatted = !appState.userPreference.doNotFormatCodeByDefault;
   const options = appState.userPreference.codeFormatterOptions || CodeFormatter.defaultOptions;
@@ -34,7 +34,7 @@ const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxPr
   if (formatted && !refFormattedCode.current) {
     const [success, result] = CodeFormatter.format(unformattedCode, props.language, options);
     if (!success) {
-      toast.error(_(`submission.failed_to_format`, { error: result }));
+      toast.error(_(`.failed_to_format`, { error: result }));
       setFormatted(false);
     } else refFormattedCode.current = result;
   }
@@ -50,7 +50,7 @@ const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxPr
       {languageFormattable && (
         <Button
           className={style.formatCodeButton}
-          content={!formatted ? _("submission.format_code") : _("submission.show_original_code")}
+          content={!formatted ? _(".format_code") : _(".show_original_code")}
           onClick={() => setFormatted(!formatted)}
         />
       )}

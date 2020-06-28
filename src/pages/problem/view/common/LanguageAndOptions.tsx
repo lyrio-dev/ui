@@ -20,7 +20,7 @@ interface LanguageAndOptionsProps {
 }
 
 let LanguageAndOptions: React.FC<LanguageAndOptionsProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem");
 
   const submissionContent = objectPath.get(props.submissionContent as object, props.objectPath) as {
     language: CodeLanguage;
@@ -45,7 +45,7 @@ let LanguageAndOptions: React.FC<LanguageAndOptionsProps> = props => {
   return (
     <Form>
       <Form.Select
-        label={_("problem.submit.language")}
+        label={_(".submit.language")}
         value={submissionContent.language}
         options={Object.keys(codeLanguageOptions).map(language => ({
           key: language,

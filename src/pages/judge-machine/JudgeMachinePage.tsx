@@ -40,11 +40,11 @@ interface JudgeMachinePageProps {
 }
 
 let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("judge_machine");
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(_("judge_machine.title"), false);
+    appState.enterNewPage(_(".title"), false);
   }, [appState.locale]);
 
   function getCpu(judgeClient: ApiTypes.JudgeClientInfoDto) {
@@ -117,9 +117,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
       id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`judge_machine.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("judge_machine.reset_key_success"));
+      toast.success(_(".reset_key_success"));
       navigation.refresh();
       setResetPopupOpened(null);
     }
@@ -131,9 +131,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
       id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`judge_machine.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("judge_machine.delete_success"));
+      toast.success(_(".delete_success"));
       navigation.refresh();
       setDeletePopupOpened(null);
     }
@@ -152,9 +152,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
       allowedHosts: []
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`judge_machine.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("judge_machine.add_success"));
+      toast.success(_(".add_success"));
       navigation.refresh();
     }
 
@@ -166,13 +166,8 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
   return (
     <>
       <div className={style.headerWrapper}>
-        <Header as="h1" className={style.header} content={_("judge_machine.header")} />
-        <Button
-          icon="refresh"
-          content={_("judge_machine.refresh")}
-          labelPosition="left"
-          onClick={() => navigation.refresh()}
-        />
+        <Header as="h1" className={style.header} content={_(".header")} />
+        <Button icon="refresh" content={_(".refresh")} labelPosition="left" onClick={() => navigation.refresh()} />
         {props.hasManagePermission && (
           <Popup
             open={addPopupOpened || addPending}
@@ -182,7 +177,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
               <Form>
                 <Form.Input
                   style={{ width: 230 }}
-                  placeholder={_("judge_machine.add_new_name")}
+                  placeholder={_(".add_new_name")}
                   value={addNewName}
                   onChange={(e, { value }) => setAddNewName(value)}
                   onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -193,18 +188,12 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                   }}
                 />
                 <Button loading={addPending} disabled={!addNewNameValid} onClick={onAddJudgeClient}>
-                  {_("judge_machine.confirm_add")}
+                  {_(".confirm_add")}
                 </Button>
               </Form>
             }
             trigger={
-              <Button
-                className={style.addButton}
-                icon="plus"
-                content={_("judge_machine.add")}
-                labelPosition="left"
-                primary
-              />
+              <Button className={style.addButton} icon="plus" content={_(".add")} labelPosition="left" primary />
             }
             on="click"
             position="bottom right"
@@ -215,21 +204,21 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
         <Segment placeholder>
           <Header icon>
             <Icon name="server" />
-            {_("judge_machine.no_judge_machine")}
+            {_(".no_judge_machine")}
           </Header>
         </Segment>
       ) : (
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell className={style.columnStatus}>{_("judge_machine.status")}</Table.HeaderCell>
-              <Table.HeaderCell>{_("judge_machine.name")}</Table.HeaderCell>
-              <Table.HeaderCell>{_("judge_machine.cpu")}</Table.HeaderCell>
-              <Table.HeaderCell>{_("judge_machine.memory")}</Table.HeaderCell>
-              <Table.HeaderCell>{_("judge_machine.kernel")}</Table.HeaderCell>
+              <Table.HeaderCell className={style.columnStatus}>{_(".status")}</Table.HeaderCell>
+              <Table.HeaderCell>{_(".name")}</Table.HeaderCell>
+              <Table.HeaderCell>{_(".cpu")}</Table.HeaderCell>
+              <Table.HeaderCell>{_(".memory")}</Table.HeaderCell>
+              <Table.HeaderCell>{_(".kernel")}</Table.HeaderCell>
               {props.hasManagePermission && (
                 <Table.HeaderCell textAlign="center" className={style.columnOperations}>
-                  {_("judge_machine.operations")}
+                  {_(".operations")}
                 </Table.HeaderCell>
               )}
             </Table.Row>
@@ -239,7 +228,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
               <Table.Row key={judgeClient.id}>
                 <Table.Cell className={style.columnStatus}>
                   <Label className={style.onlineStatus} circular color={judgeClient.online ? "green" : "red"} empty />
-                  {judgeClient.online ? _("judge_machine.online") : _("judge_machine.offline")}
+                  {judgeClient.online ? _(".online") : _(".offline")}
                 </Table.Cell>
                 <Table.Cell>{judgeClient.name}</Table.Cell>
                 <Table.Cell>{getCpu(judgeClient)}</Table.Cell>
@@ -248,7 +237,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                 {props.hasManagePermission && (
                   <Table.Cell textAlign="center" className={style.columnOperations}>
                     <Popup
-                      trigger={<Icon name="key" title={_("judge_machine.key")} />}
+                      trigger={<Icon name="key" title={_(".key")} />}
                       content={<code>{judgeClient.key}</code>}
                       on="click"
                       position="left center"
@@ -257,13 +246,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                       open={resetPopupOpened === judgeClient.id}
                       onOpen={() => setResetPopupOpened(judgeClient.id)}
                       onClose={() => setResetPopupOpened(null)}
-                      trigger={<Icon name="refresh" title={_("judge_machine.reset_key")} />}
+                      trigger={<Icon name="refresh" title={_(".reset_key")} />}
                       content={
-                        <Button
-                          negative
-                          content={_("judge_machine.confirm_reset_key")}
-                          onClick={() => onResetKey(judgeClient.id)}
-                        />
+                        <Button negative content={_(".confirm_reset_key")} onClick={() => onResetKey(judgeClient.id)} />
                       }
                       on="click"
                       position="left center"
@@ -272,13 +257,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                       open={deletePopupOpened === judgeClient.id}
                       onOpen={() => setDeletePopupOpened(judgeClient.id)}
                       onClose={() => setDeletePopupOpened(null)}
-                      trigger={<Icon name="delete" title={_("judge_machine.delete")} />}
+                      trigger={<Icon name="delete" title={_(".delete")} />}
                       content={
-                        <Button
-                          negative
-                          content={_("judge_machine.confirm_delete")}
-                          onClick={() => onDelete(judgeClient.id)}
-                        />
+                        <Button negative content={_(".confirm_delete")} onClick={() => onDelete(judgeClient.id)} />
                       }
                       on="click"
                       position="left center"

@@ -18,11 +18,11 @@ export interface ErrorPageProps {
 }
 
 let ErrorPage: React.FC<ErrorPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("error");
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(_("error.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   if (props.uncaughtError) console.error(props.uncaughtError);
@@ -31,22 +31,22 @@ let ErrorPage: React.FC<ErrorPageProps> = props => {
     <Message className={style.message} icon negative>
       <Icon name="remove" />
       <Message.Content>
-        <Message.Header>{_(props.uncaughtError ? "error.unexpected_error" : "error.error")}</Message.Header>
+        <Message.Header>{_(props.uncaughtError ? ".unexpected_error" : ".error")}</Message.Header>
         {props.uncaughtError ? (
           <>
             <p>
               <pre>{props.uncaughtError.stack}</pre>
             </p>
             <p>
-              <a onClick={() => location.reload()}>{_("error.refresh")}</a>
+              <a onClick={() => location.reload()}>{_(".refresh")}</a>
             </p>
           </>
         ) : (
           <>
             <p>{props.message}</p>
             <p>
-              {props.options.showBack && <a onClick={() => navigation.goBack()}>{_("error.back")}</a>}
-              {props.options.showRefresh && <a onClick={() => navigation.refresh()}>{_("error.refresh")}</a>}
+              {props.options.showBack && <a onClick={() => navigation.goBack()}>{_(".back")}</a>}
+              {props.options.showRefresh && <a onClick={() => navigation.refresh()}>{_(".refresh")}</a>}
             </p>
           </>
         )}

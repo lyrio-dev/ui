@@ -33,10 +33,10 @@ interface PrevilegeViewProps {
 }
 
 const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user_edit.privilege");
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`user_edit.privilege.title`)} - ${props.meta.username}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, false);
   }, [appState.locale]);
 
   const [pending, setPending] = useState(false);
@@ -51,7 +51,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
     if (requestError) toast.error(requestError);
     else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
     else {
-      toast.success(_("user_edit.privilege.success"));
+      toast.success(_(".success"));
     }
 
     setPending(false);
@@ -69,26 +69,26 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
 
   return (
     <>
-      <Header className={style.sectionHeader} size="large" content={_("user_edit.privilege.header")} />
+      <Header className={style.sectionHeader} size="large" content={_(".header")} />
       {Object.values(Privilege).map(privilege => (
         <div key={privilege} className={style.privilegeRow}>
           <Checkbox
             toggle
             readOnly={!isAdmin}
-            label={_(`user_edit.privilege.privileges.${privilege}.name`)}
+            label={_(`.privileges.${privilege}.name`)}
             checked={privileges.has(privilege)}
             onChange={(e, { checked }) => togglePrivilege(privilege, checked)}
           />
-          <div className={style.notes}>{_(`user_edit.privilege.privileges.${privilege}.notes`)}</div>
+          <div className={style.notes}>{_(`.privileges.${privilege}.notes`)}</div>
         </div>
       ))}
-      <div className={style.notes + " " + style.notesAdminOnly}>{_("user_edit.privilege.admin_only")}</div>
+      <div className={style.notes + " " + style.notesAdminOnly}>{_(".admin_only")}</div>
       <Button
         className={style.submit}
         loading={pending}
         disabled={!isAdmin}
         primary
-        content={_("user_edit.privilege.submit")}
+        content={_(".submit")}
         onClick={onSubmit}
       />
     </>

@@ -19,7 +19,7 @@ export interface JudgeInfoWithExtraSourceFiles {
 type ExtraSourceFilesEditorProps = EditorComponentProps<JudgeInfoWithExtraSourceFiles>;
 
 let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   // To support inserting empty items, use a local copy for editing
   // XXX: If the judge info's extraSourceFiles is modified outside this componment, it won't get synced
@@ -113,14 +113,14 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
       <Form>
         <Form.Checkbox
           checked={!!props.judgeInfo.extraSourceFiles}
-          label={_("problem_judge_settings.extra_source_files.option")}
+          label={_(".extra_source_files.option")}
           onChange={() => onToggleExtraSourceFiles()}
         />
         {props.judgeInfo.extraSourceFiles && (
           <>
             <Menu className={style.menu + " " + style.menuHeader + " " + style.color_6} attached="top">
               <Menu.Item className={style.itemTitle}>
-                <strong>{_("problem_judge_settings.extra_source_files.title")}</strong>
+                <strong>{_(".extra_source_files.title")}</strong>
               </Menu.Item>
               <Menu.Menu position="right">
                 <Dropdown item icon="plus" className={`icon ${style.itemWithIcon}`}>
@@ -162,7 +162,7 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
                       type="ItemSearchDropdown"
                       className={style.dropdown}
                       testData={props.testData}
-                      placeholder={_("problem_judge_settings.extra_source_files.src")}
+                      placeholder={_(".extra_source_files.src")}
                       value={src}
                       onChange={value => updateExtraSourceFile(codeLanguage as any, "UPDATE", i, { src: value })}
                     />
@@ -171,7 +171,7 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
                         icon="long arrow alternate right"
                         iconPosition="left"
                         transparent
-                        placeholder={_("problem_judge_settings.extra_source_files.dst")}
+                        placeholder={_(".extra_source_files.dst")}
                         value={dst}
                         onChange={(e, { value }) =>
                           updateExtraSourceFile(codeLanguage as any, "UPDATE", i, { dst: value })
@@ -184,13 +184,13 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
                           <Menu.Item
                             className={`icon ${style.itemWithIcon}`}
                             icon="delete"
-                            title={_("problem_judge_settings.extra_source_files.delete")}
+                            title={_(".extra_source_files.delete")}
                           />
                         }
                         content={
                           <Button
                             negative
-                            content={_("problem_judge_settings.extra_source_files.confirm_delete")}
+                            content={_(".extra_source_files.confirm_delete")}
                             onClick={() => updateExtraSourceFile(codeLanguage as any, "DEL", i)}
                           />
                         }

@@ -102,7 +102,7 @@ export interface JudgeInfoWithChecker {
 type CheckerEditorProps = EditorComponentProps<JudgeInfoWithChecker>;
 
 let CheckerEditor: React.FC<CheckerEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const checker = props.judgeInfo.checker;
 
@@ -125,12 +125,12 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
   return (
     <Form className={style.wrapper}>
       <div className={style.menuWrapper}>
-        <Header size="tiny" content={_("problem_judge_settings.checker.checker")} />
+        <Header size="tiny" content={_(".checker.checker")} />
         <Menu secondary pointing>
           {CHECKER_TYPES.map(type => (
             <Menu.Item
               key={type}
-              content={_(`problem_judge_settings.checker.types.${type}`)}
+              content={_(`.checker.types.${type}`)}
               active={checker.type === type}
               onClick={() => checker.type !== type && onChangeCheckerType(type)}
             />
@@ -146,7 +146,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
               return (
                 <>
                   <Form.Field width={8}>
-                    <label>{_(`problem_judge_settings.checker.config.floats.precision`)}</label>
+                    <label>{_(`.checker.config.floats.precision`)}</label>
                     <Input
                       value={checker.precision}
                       onChange={(e, { value }) =>
@@ -156,7 +156,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                     />
                   </Form.Field>
                   <div className={style.description}>
-                    {_("problem_judge_settings.checker.config.floats.description", {
+                    {_(".checker.config.floats.description", {
                       value: `1e-${checker.precision}`
                     })}
                   </div>
@@ -167,13 +167,11 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                 <>
                   <Form.Checkbox
                     toggle
-                    label={_(`problem_judge_settings.checker.config.lines.case_sensitive`)}
+                    label={_(`.checker.config.lines.case_sensitive`)}
                     checked={checker.caseSensitive}
                     onChange={(e, { checked }) => onUpdateChecker({ caseSensitive: checked })}
                   />
-                  <div className={style.description}>
-                    {_("problem_judge_settings.checker.config.lines.description")}
-                  </div>
+                  <div className={style.description}>{_(".checker.config.lines.description")}</div>
                 </>
               );
             case "binary":
@@ -190,8 +188,8 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                 <div className={style.custom}>
                   <TestDataFileSelector
                     type="FormSelect"
-                    label={_("problem_judge_settings.checker.config.custom.filename")}
-                    placeholder={_("problem_judge_settings.checker.config.custom.filename_no_file")}
+                    label={_(".checker.config.custom.filename")}
+                    placeholder={_(".checker.config.custom.filename_no_file")}
                     value={checker.filename}
                     testData={props.testData}
                     onChange={value => onUpdateChecker({ filename: value })}
@@ -199,18 +197,18 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                   <Form.Group>
                     <Form.Select
                       width={8}
-                      label={_("problem_judge_settings.checker.config.custom.interface")}
+                      label={_(".checker.config.custom.interface")}
                       value={checker.interface}
                       options={CUSTOM_CHECKER_INTERFACES.map(iface => ({
                         key: iface,
                         value: iface,
-                        text: _(`problem_judge_settings.checker.config.custom.interfaces.${iface}`)
+                        text: _(`.checker.config.custom.interfaces.${iface}`)
                       }))}
                       onChange={(e, { value }) => onUpdateChecker({ interface: value as any })}
                     />
                     <Form.Select
                       width={8}
-                      label={_("problem_judge_settings.checker.config.custom.language")}
+                      label={_(".checker.config.custom.language")}
                       value={checker.language}
                       options={Object.keys(codeLanguageOptions).map(language => ({
                         key: language,
@@ -247,7 +245,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                   </div>
                   <Form.Group>
                     <Form.Field width={8}>
-                      <label>{_("problem_judge_settings.meta.time_limit")}</label>
+                      <label>{_(".meta.time_limit")}</label>
                       <Input
                         className={style.labeledInput}
                         placeholder={props.judgeInfo["timeLimit"]}
@@ -263,7 +261,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                       />
                     </Form.Field>
                     <Form.Field width={8}>
-                      <label>{_("problem_judge_settings.meta.memory_limit")}</label>
+                      <label>{_(".meta.memory_limit")}</label>
                       <Input
                         className={style.labeledInput}
                         placeholder={props.judgeInfo["memoryLimit"]}

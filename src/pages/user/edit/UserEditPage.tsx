@@ -28,7 +28,7 @@ interface UserEditPageProps {
 }
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user_edit");
 
   const View = props.view;
 
@@ -44,29 +44,27 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
           <Menu secondary vertical>
             <Menu.Item active={props.type === EditType.Profile} as={Link} href="../profile">
               <Icon name="user" />
-              {_("user_edit.menu.profile")}
+              {_(".menu.profile")}
             </Menu.Item>
             <Menu.Item active={props.type === EditType.Preference} as={Link} href="../preference">
               <Icon name="setting" />
-              {_("user_edit.menu.preference")}
+              {_(".menu.preference")}
             </Menu.Item>
             <Menu.Item active={props.type === EditType.Security} as={Link} href="../security">
               <Icon name="lock" />
-              {_("user_edit.menu.security")}
+              {_(".menu.security")}
             </Menu.Item>
             {showPrivilegeTab && (
               <Menu.Item active={props.type === EditType.Privilege} as={Link} href="../privilege">
                 <Icon name="key" />
-                {_("user_edit.menu.privilege")}
+                {_(".menu.privilege")}
               </Menu.Item>
             )}
           </Menu>
-          {!isEditingCurrentUser && (
-            <Message className={style.adminWarning} content={_("user_edit.admin_warning")} warning />
-          )}
+          {!isEditingCurrentUser && <Message className={style.adminWarning} content={_(".admin_warning")} warning />}
           <Link href="../..">
             <Icon name="arrow left" />
-            {!isEditingCurrentUser ? _("user_edit.back_to_profile_of_user") : _("user_edit.back_to_profile")}
+            {!isEditingCurrentUser ? _(".back_to_profile_of_user") : _(".back_to_profile")}
           </Link>
         </div>
         <div className={style.main}>

@@ -80,10 +80,10 @@ interface ProblemSetPageProps {
 }
 
 let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_set");
 
   useEffect(() => {
-    appState.enterNewPage(_("problem_set.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   const navigation = useNavigation();
@@ -269,10 +269,10 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         // Search title
         <Search
           className={style.search}
-          placeholder={_("problem_set.search_placeholder.title")}
+          placeholder={_(".search_placeholder.title")}
           value={searchKeyword}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.keyCode === 13 && onAddFilterKeyword()}
-          noResultsMessage={_("problem_set.no_result_title")}
+          noResultsMessage={_(".no_result_title")}
           onSearchChange={(e, { value }) => setSearchKeyword(value)}
           input={{ iconPosition: "left", fluid: isMobile }}
         />
@@ -280,7 +280,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         // Search tag
         <Search
           className={style.search}
-          placeholder={_("problem_set.search_placeholder.tag")}
+          placeholder={_(".search_placeholder.tag")}
           value={searchKeyword}
           showNoResults={false}
           onSearchChange={(e, { value }) => setSearchKeyword(value)}
@@ -295,7 +295,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           className={style.searchMenuItem}
           icon="tag"
           active={searchMode === "tag"}
-          title={_("problem_set.search_icon.tag")}
+          title={_(".search_icon.tag")}
           onClick={() => (searchMode === "tag" ? changeSearchMode("title") : changeSearchMode("tag"))}
         />
         {props.response.permissions.filterByOwner && (
@@ -303,7 +303,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             className={style.searchMenuItem}
             icon="user"
             active={searchMode === "user"}
-            title={_("problem_set.search_icon.user")}
+            title={_(".search_icon.user")}
             onClick={() => (searchMode === "user" ? changeSearchMode("title") : changeSearchMode("user"))}
           />
         )}
@@ -313,7 +313,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             className={style.searchMenuItem}
             icon="eye slash"
             active={false}
-            title={_("problem_set.search_icon.nonpublic")}
+            title={_(".search_icon.nonpublic")}
             onClick={() => onAddFilterNonpublic()}
           />
         )}
@@ -327,9 +327,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         <Loader active size="medium" />
       ) : tagsCount === 0 ? (
         searchKeyword === "" ? (
-          <div className={style.placeholder}>{_("problem_set.no_matching_tags")}</div>
+          <div className={style.placeholder}>{_(".no_matching_tags")}</div>
         ) : (
-          <div className={style.placeholder}>{_("problem_set.no_tags")}</div>
+          <div className={style.placeholder}>{_(".no_tags")}</div>
         )
       ) : (
         Object.entries(tagsByColor).map(([color, tagIDs]) => <p key={color}>{tagIDs.map(i => getTagLabel(tags[i]))}</p>)
@@ -342,7 +342,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     props.searchQuery.keyword || props.response.filterTags || props.response.filterOwner || props.searchQuery.nonpublic;
   const headerSearchFilters = filtersApplied && (
     <>
-      <strong>{_("problem_set.search_filters")}</strong>
+      <strong>{_(".search_filters")}</strong>
       {props.searchQuery.keyword && (
         <Label size="small" color="grey">
           <Icon name="file alternate" />
@@ -360,7 +360,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
       {props.searchQuery.nonpublic && (
         <Label size="small" color="red">
           <Icon name="eye slash" />
-          {_("problem_set.non_public")}
+          {_(".non_public")}
           <Icon name="delete" onClick={() => onDelFilterNonpublic()} />
         </Label>
       )}
@@ -375,7 +375,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         toggle
         checked={appState.showTagsInProblemSet}
         onChange={() => (appState.showTagsInProblemSet = !appState.showTagsInProblemSet)}
-        label={_("problem_set.show_tags")}
+        label={_(".show_tags")}
       />
     </>
   );
@@ -390,7 +390,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           size="tiny"
           className="labeled icon"
           icon="tag"
-          content={_("problem_set.manage_tags")}
+          content={_(".manage_tags")}
           loading={openTagManagerPending}
           onClick={async () => {
             if (openTagManagerPending) return;
@@ -405,7 +405,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           size="tiny"
           className="labeled icon"
           icon="plus"
-          content={_("problem_set.add_problem")}
+          content={_(".add_problem")}
           as={Link}
           href="/problem/new"
         />
@@ -445,14 +445,14 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           <Segment placeholder>
             <Header icon>
               <Icon name="search" />
-              {_("problem_set.no_problem.message_search")}
+              {_(".no_problem.message_search")}
             </Header>
             <Segment.Inline>
               <Button primary onClick={() => navigation.goBack()}>
-                {_("problem_set.no_problem.back")}
+                {_(".no_problem.back")}
               </Button>
               <Button as={Link} href="/problems">
-                {_("problem_set.no_problem.clear_filters")}
+                {_(".no_problem.clear_filters")}
               </Button>
             </Segment.Inline>
           </Segment>
@@ -460,12 +460,12 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           <Segment placeholder>
             <Header icon>
               <Icon name="file" />
-              {_("problem_set.no_problem.message_no_search")}
+              {_(".no_problem.message_no_search")}
             </Header>
             {props.response.permissions.createProblem && (
               <Segment.Inline>
                 <Button primary as={Link} href="/problem/new">
-                  {_("problem_set.no_problem.clear_filters")}
+                  {_(".no_problem.clear_filters")}
                 </Button>
               </Segment.Inline>
             )}
@@ -475,11 +475,11 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         <Table basic="very" textAlign="center" unstackable>
           <Table.Header>
             <Table.Row className={style.tableHeaderRow}>
-              {appState.currentUser && <Table.HeaderCell width={1}>{_("problem_set.column_status")}</Table.HeaderCell>}
+              {appState.currentUser && <Table.HeaderCell width={1}>{_(".column_status")}</Table.HeaderCell>}
               <Table.HeaderCell width={1}>#</Table.HeaderCell>
-              <Table.HeaderCell textAlign="left">{_("problem_set.column_title")}</Table.HeaderCell>
-              <Table.HeaderCell width={1}>{_("problem_set.column_submission_count")}</Table.HeaderCell>
-              <Table.HeaderCell width={1}>{_("problem_set.column_accepted_rate")}</Table.HeaderCell>
+              <Table.HeaderCell textAlign="left">{_(".column_title")}</Table.HeaderCell>
+              <Table.HeaderCell width={1}>{_(".column_submission_count")}</Table.HeaderCell>
+              <Table.HeaderCell width={1}>{_(".column_accepted_rate")}</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -505,7 +505,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                         : `/problem/by-id/${problem.meta.id}`
                     }
                   >
-                    {problem.title.trim() || _("problem_set.no_title")}
+                    {problem.title.trim() || _(".no_title")}
                   </Link>
                   {!problem.meta.isPublic && (
                     <Label
@@ -513,7 +513,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                       icon="eye slash"
                       size="small"
                       color="red"
-                      content={_("problem_set.non_public")}
+                      content={_(".non_public")}
                       as="a"
                       // As long as a user can see the "nonpublic" label, it has the permission to filter the
                       // nonpublic problems

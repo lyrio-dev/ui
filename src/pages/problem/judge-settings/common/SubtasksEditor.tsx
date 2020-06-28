@@ -79,7 +79,7 @@ interface SubtaskEditorTastcaseItemProps {
 }
 
 let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const refOptionsButton = useRef(null);
 
@@ -102,7 +102,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
           type="ItemSearchDropdown"
           iconInputOrOutput="sign in"
           testData={props.testData}
-          placeholder={_("problem_judge_settings.subtasks.testcase.input_file")}
+          placeholder={_(".subtasks.testcase.input_file")}
           value={props.testcase.inputFile}
           onChange={value => props.onUpdate({ inputFile: value })}
         />
@@ -125,12 +125,12 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
             <Dropdown.Menu>
               <Dropdown.Item
                 icon="angle double up"
-                text={_("problem_judge_settings.subtasks.testcase_add.before")}
+                text={_(".subtasks.testcase_add.before")}
                 onClick={() => props.onAddTestcaseBefore()}
               />
               <Dropdown.Item
                 icon="angle double down"
-                text={_("problem_judge_settings.subtasks.testcase_add.after")}
+                text={_(".subtasks.testcase_add.after")}
                 onClick={() => props.onAddTestcaseAfter()}
               />
             </Dropdown.Menu>
@@ -166,15 +166,12 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
             type="ItemSearchDropdown"
             iconInputOrOutput="sign out"
             testData={props.testData}
-            placeholder={_("problem_judge_settings.subtasks.testcase.output_file")}
+            placeholder={_(".subtasks.testcase.output_file")}
             value={props.testcase.outputFile}
             onChange={value => props.onUpdate({ outputFile: value })}
           />
         ) : (
-          <Menu.Item
-            className={style.outputFileNotNeeded}
-            content={_("problem_judge_settings.subtasks.testcase.output_file_not_needed")}
-          />
+          <Menu.Item className={style.outputFileNotNeeded} content={_(".subtasks.testcase.output_file_not_needed")} />
         )}
         <Menu.Menu position="right">
           <Menu.Item className={style.itemTestcaseMemoryLimit}>
@@ -196,25 +193,23 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
               <Dropdown.Menu>
                 <Dropdown.Item
                   icon="angle double up"
-                  text={_("problem_judge_settings.subtasks.testcase_options.move_up")}
+                  text={_(".subtasks.testcase_options.move_up")}
                   onClick={() => props.onMoveUp()}
                   disabled={props.testcaseIndex === 0}
                 />
                 <Dropdown.Item
                   icon="angle double down"
-                  text={_("problem_judge_settings.subtasks.testcase_options.move_down")}
+                  text={_(".subtasks.testcase_options.move_down")}
                   onClick={() => props.onMoveDown()}
                   disabled={props.testcaseIndex === props.testcaseCount - 1}
                 />
                 <Popup
-                  trigger={
-                    <Dropdown.Item icon="delete" text={_("problem_judge_settings.subtasks.testcase_options.delete")} />
-                  }
+                  trigger={<Dropdown.Item icon="delete" text={_(".subtasks.testcase_options.delete")} />}
                   context={refOptionsButton}
                   content={
                     <Button
                       negative
-                      content={_("problem_judge_settings.subtasks.testcase_options.confirm_delete")}
+                      content={_(".subtasks.testcase_options.confirm_delete")}
                       onClick={() => props.onDelete()}
                     />
                   }
@@ -259,7 +254,7 @@ interface SubtaskEditorProps {
 }
 
 let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const [testcasesExpanded, setTestcasesExpanded] = useState(props.subtaskCount === 1);
 
@@ -345,7 +340,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
       // If the regex is auto generated, do not show error message
       if (!inputIsDefault) {
         setAutoAddTestcaseErrorCompileForInput(
-          _("problem_judge_settings.subtasks.auto_add_testcases.can_not_compile_for_input", { message: e.message })
+          _(".subtasks.auto_add_testcases.can_not_compile_for_input", { message: e.message })
         );
       } else setAutoAddTestcaseErrorCompileForInput("");
       setAutoAddTestcaseErrorMatching("");
@@ -359,7 +354,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
         // If the regex is auto generated, do not show error message
         if (!outputIsDefault) {
           setAutoAddTestcaseErrorCompileForOutput(
-            _("problem_judge_settings.subtasks.auto_add_testcases.can_not_compile_for_output", { message: e.message })
+            _(".subtasks.auto_add_testcases.can_not_compile_for_output", { message: e.message })
           );
         } else setAutoAddTestcaseErrorCompileForOutput("");
         setAutoAddTestcaseErrorMatching("");
@@ -382,13 +377,13 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
         const groupCount = matchesForInput[0].length - 1;
         if (groupCount !== matchesForOutput[0].length - 1) {
           setAutoAddTestcaseErrorMatching(
-            _("problem_judge_settings.subtasks.auto_add_testcases.capturing_groups_do_not_match", {
+            _(".subtasks.auto_add_testcases.capturing_groups_do_not_match", {
               countInInputFilename: String(groupCount),
               countInOutputFilename: String(matchesForOutput[0].length - 1)
             })
           );
         } else if (groupCount === 0) {
-          setAutoAddTestcaseErrorMatching(_("problem_judge_settings.subtasks.auto_add_testcases.no_capturing_groups"));
+          setAutoAddTestcaseErrorMatching(_(".subtasks.auto_add_testcases.no_capturing_groups"));
         } else {
           while (matchesForInput.length !== 0) {
             const currentMatchForInput = matchesForInput.shift();
@@ -446,9 +441,9 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
       className={style.dialogHeader}
       content={
         <>
-          {_("problem_judge_settings.subtasks.auto_add_testcases.auto_add_testcases")}
+          {_(".subtasks.auto_add_testcases.auto_add_testcases")}
           <div className={style.dialogHeaderInfo}>
-            {_("problem_judge_settings.subtasks.auto_add_testcases.subtask") + " #" + (props.subtaskIndex + 1)}
+            {_(".subtasks.auto_add_testcases.subtask") + " #" + (props.subtaskIndex + 1)}
           </div>
         </>
       }
@@ -464,14 +459,14 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
           <p className={style.autoAddTestcasesHelp}>
             {_(
               !props.options.enableOutputFile
-                ? "problem_judge_settings.subtasks.auto_add_testcases.help_no_output"
-                : "problem_judge_settings.subtasks.auto_add_testcases.help"
+                ? ".subtasks.auto_add_testcases.help_no_output"
+                : ".subtasks.auto_add_testcases.help"
             )}
           </p>
           <Form>
             <Form.Group>
               <Form.Field width={8}>
-                <label>{_("problem_judge_settings.subtasks.auto_add_testcases.input_file")}</label>
+                <label>{_(".subtasks.auto_add_testcases.input_file")}</label>
                 <Input
                   placeholder={defaultInput}
                   value={autoAddTestcaseRegexForInput}
@@ -485,7 +480,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
               </Form.Field>
               {props.options.enableOutputFile && (
                 <Form.Field width={8}>
-                  <label>{_("problem_judge_settings.subtasks.auto_add_testcases.output_file")}</label>
+                  <label>{_(".subtasks.auto_add_testcases.output_file")}</label>
                   <Input
                     placeholder={defaultOutput}
                     value={autoAddTestcaseRegexForOutput}
@@ -509,8 +504,8 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
               info={autoAddTestcaseMatchResult.length === 0}
               content={
                 !input || !output
-                  ? _("problem_judge_settings.subtasks.auto_add_testcases.empty_regex")
-                  : _("problem_judge_settings.subtasks.auto_add_testcases.matches_count", {
+                  ? _(".subtasks.auto_add_testcases.empty_regex")
+                  : _(".subtasks.auto_add_testcases.matches_count", {
                       count: autoAddTestcaseMatchResult.length.toString()
                     })
               }
@@ -524,11 +519,11 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
                     <React.Fragment key={i}>
                       <Table.HeaderCell width={1}>#</Table.HeaderCell>
                       <Table.HeaderCell width={props.options.enableOutputFile ? 3 : 6}>
-                        {_("problem_judge_settings.subtasks.auto_add_testcases.column_input_file")}
+                        {_(".subtasks.auto_add_testcases.column_input_file")}
                       </Table.HeaderCell>
                       {props.options.enableOutputFile && (
                         <Table.HeaderCell width={3}>
-                          {_("problem_judge_settings.subtasks.auto_add_testcases.column_output_file")}
+                          {_(".subtasks.auto_add_testcases.column_output_file")}
                         </Table.HeaderCell>
                       )}
                     </React.Fragment>
@@ -562,14 +557,11 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
       );
     })(),
     <>
-      <Button
-        content={_("problem_judge_settings.subtasks.auto_add_testcases.close")}
-        onClick={() => autoAddTestcaseDialog.close()}
-      />
+      <Button content={_(".subtasks.auto_add_testcases.close")} onClick={() => autoAddTestcaseDialog.close()} />
       <Button
         positive
         disabled={autoAddTestcaseMatchResult.length === 0}
-        content={_("problem_judge_settings.subtasks.auto_add_testcases.append")}
+        content={_(".subtasks.auto_add_testcases.append")}
         onClick={() => {
           const current = props.subtask.testcases.map(testcase => [testcase.inputFile, testcase.outputFile]);
           const toAppend = autoAddTestcaseMatchResult.filter(
@@ -587,18 +579,13 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
           <Button
             primary
             disabled={autoAddTestcaseMatchResult.length === 0}
-            content={_("problem_judge_settings.subtasks.auto_add_testcases.replace")}
+            content={_(".subtasks.auto_add_testcases.replace")}
             onClick={() => props.subtask.testcases.length === 0 && doReplace()}
           />
         }
         // It's safe to replace if no testcases at present, don't confirm
         disabled={props.subtask.testcases.length === 0}
-        content={
-          <Button
-            content={_("problem_judge_settings.subtasks.auto_add_testcases.confirm_replace")}
-            onClick={doReplace}
-          />
-        }
+        content={<Button content={_(".subtasks.auto_add_testcases.confirm_replace")} onClick={doReplace} />}
         on="click"
         position="top center"
       />
@@ -638,17 +625,17 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
         <Menu.Item className={style.itemTitle}>
           <strong>
             {props.subtaskCount === 1 ? (
-              _("problem_judge_settings.subtasks.single_subtask")
+              _(".subtasks.single_subtask")
             ) : (
               <>
-                {_("problem_judge_settings.subtasks.subtask")}
+                {_(".subtasks.subtask")}
                 &nbsp; #{props.subtaskIndex + 1}
               </>
             )}
           </strong>
           <div className={style.subtaskTitleTestcasesCount}>
             {appState.windowWidth >= 100
-              ? _("problem_judge_settings.subtasks.subtask_testcases_count", {
+              ? _(".subtasks.subtask_testcases_count", {
                   count: props.subtask.testcases.length.toString()
                 })
               : props.subtask.testcases.length}
@@ -700,45 +687,43 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
               <Dropdown.Menu>
                 <Dropdown.Item
                   icon="sort numeric down"
-                  text={_("problem_judge_settings.subtasks.subtask_options.sort")}
+                  text={_(".subtasks.subtask_options.sort")}
                   onClick={sortTestcases}
                 />
                 <Dropdown.Item
                   icon="arrow up"
-                  text={_("problem_judge_settings.subtasks.subtask_options.add_before")}
+                  text={_(".subtasks.subtask_options.add_before")}
                   onClick={() => props.onAddSubtaskBefore()}
                 />
                 <Dropdown.Item
                   icon="arrow down"
-                  text={_("problem_judge_settings.subtasks.subtask_options.add_after")}
+                  text={_(".subtasks.subtask_options.add_after")}
                   onClick={() => props.onAddSubtaskAfter()}
                 />
                 <Dropdown.Item
                   icon="plus"
-                  text={_("problem_judge_settings.subtasks.subtask_options.add_testcase")}
+                  text={_(".subtasks.subtask_options.add_testcase")}
                   onClick={() => (props.onAddTestcase(props.subtask.testcases.length), setTestcasesExpanded(true))}
                 />
                 <Dropdown.Item
                   icon="angle double up"
-                  text={_("problem_judge_settings.subtasks.subtask_options.move_up")}
+                  text={_(".subtasks.subtask_options.move_up")}
                   disabled={props.subtaskIndex === 0}
                   onClick={() => props.onMoveUp()}
                 />
                 <Dropdown.Item
                   icon="angle double down"
-                  text={_("problem_judge_settings.subtasks.subtask_options.move_down")}
+                  text={_(".subtasks.subtask_options.move_down")}
                   disabled={props.subtaskIndex === props.subtaskCount - 1}
                   onClick={() => props.onMoveDown()}
                 />
                 <Popup
-                  trigger={
-                    <Dropdown.Item icon="delete" text={_("problem_judge_settings.subtasks.subtask_options.delete")} />
-                  }
+                  trigger={<Dropdown.Item icon="delete" text={_(".subtasks.subtask_options.delete")} />}
                   context={refOptionsButton}
                   content={
                     <Button
                       negative
-                      content={_("problem_judge_settings.subtasks.subtask_options.confirm_delete")}
+                      content={_(".subtasks.subtask_options.confirm_delete")}
                       onClick={() => props.onDelete()}
                     />
                   }
@@ -759,22 +744,18 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
           options={Object.values(SubtaskScoringType).map(type => ({
             key: type,
             value: type,
-            text: _(`problem_judge_settings.subtasks.subtask_type.${type}`)
+            text: _(`.subtasks.subtask_type.${type}`)
           }))}
           onChange={(e, { value }) => props.onUpdate({ scoringType: value as SubtaskScoringType })}
         />
         <Menu.Menu position="right">
           {props.subtask.testcases.length === 0 ? (
-            <Menu.Item icon="circle outline" content={_("problem_judge_settings.subtasks.no_testcases")} />
+            <Menu.Item icon="circle outline" content={_(".subtasks.no_testcases")} />
           ) : (
             <Menu.Item
               as="a"
               icon={testcasesExpanded ? "minus square outline" : "plus square outline"}
-              content={
-                testcasesExpanded
-                  ? _("problem_judge_settings.subtasks.hide_testcases")
-                  : _("problem_judge_settings.subtasks.expand_testcases")
-              }
+              content={testcasesExpanded ? _(".subtasks.hide_testcases") : _(".subtasks.expand_testcases")}
               onClick={() => setTestcasesExpanded(!testcasesExpanded)}
             />
           )}
@@ -805,7 +786,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
       {props.subtaskCount > 1 && (
         <>
           <Menu attached="bottom" className={style.menu + " " + style.menuFooter}>
-            <Menu.Item>{_("problem_judge_settings.subtasks.dependencies")}</Menu.Item>
+            <Menu.Item>{_(".subtasks.dependencies")}</Menu.Item>
             <Dropdown
               className={style.itemSearchDropdown + " " + style.itemDependencies}
               item
@@ -871,7 +852,7 @@ function detectTestcasesFromTestData(testData: ApiTypes.ProblemFileDto[], enable
 type SubtasksEditorProps = EditorComponentProps<JudgeInfoWithSubtasks, SubtasksEditorOptions>;
 
 let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const judgeInfo = props.judgeInfo;
 
@@ -1053,9 +1034,7 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
               <label
                 dangerouslySetInnerHTML={{
                   __html: _(
-                    props.options.enableOutputFile
-                      ? "problem_judge_settings.subtasks.auto_testcases"
-                      : "problem_judge_settings.subtasks.auto_testcases_no_output"
+                    props.options.enableOutputFile ? ".subtasks.auto_testcases" : ".subtasks.auto_testcases_no_output"
                   )
                 }}
               ></label>
@@ -1105,12 +1084,10 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
             <Table.Row>
               <Table.HeaderCell width={2}>#</Table.HeaderCell>
               <Table.HeaderCell width={props.options.enableOutputFile ? 7 : 14}>
-                {_("problem_judge_settings.subtasks.testcase.input_file")}
+                {_(".subtasks.testcase.input_file")}
               </Table.HeaderCell>
               {props.options.enableOutputFile && (
-                <Table.HeaderCell width={7}>
-                  {_("problem_judge_settings.subtasks.testcase.output_file")}
-                </Table.HeaderCell>
+                <Table.HeaderCell width={7}>{_(".subtasks.testcase.output_file")}</Table.HeaderCell>
               )}
             </Table.Row>
           </Table.Header>
@@ -1125,9 +1102,7 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
               ))
             ) : (
               <Table.Row>
-                <Table.Cell colSpan={3}>
-                  {_("problem_judge_settings.subtasks.cannot_detect_testcases_from_testdata")}
-                </Table.Cell>
+                <Table.Cell colSpan={3}>{_(".subtasks.cannot_detect_testcases_from_testdata")}</Table.Cell>
               </Table.Row>
             )}
           </Table.Body>

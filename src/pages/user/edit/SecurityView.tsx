@@ -26,10 +26,10 @@ interface SecurityViewProps {
 }
 
 const SecurityView: React.FC<SecurityViewProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user_edit.security");
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`user_edit.security.title`)} - ${props.meta.username}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, false);
   }, [appState.locale]);
 
   const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
@@ -83,7 +83,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         setWrongOldPassword(true);
       } else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
       else {
-        toast.success(_("user_edit.security.password.success"));
+        toast.success(_(".password.success"));
 
         setOldPassword("");
         setNewPassword("");
@@ -122,7 +122,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
       else if (response.error === "DUPLICATE_EMAIL") setDuplicateEmail(true);
       else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
       else {
-        toast.success(_("user_edit.security.email.success"));
+        toast.success(_(".email.success"));
 
         if (props.meta.id === appState.currentUser.id) {
           appState.currentUser.email = email;
@@ -137,11 +137,11 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   return (
     <>
       <form>
-        <Header className={style.sectionHeader} size="large" content={_("user_edit.security.password.header")} />
+        <Header className={style.sectionHeader} size="large" content={_(".password.header")} />
         <input readOnly type="text" hidden autoComplete="username" value={props.meta.username} />
         {!hasPrivilege && (
           <>
-            <Header className={style.header} size="tiny" content={_("user_edit.security.password.old")} />
+            <Header className={style.header} size="tiny" content={_(".password.old")} />
             <Input
               className={style.notFullWidth}
               fluid
@@ -154,12 +154,12 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
             />
             <div className={style.notes}>
               {wrongOldPassword
-                ? _("user_edit.security.password.wrong_old_password")
-                : oldPasswordInvalid && _("user_edit.security.password.invalid_password")}
+                ? _(".password.wrong_old_password")
+                : oldPasswordInvalid && _(".password.invalid_password")}
             </div>
           </>
         )}
-        <Header className={style.header} size="tiny" content={_("user_edit.security.password.new")} />
+        <Header className={style.header} size="tiny" content={_(".password.new")} />
         <Input
           className={style.notFullWidth}
           fluid
@@ -171,11 +171,9 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
           error={newPasswordInvalid || emptyNewPassword}
         />
         <div className={style.notes}>
-          {emptyNewPassword
-            ? _("user_edit.security.password.empty_new_password")
-            : newPasswordInvalid && _("user_edit.security.password.invalid_password")}
+          {emptyNewPassword ? _(".password.empty_new_password") : newPasswordInvalid && _(".password.invalid_password")}
         </div>
-        <Header className={style.header} size="tiny" content={_("user_edit.security.password.retype")} />
+        <Header className={style.header} size="tiny" content={_(".password.retype")} />
         <Input
           className={style.notFullWidth}
           fluid
@@ -190,19 +188,19 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         />
         <div className={style.notes}>
           {emptyRetypePassword
-            ? _("user_edit.security.password.empty_retype_password")
-            : retypePasswordInvalid && _("user_edit.security.password.passwords_do_not_match")}
+            ? _(".password.empty_retype_password")
+            : retypePasswordInvalid && _(".password.passwords_do_not_match")}
         </div>
       </form>
       <Button
         className={style.submit}
         loading={pendingChangePassword}
         primary
-        content={_("user_edit.security.password.submit")}
+        content={_(".password.submit")}
         onClick={onSubmitChangePassword}
       />
-      <Header className={style.sectionHeader} size="large" content={_("user_edit.security.email.header")} />
-      <Header className={style.header} size="tiny" content={_("user_edit.security.email.email")} />
+      <Header className={style.sectionHeader} size="large" content={_(".email.header")} />
+      <Header className={style.header} size="tiny" content={_(".email.email")} />
       <Input
         className={style.notFullWidth}
         fluid
@@ -212,15 +210,13 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         error={emailInvalid || duplicateEmail}
       />
       <div className={style.notes}>
-        {emailInvalid
-          ? _("user_edit.security.email.invalid_email")
-          : duplicateEmail && _("user_edit.security.email.duplicate_email")}
+        {emailInvalid ? _(".email.invalid_email") : duplicateEmail && _(".email.duplicate_email")}
       </div>
       <Button
         className={style.submit}
         loading={pendingChangeEmail}
         primary
-        content={_("user_edit.security.email.submit")}
+        content={_(".email.submit")}
         onClick={onSubmitChangeEmail}
       />
     </>

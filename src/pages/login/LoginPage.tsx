@@ -17,7 +17,7 @@ import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
 
 let LoginPage: React.FC = () => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("login");
   const currentRoute = useCurrentRoute();
 
   const navigation = useNavigation();
@@ -30,7 +30,7 @@ let LoginPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    appState.enterNewPage(_("login.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   const [formError, setFormError] = useState({ type: null, message: null });
@@ -60,13 +60,13 @@ let LoginPage: React.FC = () => {
     setPending(true);
 
     if (username.length === 0) {
-      setError("username", _("login.empty_username"));
+      setError("username", _(".empty_username"));
     } else if (!isValidUsername(username)) {
-      setError("username", _("login.invalid_username"));
+      setError("username", _(".invalid_username"));
     } else if (password.length === 0) {
-      setError("password", _("login.empty_password"));
+      setError("password", _(".empty_password"));
     } else if (!isValidPassword(password)) {
-      setError("password", _("login.invalid_password"));
+      setError("password", _(".invalid_password"));
     } else {
       // Send login request
       const { requestError, response } = await AuthApi.login({ username, password });
@@ -75,15 +75,15 @@ let LoginPage: React.FC = () => {
       else if (response.error) {
         switch (response.error) {
           case "ALREADY_LOGGEDIN":
-            toast.error(_("login.already_loggedin"));
+            toast.error(_(".already_loggedin"));
             break;
           case "NO_SUCH_USER":
-            setError("username", _("login.no_such_user"));
+            setError("username", _(".no_such_user"));
             getInput("username").focus();
             getInput("username").select();
             break;
           case "WRONG_PASSWORD":
-            setError("password", _("login.wrong_password"));
+            setError("password", _(".wrong_password"));
             getInput("password").focus();
             getInput("password").select();
             break;
@@ -97,7 +97,7 @@ let LoginPage: React.FC = () => {
           if (requestError) toast.error(requestError);
           else if (!response.userMeta) location.reload();
 
-          setSuccess(_("login.welcome", { username: response.userMeta.username }));
+          setSuccess(_(".welcome", { username: response.userMeta.username }));
 
           setTimeout(() => {
             appState.currentUser = response.userMeta;
@@ -121,7 +121,7 @@ let LoginPage: React.FC = () => {
         <Grid.Column className={style.wrapper}>
           <Header as="h2" className={style.header} textAlign="center">
             <Image as={AppLogo} className={style.logo} />
-            {_("login.login_to_your_account")}
+            {_(".login_to_your_account")}
           </Header>
           <Form size="large" ref={refForm}>
             <Segment>
@@ -136,7 +136,7 @@ let LoginPage: React.FC = () => {
                 fluid
                 icon="user"
                 iconPosition="left"
-                placeholder={_("login.username")}
+                placeholder={_(".username")}
                 value={username}
                 autoComplete="username"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
@@ -158,7 +158,7 @@ let LoginPage: React.FC = () => {
                 fluid
                 icon="lock"
                 iconPosition="left"
-                placeholder={_("login.password")}
+                placeholder={_(".password")}
                 value={password}
                 type="password"
                 autoComplete="current-password"
@@ -180,14 +180,14 @@ let LoginPage: React.FC = () => {
                     {successMessage}
                   </>
                 ) : (
-                  _("login.login")
+                  _(".login")
                 )}
               </Button>
             </Segment>
           </Form>
           <Message className={style.message}>
-            {_("login.new_user")}
-            <Link href="/register">{_("login.register")}</Link>
+            {_(".new_user")}
+            <Link href="/register">{_(".register")}</Link>
           </Message>
         </Grid.Column>
       </Grid>

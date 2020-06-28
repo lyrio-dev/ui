@@ -85,7 +85,7 @@ function parseInteractorConfig(
 }
 
 let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const interactorInterfaces: InteractorInterface[] = ["stdio", "shm"];
   const interactor = props.judgeInfo.interactor;
@@ -115,12 +115,12 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
       <MetaEditor {...props} options={metaEditorOptions} />
       <Form className={style.wrapper}>
         <div className={style.menuWrapper}>
-          <Header size="tiny" content={_("problem_judge_settings.interactor.interactor")} />
+          <Header size="tiny" content={_(".interactor.interactor")} />
           <Menu secondary pointing>
             {interactorInterfaces.map(interactorInterface => (
               <Menu.Item
                 key={interactorInterface}
-                content={_(`problem_judge_settings.interactor.interfaces.${interactorInterface}`)}
+                content={_(`.interactor.interfaces.${interactorInterface}`)}
                 active={interactor.interface === interactorInterface}
                 onClick={() =>
                   interactor.interface !== interactorInterface &&
@@ -137,8 +137,8 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
           <div className={style.custom}>
             <TestDataFileSelector
               type="FormSelect"
-              label={_("problem_judge_settings.interactor.filename")}
-              placeholder={_("problem_judge_settings.interactor.filename_no_file")}
+              label={_(".interactor.filename")}
+              placeholder={_(".interactor.filename_no_file")}
               value={interactor.filename}
               testData={props.testData}
               onChange={value => onUpdateInteractor({ filename: value })}
@@ -146,7 +146,7 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
             <Form.Group>
               <Form.Select
                 width={8}
-                label={_("problem_judge_settings.interactor.language")}
+                label={_(".interactor.language")}
                 value={interactor.language}
                 options={Object.keys(codeLanguageOptions).map(language => ({
                   key: language,
@@ -157,7 +157,7 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
               />
               {interactor.interface === "shm" && (
                 <Form.Field width={8}>
-                  <label>{_("problem_judge_settings.interactor.shm_size")}</label>
+                  <label>{_(".interactor.shm_size")}</label>
                   <Input
                     value={normalizeSharedMemorySize(interactor.sharedMemorySize)}
                     type="number"
@@ -200,7 +200,7 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
             </div>
             <Form.Group>
               <Form.Field width={8}>
-                <label>{_("problem_judge_settings.meta.time_limit")}</label>
+                <label>{_(".meta.time_limit")}</label>
                 <Input
                   className={style.labeledInput}
                   placeholder={props.judgeInfo["timeLimit"]}
@@ -216,7 +216,7 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
                 />
               </Form.Field>
               <Form.Field width={8}>
-                <label>{_("problem_judge_settings.meta.memory_limit")}</label>
+                <label>{_(".meta.memory_limit")}</label>
                 <Input
                   className={style.labeledInput}
                   placeholder={props.judgeInfo["memoryLimit"]}

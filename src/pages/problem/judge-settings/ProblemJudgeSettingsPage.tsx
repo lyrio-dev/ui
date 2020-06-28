@@ -41,13 +41,13 @@ interface ProblemJudgeSettingsPageProps {
 }
 
 let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
   const navigation = useNavigation();
 
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.enterNewPage(`${_("problem_judge_settings.title")} ${idString}`, false);
+    appState.enterNewPage(`${_(".title")} ${idString}`, false);
   }, [appState.locale]);
 
   const ProblemTypeEditorComponent = props.ProblemTypeEditorComponent;
@@ -99,14 +99,12 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
       toast.error(requestError);
     } else if (response.error) {
       if (response.error === "INVALID_JUDGE_INFO") {
-        toast.error(
-          _(`problem_judge_settings.error.INVALID_JUDGE_INFO.${response.judgeInfoError[0]}`, response.judgeInfoError)
-        );
+        toast.error(_(`.error.INVALID_JUDGE_INFO.${response.judgeInfoError[0]}`, response.judgeInfoError));
       } else {
-        toast.error(_(`problem_judge_settings.error.${response.error}`));
+        toast.error(_(`.error.${response.error}`));
       }
     } else {
-      toast.success(_("problem_judge_settings.submit_success"));
+      toast.success(_(".submit_success"));
       setModified(false);
     }
 
@@ -117,13 +115,13 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const [editRawEditorErrorMessage, setEditRawEditorErrorMessage] = useState("");
   const editRawDialog = useDialog(
     {},
-    <Header icon="code" content={_("problem_judge_settings.edit_raw.edit_raw")} />,
+    <Header icon="code" content={_(".edit_raw.edit_raw")} />,
     <>
       {editRawEditorErrorMessage && (
         <Message
           className={style.dialogMessage}
           error
-          header={_("problem_judge_settings.edit_raw.parse_error")}
+          header={_(".edit_raw.parse_error")}
           content={
             <p>
               <code>{editRawEditorErrorMessage.trimEnd()}</code>
@@ -139,10 +137,10 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
       />
     </>,
     <>
-      <Button content={_("problem_judge_settings.edit_raw.cancel")} onClick={() => editRawDialog.close()} />
+      <Button content={_(".edit_raw.cancel")} onClick={() => editRawDialog.close()} />
       <Button
         positive
-        content={_("problem_judge_settings.edit_raw.ok")}
+        content={_(".edit_raw.ok")}
         onClick={() => {
           try {
             const parsed = parseJudgeInfo(yaml.safeLoad(editRawEditorValue));
@@ -175,9 +173,9 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     if (requestError) {
       toast.error(requestError);
     } else if (response.error) {
-      toast.error(_(`problem_judge_settings.error.${response.error}`));
+      toast.error(_(`.error.${response.error}`));
     } else {
-      toast.success(_("problem_judge_settings.switch_type_success"));
+      toast.success(_(".switch_type_success"));
       navigation.refresh();
     }
 
@@ -192,25 +190,19 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           <Grid.Column width={7}>
             <div style={{ height: appState.windowHeight - 105 }} className={style.leftContainer}>
               <div className={style.header}>
-                <Header as="h1" content={_("problem_judge_settings.header") + " " + idString} />
+                <Header as="h1" content={_(".header") + " " + idString} />
                 <Popup
                   trigger={
                     <Button
                       className={style.backButton}
                       disabled={pending}
-                      content={_("problem_judge_settings.back_to_problem")}
+                      content={_(".back_to_problem")}
                       onClick={() => !modified && onBackToProblem()}
                     />
                   }
                   // It's safe to redirect if not modified, don't confirm
                   disabled={!modified}
-                  content={
-                    <Button
-                      negative
-                      content={_("problem_judge_settings.confirm_back_to_problem")}
-                      onClick={onBackToProblem}
-                    />
-                  }
+                  content={<Button negative content={_(".confirm_back_to_problem")} onClick={onBackToProblem} />}
                   on="click"
                   position="bottom center"
                 />
@@ -219,11 +211,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   primary
                   loading={pending}
                   disabled={!props.problem.permissionOfCurrentUser.MODIFY}
-                  content={
-                    props.problem.permissionOfCurrentUser.MODIFY
-                      ? _("problem_judge_settings.submit")
-                      : _("problem_judge_settings.no_submit_permission")
-                  }
+                  content={props.problem.permissionOfCurrentUser.MODIFY ? _(".submit") : _(".no_submit_permission")}
                   onClick={onSubmit}
                 />
               </div>
@@ -237,7 +225,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   className="icon labeled"
                   id={style.buttonEditRaw}
                   icon="code"
-                  content={_("problem_judge_settings.edit_raw.edit_raw")}
+                  content={_(".edit_raw.edit_raw")}
                   onClick={() => {
                     setEditRawEditorErrorMessage("");
                     setEditRawEditorValue(yaml.safeDump(normalizeJudgeInfo(judgeInfo)));
@@ -250,7 +238,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           <Grid.Column width={9}>
             <Form className={style.problemTypeForm}>
               <Form.Field inline className={style.field}>
-                <label className={style.label}>{_("problem_judge_settings.problem_type")}</label>
+                <label className={style.label}>{_(".problem_type")}</label>
                 <Dropdown
                   className={style.dropdown}
                   selection
@@ -267,12 +255,10 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                     <Button
                       disabled={pending || newType === props.problem.meta.type}
                       className={style.switchButton}
-                      content={_("problem_judge_settings.switch_type")}
+                      content={_(".switch_type")}
                     />
                   }
-                  content={
-                    <Button negative content={_("problem_judge_settings.confirm_switch_type")} onClick={onChangeType} />
-                  }
+                  content={<Button negative content={_(".confirm_switch_type")} onClick={onChangeType} />}
                   open={switchProblemPopupOpen}
                   onOpen={() => setSwitchProblemPopupOpen(true)}
                   onClose={() => setSwitchProblemPopupOpen(false)}

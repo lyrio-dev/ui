@@ -24,21 +24,21 @@ interface SubmitViewFrameProps {
 }
 
 let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem");
 
   return (
     <div className={style.submitView} style={{ display: props.inSubmitView ? null : "none" }}>
       <div className={style.leftContainer}>{props.mainContent}</div>
       <div className={style.rightContainer}>
         <Menu pointing secondary vertical className={style.actionMenu}>
-          <Menu.Item name={_("problem.submit.back_to_statement")} icon="arrow left" onClick={props.onCloseSubmitView} />
+          <Menu.Item name={_(".submit.back_to_statement")} icon="arrow left" onClick={props.onCloseSubmitView} />
           <div />
         </Menu>
         {props.sidebarContent}
         {props.showSkipSamples && (
           <Checkbox
             className={style.skipSamples}
-            label={_("problem.submit.skip_samples")}
+            label={_(".submit.skip_samples")}
             checked={(props.submissionContent as any).skipSamples}
             onChange={(e, { checked }) => props.onUpdateSubmissionContent("skipSamples", checked)}
           />
@@ -49,12 +49,12 @@ let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
           fluid
           icon="paper plane"
           loading={props.pendingSubmit}
-          content={_("problem.submit.submit")}
+          content={_(".submit.submit")}
           onClick={props.onSubmit}
         />
         {props.lastSubmission && props.lastSubmission.lastSubmission && (
           <div className={style.lastSubmission}>
-            <Header size="tiny" content={_("problem.submit.last_submission")} />
+            <Header size="tiny" content={_(".submit.last_submission")} />
             <Link href={`/submission/${props.lastSubmission.lastSubmission.id}`}>
               <StatusText status={props.lastSubmission.lastSubmission.status} />
             </Link>

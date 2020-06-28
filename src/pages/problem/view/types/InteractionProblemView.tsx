@@ -2,7 +2,6 @@ import React from "react";
 import { Icon, Label } from "semantic-ui-react";
 import { observer } from "mobx-react";
 
-import { useIntlMessage } from "@/utils/hooks";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import CodeEditor from "@/components/LazyCodeEditor";
 
@@ -15,8 +14,6 @@ import { getLimit } from "../common";
 type InteractionProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoInteraction>;
 
 const InteractionProblemLabels: React.FC<InteractionProblemLabelsProps> = React.memo(props => {
-  const _ = useIntlMessage();
-
   const timeLimit = getLimit(props.judgeInfo, "timeLimit");
   const memoryLimit = getLimit(props.judgeInfo, "memoryLimit");
 

@@ -102,7 +102,7 @@ interface LocalizedContentEditorSectionProps {
 }
 
 const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_edit");
 
   const [preview, setPreview] = useState(false);
 
@@ -116,7 +116,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
             className={style.boldInput}
             fluid
             transparent
-            placeholder={_("problem_edit.content_editor.section_title")}
+            placeholder={_(".content_editor.section_title")}
             value={props.section.sectionTitle}
             onChange={(e, { value }) => props.onChangeSectionValue("sectionTitle", value)}
           />
@@ -125,7 +125,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
           <Menu.Item>
             <Checkbox
               fitted
-              label={_("problem_edit.content_editor.preview")}
+              label={_(".content_editor.preview")}
               checked={preview || props.isPreview}
               disabled={props.isPreview}
               onChange={(e, { checked }) => setPreview(checked)}
@@ -147,7 +147,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                   text: (
                     <>
                       <Icon name="add" />
-                      {_("problem_edit.content_editor.new_sample")}
+                      {_(".content_editor.new_sample")}
                     </>
                   ),
                   value: "new",
@@ -166,7 +166,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                 text: (
                   <>
                     <Icon name="sticky note" />
-                    {_("problem_edit.content_editor.section_type.text")}
+                    {_(".content_editor.section_type.text")}
                   </>
                 ),
                 value: "TEXT",
@@ -177,7 +177,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                 text: (
                   <>
                     <Icon name="sticky note outline" />
-                    {_("problem_edit.content_editor.section_type.sample")}
+                    {_(".content_editor.section_type.sample")}
                   </>
                 ),
                 value: "SAMPLE",
@@ -189,12 +189,12 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
             <Dropdown.Menu>
               <Dropdown.Item
                 icon="arrow up"
-                text={_("problem_edit.content_editor.add_section.before_this_section")}
+                text={_(".content_editor.add_section.before_this_section")}
                 onClick={() => props.onAddSectionBefore()}
               />
               <Dropdown.Item
                 icon="arrow down"
-                text={_("problem_edit.content_editor.add_section.after_this_section")}
+                text={_(".content_editor.add_section.after_this_section")}
                 onClick={() => props.onAddSectionAfter()}
               />
             </Dropdown.Menu>
@@ -210,13 +210,13 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               <Dropdown.Item
                 disabled={props.isFirst}
                 icon="angle double up"
-                text={_("problem_edit.content_editor.section_options.move_up")}
+                text={_(".content_editor.section_options.move_up")}
                 onClick={() => props.onMoveSectionUp()}
               />
               <Dropdown.Item
                 disabled={props.isLast}
                 icon="angle double down"
-                text={_("problem_edit.content_editor.section_options.move_down")}
+                text={_(".content_editor.section_options.move_down")}
                 onClick={() => props.onMoveSectionDown()}
               />
               <Popup
@@ -224,14 +224,14 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                   <Dropdown.Item
                     disabled={props.isFirst && props.isLast}
                     icon="delete"
-                    text={_("problem_edit.content_editor.section_options.delete")}
+                    text={_(".content_editor.section_options.delete")}
                   />
                 }
                 context={refOptionsButton}
                 content={
                   <Button
                     color="red"
-                    content={_("problem_edit.content_editor.section_options.confirm_delete")}
+                    content={_(".content_editor.section_options.confirm_delete")}
                     onClick={() => props.onDeleteSection()}
                   />
                 }
@@ -251,7 +251,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                   <TextArea
                     rows={4}
                     value={props.samples[props.section.sampleId].inputData}
-                    placeholder={_("problem_edit.content_editor.sample_input")}
+                    placeholder={_(".content_editor.sample_input")}
                     onChange={(e, { value }) =>
                       props.onChangeSampleData(props.section.sampleId, "inputData", value as string)
                     }
@@ -263,7 +263,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                   <TextArea
                     rows={4}
                     value={props.samples[props.section.sampleId].outputData}
-                    placeholder={_("problem_edit.content_editor.sample_output")}
+                    placeholder={_(".content_editor.sample_output")}
                     onChange={(e, { value }) =>
                       props.onChangeSampleData(props.section.sampleId, "outputData", value as string)
                     }
@@ -282,7 +282,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                       minRows={4}
                       maxRows={16}
                       value={props.section.text}
-                      placeholder={_("problem_edit.content_editor.sample_explanation")}
+                      placeholder={_(".content_editor.sample_explanation")}
                       onChange={(e, { value }) => props.onChangeSectionValue("text", value as string)}
                     />
                   </Form>
@@ -299,7 +299,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               minRows={4}
               maxRows={16}
               value={props.section.text}
-              placeholder={_("problem_edit.content_editor.section_content")}
+              placeholder={_(".content_editor.section_content")}
               onChange={(e, { value }) => props.onChangeSectionValue("text", value as string)}
             />
           </Form>
@@ -331,7 +331,7 @@ interface LocalizedContentEditorProps {
 }
 
 const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_edit");
 
   const [preview, setPreview] = useState(false);
 
@@ -348,7 +348,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
             className={style.boldInput}
             fluid
             transparent
-            placeholder={_("problem_edit.content_editor.title")}
+            placeholder={_(".content_editor.title")}
             value={props.localizedContent.title}
             onChange={(e, { value }) => props.onChangeTitle(value)}
           />
@@ -356,7 +356,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
         <Menu.Menu position="right">
           <Menu.Item>
             <Checkbox
-              label={_("problem_edit.content_editor.preview_all")}
+              label={_(".content_editor.preview_all")}
               checked={preview}
               onChange={(e, { checked }) => setPreview(checked)}
             />
@@ -365,7 +365,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
             <>
               <Menu.Item>
                 <Radio
-                  label={_("problem_edit.content_editor.default")}
+                  label={_(".content_editor.default")}
                   checked={props.isDefault}
                   onChange={(e, { checked }) => checked && props.onMakeDefault()}
                 />
@@ -388,7 +388,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
             content={
               <Button
                 color="green"
-                content={_("problem_edit.content_editor.confirm_apply_template")}
+                content={_(".content_editor.confirm_apply_template")}
                 onClick={() => {
                   setApplyTemplatePopupOpen(false);
                   props.onApplyTemplate();
@@ -403,11 +403,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
               <Popup
                 trigger={<Menu.Item as="a" icon="delete" className={style.toolbarMenuIconItem} />}
                 content={
-                  <Button
-                    color="red"
-                    content={_("problem_edit.content_editor.confirm_delete")}
-                    onClick={() => props.onDelete()}
-                  />
+                  <Button color="red" content={_(".content_editor.confirm_delete")} onClick={() => props.onDelete()} />
                 }
                 on="click"
                 position="top right"
@@ -459,7 +455,7 @@ interface SampleEditorProps {
 }
 
 const SampleEditor: React.FC<SampleEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_edit");
 
   const refOptionsButton = useRef(null);
 
@@ -471,7 +467,7 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
             className={style.boldInput}
             fluid
             transparent
-            placeholder={_("problem_edit.sample_editor.sample_id")}
+            placeholder={_(".sample_editor.sample_id")}
             value={props.sampleId == null ? "" : props.sampleId + 1}
             readOnly
           />
@@ -486,10 +482,10 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
                   {props.warningMessage.map((warningMessage, index) => (
                     <List.Item key={index}>
                       {warningMessage.referenceCount === 0
-                        ? _("problem_edit.sample_editor.warning.not_referenced", {
+                        ? _(".sample_editor.warning.not_referenced", {
                             language: localeMeta[warningMessage.locale].name
                           })
-                        : _("problem_edit.sample_editor.warning.multiple_references", {
+                        : _(".sample_editor.warning.multiple_references", {
                             language: localeMeta[warningMessage.locale].name,
                             referenceCount: warningMessage.referenceCount.toString()
                           })}
@@ -503,12 +499,12 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
             <Dropdown.Menu>
               <Dropdown.Item
                 icon="arrow up"
-                text={_("problem_edit.sample_editor.add_sample.before_this_sample")}
+                text={_(".sample_editor.add_sample.before_this_sample")}
                 onClick={() => props.onAddSampleBefore()}
               />
               <Dropdown.Item
                 icon="arrow down"
-                text={_("problem_edit.sample_editor.add_sample.after_this_sample")}
+                text={_(".sample_editor.add_sample.after_this_sample")}
                 onClick={() => props.onAddSampleAfter()}
               />
             </Dropdown.Menu>
@@ -524,22 +520,22 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
               <Dropdown.Item
                 disabled={props.isFirst}
                 icon="angle double up"
-                text={_("problem_edit.sample_editor.options.move_up")}
+                text={_(".sample_editor.options.move_up")}
                 onClick={() => props.onMoveSampleUp()}
               />
               <Dropdown.Item
                 disabled={props.isLast}
                 icon="angle double down"
-                text={_("problem_edit.sample_editor.options.move_down")}
+                text={_(".sample_editor.options.move_down")}
                 onClick={() => props.onMoveSampleDown()}
               />
               <Popup
-                trigger={<Dropdown.Item icon="delete" text={_("problem_edit.sample_editor.options.delete")} />}
+                trigger={<Dropdown.Item icon="delete" text={_(".sample_editor.options.delete")} />}
                 context={refOptionsButton}
                 content={
                   <Button
                     color="red"
-                    content={_("problem_edit.sample_editor.options.confirm_delete")}
+                    content={_(".sample_editor.options.confirm_delete")}
                     onClick={() => props.onDeleteSample()}
                   />
                 }
@@ -558,7 +554,7 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
                 <TextArea
                   rows={4}
                   value={props.sample ? props.sample.inputData : ""}
-                  placeholder={_("problem_edit.content_editor.sample_input")}
+                  placeholder={_(".content_editor.sample_input")}
                   onChange={(e, { value }) => props.onChangeSampleData("inputData", value as string)}
                 />
               </Form>
@@ -568,7 +564,7 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
                 <TextArea
                   rows={4}
                   value={props.sample ? props.sample.outputData : ""}
-                  placeholder={_("problem_edit.content_editor.sample_output")}
+                  placeholder={_(".content_editor.sample_output")}
                   onChange={(e, { value }) => props.onChangeSampleData("outputData", value as string)}
                 />
               </Form>
@@ -692,17 +688,14 @@ interface ProblemEditPageProps {
 }
 
 let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_edit");
   const navigation = useNavigation();
 
   const idString =
     !props.new && (props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`);
 
   useEffect(() => {
-    appState.enterNewPage(
-      props.new ? `${_("problem_edit.title_new")}` : `${_("problem_edit.title_edit")} ${idString}`,
-      false
-    );
+    appState.enterNewPage(props.new ? `${_(".title_new")}` : `${_(".title_edit")} ${idString}`, false);
   }, [appState.locale]);
 
   const [localizedContents, setLocalizedContents] = useState(
@@ -790,7 +783,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
       if (requestError) toast.error(requestError);
       else if (response.error) {
-        toast.error(_(`problem_edit.error.${response.error}`));
+        toast.error(_(`.error.${response.error}`));
       } else {
         navigation.navigate(`/problem/by-id/${response.id}`);
       }
@@ -804,9 +797,9 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
       if (requestError) toast.error(requestError);
       else if (response.error) {
-        toast.error(_(`problem_edit.error.${response.error}`));
+        toast.error(_(`.error.${response.error}`));
       } else {
-        toast.success(_("problem_edit.submit_success"));
+        toast.success(_(".submit_success"));
         setModified(false);
       }
     }
@@ -1211,14 +1204,14 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         <Grid.Row>
           <Grid.Column width={11}>
             <Header as="h1" className={style.headerContainer}>
-              {props.new ? `${_("problem_edit.header_new")}` : `${_("problem_edit.header_edit", { idString })}`}
+              {props.new ? `${_(".header_new")}` : `${_(".header_edit", { idString })}`}
               {props.new && (
                 <Menu compact className={style.typeDropdown}>
                   <Dropdown
                     item
                     value={newProblemType}
                     options={Object.values(ProblemType).map(type => ({
-                      text: _(`problem.type.${type}`),
+                      text: _(`.type.${type}`),
                       value: type,
                       key: type
                     }))}
@@ -1231,26 +1224,24 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                   <Button
                     className={style.backButton}
                     disabled={pendingSubmit}
-                    content={_("problem_edit.back_to_problem")}
+                    content={_(".back_to_problem")}
                     onClick={() => !modified && onBackToProblem()}
                   />
                 }
                 // It's safe to redirect if not modified, don't confirm
                 disabled={!modified}
-                content={
-                  <Button negative content={_("problem_edit.confirm_back_to_problem")} onClick={onBackToProblem} />
-                }
+                content={<Button negative content={_(".confirm_back_to_problem")} onClick={onBackToProblem} />}
                 on="click"
                 position="bottom center"
               />
               <Button primary disabled={!haveSubmitPermission} loading={pendingSubmit} onClick={onSubmit}>
-                {haveSubmitPermission ? _("problem_edit.submit") : _("problem_edit.no_submit_permission")}
+                {haveSubmitPermission ? _(".submit") : _(".no_submit_permission")}
               </Button>
             </Header>
           </Grid.Column>
           <Grid.Column width={5}>
             <Header as="h1">
-              <strong>{_("problem_edit.header_samples")}</strong>
+              <strong>{_(".header_samples")}</strong>
             </Header>
           </Grid.Column>
         </Grid.Row>
@@ -1351,7 +1342,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 />
                 <Dimmer active={true} inverted>
                   <Button primary onClick={() => onAddSample()}>
-                    {_("problem_edit.sample_editor.add_sample_when_empty")}
+                    {_(".sample_editor.add_sample_when_empty")}
                   </Button>
                 </Dimmer>
               </Dimmer.Dimmable>
@@ -1383,16 +1374,16 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
               ))
             )}
             <Header as="h1">
-              <strong>{_("problem_edit.header_tags")}</strong>
+              <strong>{_(".header_tags")}</strong>
             </Header>
             <Dropdown
               search={searchTags}
               fluid
               multiple
               value={tagIds}
-              placeholder={_("problem_edit.tags_placeholder")}
+              placeholder={_(".tags_placeholder")}
               selection
-              noResultsMessage={_("problem_edit.no_addable_tags")}
+              noResultsMessage={_(".no_addable_tags")}
               onChange={(e, { value }: { value: number[] }) => {
                 if (value.length <= 20) {
                   setModified(true);

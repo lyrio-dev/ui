@@ -61,7 +61,7 @@ export interface PermissionManagerProps {
 }
 
 let PermissionManager: React.FC<PermissionManagerProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("components.permission_manager");
 
   const defaultPermissionLevel = Number(Object.keys(props.permissionsLevelDetails)[0]);
 
@@ -257,7 +257,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     } else if (response.error) {
       toast.error(
         _(
-          `components.permission_manager.submit_error.${response.error}`,
+          `.submit_error.${response.error}`,
           !response.errorObjectId
             ? null
             : {
@@ -294,7 +294,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         className={style.dialogHeader}
         content={
           <>
-            {_("components.permission_manager.header")}
+            {_(".header")}
             {!isMobile && <div className={style.dialogHeaderInfo}>{props.objectDescription}</div>}
           </>
         }
@@ -302,12 +302,12 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     ),
     () => (
       <>
-        <Header as="h4">{_("components.permission_manager.permission_for_users")}</Header>
+        <Header as="h4">{_(".permission_for_users")}</Header>
         <Table fixed unstackable>
           <Table.Body>
             <Table.Row>
               {getUsernameAndEmailColumns(permissions.owner)}
-              <Table.Cell width={isMobile ? 6 : 4}>{_("components.permission_manager.owner")}</Table.Cell>
+              <Table.Cell width={isMobile ? 6 : 4}>{_(".owner")}</Table.Cell>
               <Table.Cell width={2} textAlign="right">
                 <Icon disabled name="delete" />
               </Table.Cell>
@@ -339,7 +339,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
               <Table.Row>
                 <Table.HeaderCell colSpan={4} className={style.columnDropdown}>
                   <TableCellSearchDropdown
-                    placeholder={_("components.permission_manager.search_users")}
+                    placeholder={_(".search_users")}
                     onSearch={onSearchUser}
                     onSelect={user => addUser(user)}
                   />
@@ -348,13 +348,13 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
             </Table.Footer>
           )}
         </Table>
-        <Header as="h4">{_("components.permission_manager.permission_for_groups")}</Header>
+        <Header as="h4">{_(".permission_for_groups")}</Header>
         <Table compact fixed unstackable>
           <Table.Body>
             {permissions.groupPermissions.length === 0 ? (
               <Table.Row>
                 <Table.HeaderCell colSpan={3} textAlign="center" className={style.noGroupGranted}>
-                  {_("components.permission_manager.no_group_granted")}
+                  {_(".no_group_granted")}
                 </Table.HeaderCell>
               </Table.Row>
             ) : (
@@ -389,7 +389,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
               <Table.Row>
                 <Table.HeaderCell colSpan={3} className={style.columnDropdown}>
                   <TableCellSearchDropdown
-                    placeholder={_("components.permission_manager.search_groups")}
+                    placeholder={_(".search_groups")}
                     onSearch={onSearchGroup}
                     onSelect={group => addGroup(group)}
                   />
@@ -403,28 +403,16 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     () => (
       <>
         <Popup
-          trigger={
-            <Button
-              content={_("components.permission_manager.cancel")}
-              disabled={pendingSubmit}
-              onClick={() => !modified && onClose()}
-            />
-          }
+          trigger={<Button content={_(".cancel")} disabled={pendingSubmit} onClick={() => !modified && onClose()} />}
           // It's safe to close if not modified, don't confirm
           disabled={!modified}
-          content={
-            <Button negative content={_("components.permission_manager.confirm_cancel")} onClick={() => onClose()} />
-          }
+          content={<Button negative content={_(".confirm_cancel")} onClick={() => onClose()} />}
           on="click"
           position="top center"
         />
         <Button
           positive
-          content={
-            props.haveSubmitPermission
-              ? _("components.permission_manager.submit")
-              : _("components.permission_manager.no_submit_permission")
-          }
+          content={props.haveSubmitPermission ? _(".submit") : _(".no_submit_permission")}
           loading={pendingSubmit}
           disabled={!props.haveSubmitPermission}
           onClick={() => onSubmit()}

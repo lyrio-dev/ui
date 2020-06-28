@@ -36,7 +36,7 @@ interface TagProps {
 }
 
 const Tag: React.FC<TagProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_tag_manager");
 
   // Prevent the clicks on delete icon or delete icon's popup trigger an click event on the label
   const refClickDisabled = useRef(false);
@@ -75,7 +75,7 @@ const Tag: React.FC<TagProps> = props => {
               content={
                 <Button
                   negative
-                  content={_("problem_tag_manager.confirm_delete_tag")}
+                  content={_(".confirm_delete_tag")}
                   loading={props.disabled}
                   onClick={() => {
                     refClickDisabled.current = true;
@@ -101,7 +101,7 @@ const Tag: React.FC<TagProps> = props => {
       content={
         <Button
           negative
-          content={_("problem_tag_manager.confirm_discard_unsaved")}
+          content={_(".confirm_discard_unsaved")}
           onClick={() => {
             if (props.editing) return;
             props.onEdit();
@@ -120,7 +120,7 @@ interface ProblemTagManagerProps {
 }
 
 let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_tag_manager");
 
   const [modified, setModified] = useState(false);
   useConfirmUnload(() => modified);
@@ -162,7 +162,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
       id: tagId
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(`problem_tag_manager.error.${response.error}`);
+    else if (response.error) toast.error(`.error.${response.error}`);
     else {
       const newTags = Object.assign({}, tags);
       delete newTags[tagId];
@@ -203,7 +203,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         localizedNames: localizedNames
       });
       if (requestError) toast.error(requestError);
-      else if (response.error) toast.error(`problem_tag_manager.error.${response.error}`);
+      else if (response.error) toast.error(`.error.${response.error}`);
       else {
         setTags(
           Object.assign({}, tags, {
@@ -214,7 +214,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
             }
           })
         );
-        toast.success(_("problem_tag_manager.success_create"));
+        toast.success(_(".success_create"));
         setModified(false);
         initNewTag();
       }
@@ -225,7 +225,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         localizedNames: localizedNames
       });
       if (requestError) toast.error(requestError);
-      else if (response.error) toast.error(`problem_tag_manager.error.${response.error}`);
+      else if (response.error) toast.error(`.error.${response.error}`);
       else {
         setTags(
           Object.assign({}, tags, {
@@ -236,7 +236,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
             }
           })
         );
-        toast.success(_("problem_tag_manager.success_update"));
+        toast.success(_(".success_update"));
         setModified(false);
       }
     }
@@ -342,17 +342,15 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
       icon="tag"
       content={
         <>
-          {_("problem_tag_manager.title")}
-          <div className={style.dialogHeaderInfo}>
-            {_("problem_tag_manager.tag_count", { count: tagsCount.toString() })}
-          </div>
+          {_(".title")}
+          <div className={style.dialogHeaderInfo}>{_(".tag_count", { count: tagsCount.toString() })}</div>
         </>
       }
     />,
     <>
       <div className={style.tagsSegment + (tagsCount === 0 ? " " + style.noTags : "")}>
         {tagsCount === 0 ? (
-          <div>{_("problem_tag_manager.no_tags")}</div>
+          <div>{_(".no_tags")}</div>
         ) : (
           Object.entries(tagsByColor).map(([color, tagIDs]) => <p key={color}>{tagIDs.map(i => getTagLabel(i))}</p>)
         )}
@@ -363,10 +361,10 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
             className={style.header}
             content={
               editingTagId == null ? (
-                _("problem_tag_manager.new_tag")
+                _(".new_tag")
               ) : (
                 <>
-                  {_("problem_tag_manager.edit_tag")}
+                  {_(".edit_tag")}
                   {getTagLabel(editingTagId)}
                 </>
               )
@@ -413,7 +411,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
           <Menu.Item className={style.itemName}>
             <Input
               transparent
-              placeholder={_("problem_tag_manager.name_placeholder")}
+              placeholder={_(".name_placeholder")}
               value={editingTagLocalizedNames[locale]}
               onChange={(e, { value }) => onChangeName(locale, value)}
             />
@@ -425,18 +423,14 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
                   disabled={pending}
                   checked={editingTagDefaultLocale === locale}
                   onChange={(e, { checked }) => checked && onSetDefaultLocale(locale)}
-                  label={_("problem_tag_manager.default_language")}
+                  label={_(".default_language")}
                 />
               </Menu.Item>
               <Popup
                 trigger={<Menu.Item as="a" icon="delete" className={style.itemIcon} disabled={pending} />}
                 disabled={pending}
                 content={
-                  <Button
-                    negative
-                    content={_("problem_tag_manager.confirm_delete_language")}
-                    onClick={() => onDeleteLocale(locale)}
-                  />
+                  <Button negative content={_(".confirm_delete_language")} onClick={() => onDeleteLocale(locale)} />
                 }
                 on="click"
                 position="bottom center"
@@ -446,10 +440,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         </Menu>
       ))}
       <div className={style.divAddLanguageAndSubmit}>
-        <Dropdown
-          disabled={existingLocales.length === Object.keys(localeMeta).length}
-          text={_("problem_tag_manager.add_language")}
-        >
+        <Dropdown disabled={existingLocales.length === Object.keys(localeMeta).length} text={_(".add_language")}>
           <Dropdown.Menu>
             {Object.values(Locale)
               .filter(locale => !existingLocales.includes(locale))
@@ -469,14 +460,12 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
               <Button
                 className={style.addButton}
                 positive
-                content={_("problem_tag_manager.new_tag_button")}
+                content={_(".new_tag_button")}
                 onClick={() => !modified && onNewTag()}
               />
             }
             disabled={!modified}
-            content={
-              <Button negative content={_("problem_tag_manager.confirm_discard_unsaved")} onClick={() => onNewTag()} />
-            }
+            content={<Button negative content={_(".confirm_discard_unsaved")} onClick={() => onNewTag()} />}
             position="bottom center"
             on="click"
           />
@@ -486,7 +475,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
           primary
           loading={pendingSubmit}
           disabled={pending}
-          content={_("problem_tag_manager.submit")}
+          content={_(".submit")}
           onClick={() => !pending && onSubmit()}
         />
       </div>
@@ -496,7 +485,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         trigger={
           <Button
             className={style.closeButton}
-            content={_("problem_tag_manager.close")}
+            content={_(".close")}
             onClick={() => {
               if (pending) return;
               if (!modified) {
@@ -510,7 +499,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         content={
           <Button
             negative
-            content={_("problem_tag_manager.confirm_discard_unsaved")}
+            content={_(".confirm_discard_unsaved")}
             onClick={() => {
               if (pending) return;
               setModified(false);
@@ -533,7 +522,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
     setPendingOpen(true);
 
     const { requestError, response } = await ProblemApi.getAllProblemTagsOfAllLocales({});
-    if (requestError || response.error) toast.error(requestError || _(`problem_tag_manager.error.${response.error}`));
+    if (requestError || response.error) toast.error(requestError || _(`.error.${response.error}`));
 
     setPendingOpen(false);
 

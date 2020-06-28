@@ -27,7 +27,7 @@ interface MetaEditorOptions {
 type MetaEditorProps = EditorComponentProps<JudgeInfoWithMeta, MetaEditorOptions>;
 
 let MetaEditor: React.FC<MetaEditorProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem_judge_settings");
 
   const judgeInfo = props.judgeInfo;
 
@@ -37,7 +37,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
         {props.options.enableTimeMemoryLimit && (
           <Form.Group>
             <Form.Field width={8}>
-              <label>{_("problem_judge_settings.meta.time_limit")}</label>
+              <label>{_(".meta.time_limit")}</label>
               <Input
                 className={style.labeledInput}
                 value={judgeInfo.timeLimit == null ? "" : judgeInfo.timeLimit}
@@ -52,7 +52,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
               />
             </Form.Field>
             <Form.Field width={8}>
-              <label>{_("problem_judge_settings.meta.memory_limit")}</label>
+              <label>{_(".meta.memory_limit")}</label>
               <Input
                 className={style.labeledInput}
                 value={judgeInfo.memoryLimit == null ? "" : judgeInfo.memoryLimit}
@@ -71,7 +71,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
         {props.options.enableFileIo && judgeInfo.fileIo && (
           <Form.Group>
             <Form.Field width={8}>
-              <label>{_("problem_judge_settings.meta.input_file")}</label>
+              <label>{_(".meta.input_file")}</label>
               <Input
                 value={judgeInfo.fileIo.inputFilename}
                 readOnly={!judgeInfo.fileIo}
@@ -85,7 +85,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
               />
             </Form.Field>
             <Form.Field width={8}>
-              <label>{_("problem_judge_settings.meta.output_file")}</label>
+              <label>{_(".meta.output_file")}</label>
               <Input
                 value={judgeInfo.fileIo.outputFilename}
                 readOnly={!judgeInfo.fileIo}
@@ -105,7 +105,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
             {props.options.enableFileIo && (
               <Form.Checkbox
                 width={8}
-                label={_("problem_judge_settings.meta.use_standard_io")}
+                label={_(".meta.use_standard_io")}
                 checked={!judgeInfo.fileIo}
                 onChange={(e, { checked }) =>
                   props.onUpdateJudgeInfo({ fileIo: checked ? null : { inputFilename: "", outputFilename: "" } })
@@ -115,7 +115,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
             {props.options.enableRunSamples && (
               <Form.Checkbox
                 width={8}
-                label={_("problem_judge_settings.meta.run_samples")}
+                label={_(".meta.run_samples")}
                 checked={judgeInfo.runSamples}
                 onChange={(e, { checked }) => props.onUpdateJudgeInfo({ runSamples: checked })}
               />

@@ -36,12 +36,12 @@ interface ProfileViewProps {
 }
 
 const ProfileView: React.FC<ProfileViewProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user_edit.profile");
 
   const [titleUsername, setTitleUsername] = useState(props.meta.username);
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`user_edit.profile.title`)} - ${titleUsername}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${titleUsername}`, false);
   }, [appState.locale, titleUsername]);
 
   const [username, setUsername] = useState(props.meta.username);
@@ -124,7 +124,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     setPending(true);
 
     if (urlInvalid) {
-      toast.error(_("user_edit.profile.error_invalid_url"));
+      toast.error(_(".error_invalid_url"));
     } else {
       const { requestError, response } = await UserApi.updateUserProfile({
         userId: props.meta.id,
@@ -166,7 +166,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   return (
     <div className={style.profileContainer}>
       <div className={style.profileMain}>
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.username")} />
+        <Header className={style.header} size="tiny" content={_(".username")} />
         <Input
           readOnly={!(hasPrivilege || allowUserChangeUsername)}
           fluid
@@ -174,112 +174,102 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           onChange={(e, { value }) => !pending && setUsername(value)}
         />
         {!(allowUserChangeUsername && props.meta.id === appState.currentUser.id) && (
-          <div className={style.notes}>
-            {_(!hasPrivilege ? "user_edit.profile.username_notes" : "user_edit.profile.username_notes_admin")}
-          </div>
+          <div className={style.notes}>{_(!hasPrivilege ? ".username_notes" : ".username_notes_admin")}</div>
         )}
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.email")} />
+        <Header className={style.header} size="tiny" content={_(".email")} />
         <Input readOnly={!hasPrivilege} fluid value={email} onChange={(e, { value }) => !pending && setEmail(value)} />
         <Checkbox
           className={style.checkbox}
           checked={publicEmail}
-          label={_("user_edit.profile.public_email")}
+          label={_(".public_email")}
           onChange={(e, { checked }) => !pending && setPublicEmail(checked)}
         />
-        <div className={style.notes}>
-          {_(!hasPrivilege ? "user_edit.profile.email_notes" : "user_edit.profile.email_notes_admin")}
-        </div>
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.bio")} />
+        <div className={style.notes}>{_(!hasPrivilege ? ".email_notes" : ".email_notes_admin")}</div>
+        <Header className={style.header} size="tiny" content={_(".bio")} />
         <Form>
           <TextArea
             className={style.textarea}
-            placeholder={_("user_edit.profile.bio_placeholder")}
+            placeholder={_(".bio_placeholder")}
             value={bio}
             onChange={(e, { value }) => (value as string).length <= 190 && !pending && setBio(value as string)}
           />
         </Form>
         {bio.length >= 190 - 10 && <div className={style.notes}>{bio.length}/190</div>}
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.organization")} />
+        <Header className={style.header} size="tiny" content={_(".organization")} />
         <Input
           fluid
-          placeholder={_("user_edit.profile.organization_placeholder")}
+          placeholder={_(".organization_placeholder")}
           value={organization}
           onChange={(e, { value }) => value.length < 80 && !pending && setOrganization(value)}
         />
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.location")} />
+        <Header className={style.header} size="tiny" content={_(".location")} />
         <Input
           fluid
-          placeholder={_("user_edit.profile.location_placeholder")}
+          placeholder={_(".location_placeholder")}
           value={location}
           onChange={(e, { value }) => value.length < 80 && !pending && setLocation(value)}
         />
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.url")} />
+        <Header className={style.header} size="tiny" content={_(".url")} />
         <Input
           fluid
-          placeholder={_("user_edit.profile.url_placeholder")}
+          placeholder={_(".url_placeholder")}
           value={url}
           error={urlInvalid}
           onBlur={checkUrl}
           onChange={(e, { value }) => value.length < 80 && !pending && setUrl(value.trim())}
         />
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.qq")} />
+        <Header className={style.header} size="tiny" content={_(".qq")} />
         <Input
           fluid
-          placeholder={_("user_edit.profile.qq_placeholder")}
+          placeholder={_(".qq_placeholder")}
           value={qq}
           onChange={(e, { value }) => value.length < 30 && !pending && setQq(value.trim())}
         />
         {qq && (
           <div className={style.notes}>
             <Icon name="qq" />
-            {_("user_edit.profile.qq_notes")}
+            {_(".qq_notes")}
             <a href={`https://wpa.qq.com/msgrd?V=3&Uin=${qq}`} target="_blank">
               https://wpa.qq.com/msgrd?V=3&Uin={qq}
             </a>
           </div>
         )}
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.telegram")} />
+        <Header className={style.header} size="tiny" content={_(".telegram")} />
         <Input
           fluid
-          placeholder={_("user_edit.profile.telegram_placeholder")}
+          placeholder={_(".telegram_placeholder")}
           value={telegram}
           onChange={(e, { value }) => value.length < 30 && !pending && setTelegram(value.trim())}
         />
         {telegram && (
           <div className={style.notes}>
             <Icon name="telegram" />
-            {_("user_edit.profile.telegram_notes")}
+            {_(".telegram_notes")}
             <a href={`https://t.me/${telegram}`} target="_blank">
               https://t.me/{telegram}
             </a>
           </div>
         )}
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.github")} />
+        <Header className={style.header} size="tiny" content={_(".github")} />
         <Input
           fluid
-          placeholder={_("user_edit.profile.github_placeholder")}
+          placeholder={_(".github_placeholder")}
           value={github}
           onChange={(e, { value }) => value.length < 30 && !pending && setGithub(value.trim())}
         />
         {github && (
           <div className={style.notes}>
             <Icon name="github" />
-            {_("user_edit.profile.github_notes")}
+            {_(".github_notes")}
             <a href={`https://github.com/${github}`} target="_blank">
               https://github.com/{github}
             </a>
           </div>
         )}
-        <Button
-          className={style.submit}
-          loading={pending}
-          primary
-          content={_("user_edit.profile.submit")}
-          onClick={onSubmit}
-        />
+        <Button className={style.submit} loading={pending} primary content={_(".submit")} onClick={onSubmit} />
       </div>
       <div className={style.profileAvatar}>
-        <Header className={style.header} size="tiny" content={_("user_edit.profile.avatar.header")} />
+        <Header className={style.header} size="tiny" content={_(".avatar.header")} />
         <UserAvatar
           userAvatar={avatar}
           placeholder={!avatar.key}
@@ -292,21 +282,21 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             <Radio
               checked={avatarType === AvatarType.Gravatar}
               onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.Gravatar)}
-              label={_("user_edit.profile.avatar.gravatar.name")}
+              label={_(".avatar.gravatar.name")}
             />
           </List.Item>
           <List.Item>
             <Radio
               checked={avatarType === AvatarType.QQ}
               onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.QQ)}
-              label={_("user_edit.profile.avatar.qq.name")}
+              label={_(".avatar.qq.name")}
             />
           </List.Item>
           <List.Item>
             <Radio
               checked={avatarType === AvatarType.GitHub}
               onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.GitHub)}
-              label={_("user_edit.profile.avatar.github.name")}
+              label={_(".avatar.github.name")}
             />
           </List.Item>
         </List>
@@ -317,8 +307,8 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             avatarType === AvatarType.Gravatar
               ? email
               : avatarType === AvatarType.GitHub
-              ? _("user_edit.profile.avatar.github.placeholder")
-              : _("user_edit.profile.avatar.qq.placeholder")
+              ? _(".avatar.github.placeholder")
+              : _(".avatar.qq.placeholder")
           }
           error={avatarError}
           value={avatarKeyValue}
@@ -334,7 +324,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
         {avatarError && (
           <div className={style.notes}>
             <Icon name="warning sign" />
-            {_("user_edit.profile.avatar.error")}
+            {_(".avatar.error")}
           </div>
         )}
       </div>

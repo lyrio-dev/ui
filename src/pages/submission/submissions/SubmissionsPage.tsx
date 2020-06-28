@@ -77,15 +77,15 @@ interface SubmissionsPageProps {
 }
 
 let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submissions");
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(_("submissions.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   useEffect(() => {
-    if (props.queryResult.error) toast.error(_(`submissions.query_error.${props.queryResult.error}`));
+    if (props.queryResult.error) toast.error(_(`.query_error.${props.queryResult.error}`));
   }, []);
 
   const [queryProblemId, setQueryProblemId] = useState(
@@ -111,9 +111,8 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   const [queryStatus, setQueryStatus] = useState(props.query.status);
 
   function onFilter(filterMySubmissions: boolean) {
-    if (!checkQueryProblemId()) return toast.error(_("submissions.query_error.INVALID_PROBLEM_ID"));
-    else if (!filterMySubmissions && !checkQuerySubmitter())
-      return toast.error(_("submissions.query_error.INVALID_USERNAME"));
+    if (!checkQueryProblemId()) return toast.error(_(".query_error.INVALID_PROBLEM_ID"));
+    else if (!filterMySubmissions && !checkQuerySubmitter()) return toast.error(_(".query_error.INVALID_USERNAME"));
 
     const query: Partial<SubmissionsQuery> = {};
     if (queryProblemId && queryProblemId.toUpperCase().startsWith("P"))
@@ -211,7 +210,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             className={style.queryInputProblemId}
             icon="hashtag"
             iconPosition="left"
-            placeholder={_("submissions.query.problem_id")}
+            placeholder={_(".query.problem_id")}
             value={queryProblemId}
             onChange={(e, { value }) => setQueryProblemId(value)}
             onBlur={checkQueryProblemId}
@@ -221,7 +220,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             className={style.queryInputSubmitter}
             icon="user"
             iconPosition="left"
-            placeholder={_("submissions.query.submitter")}
+            placeholder={_(".query.submitter")}
             value={querySubmitter}
             onChange={(e, { value }) => setQuerySubmitter(value)}
             onBlur={checkQuerySubmitter}
@@ -240,8 +239,8 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
                 text: (
                   <>
                     <Icon name="code" />
-                    <span className={style.notInMenu}>{_("submissions.query.code_language")}</span>
-                    <span className={style.inMenu}>{_("submissions.query.code_language_all")}</span>
+                    <span className={style.notInMenu}>{_(".query.code_language")}</span>
+                    <span className={style.inMenu}>{_(".query.code_language_all")}</span>
                   </>
                 )
               },
@@ -268,8 +267,8 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
                 text: (
                   <>
                     <Icon name="question" />
-                    <span className={style.notInMenu}>{_("submissions.query.status")}</span>
-                    <span className={style.inMenu}>{_("submissions.query.status_all")}</span>
+                    <span className={style.notInMenu}>{_(".query.status")}</span>
+                    <span className={style.inMenu}>{_(".query.status_all")}</span>
                   </>
                 )
               },
@@ -283,7 +282,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
           <Button
             className={isWideScreen ? "labeled icon" : null}
             icon="search"
-            content={isWideScreen ? _("submissions.query.filter") : null}
+            content={isWideScreen ? _(".query.filter") : null}
             onClick={() => onFilter(false)}
           />
           {appState.currentUser && (
@@ -291,7 +290,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
               className={(isWideScreen ? "labeled icon " : "") + style.mySubmissions}
               primary
               icon="user"
-              content={isWideScreen ? _("submissions.query.my_submissions") : null}
+              content={isWideScreen ? _(".query.my_submissions") : null}
               onClick={() => onFilter(true)}
             />
           )}
@@ -303,18 +302,18 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             {Object.values(props.query).some(x => x) ? (
               <>
                 <Icon name="search" />
-                {_("submissions.empty.message_filtered")}
+                {_(".empty.message_filtered")}
               </>
             ) : (
               <>
                 <Icon name="file" />
-                {_("submissions.empty.message_not_filtered")}
+                {_(".empty.message_not_filtered")}
               </>
             )}
           </Header>
           <Segment.Inline>
             <Button primary onClick={() => navigation.goBack()}>
-              {_("submissions.empty.goback")}
+              {_(".empty.goback")}
             </Button>
           </Segment.Inline>
         </Segment>

@@ -39,7 +39,7 @@ type TraditionalProblemSubmissionViewProps = ProblemTypeSubmissionViewProps<
 >;
 
 const TraditionalProblemSubmissionView: React.FC<TraditionalProblemSubmissionViewProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission_statistics");
 
   return (
     <>
@@ -51,7 +51,7 @@ const TraditionalProblemSubmissionView: React.FC<TraditionalProblemSubmissionVie
       {props.getCompilationMessage()}
       {props.getSystemMessage()}
       {props.getSubtasksView(testcaseResult => (
-        <CodeBox title={_("submission.testcase.checker_message")} content={testcaseResult.checkerMessage} />
+        <CodeBox title={_(".testcase.checker_message")} content={testcaseResult.checkerMessage} />
       ))}
     </>
   );

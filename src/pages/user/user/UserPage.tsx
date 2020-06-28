@@ -43,14 +43,14 @@ interface SubwayGraphProps {
 }
 
 const SubwayGraph: React.FC<SubwayGraphProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user");
 
   const now = dayjs(props.now).startOf("day");
 
   const weeks = 53;
 
   // A week starts from Monday
-  const weekStart = Number(_("user.subway_graph.start_of_week")) || 1;
+  const weekStart = Number(_(".subway_graph.start_of_week")) || 1;
 
   // If the last column is NOT a full week, the later at most 6 days' blocks will be omitted
   const omittedBlockCount = (((7 - (now.day() - weekStart + 1)) % 7) + 7) % 7;
@@ -76,7 +76,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
             <div />
             {[...new Array(7).keys()].map(i => (
               <div key={i} className={style.label}>
-                {_(`user.subway_graph.week.${(i + weekStart) % 7 || 7}`)}
+                {_(`.subway_graph.week.${(i + weekStart) % 7 || 7}`)}
               </div>
             ))}
           </div>
@@ -87,7 +87,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
                   // If the first month has too less weeks (less than 3), omit its month label
                   // since the space is not enough
                   (i === 0 ? monthOfWeek[2] == monthOfWeek[0] : monthOfWeek[i] != monthOfWeek[i - 1]) &&
-                    _(`user.subway_graph.month.${monthOfWeek[i]}`)
+                    _(`.subway_graph.month.${monthOfWeek[i]}`)
                 }
               </div>
               {weekData.map((dayData, j) => (
@@ -98,13 +98,10 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
                       <span className={style.subwayGraphPopup}>
                         <span className={style.submissions}>
                           {dayData
-                            ? _(
-                                dayData === 1
-                                  ? "user.subway_graph.popup.submission"
-                                  : "user.subway_graph.popup.submissions",
-                                { count: dayData.toString() }
-                              )
-                            : _("user.subway_graph.popup.no_submissions")}
+                            ? _(dayData === 1 ? ".subway_graph.popup.submission" : ".subway_graph.popup.submissions", {
+                                count: dayData.toString()
+                              })
+                            : _(".subway_graph.popup.no_submissions")}
                         </span>
                         <span className={style.date}>{_.formatDate(startDateOfWeek[i].add(j, "day").toDate())}</span>
                       </span>
@@ -130,10 +127,10 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
             }}
           >
             <Icon name="search" />
-            {_("user.subway_graph.link")}
+            {_(".subway_graph.link")}
           </Link>
           <div className={style.legend}>
-            <span>{_("user.subway_graph.legend.less")}</span>
+            <span>{_(".subway_graph.legend.less")}</span>
             <div data-level="0">
               <div />
             </div>
@@ -149,7 +146,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
             <div data-level="4">
               <div />
             </div>
-            <span>{_("user.subway_graph.legend.more")}</span>
+            <span>{_(".subway_graph.legend.more")}</span>
           </div>
         </div>
       </div>
@@ -162,7 +159,7 @@ type UserPageProps = ApiTypes.GetUserDetailResponseDto & {
 };
 
 let UserPage: React.FC<UserPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user");
 
   useEffect(() => {
     appState.enterNewPage(`${props.meta.username}`);
@@ -202,13 +199,7 @@ let UserPage: React.FC<UserPageProps> = props => {
         </Grid>
       )}
       {props.hasPrivilege ? (
-        <Button
-          className={style.editProfileButton}
-          fluid
-          content={_("user.edit_profile")}
-          as={Link}
-          href="edit/profile"
-        />
+        <Button className={style.editProfileButton} fluid content={_(".edit_profile")} as={Link} href="edit/profile" />
       ) : (
         !isMobile && <Divider className={style.editProfileButton} />
       )}
@@ -218,7 +209,7 @@ let UserPage: React.FC<UserPageProps> = props => {
             <Icon name="time" />
           </div>
           <span title={""}>
-            {_("user.joined")}
+            {_(".joined")}
             {fixChineseSpace(
               _.formatDate(props.meta.registrationTime, { year: "numeric", month: "long", day: "numeric" })
             )}
@@ -256,7 +247,7 @@ let UserPage: React.FC<UserPageProps> = props => {
           <Link
             className={style.socialIcon}
             href={`mailto:${props.meta.email}`}
-            title={_("user.social.email")}
+            title={_(".social.email")}
             target="_blank"
           >
             <Icon name="mail" />
@@ -266,7 +257,7 @@ let UserPage: React.FC<UserPageProps> = props => {
           <Link
             className={style.socialIcon}
             href={`https://wpa.qq.com/msgrd?V=3&Uin=${props.information.qq}`}
-            title={_("user.social.qq")}
+            title={_(".social.qq")}
             target="_blank"
           >
             <Icon name="qq" />
@@ -276,7 +267,7 @@ let UserPage: React.FC<UserPageProps> = props => {
           <Link
             className={style.socialIcon}
             href={`https://t.me/${props.information.telegram}`}
-            title={_("user.social.telegram")}
+            title={_(".social.telegram")}
             target="_blank"
           >
             <Icon name="telegram" />
@@ -286,7 +277,7 @@ let UserPage: React.FC<UserPageProps> = props => {
           <Link
             className={style.socialIcon}
             href={`https://github.com/${props.information.github}`}
-            title={_("user.social.github")}
+            title={_(".social.github")}
             target="_blank"
           >
             <Icon name="github" />
@@ -301,28 +292,28 @@ let UserPage: React.FC<UserPageProps> = props => {
       <div className={style.iconWrapper}>
         <Icon name="checkmark" />
       </div>
-      <span className={style.key}>{_("user.statictics.ac_count")}</span>
+      <span className={style.key}>{_(".statictics.ac_count")}</span>
       <span className={style.value}>{props.meta.acceptedProblemCount}</span>
     </div>,
     <div className={style.item}>
       <div className={style.iconWrapper}>
         <Icon name="calendar" />
       </div>
-      <span className={style.key}>{_("user.statictics.contest_take_part_count")}</span>
+      <span className={style.key}>{_(".statictics.contest_take_part_count")}</span>
       <span className={style.value}>{0}</span>
     </div>,
     <div className={style.item}>
       <div className={style.iconWrapper}>
         <Icon name="star" />
       </div>
-      <span className={style.key}>{_("user.statictics.rating")}</span>
+      <span className={style.key}>{_(".statictics.rating")}</span>
       <span className={style.value}>{props.meta.rating}</span>
     </div>,
     <div className={style.item}>
       <div className={style.iconWrapper}>
         <Icon name="signal" />
       </div>
-      <span className={style.key}>{_("user.statictics.rank")}</span>
+      <span className={style.key}>{_(".statictics.rank")}</span>
       <span className={style.value}>{props.rank}</span>
     </div>
   ];

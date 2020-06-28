@@ -244,11 +244,11 @@ interface SubmissionPageProps {
 }
 
 let SubmissionPage: React.FC<SubmissionPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission");
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(`${_("submission.title")} #${props.meta.id}`);
+    appState.enterNewPage(`${_(".title")} #${props.meta.id}`);
   }, [appState.locale]);
 
   // The meta only provides fields not changing with progress
@@ -341,7 +341,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       filenameList: [filename]
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else downloadFile(response.downloadInfo[0].downloadUrl, filename);
   }
 
@@ -454,7 +454,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           const columnTitle = (width: SemanticWIDTHS) => (
             <Grid.Column className={style.testcaseColumnTitle} width={width}>
               <Icon name="dropdown" />
-              {isSample ? _("submission.sample_testcase") : _("submission.testcase.title")} #{i + 1}
+              {isSample ? _(".sample_testcase") : _(".testcase.title")} #{i + 1}
             </Grid.Column>
           );
 
@@ -542,7 +542,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
               <CodeBox
                 title={
                   <>
-                    <strong>{_("submission.testcase.input")}</strong>
+                    <strong>{_(".testcase.input")}</strong>
                     {testcaseResult.testcaseInfo.inputFile && (
                       <span
                         className={"monospace " + style.fileNameWrapper}
@@ -561,7 +561,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
               <CodeBox
                 title={
                   <>
-                    <strong>{_("submission.testcase.output")}</strong>
+                    <strong>{_(".testcase.output")}</strong>
                     {testcaseResult.testcaseInfo.outputFile && (
                       <span
                         className={"monospace " + style.fileNameWrapper}
@@ -576,10 +576,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                 content={testcaseResult.output}
               />
             )}
-            <CodeBox title={_("submission.testcase.user_output")} content={testcaseResult.userOutput} />
-            <CodeBox title={_("submission.testcase.user_error")} content={testcaseResult.userError} />
+            <CodeBox title={_(".testcase.user_output")} content={testcaseResult.userOutput} />
+            <CodeBox title={_(".testcase.user_error")} content={testcaseResult.userError} />
             {getAdditionalSections(testcaseResult)}
-            <CodeBox title={_("submission.testcase.system_message")} content={testcaseResult.systemMessage} />
+            <CodeBox title={_(".testcase.system_message")} content={testcaseResult.systemMessage} />
           </Accordion.Content>
         )
       };
@@ -591,7 +591,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       const columnTitle = (width: SemanticWIDTHS) => (
         <Grid.Column width={width}>
           <Icon name="dropdown" />
-          {_("submission.sample")}
+          {_(".sample")}
         </Grid.Column>
       );
 
@@ -659,7 +659,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         const columnTitle = (width: SemanticWIDTHS) => (
           <Grid.Column width={width}>
             <Icon name="dropdown" />
-            {_("submission.subtask.title")} #{i + 1}
+            {_(".subtask.title")} #{i + 1}
           </Grid.Column>
         );
 
@@ -769,9 +769,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       submissionId: meta.id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("submission.success_cancel"));
+      toast.success(_(".success_cancel"));
     }
 
     setCancelPopupOpen(false);
@@ -786,9 +786,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       submissionId: meta.id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("submission.success_rejudge"));
+      toast.success(_(".success_rejudge"));
       navigation.refresh();
     }
 
@@ -805,9 +805,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       isPublic: !meta.isPublic
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_(meta.isPublic ? "submission.success_set_non_public" : "submission.success_set_public"));
+      toast.success(_(meta.isPublic ? ".success_set_non_public" : ".success_set_public"));
       navigation.refresh();
     }
 
@@ -823,9 +823,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       submissionId: meta.id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`submission.error.${response.error}`));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
-      toast.success(_("submission.success_delete"));
+      toast.success(_(".success_delete"));
       navigation.navigate("/submissions");
     }
 
@@ -867,7 +867,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                     content={
                       <>
                         <Icon name="ban" />
-                        {_("submission.cancel")}
+                        {_(".cancel")}
                       </>
                     }
                     onClick={() => (setOperationsPopupOpen(false), setCancelPopupOpen(true))}
@@ -878,7 +878,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                     content={
                       <>
                         <Icon name="refresh" />
-                        {_("submission.rejudge")}
+                        {_(".rejudge")}
                       </>
                     }
                     onClick={() => (setOperationsPopupOpen(false), setRejudgePopupOpen(true))}
@@ -889,7 +889,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                     content={
                       <>
                         <Icon name={meta.isPublic ? "eye slash" : "eye"} />
-                        {_(meta.isPublic ? "submission.set_non_public" : "submission.set_public")}
+                        {_(meta.isPublic ? ".set_non_public" : ".set_public")}
                       </>
                     }
                     onClick={() => (setOperationsPopupOpen(false), setTogglePublicPopupOpen(true))}
@@ -900,7 +900,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                     content={
                       <>
                         <Icon name="delete" />
-                        {_("submission.delete")}
+                        {_(".delete")}
                       </>
                     }
                     onClick={() => (setOperationsPopupOpen(false), setDeletePopupOpen(true))}
@@ -917,9 +917,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             open={cancelPopupOpen}
             onClose={() => setCancelPopupOpen(false)}
             context={statusNodeRef.current}
-            content={
-              <Button negative content={_("submission.confirm_cancel")} loading={operationPending} onClick={onCancel} />
-            }
+            content={<Button negative content={_(".confirm_cancel")} loading={operationPending} onClick={onCancel} />}
             position="bottom left"
           />
         )}
@@ -928,14 +926,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             open={rejudgePopupOpen}
             onClose={() => setRejudgePopupOpen(false)}
             context={statusNodeRef.current}
-            content={
-              <Button
-                negative
-                content={_("submission.confirm_rejudge")}
-                loading={operationPending}
-                onClick={onRejudge}
-              />
-            }
+            content={<Button negative content={_(".confirm_rejudge")} loading={operationPending} onClick={onRejudge} />}
             position="bottom left"
           />
         )}
@@ -947,7 +938,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             content={
               <Button
                 positive={!meta.isPublic}
-                content={_(meta.isPublic ? "submission.confirm_set_non_public" : "submission.confirm_set_public")}
+                content={_(meta.isPublic ? ".confirm_set_non_public" : ".confirm_set_public")}
                 loading={operationPending}
                 onClick={onTogglePublic}
               />
@@ -960,9 +951,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             open={deletePopupOpen}
             onClose={() => setDeletePopupOpen(false)}
             context={statusNodeRef.current}
-            content={
-              <Button negative content={_("submission.confirm_delete")} loading={operationPending} onClick={onDelete} />
-            }
+            content={<Button negative content={_(".confirm_delete")} loading={operationPending} onClick={onDelete} />}
             position="bottom left"
           />
         )}
@@ -1001,13 +990,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         getCompilationMessage={() =>
           fullInfo.compile &&
           fullInfo.compile.message && (
-            <AnsiCodeBox title={_("submission.compilation_message")} ansiMessage={fullInfo.compile.message} />
+            <AnsiCodeBox title={_(".compilation_message")} ansiMessage={fullInfo.compile.message} />
           )
         }
         getSystemMessage={() =>
-          fullInfo.systemMessage && (
-            <AnsiCodeBox title={_("submission.system_message")} ansiMessage={fullInfo.systemMessage} />
-          )
+          fullInfo.systemMessage && <AnsiCodeBox title={_(".system_message")} ansiMessage={fullInfo.systemMessage} />
         }
         getSubtasksView={getSubtasksView}
         refDefaultCopyCodeBox={refDefaultCopyCodeBox}

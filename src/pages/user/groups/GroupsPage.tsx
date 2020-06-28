@@ -43,7 +43,7 @@ interface GroupItemProps {
 }
 
 let GroupItem: React.FC<GroupItemProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("groups");
 
   const [memberListLoading, setMemberListLoading] = useState(false);
   const [memberList, setMemberList] = useState<ApiTypes.GetGroupMemberListResponseItem[]>(null);
@@ -66,7 +66,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     });
 
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(response.memberList);
       setMemberListLoading(false);
@@ -87,7 +87,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       isGroupAdmin
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(
         memberList.map(member =>
@@ -121,7 +121,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       name: renameInputValue
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setName(renameInputValue);
       setRenamePopupOpen(false);
@@ -139,7 +139,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       userId: userMeta.id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList([
         ...memberList,
@@ -161,7 +161,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       groupId: props.meta.id
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       props.onDelete();
     }
@@ -178,7 +178,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       userId: userId
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(memberList.filter(member => member.userMeta.id !== userId));
     }
@@ -196,7 +196,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
           </Grid.Column>
           <Grid.Column width={8}>
             {!hasPrivilege && (
-              <Checkbox toggle label={_("groups.group_admin")} readOnly checked={props.hasPermission || hasPrivilege} />
+              <Checkbox toggle label={_(".group_admin")} readOnly checked={props.hasPermission || hasPrivilege} />
             )}
           </Grid.Column>
           <Grid.Column width={3} className={style.memberCount}>
@@ -213,19 +213,19 @@ let GroupItem: React.FC<GroupItemProps> = props => {
               {(hasPrivilege || props.hasPermission) && (
                 <UserSearch
                   className={style.memberListUserSearch}
-                  placeholder={_("groups.search_to_add_user")}
+                  placeholder={_(".search_to_add_user")}
                   onResultSelect={onAddUser}
                 />
               )}
               {hasPrivilege && (
                 <>
                   <Popup
-                    trigger={<Button className={style.renameGroup} content={_("groups.rename_group")} />}
+                    trigger={<Button className={style.renameGroup} content={_(".rename_group")} />}
                     content={
                       <Form>
                         <Form.Input
                           style={{ width: 230 }}
-                          placeholder={_("groups.rename_group_new_name")}
+                          placeholder={_(".rename_group_new_name")}
                           value={renameInputValue}
                           autoComplete="username"
                           readOnly={pending}
@@ -238,7 +238,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
                           }}
                         />
                         <Button primary disabled={pending} onClick={onRename}>
-                          {_("groups.confirm_rename_group")}
+                          {_(".confirm_rename_group")}
                         </Button>
                       </Form>
                     }
@@ -249,10 +249,10 @@ let GroupItem: React.FC<GroupItemProps> = props => {
                     position="top right"
                   />
                   <Popup
-                    trigger={<Button className={style.deleteGroup} negative content={_("groups.delete_group")} />}
+                    trigger={<Button className={style.deleteGroup} negative content={_(".delete_group")} />}
                     content={
                       <Button negative disabled={pending} onClick={onDelete}>
-                        {_("groups.confirm_delete_group")}
+                        {_(".confirm_delete_group")}
                       </Button>
                     }
                     on="click"
@@ -277,7 +277,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
                         <Checkbox
                           checked={isGroupAdmin}
                           readOnly={!hasPrivilege}
-                          label={_("groups.group_admin")}
+                          label={_(".group_admin")}
                           toggle
                           onChange={(e, { checked }) => onSetGroupAdmin(userMeta.id, checked)}
                         />
@@ -289,14 +289,14 @@ let GroupItem: React.FC<GroupItemProps> = props => {
                             <Icon
                               name="delete"
                               disabled={!(props.hasPermission && !isGroupAdmin)}
-                              label={_("groups.remove_member")}
+                              label={_(".remove_member")}
                             />
                           }
                           content={
                             <Button
                               negative
                               disabled={pending}
-                              content={_("groups.confirm_remove_member")}
+                              content={_(".confirm_remove_member")}
                               onClick={() => onRemoveUser(userMeta.id)}
                             />
                           }
@@ -321,10 +321,10 @@ interface GroupsPageProps {
 }
 
 let GroupsPage: React.FC<GroupsPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("groups");
 
   useEffect(() => {
-    appState.enterNewPage(_("groups.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   const hasPrivilege = appState.currentUserHasPrivilege("MANAGE_USER_GROUP");
@@ -343,7 +343,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
       groupName: createGroupName
     });
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`groups.errors.${response.error}`));
+    else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setGroups([
         ...groups,
@@ -365,15 +365,15 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
   return (
     <>
       <div className={style.header}>
-        <Header as="h1">{_("groups.header")}</Header>
+        <Header as="h1">{_(".header")}</Header>
         {hasPrivilege && (
           <Popup
-            trigger={<Button className={style.createGroup} primary content={_("groups.create_group")} />}
+            trigger={<Button className={style.createGroup} primary content={_(".create_group")} />}
             content={
               <Form>
                 <Form.Input
                   style={{ width: 230 }}
-                  placeholder={_("groups.create_group_name")}
+                  placeholder={_(".create_group_name")}
                   value={createGroupName}
                   autoComplete="username"
                   readOnly={pending}
@@ -386,7 +386,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
                   }}
                 />
                 <Button primary disabled={pending} onClick={onCreateGroup}>
-                  {_("groups.confirm_create_group")}
+                  {_(".confirm_create_group")}
                 </Button>
               </Form>
             }
@@ -416,7 +416,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
         <Segment placeholder>
           <Header icon>
             <Icon name="file" />
-            {_("groups.no_groups")}
+            {_(".no_groups")}
           </Header>
         </Segment>
       )}

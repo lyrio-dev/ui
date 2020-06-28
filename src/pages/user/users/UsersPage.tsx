@@ -43,11 +43,11 @@ interface UsersPageProps {
 }
 
 let UsersPage: React.FC<UsersPageProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("users");
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(_("users.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   function changePage(page: number) {
@@ -63,25 +63,19 @@ let UsersPage: React.FC<UsersPageProps> = props => {
       <div className={style.header}>
         <UserSearch onResultSelect={user => navigation.navigate(`/user/${user.id}`)} />
         {appState.currentUserHasPrivilege("MANAGE_USER_GROUP") && (
-          <Button
-            primary
-            className={style.manageGroups}
-            content={_("users.manage_groups")}
-            as={Link}
-            href="/users/groups"
-          />
+          <Button primary className={style.manageGroups} content={_(".manage_groups")} as={Link} href="/users/groups" />
         )}
       </div>
       <Table unstackable basic="very" textAlign="center" className={style.table}>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell className={style.columnRank}>{_("users.rank")}</Table.HeaderCell>
-            <Table.HeaderCell className={style.columnUsername}>{_("users.username")}</Table.HeaderCell>
-            <Table.HeaderCell className={style.columnBio}>{_("users.bio")}</Table.HeaderCell>
+            <Table.HeaderCell className={style.columnRank}>{_(".rank")}</Table.HeaderCell>
+            <Table.HeaderCell className={style.columnUsername}>{_(".username")}</Table.HeaderCell>
+            <Table.HeaderCell className={style.columnBio}>{_(".bio")}</Table.HeaderCell>
             <Table.HeaderCell className={style.columnAcceptedProblemCount}>
               {props.sortBy === SortBy.acceptedProblemCount ? (
                 <>
-                  {_("users.accepted_problem_count")}
+                  {_(".accepted_problem_count")}
                   <Icon name="angle down" />
                 </>
               ) : (
@@ -93,14 +87,14 @@ let UsersPage: React.FC<UsersPageProps> = props => {
                     }
                   }}
                 >
-                  {_("users.accepted_problem_count")}
+                  {_(".accepted_problem_count")}
                 </Link>
               )}
             </Table.HeaderCell>
             <Table.HeaderCell className={style.columnRating}>
               {props.sortBy === SortBy.rating ? (
                 <>
-                  {_("users.rating")}
+                  {_(".rating")}
                   <Icon name="angle down" />
                 </>
               ) : (
@@ -112,7 +106,7 @@ let UsersPage: React.FC<UsersPageProps> = props => {
                     }
                   }}
                 >
-                  {_("users.rating")}
+                  {_(".rating")}
                 </Link>
               )}
             </Table.HeaderCell>

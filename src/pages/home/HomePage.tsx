@@ -6,10 +6,10 @@ import { useIntlMessage } from "@/utils/hooks";
 import { defineRoute } from "@/AppRouter";
 
 let HomePage: React.FC = () => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("home");
 
   useEffect(() => {
-    appState.enterNewPage(_("home.title"));
+    appState.enterNewPage(_(".title"));
   }, [appState.locale]);
 
   return <>Hello, world!</>;

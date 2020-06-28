@@ -39,7 +39,7 @@ type InteractionProblemSubmissionViewProps = ProblemTypeSubmissionViewProps<
 >;
 
 const InteractionProblemSubmissionView: React.FC<InteractionProblemSubmissionViewProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("submission");
 
   return (
     <>
@@ -51,7 +51,7 @@ const InteractionProblemSubmissionView: React.FC<InteractionProblemSubmissionVie
       {props.getCompilationMessage()}
       {props.getSystemMessage()}
       {props.getSubtasksView(testcaseResult => (
-        <CodeBox title={_("submission.testcase.interactor_message")} content={testcaseResult.interactorMessage} />
+        <CodeBox title={_(".testcase.interactor_message")} content={testcaseResult.interactorMessage} />
       ))}
     </>
   );

@@ -17,7 +17,7 @@ import { getLimit } from "../common";
 type TraditionalProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoTraditional>;
 
 const TraditionalProblemLabels: React.FC<TraditionalProblemLabelsProps> = React.memo(props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("problem");
 
   const timeLimit = getLimit(props.judgeInfo, "timeLimit");
   const memoryLimit = getLimit(props.judgeInfo, "memoryLimit");
@@ -43,7 +43,7 @@ const TraditionalProblemLabels: React.FC<TraditionalProblemLabelsProps> = React.
           trigger={
             <Label size={props.size} color="orange">
               <Icon name="file" />
-              {_(`problem.fileio.fileio`)}
+              {_(`.fileio.fileio`)}
             </Label>
           }
           content={
@@ -51,13 +51,13 @@ const TraditionalProblemLabels: React.FC<TraditionalProblemLabelsProps> = React.
               <tbody>
                 <tr>
                   <td align="right" className={style.fileIoName}>
-                    <strong>{_(`problem.fileio.input`)}</strong>
+                    <strong>{_(`.fileio.input`)}</strong>
                   </td>
                   <td>{fileIo.inputFilename}</td>
                 </tr>
                 <tr>
                   <td align="right" className={style.fileIoName}>
-                    <strong>{_(`problem.fileio.output`)}</strong>
+                    <strong>{_(`.fileio.output`)}</strong>
                   </td>
                   <td>{fileIo.outputFilename}</td>
                 </tr>

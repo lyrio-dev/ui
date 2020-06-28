@@ -23,7 +23,7 @@ import { AuthApi } from "@/api";
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
   const loadingRoute = useLoadingRoute();
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("common");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -48,32 +48,32 @@ let AppLayout: React.FC = props => {
   const navButtons: Record<string, { icon: SemanticICONS; text: string; url?: string }> = {
     home: {
       icon: "home",
-      text: "common.navbar.home",
+      text: ".navbar.home",
       url: "/"
     },
     problem_set: {
       icon: "book",
-      text: "common.navbar.problem_set",
+      text: ".navbar.problem_set",
       url: "/problems"
     },
     contests: {
       icon: "calendar",
-      text: "common.navbar.contests"
+      text: ".navbar.contests"
       // url: "/contests"
     },
     submissions: {
       icon: "hourglass",
-      text: "common.navbar.submissions",
+      text: ".navbar.submissions",
       url: "/submissions"
     },
     members: {
       icon: "users",
-      text: "common.navbar.members",
+      text: ".navbar.members",
       url: "/users"
     },
     discussion: {
       icon: "comments",
-      text: "common.navbar.discussion"
+      text: ".navbar.discussion"
       // url: "/discussion"
     }
   };
@@ -88,7 +88,7 @@ let AppLayout: React.FC = props => {
   const loginAndRegisterButtons = (
     <>
       <Button className={style.loginAndRegisterButton} onClick={() => onLoginOrRegisterClick("login")}>
-        {_("common.header.user.login")}
+        {_(".header.user.login")}
       </Button>
       <Button
         className={style.loginAndRegisterButton}
@@ -96,7 +96,7 @@ let AppLayout: React.FC = props => {
         onClick={() => onLoginOrRegisterClick("register")}
         type="primary"
       >
-        {_("common.header.user.register")}
+        {_(".header.user.register")}
       </Button>
     </>
   );
@@ -106,40 +106,40 @@ let AppLayout: React.FC = props => {
       <ContainerComponent.Menu className={style.userMenu}>
         <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}`}>
           <Icon name="user" />
-          {_("common.header.user.profile")}
+          {_(".header.user.profile")}
         </ContainerComponent.Item>
         <ContainerComponent.Item
           as={Link}
           href={{ pathname: "/submissions", query: { submitter: appState.currentUser.username } }}
         >
           <Icon name="hourglass half" />
-          {_("common.header.user.submissions")}
+          {_(".header.user.submissions")}
         </ContainerComponent.Item>
         <ContainerComponent.Item
           as={Link}
           href={{ pathname: "/problems", query: { ownerId: appState.currentUser.id } }}
         >
           <Icon name="book" />
-          {_("common.header.user.problems")}
+          {_(".header.user.problems")}
         </ContainerComponent.Item>
         {appState.currentUserJoinedGroupsCount > 0 && (
           <ContainerComponent.Item as={Link} href="/users/groups">
             <Icon name="users" />
-            {_("common.header.user.groups")}
+            {_(".header.user.groups")}
           </ContainerComponent.Item>
         )}
         {ContainerComponent === Dropdown && <Dropdown.Divider />}
         <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/profile`}>
           <Icon name="edit" />
-          {_("common.header.user.edit_profile")}
+          {_(".header.user.edit_profile")}
         </ContainerComponent.Item>
         <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/preference`}>
           <Icon name="cog" />
-          {_("common.header.user.preference")}
+          {_(".header.user.preference")}
         </ContainerComponent.Item>
         <ContainerComponent.Item onClick={onLogoutClick}>
           <Icon name="power" />
-          {_("common.header.user.logout")}
+          {_(".header.user.logout")}
         </ContainerComponent.Item>
       </ContainerComponent.Menu>
     </>
@@ -167,7 +167,7 @@ let AppLayout: React.FC = props => {
             </a>
           </div>
           <div className={style.footerLinks}>
-            <Link href="/judge-machine">{_("common.footer.judge_machine")}</Link>
+            <Link href="/judge-machine">{_(".footer.judge_machine")}</Link>
           </div>
           <div className={style.languageSwitchContainer}>
             <Dropdown icon="language">

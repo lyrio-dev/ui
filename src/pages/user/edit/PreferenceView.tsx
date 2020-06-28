@@ -39,11 +39,11 @@ interface PreferenceViewProps {
 }
 
 const PreferenceView: React.FC<PreferenceViewProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("user_edit.preference");
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`user_edit.preference.title`)} - ${props.meta.username}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, false);
   }, [appState.locale]);
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.systemLocale || null) as Locale);
@@ -94,9 +94,9 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
     });
 
     if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
+    else if (response.error) toast.error(_(`.${response.error}`));
     else {
-      toast.success(_("user_edit.preference.success"));
+      toast.success(_(".success"));
 
       if (appState.currentUser.id === props.meta.id) {
         if (appState.userPreference.systemLocale !== systemLocale) {
@@ -150,8 +150,8 @@ int main(int argc,char**argv)
 
   return (
     <>
-      <Header className={style.sectionHeader} size="large" content={_("user_edit.preference.locale.header")} />
-      <Header className={style.header} size="tiny" content={_("user_edit.preference.locale.system")} />
+      <Header className={style.sectionHeader} size="large" content={_(".locale.header")} />
+      <Header className={style.header} size="tiny" content={_(".locale.system")} />
       <Select
         className={style.notFullWidth}
         fluid
@@ -164,7 +164,7 @@ int main(int argc,char**argv)
             text: (
               <>
                 <Flag name={localeMeta[defaultSystemLocale].flag as any} />
-                {_("user_edit.preference.locale.system_default", { name: localeMeta[defaultSystemLocale].name })}
+                {_(".locale.system_default", { name: localeMeta[defaultSystemLocale].name })}
               </>
             )
           },
@@ -180,8 +180,8 @@ int main(int argc,char**argv)
           }))
         ]}
       />
-      <div className={style.notes}>{_("user_edit.preference.locale.system_notes")}</div>
-      <Header className={style.header} size="tiny" content={_("user_edit.preference.locale.content")} />
+      <div className={style.notes}>{_(".locale.system_notes")}</div>
+      <Header className={style.header} size="tiny" content={_(".locale.content")} />
       <Select
         className={style.notFullWidth}
         fluid
@@ -194,7 +194,7 @@ int main(int argc,char**argv)
             text: (
               <>
                 <Flag name={localeMeta[defaultContentLocale].flag as any} />
-                {_("user_edit.preference.locale.content_default", { name: localeMeta[defaultContentLocale].name })}
+                {_(".locale.content_default", { name: localeMeta[defaultContentLocale].name })}
               </>
             )
           },
@@ -210,9 +210,9 @@ int main(int argc,char**argv)
           }))
         ]}
       />
-      <div className={style.notes}>{_("user_edit.preference.locale.content_notes")}</div>
-      <Header className={style.sectionHeader} size="large" content={_("user_edit.preference.code_language.header")} />
-      <Header className={style.header} size="tiny" content={_("user_edit.preference.code_language.language")} />
+      <div className={style.notes}>{_(".locale.content_notes")}</div>
+      <Header className={style.sectionHeader} size="large" content={_(".code_language.header")} />
+      <Header className={style.header} size="tiny" content={_(".code_language.language")} />
       <Select
         className={style.notFullWidth}
         fluid
@@ -254,9 +254,9 @@ int main(int argc,char**argv)
           }
         })}
       </div>
-      <div className={style.notes}>{_("user_edit.preference.code_language.content_notes")}</div>
-      <Header className={style.sectionHeader} size="large" content={_("user_edit.preference.code_formatter.header")} />
-      <Header className={style.header} size="tiny" content={_("user_edit.preference.code_formatter.astyle_options")} />
+      <div className={style.notes}>{_(".code_language.content_notes")}</div>
+      <Header className={style.sectionHeader} size="large" content={_(".code_formatter.header")} />
+      <Header className={style.header} size="tiny" content={_(".code_formatter.astyle_options")} />
       <Form>
         <TextArea
           className={style.textarea}
@@ -269,26 +269,22 @@ int main(int argc,char**argv)
         />
       </Form>
       <div className={style.notes}>
-        {_("user_edit.preference.code_formatter.notes_before")}
+        {_(".code_formatter.notes_before")}
         <a href="http://astyle.sourceforge.net/astyle.html" target="_blank">
-          &nbsp;{_("user_edit.preference.code_formatter.notes_link")}&nbsp;
+          &nbsp;{_(".code_formatter.notes_link")}&nbsp;
         </a>
-        {_("user_edit.preference.code_formatter.notes_after")}
+        {_(".code_formatter.notes_after")}
       </div>
       <Checkbox
         className={style.checkbox}
         checked={!doNotFormatCodeByDefault}
-        label={_("user_edit.preference.code_formatter.format_code_by_default")}
+        label={_(".code_formatter.format_code_by_default")}
         onChange={(e, { checked }) => !pending && setDoNotFormatCodeByDefault(!checked)}
       />
       <Header
         className={style.header}
         size="tiny"
-        content={_(
-          formatPreviewSuccess
-            ? "user_edit.preference.code_formatter.preview"
-            : "user_edit.preference.code_formatter.error"
-        )}
+        content={_(formatPreviewSuccess ? ".code_formatter.preview" : ".code_formatter.error")}
       />
       <HighlightedCodeBox
         segment={{
@@ -302,7 +298,7 @@ int main(int argc,char**argv)
         loading={pending}
         disabled={!formatPreviewSuccess}
         primary
-        content={_("user_edit.preference.submit")}
+        content={_(".submit")}
         onClick={onSubmit}
       />
     </>

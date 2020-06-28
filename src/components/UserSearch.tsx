@@ -18,7 +18,7 @@ interface UserSearchProps {
 }
 
 let UserSearch: React.FC<UserSearchProps> = props => {
-  const _ = useIntlMessage();
+  const _ = useIntlMessage("components.user_search");
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const [result, setResult] = useState<ApiTypes.UserMetaDto[]>([]);
@@ -53,9 +53,9 @@ let UserSearch: React.FC<UserSearchProps> = props => {
   return (
     <Search
       className={style.search + (props.className ? " " + props.className : "")}
-      placeholder={props.placeholder || _("components.user_search.placeholder")}
+      placeholder={props.placeholder || _(".placeholder")}
       value={searchKeyword}
-      noResultsMessage={_("components.user_search.no_result")}
+      noResultsMessage={_(".no_result")}
       onSearchChange={(e, { value }) => {
         setSearchKeyword(value);
         setPending(true);
