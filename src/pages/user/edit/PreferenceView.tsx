@@ -13,15 +13,10 @@ import { useIntlMessage } from "@/utils/hooks";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
-import {
-  CodeLanguage,
-  codeLanguageOptions,
-  CodeLanguageOptionType,
-  filterValidLanguageOptions,
-  getDefaultCodeLanguageOptions
-} from "@/interfaces/CodeLanguage";
+import { CodeLanguage, filterValidLanguageOptions, getDefaultCodeLanguageOptions } from "@/interfaces/CodeLanguage";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { RouteError } from "@/AppRouter";
+import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserPreference({ userId });
@@ -60,17 +55,6 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const [defaultCodeLanguageOptions, setDefaultCodeLanguageOptions] = useState(
     filterValidLanguageOptions(defaultCodeLanguage, props.preference.defaultCodeLanguageOptions)
   );
-  function changeDefaultCodeLanguage(codeLanguage: CodeLanguage) {
-    setDefaultCodeLanguage(codeLanguage);
-    setDefaultCodeLanguageOptions(getDefaultCodeLanguageOptions(codeLanguage));
-  }
-  function setDefaultCodeLanguageOption(name: string, value: unknown) {
-    setDefaultCodeLanguageOptions(
-      Object.assign({}, defaultCodeLanguageOptions, {
-        [name]: value
-      })
-    );
-  }
 
   const defaultSystemLocale = browserDefaultLocale;
   const defaultContentLocale = systemLocale || browserDefaultLocale;
@@ -212,48 +196,16 @@ int main(int argc,char**argv)
       />
       <div className={style.notes}>{_(".locale.content_notes")}</div>
       <Header className={style.sectionHeader} size="large" content={_(".code_language.header")} />
-      <Header className={style.header} size="tiny" content={_(".code_language.language")} />
-      <Select
-        className={style.notFullWidth}
-        fluid
-        value={defaultCodeLanguage}
-        options={Object.keys(codeLanguageOptions).map(language => ({
-          key: language,
-          value: language,
-          text: _(`code_language.${language}.name`)
-        }))}
-        onChange={(e, { value }) => changeDefaultCodeLanguage(value as CodeLanguage)}
-      />
-      <div className={style.notFullWidth}>
-        {codeLanguageOptions[defaultCodeLanguage].map(option => {
-          switch (option.type) {
-            case CodeLanguageOptionType.Select:
-              return (
-                <div key={option.name} className={style.halfWidthFieldContainer}>
-                  <Header
-                    className={style.header}
-                    size="tiny"
-                    content={_(`code_language.${defaultCodeLanguage}.options.${option.name}.name`)}
-                  />
-                  <Select
-                    fluid
-                    value={
-                      defaultCodeLanguageOptions[option.name] == null
-                        ? option.defaultValue
-                        : (defaultCodeLanguageOptions[option.name] as string)
-                    }
-                    options={option.values.map(value => ({
-                      key: value,
-                      value: value,
-                      text: _(`code_language.${defaultCodeLanguage}.options.${option.name}.values.${value}`)
-                    }))}
-                    onChange={(e, { value }) => setDefaultCodeLanguageOption(option.name, value)}
-                  />
-                </div>
-              );
-          }
-        })}
-      </div>
+      <Form className={style.notFullWidth}>
+        <CodeLanguageAndOptions
+          headerForLanguage={_(".code_language.language")}
+          classNameForLanguageOptions={style.halfWidthFieldContainer}
+          language={defaultCodeLanguage}
+          languageOptions={defaultCodeLanguageOptions}
+          onUpdateLanguage={setDefaultCodeLanguage}
+          onUpdateLanguageOptions={setDefaultCodeLanguageOptions}
+        />
+      </Form>
       <div className={style.notes}>{_(".code_language.content_notes")}</div>
       <Header className={style.sectionHeader} size="large" content={_(".code_formatter.header")} />
       <Header className={style.header} size="tiny" content={_(".code_formatter.astyle_options")} />

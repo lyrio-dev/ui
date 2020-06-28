@@ -1,4 +1,5 @@
 module.exports = {
+  code_language: "语言",
   cpp: {
     name: "C++",
     options: {

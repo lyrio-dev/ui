@@ -1,4 +1,5 @@
 module.exports = {
+  code_language: "[TBT] Language",
   cpp: {
     name: "C++",
     options: {

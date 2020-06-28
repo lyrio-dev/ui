@@ -56,7 +56,6 @@ module.exports = {
   submit: {
     last_submission: "上次提交",
     back_to_statement: "返回题面",
-    language: "语言",
     skip_samples: "跳过样例",
     submit: "提交"
   },

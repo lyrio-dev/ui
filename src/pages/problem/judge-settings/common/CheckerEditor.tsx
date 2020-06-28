@@ -15,6 +15,7 @@ import {
 } from "@/interfaces/CodeLanguage";
 import TestDataFileSelector from "./TestDataFileSelector";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
+import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 
 interface CheckerTypeIntegers {
   type: "integers";
@@ -177,13 +178,6 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
             case "binary":
               return null;
             case "custom":
-              const setLanguageOption = (name: string, value: unknown) => {
-                onUpdateChecker({
-                  languageOptions: Object.assign({}, checker.languageOptions, {
-                    [name]: value
-                  })
-                });
-              };
               return (
                 <div className={style.custom}>
                   <TestDataFileSelector
@@ -194,9 +188,8 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                     testData={props.testData}
                     onChange={value => onUpdateChecker({ filename: value })}
                   />
-                  <Form.Group>
+                  <div className={style.languageOptions}>
                     <Form.Select
-                      width={8}
                       label={_(".checker.config.custom.interface")}
                       value={checker.interface}
                       options={CUSTOM_CHECKER_INTERFACES.map(iface => ({
@@ -206,42 +199,12 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                       }))}
                       onChange={(e, { value }) => onUpdateChecker({ interface: value as any })}
                     />
-                    <Form.Select
-                      width={8}
-                      label={_(".checker.config.custom.language")}
-                      value={checker.language}
-                      options={Object.keys(codeLanguageOptions).map(language => ({
-                        key: language,
-                        value: language,
-                        text: _(`code_language.${language}.name`)
-                      }))}
-                      onChange={(e, { value }) => onUpdateChecker({ language: value as CodeLanguage })}
+                    <CodeLanguageAndOptions
+                      language={checker.language}
+                      languageOptions={checker.languageOptions}
+                      onUpdateLanguage={newLanguage => onUpdateChecker({ language: newLanguage })}
+                      onUpdateLanguageOptions={languageOptions => onUpdateChecker({ languageOptions: languageOptions })}
                     />
-                  </Form.Group>
-                  <div className={style.languageOptions}>
-                    {codeLanguageOptions[checker.language].map(option => {
-                      switch (option.type) {
-                        case CodeLanguageOptionType.Select:
-                          return (
-                            <Form.Select
-                              key={option.name}
-                              label={_(`code_language.${checker.language}.options.${option.name}.name`)}
-                              fluid
-                              value={
-                                checker.languageOptions[option.name] == null
-                                  ? option.defaultValue
-                                  : (checker.languageOptions[option.name] as string)
-                              }
-                              options={option.values.map(value => ({
-                                key: value,
-                                value: value,
-                                text: _(`code_language.${checker.language}.options.${option.name}.values.${value}`)
-                              }))}
-                              onChange={(e, { value }) => setLanguageOption(option.name, value)}
-                            />
-                          );
-                      }
-                    })}
                   </div>
                   <Form.Group>
                     <Form.Field width={8}>

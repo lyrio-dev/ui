@@ -108,7 +108,6 @@ module.exports = {
           qduoj: "QDUOJ",
           domjudge: "DOMjudge"
         },
-        language: "Language",
         filename: "File",
         filename_no_file: "No file"
       }
@@ -121,7 +120,6 @@ module.exports = {
       shm: "Shared Memory"
     },
     shm_size: "Shared Memory Size",
-    language: "Language",
     filename: "File",
     filename_no_file: "No file"
   },

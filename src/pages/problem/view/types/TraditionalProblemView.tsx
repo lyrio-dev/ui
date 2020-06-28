@@ -11,7 +11,7 @@ import CodeEditor from "@/components/LazyCodeEditor";
 import { JudgeInfoTraditional } from "../../judge-settings/types/TraditionalProblemEditor";
 import { ProblemTypeLabelsProps, ProblemTypeSubmitViewProps, ProblemTypeView } from "../common/interface";
 import SubmitViewFrame from "../common/SubmitViewFrame";
-import LanguageAndOptions from "../common/LanguageAndOptions";
+import CodeLanguageAndOptions from "../common/CodeLanguageAndOptions";
 import { getLimit } from "../common";
 
 type TraditionalProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoTraditional>;
@@ -101,7 +101,7 @@ let TraditionalProblemSubmitView: React.FC<TraditionalProblemSubmitViewProps> = 
         }
         sidebarContent={
           <>
-            <LanguageAndOptions objectPath="" {...props} />
+            <CodeLanguageAndOptions objectPath="" {...props} />
           </>
         }
       />
@@ -119,7 +119,7 @@ const traditionalProblemViews: ProblemTypeView<JudgeInfoTraditional> = {
       {
         code: ""
       },
-      LanguageAndOptions.getDefault()
+      CodeLanguageAndOptions.getDefault()
     )
 };
 

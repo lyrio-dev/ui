@@ -111,7 +111,6 @@ module.exports = {
           qduoj: "[TBT] QDUOJ",
           domjudge: "[TBT] DOMjudge"
         },
-        language: "[TBT] Language",
         filename: "[TBT] File",
         filename_no_file: "[TBT] No file"
       }
@@ -124,7 +123,6 @@ module.exports = {
       shm: "[TBT] Shared Memory"
     },
     shm_size: "[TBT] Shared Memory Size",
-    language: "[TBT] Language",
     filename: "[TBT] File",
     filename_no_file: "[TBT] No file"
   },

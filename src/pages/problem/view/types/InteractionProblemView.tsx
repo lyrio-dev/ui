@@ -8,7 +8,7 @@ import CodeEditor from "@/components/LazyCodeEditor";
 import { JudgeInfoInteraction } from "../../judge-settings/types/InteractionProblemEditor";
 import { ProblemTypeLabelsProps, ProblemTypeSubmitViewProps, ProblemTypeView } from "../common/interface";
 import SubmitViewFrame from "../common/SubmitViewFrame";
-import LanguageAndOptions from "../common/LanguageAndOptions";
+import CodeLanguageAndOptions from "../common/CodeLanguageAndOptions";
 import { getLimit } from "../common";
 
 type InteractionProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoInteraction>;
@@ -63,7 +63,7 @@ let InteractionProblemSubmitView: React.FC<InteractionProblemSubmitViewProps> = 
         }
         sidebarContent={
           <>
-            <LanguageAndOptions objectPath="" {...props} />
+            <CodeLanguageAndOptions objectPath="" {...props} />
           </>
         }
       />
@@ -81,7 +81,7 @@ const interactionProblemViews: ProblemTypeView<JudgeInfoInteraction> = {
       {
         code: ""
       },
-      LanguageAndOptions.getDefault()
+      CodeLanguageAndOptions.getDefault()
     )
 };
 

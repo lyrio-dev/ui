@@ -85,14 +85,17 @@
   @margin: 7px;
   width: calc(50% - @margin);
   display: inline-block;
-  margin-top: 14px;
-
-  &:nth-child(odd) {
-    margin-right: @margin;
-  }
 
   &:nth-child(even) {
-    margin-left: @margin;
+    margin-right: @margin !important;
+  }
+
+  &:nth-child(odd) {
+    margin-left: @margin !important;
+  }
+
+  &:nth-last-child(1), &:nth-last-child(2) {
+    margin-bottom: 0 !important;
   }
 }
 

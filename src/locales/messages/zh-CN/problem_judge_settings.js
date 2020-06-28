@@ -103,7 +103,6 @@ module.exports = {
           qduoj: "QDUOJ",
           domjudge: "DOMjudge"
         },
-        language: "语言",
         filename: "文件",
         filename_no_file: "无文件"
       }
@@ -116,7 +115,6 @@ module.exports = {
       shm: "共享内存"
     },
     shm_size: "共享内存大小",
-    language: "语言",
     filename: "文件",
     filename_no_file: "无文件"
   },

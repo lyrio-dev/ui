@@ -19,6 +19,7 @@ import {
 import { useIntlMessage } from "@/utils/hooks";
 import { Segment, Form, Header, Menu, Input } from "semantic-ui-react";
 import TestDataFileSelector from "../common/TestDataFileSelector";
+import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 
 const metaEditorOptions: Options<typeof MetaEditor> = {
   enableTimeMemoryLimit: true,
@@ -143,60 +144,31 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
               testData={props.testData}
               onChange={value => onUpdateInteractor({ filename: value })}
             />
-            <Form.Group>
-              <Form.Select
-                width={8}
-                label={_(".interactor.language")}
-                value={interactor.language}
-                options={Object.keys(codeLanguageOptions).map(language => ({
-                  key: language,
-                  value: language,
-                  text: _(`code_language.${language}.name`)
-                }))}
-                onChange={(e, { value }) => onUpdateInteractor({ language: value as CodeLanguage })}
-              />
-              {interactor.interface === "shm" && (
-                <Form.Field width={8}>
-                  <label>{_(".interactor.shm_size")}</label>
-                  <Input
-                    value={normalizeSharedMemorySize(interactor.sharedMemorySize)}
-                    type="number"
-                    min={4}
-                    max={128}
-                    label="MiB"
-                    labelPosition="right"
-                    onChange={(e, { value }) =>
-                      onUpdateInteractor({
-                        sharedMemorySize: normalizeSharedMemorySize(Number(value))
-                      })
-                    }
-                  />
-                </Form.Field>
-              )}
-            </Form.Group>
             <div className={style.languageOptions}>
-              {codeLanguageOptions[interactor.language].map(option => {
-                switch (option.type) {
-                  case CodeLanguageOptionType.Select:
-                    return (
-                      <Form.Select
-                        label={_(`code_language.${interactor.language}.options.${option.name}.name`)}
-                        fluid
-                        value={
-                          interactor.languageOptions[option.name] == null
-                            ? option.defaultValue
-                            : (interactor.languageOptions[option.name] as string)
-                        }
-                        options={option.values.map(value => ({
-                          key: value,
-                          value: value,
-                          text: _(`code_language.${interactor.language}.options.${option.name}.values.${value}`)
-                        }))}
-                        onChange={(e, { value }) => setLanguageOption(option.name, value)}
-                      />
-                    );
+              <CodeLanguageAndOptions
+                elementAfterLanguageSelect={
+                  <Form.Field style={{ visibility: interactor.interface === "shm" ? "" : "hidden" }}>
+                    <label>{_(".interactor.shm_size")}</label>
+                    <Input
+                      value={normalizeSharedMemorySize(interactor.sharedMemorySize)}
+                      type="number"
+                      min={4}
+                      max={128}
+                      label="MiB"
+                      labelPosition="right"
+                      onChange={(e, { value }) =>
+                        onUpdateInteractor({
+                          sharedMemorySize: normalizeSharedMemorySize(Number(value))
+                        })
+                      }
+                    />
+                  </Form.Field>
                 }
-              })}
+                language={interactor.language}
+                languageOptions={interactor.languageOptions}
+                onUpdateLanguage={newLanguage => onUpdateInteractor({ language: newLanguage })}
+                onUpdateLanguageOptions={languageOptions => onUpdateInteractor({ languageOptions: languageOptions })}
+              />
             </div>
             <Form.Group>
               <Form.Field width={8}>
