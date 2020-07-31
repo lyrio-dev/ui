@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useReducer } from "react";
 import ReactDOM from "react-dom";
-import { Grid, Header, Segment, Message, Image, Input, Button, Form, Icon } from "semantic-ui-react";
+import { Grid, Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
 import { route } from "navi";
 import { Link } from "react-navi";
 import { useNavigation, useCurrentRoute } from "react-navi";
@@ -37,20 +37,18 @@ let RegisterPage: React.FC = () => {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [emailVerificationCode, setEmailVerificationCode] = useState("");
   const [password, setPassword] = useState("");
   const [retypePassword, setRetypePassword] = useState("");
   const [registerPending, setRegisterPending] = useState(false);
 
-  const refForm = useRef(null);
+  const refUsernameInput = useRef<HTMLInputElement>();
+  const refEmailInput = useRef<HTMLInputElement>();
+  const refEmailVerificationCodeInput = useRef<HTMLInputElement>();
+  const refPasswordInput = useRef<HTMLInputElement>();
+  const refRetypePasswordInput = useRef<HTMLInputElement>();
 
-  // Ugly workaround
-  function getInput(name: string): HTMLInputElement {
-    const query = (x: string) => (ReactDOM.findDOMNode(refForm.current) as any).querySelector(x);
-    if (name === "username") return query("[autocomplete=username]");
-    else if (name === "email") return query("[autocomplete=email]");
-    else if (name === "password") return query("[autocomplete=new-password]");
-    else if (name === "retype-password") return query(".field:last-of-type input[autocomplete=new-password]");
-  }
+  const refForm = useRef(null);
 
   // usernameCheckStatus: false (not checked) | true (pass) | string (error message)
   const [checkUsername, waitForUsernameCheck, getUsernameUIValidateStatus, getUsernameUIHelp] = useFieldCheck(
@@ -122,30 +120,33 @@ let RegisterPage: React.FC = () => {
     return true;
   });
 
+  const [emailVerificationCodeError, setEmailVerificationCodeError] = useState(false);
+
   async function onSubmit() {
     if (registerPending) return;
     setRegisterPending(true);
 
     if (!(await waitForUsernameCheck())) {
       toast.error(_(".username_unavailable_message"));
-      getInput("username").focus();
-      getInput("username").select();
+      refUsernameInput.current.focus();
+      refUsernameInput.current.select();
     } else if (!(await waitForEmailCheck())) {
       toast.error(_(".email_unavailable_message"));
-      getInput("email").focus();
-      getInput("email").select();
+      refEmailInput.current.focus();
+      refEmailInput.current.select();
     } else if (!(await waitForPasswordCheck())) {
       toast.error(_(".invalid_password_message"));
-      getInput("password").focus();
-      getInput("password").select();
+      refPasswordInput.current.focus();
+      refPasswordInput.current.select();
     } else if (!(await waitForRetypePasswordCheck())) {
       toast.error(_(".passwords_do_not_match_message"));
-      getInput("retype-password").focus();
-      getInput("retype-password").select();
+      refRetypePasswordInput.current.focus();
+      refRetypePasswordInput.current.select();
     } else {
       const { requestError, response } = await AuthApi.register({
         username: username,
         email: email,
+        emailVerificationCode: emailVerificationCode,
         password: password
       });
 
@@ -153,29 +154,36 @@ let RegisterPage: React.FC = () => {
       else if (response.error) {
         switch (response.error) {
           case "ALREADY_LOGGEDIN":
-            toast.error(_(".response_already_loggedin"));
+            toast.error(_(`.errors.${response.error}`));
             break;
           case "DUPLICATE_USERNAME":
-            toast.error(_(".response_duplicate_username"));
+            toast.error(_(`.errors.${response.error}`));
             await waitForUsernameCheck(true);
-            getInput("username").focus();
-            getInput("username").select();
+            refUsernameInput.current.focus();
+            refUsernameInput.current.select();
             break;
           case "DUPLICATE_EMAIL":
-            toast.error(_(".response_duplicate_email"));
+            toast.error(_(`.errors.${response.error}`));
             await waitForEmailCheck(true);
-            getInput("email").focus();
-            getInput("email").select();
+            refEmailInput.current.focus();
+            refEmailInput.current.select();
+            break;
+          case "INVALID_EMAIL_VERIFICATION_CODE":
+            toast.error(_(`.errors.${response.error}`));
+            setEmailVerificationCodeError(true);
+            refEmailVerificationCodeInput.current.focus();
             break;
         }
       } else {
         // Register success
-        setSuccessMessage(_(".success", { username }));
+        appState.token = response.token;
 
         {
           const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
           if (requestError) toast.error(requestError);
           else if (!response.userMeta) location.reload();
+
+          setSuccessMessage(_(".success", { username }));
 
           setTimeout(() => {
             appState.currentUser = response.userMeta;
@@ -193,6 +201,53 @@ let RegisterPage: React.FC = () => {
     setRegisterPending(false);
   }
 
+  const stateVerificationCodeTimeout = useState(0);
+  const [sendEmailVerificationCodeTimeout, setSendEmailVerificationCodeTimeout] = stateVerificationCodeTimeout;
+  const refStateVerificationCodeTimeout = useRef<typeof stateVerificationCodeTimeout>();
+  refStateVerificationCodeTimeout.current = stateVerificationCodeTimeout;
+
+  const [sendEmailVerificationCodePending, setSendEmailVerificationCodePending] = useState(false);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      const [
+        sendEmailVerificationCodeTimeout,
+        setSendEmailVerificationCodeTimeout
+      ] = refStateVerificationCodeTimeout.current;
+      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(sendEmailVerificationCodeTimeout - 1);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  async function onSendEmailVerificationCode() {
+    if (sendEmailVerificationCodePending) return;
+    setSendEmailVerificationCodePending(true);
+
+    if (!(await waitForEmailCheck())) {
+      toast.error(_(".email_unavailable_message"));
+      refEmailInput.current.focus();
+      refEmailInput.current.select();
+    } else {
+      const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
+        email: email,
+        locale: appState.locale
+      });
+      if (requestError) toast.error(requestError);
+      else if (response.error) toast.error(_(`.errors.${response.error}`, { errorMessage: response.errorMessage }));
+      else {
+        toast.success(_(".email_verification_code_sent"));
+        setSendEmailVerificationCodeTimeout(61);
+      }
+    }
+
+    setSendEmailVerificationCodePending(false);
+  }
+
+  function onChangeVerificationCode(code: string) {
+    setEmailVerificationCodeError(false);
+    setEmailVerificationCode(code);
+  }
+
   return (
     <>
       <div className={style.wrapper}>
@@ -203,65 +258,116 @@ let RegisterPage: React.FC = () => {
         <Form size="large" ref={refForm}>
           <Segment>
             {/* username */}
-            <Form.Field
-              control={Input}
-              error={
-                getUsernameUIValidateStatus() === "error" && {
-                  content: getUsernameUIHelp(),
-                  pointing: "left"
+            <Ref innerRef={field => field && (refUsernameInput.current = field.querySelector("input"))}>
+              <Form.Field
+                control={Input}
+                error={
+                  getUsernameUIValidateStatus() === "error" && {
+                    content: getUsernameUIHelp(),
+                    pointing: "left"
+                  }
                 }
-              }
-              loading={getUsernameUIValidateStatus() === "validating"}
-              fluid
-              icon="user"
-              iconPosition="left"
-              placeholder={_(".username")}
-              value={username}
-              autoComplete="username"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-              onBlur={() => checkUsername()}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.keyCode === 13) {
-                  e.preventDefault();
-                  getInput("email").focus();
-                }
-              }}
-            />
+                loading={getUsernameUIValidateStatus() === "validating"}
+                fluid
+                icon="user"
+                iconPosition="left"
+                placeholder={_(".username")}
+                value={username}
+                autoComplete="username"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                onBlur={() => checkUsername()}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.keyCode === 13) {
+                    e.preventDefault();
+                    refEmailInput.current.focus();
+                  }
+                }}
+              />
+            </Ref>
 
             {/* email */}
-            <Form.Field
-              control={Input}
-              error={
-                getEmailUIValidateStatus() === "error" && {
-                  content: getEmailUIHelp(),
-                  pointing: "left"
+            <Ref innerRef={field => field && (refEmailInput.current = field.querySelector("input"))}>
+              <Form.Field
+                control={Input}
+                error={
+                  getEmailUIValidateStatus() === "error" && {
+                    content: getEmailUIHelp(),
+                    pointing: "left"
+                  }
                 }
-              }
-              loading={getEmailUIValidateStatus() === "validating"}
-              fluid
-              icon="envelope"
-              iconPosition="left"
-              placeholder={_(".email")}
-              value={email}
-              autoComplete="email"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              onBlur={() => checkEmail()}
-              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                if (e.keyCode === 13) {
-                  e.preventDefault();
-                  getInput("password").focus();
-                }
-              }}
-            />
+                loading={getEmailUIValidateStatus() === "validating"}
+                fluid
+                icon="envelope"
+                iconPosition="left"
+                placeholder={_(".email")}
+                value={email}
+                autoComplete="email"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                onBlur={() => checkEmail()}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.keyCode === 13) {
+                    e.preventDefault();
+                    (appState.serverPreference.requireEmailVerification
+                      ? refEmailVerificationCodeInput
+                      : refPasswordInput
+                    ).current.focus();
+                  }
+                }}
+              />
+            </Ref>
+
+            {
+              /* email verification code */
+              appState.serverPreference.requireEmailVerification && (
+                <Ref
+                  innerRef={field => field && (refEmailVerificationCodeInput.current = field.querySelector("input"))}
+                >
+                  <Form.Field
+                    control={Input}
+                    error={
+                      emailVerificationCodeError && {
+                        content: _(".invalid_email_verify_code"),
+                        pointing: "left"
+                      }
+                    }
+                    fluid
+                    icon="shield"
+                    iconPosition="left"
+                    placeholder={_(".email_verify_code")}
+                    value={emailVerificationCode}
+                    autoComplete="off"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeVerificationCode(e.target.value)}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.keyCode === 13) {
+                        e.preventDefault();
+                        refPasswordInput.current.focus();
+                      }
+                    }}
+                    action={
+                      <Button
+                        disabled={sendEmailVerificationCodeTimeout !== 0}
+                        loading={sendEmailVerificationCodePending}
+                        content={
+                          sendEmailVerificationCodeTimeout
+                            ? `${sendEmailVerificationCodeTimeout > 60 ? 60 : sendEmailVerificationCodeTimeout}s`
+                            : _(".send_email_verify_code")
+                        }
+                        onClick={onSendEmailVerificationCode}
+                      />
+                    }
+                  />
+                </Ref>
+              )
+            }
 
             {/* password */}
-            <Form.Group className={style.passwords} widths="equal">
+            <Ref innerRef={field => field && (refPasswordInput.current = field.querySelector("input"))}>
               <Form.Field
                 control={Input}
                 error={
                   getPasswordUIValidateStatus() === "error" && {
                     content: getPasswordUIHelp(),
-                    pointing: "right"
+                    pointing: "left"
                   }
                 }
                 loading={getPasswordUIValidateStatus() === "validating"}
@@ -277,10 +383,12 @@ let RegisterPage: React.FC = () => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.keyCode === 13) {
                     e.preventDefault();
-                    getInput("retype-password").focus();
+                    refRetypePasswordInput.current.focus();
                   }
                 }}
               />
+            </Ref>
+            <Ref innerRef={field => field && (refRetypePasswordInput.current = field.querySelector("input"))}>
               <Form.Field
                 control={Input}
                 error={
@@ -300,7 +408,7 @@ let RegisterPage: React.FC = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRetypePassword(e.target.value)}
                 onBlur={() => checkRetypePassword()}
               />
-            </Form.Group>
+            </Ref>
 
             <Button
               className={successMessage && style.successButton}
@@ -322,7 +430,7 @@ let RegisterPage: React.FC = () => {
             </Button>
           </Segment>
         </Form>
-        <Message className={style.message} textAlign="center">
+        <Message className={style.message}>
           {_(".already_have_account")}
           <Link href="/login">{_(".login")}</Link>
         </Message>

@@ -4,6 +4,7 @@ module.exports = {
   username: "Username",
   email: "E-mail",
   send_email_verify_code: "Send",
+  email_verification_code_sent: "Email verification code sent.",
   email_verify_code: "E-mail Verify Code",
   password: "Password",
   retype_password: "Retype Password",
@@ -16,6 +17,7 @@ module.exports = {
   empty_email: "Please enter your email address",
   invalid_email: "Invalid email address",
   email_already_used: "Email already used",
+  invalid_email_verify_code: "Invalid email verification code.",
   empty_password: "Please enter your password",
   invalid_password: "Password must be in the length of 6 to 32",
   passwords_do_not_match: "Passwords don't match",
@@ -23,8 +25,13 @@ module.exports = {
   email_unavailable_message: "You can't register with this email.",
   invalid_password_message: "Invalid password.",
   passwords_do_not_match_message: "Two passwords don't match.",
-  already_loggedin: "You have already logged in.",
-  response_duplicate_username: "Username already taken.",
-  response_duplicate_email: "Email already used.",
+  errors: {
+    ALREADY_LOGGEDIN: "You have already logged in.",
+    DUPLICATE_USERNAME: "Username already taken.",
+    DUPLICATE_EMAIL: "Email already used.",
+    INVALID_EMAIL_VERIFICATION_CODE: "Invalid email verification code.",
+    FAILED_TO_SEND: "Failed to send mail: {errorMessage}",
+    RATE_LIMITED: "Your operations are too frequent. Please try again later."
+  },
   success: "Welcome, {username}!"
 };

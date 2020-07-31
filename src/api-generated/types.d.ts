@@ -319,8 +319,10 @@ declare namespace ApiTypes {
     export type Wildcard = "START" | "END" | "BOTH";
   }
   export interface PreferenceConfig {
+    requireEmailVerification: boolean;
     allowUserChangeUsername: boolean;
     allowEveryoneCreateProblem: boolean;
+    allowNonAdminEditPublicProblem: boolean;
     allowOwnerManageProblemPermission: boolean;
     allowOwnerDeleteProblem: boolean;
   }
@@ -480,10 +482,11 @@ declare namespace ApiTypes {
   export interface RegisterRequestDto {
     username: string;
     email: string;
+    emailVerificationCode?: string;
     password: string;
   }
   export interface RegisterResponseDto {
-    error?: "ALREADY_LOGGEDIN" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
+    error?: "ALREADY_LOGGEDIN" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL" | "INVALID_EMAIL_VERIFICATION_CODE";
     token?: string;
   }
   export interface RejudgeSubmissionRequestDto {
@@ -545,6 +548,14 @@ declare namespace ApiTypes {
   }
   export interface SearchUserResponseDto {
     userMetas: ApiTypes.UserMetaDto[];
+  }
+  export interface SendEmailVerificationCodeRequestDto {
+    email: string;
+    locale: "en_US" | "zh_CN" | "ja_JP";
+  }
+  export interface SendEmailVerificationCodeResponseDto {
+    error?: "ALREADY_LOGGEDIN" | "DUPLICATE_EMAIL" | "FAILED_TO_SEND" | "RATE_LIMITED";
+    errorMessage?: string;
   }
   export interface SetGroupAdminRequestDto {
     userId: number;
