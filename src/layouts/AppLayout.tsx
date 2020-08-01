@@ -151,7 +151,7 @@ let AppLayout: React.FC = props => {
         <div className={style.logo}>
           <Logo />
         </div>
-        <div className={style.siteName}>{appConfig.siteName}</div>
+        <div className={style.siteName}>{appState.serverPreference.siteName}</div>
       </div>
     </Menu.Item>
   );
@@ -161,7 +161,7 @@ let AppLayout: React.FC = props => {
       <Segment vertical className={style.footer}>
         <Container textAlign="center">
           <div>
-            {appConfig.siteName} Powered by{" "}
+            {appState.serverPreference.siteName} Powered by{" "}
             <a href="https://github.com/syzoj" target="_blank">
               SYZOJ
             </a>
@@ -237,7 +237,7 @@ let AppLayout: React.FC = props => {
           visible={sidebarOpen}
         >
           <Menu.Item className={style.siteName} as={Link} href="/">
-            {appConfig.siteName}
+            {appState.serverPreference.siteName}
           </Menu.Item>
           <Menu.Item>
             {appState.currentUser ? (

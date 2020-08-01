@@ -18,7 +18,7 @@ const App: React.FC = () => {
           />
           <title>
             {appState.title && `${appState.title} - `}
-            {appConfig.siteName}
+            {appState.serverPreference.siteName}
           </title>
         </Helmet>
       </HelmetProvider>
