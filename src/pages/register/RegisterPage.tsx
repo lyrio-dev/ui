@@ -15,6 +15,7 @@ import { AuthApi } from "@/api";
 import { useIntlMessage, useFieldCheck } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
+import { refreshSession } from "@/initApp";
 
 let RegisterPage: React.FC = () => {
   const _ = useIntlMessage("register");
@@ -179,17 +180,10 @@ let RegisterPage: React.FC = () => {
         appState.token = response.token;
 
         {
-          const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
-          if (requestError) toast.error(requestError);
-          else if (!response.userMeta) location.reload();
-
           setSuccessMessage(_(".success", { username }));
 
-          setTimeout(() => {
-            appState.currentUser = response.userMeta;
-            appState.userPreference = response.userPreference;
-            appState.serverPreference = response.serverPreference;
-
+          setTimeout(async () => {
+            await refreshSession();
             redirect();
           }, 1000);
         }

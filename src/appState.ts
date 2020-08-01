@@ -78,11 +78,11 @@ export class AppState {
   currentUserJoinedGroupsCount: number = 0;
 
   @observable
-  currentUserPrivileges: ApiTypes.GetCurrentUserAndPreferenceResponseDto["userPrivileges"] = [];
+  currentUserPrivileges: ApiTypes.GetSessionInfoResponseDto["userPrivileges"] = [];
 
   currentUserHasPrivilege = computedFn(function (
     this: AppState,
-    privilege: ApiTypes.GetCurrentUserAndPreferenceResponseDto["userPrivileges"][0]
+    privilege: ApiTypes.GetSessionInfoResponseDto["userPrivileges"][0]
   ) {
     return this.currentUser && (this.currentUser.isAdmin || this.currentUserPrivileges.includes(privilege));
   });

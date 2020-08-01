@@ -4,7 +4,7 @@
 
 import { createGetApi, createPostApi } from "@/api";
 
-export type GetCurrentUserAndPreferenceResponseDto = ApiTypes.GetCurrentUserAndPreferenceResponseDto;
+export type GetSessionInfoResponseDto = ApiTypes.GetSessionInfoResponseDto;
 export type LoginRequestDto = ApiTypes.LoginRequestDto;
 export type LoginResponseDto = ApiTypes.LoginResponseDto;
 export type CheckAvailabilityResponseDto = ApiTypes.CheckAvailabilityResponseDto;
@@ -13,8 +13,8 @@ export type SendEmailVerificationCodeResponseDto = ApiTypes.SendEmailVerificatio
 export type RegisterRequestDto = ApiTypes.RegisterRequestDto;
 export type RegisterResponseDto = ApiTypes.RegisterResponseDto;
 
-export const getCurrentUserAndPreference = createGetApi<void, GetCurrentUserAndPreferenceResponseDto>(
-  "auth/getCurrentUserAndPreference"
+export const getSessionInfo = createGetApi<{ token: string; jsonp: string }, GetSessionInfoResponseDto>(
+  "auth/getSessionInfo"
 );
 export const login = createPostApi<LoginRequestDto, LoginResponseDto>("auth/login");
 export const logout = createPostApi<void, void>("auth/logout");

@@ -130,19 +130,6 @@ declare namespace ApiTypes {
   export interface GetAllProblemTagsResponseDto {
     tags: ApiTypes.LocalizedProblemTagDto[];
   }
-  export interface GetCurrentUserAndPreferenceResponseDto {
-    userMeta?: ApiTypes.UserMetaDto;
-    joinedGroupsCount?: number;
-    userPrivileges?: (
-      | "MANAGE_USER"
-      | "MANAGE_USER_GROUP"
-      | "MANAGE_PROBLEM"
-      | "MANAGE_CONTEST"
-      | "MANAGE_DISCUSSION"
-    )[];
-    userPreference?: ApiTypes.UserPreferenceDto;
-    serverPreference?: ApiTypes.PreferenceConfig;
-  }
   export interface GetGroupListResponseDto {
     groups: ApiTypes.GroupMetaDto[];
     groupsWithAdminPermission: number[];
@@ -201,6 +188,13 @@ declare namespace ApiTypes {
     id?: number;
     color?: string;
     localizedNames?: ApiTypes.ProblemTagLocalizedNameDto[];
+  }
+  export interface GetSessionInfoResponseDto {
+    userMeta: ApiTypes.UserMetaDto;
+    joinedGroupsCount: number;
+    userPrivileges: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
+    userPreference: ApiTypes.UserPreferenceDto;
+    serverPreference: ApiTypes.PreferenceConfig;
   }
   export interface GetSubmissionDetailRequestDto {
     submissionId: string;
@@ -313,12 +307,15 @@ declare namespace ApiTypes {
   namespace Parameters {
     export type Email = string;
     export type GroupId = string;
+    export type Jsonp = string;
     export type MaintainceKey = string;
     export type Query = string;
+    export type Token = string;
     export type Username = string;
     export type Wildcard = "START" | "END" | "BOTH";
   }
   export interface PreferenceConfig {
+    siteName: string;
     requireEmailVerification: boolean;
     allowUserChangeUsername: boolean;
     allowEveryoneCreateProblem: boolean;

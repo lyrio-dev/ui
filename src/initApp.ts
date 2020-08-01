@@ -1,16 +1,28 @@
 import { appState, initAppStateStore } from "@/appState";
 
-import { AuthApi } from "@/api";
+// Wait for getSessionInfo JSONP API returns
+async function waitForSessionInitialization() {
+  const sessionInfo =
+    window["sessionInfo"] ||
+    (await new Promise(resolve => {
+      window["getSessionInfoCallback"] = (sessionInfo: any) => {
+        resolve(sessionInfo);
+        delete window["getSessionInfoCallback"];
+      };
+    }));
+
+  appState.currentUser = sessionInfo.userMeta;
+  appState.currentUserJoinedGroupsCount = sessionInfo.joinedGroupsCount;
+  appState.currentUserPrivileges = sessionInfo.userPrivileges || [];
+  appState.userPreference = sessionInfo.userPreference || {};
+  appState.serverPreference = sessionInfo.serverPreference;
+}
 
 export default async function initApp() {
-  await initAppStateStore();
-
-  // Get current logged in user's meta
-  const { requestError, response } = await AuthApi.getCurrentUserAndPreference();
-  if (requestError) throw new Error(requestError);
-  appState.currentUser = response.userMeta;
-  appState.currentUserJoinedGroupsCount = response.joinedGroupsCount;
-  appState.currentUserPrivileges = response.userPrivileges || [];
-  appState.userPreference = response.userPreference || {};
-  appState.serverPreference = response.serverPreference;
+  await Promise.all([initAppStateStore(), waitForSessionInitialization()]);
 }
+
+export const refreshSession = async () => {
+  window["refreshSession"](appState.token);
+  await waitForSessionInitialization();
+};

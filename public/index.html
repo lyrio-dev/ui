@@ -206,6 +206,27 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
     }
   </script>
 
+  <!-- Get session and server info -->
+  <script>
+    function refreshSession(token) {
+      function getSessionToken() {
+        try {
+          return JSON.parse(localStorage["appState"])["token"]
+        } catch (e) {
+          return null;
+        }
+      }
+
+      if (!token) token = getSessionToken() || "";
+      var script = document.createElement("script");
+      script.async = true;
+      script.onerror = handleLoadingError;
+      script.src = <%= safeStringify(appConfig.apiEndpoint + "api/auth/getSessionInfo") %> + "?jsonp=1&token=" + encodeURIComponent(token);
+      document.head.appendChild(script);
+    }
+    refreshSession();
+  </script>
+
   <title><%= appConfig.siteName %></title>
 
   <%= htmlWebpackPlugin.tags.headTags %>
