@@ -16,7 +16,7 @@ module.exports = {
     FAILED: "未知错误。"
   },
   profile: {
-    title: "修改个人资料",
+    title: "个人资料",
     avatar: {
       header: "头像",
       gravatar: {
@@ -90,7 +90,7 @@ module.exports = {
     success: "偏好设置修改成功。"
   },
   security: {
-    title: "安全设置",
+    title: "安全",
     password: {
       header: "修改密码",
       old: "旧密码",

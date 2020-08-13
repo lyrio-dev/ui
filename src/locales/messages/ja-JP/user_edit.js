@@ -2,7 +2,8 @@ module.exports = {
   menu: {
     profile: "プロファイル",
     preference: "環境設定",
-    security: "セキュリティ"
+    security: "セキュリティ",
+    privilege: "[TBT] Privileges"
   },
   back_to_profile: "ユーザページに戻る",
   back_to_profile_of_user: "このユーザのプロファイルに戻る",
@@ -11,7 +12,8 @@ module.exports = {
     PERMISSION_DENIED: "権限がありません。",
     NO_SUCH_USER: "ユーザが存在しません。",
     DUPLICATE_USERNAME: "このユーザ名はすでに使用されています。",
-    DUPLICATE_EMAIL: "このメールアドレスはすでに使用されています。"
+    DUPLICATE_EMAIL: "このメールアドレスはすでに使用されています。",
+    FAILED: "[TBT] Unknown error."
   },
   profile: {
     title: "プロファイル設定",

@@ -16,6 +16,7 @@ module.exports = {
     FAILED: "Unknown error."
   },
   profile: {
+    title: "Profile",
     avatar: {
       header: "Avatar",
       gravatar: {
@@ -60,6 +61,7 @@ module.exports = {
     success: "Profile updated successfully."
   },
   preference: {
+    title: "Preference",
     locale: {
       header: "Language",
       system: "Preferred system language",
@@ -90,6 +92,7 @@ module.exports = {
     success: "Preference updated successfully."
   },
   security: {
+    title: "Security",
     password: {
       header: "Change password",
       old: "Old password",
