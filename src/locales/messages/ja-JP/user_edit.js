@@ -8,12 +8,14 @@ module.exports = {
   back_to_profile: "ユーザページに戻る",
   back_to_profile_of_user: "このユーザのプロファイルに戻る",
   admin_warning: "管理者権限で他のユーザのプロファイルを閲覧しています",
-  error: {
+  errors: {
     PERMISSION_DENIED: "権限がありません。",
     NO_SUCH_USER: "ユーザが存在しません。",
     DUPLICATE_USERNAME: "このユーザ名はすでに使用されています。",
     DUPLICATE_EMAIL: "このメールアドレスはすでに使用されています。",
-    FAILED: "[TBT] Unknown error."
+    FAILED: "[TBT] Unknown error.",
+    FAILED_TO_SEND: "[TBT] Failed to send mail: {errorMessage}",
+    RATE_LIMITED: "[TBT] Your operations are too frequent. Please try again later."
   },
   profile: {
     title: "プロファイル設定",
@@ -110,6 +112,10 @@ module.exports = {
       email: "メールアドレス",
       invalid_email: "無効なメールアドレスです。",
       duplicate_email: "このメールアドレスはすでに使用されています。",
+      email_verification_code: "[TBT] Email verification code",
+      send_email_verification_code: "[TBT] Send",
+      verification_code_sent: "[TBT] Email verification code sent.",
+      invalid_email_verification_code: "[TBT] Invalid email verification code",
       success: "メールアドレス変更に成功しました。",
       submit: "変更"
     }

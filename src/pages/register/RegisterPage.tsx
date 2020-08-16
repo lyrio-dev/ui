@@ -224,6 +224,7 @@ let RegisterPage: React.FC = () => {
     } else {
       const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
         email: email,
+        type: "Register",
         locale: appState.locale
       });
       if (requestError) toast.error(requestError);
@@ -320,14 +321,14 @@ let RegisterPage: React.FC = () => {
                     control={Input}
                     error={
                       emailVerificationCodeError && {
-                        content: _(".invalid_email_verify_code"),
+                        content: _(".invalid_email_verification_code"),
                         pointing: "left"
                       }
                     }
                     fluid
                     icon="shield"
                     iconPosition="left"
-                    placeholder={_(".email_verify_code")}
+                    placeholder={_(".email_verification_code")}
                     value={emailVerificationCode}
                     autoComplete="off"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeVerificationCode(e.target.value)}
@@ -344,7 +345,7 @@ let RegisterPage: React.FC = () => {
                         content={
                           sendEmailVerificationCodeTimeout
                             ? `${sendEmailVerificationCodeTimeout > 60 ? 60 : sendEmailVerificationCodeTimeout}s`
-                            : _(".send_email_verify_code")
+                            : _(".send_email_verification_code")
                         }
                         onClick={onSendEmailVerificationCode}
                       />

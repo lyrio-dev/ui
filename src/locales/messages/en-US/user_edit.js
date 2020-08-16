@@ -8,12 +8,14 @@ module.exports = {
   back_to_profile: "Back to profile",
   back_to_profile_of_user: "Bask to the user's profile",
   admin_warning: "You're viewing and editing another user with your privilege.",
-  error: {
+  errors: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_USER: "No such user.",
     DUPLICATE_USERNAME: "Username already taken.",
     DUPLICATE_EMAIL: "Email already used.",
-    FAILED: "Unknown error."
+    FAILED: "Unknown error.",
+    FAILED_TO_SEND: "Failed to send mail: {errorMessage}",
+    RATE_LIMITED: "Your operations are too frequent. Please try again later."
   },
   profile: {
     title: "Profile",
@@ -111,6 +113,10 @@ module.exports = {
       email: "Email",
       invalid_email: "Invalid email address.",
       duplicate_email: "This email address has already been occupied.",
+      email_verification_code: "Email verification code",
+      send_email_verification_code: "Send",
+      verification_code_sent: "Email verification code sent.",
+      invalid_email_verification_code: "Invalid email verification code",
       success: "Email changed successfully.",
       submit: "Submit"
     }

@@ -548,10 +548,11 @@ declare namespace ApiTypes {
   }
   export interface SendEmailVerificationCodeRequestDto {
     email: string;
+    type: "Register" | "ChangeEmail";
     locale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface SendEmailVerificationCodeResponseDto {
-    error?: "ALREADY_LOGGEDIN" | "DUPLICATE_EMAIL" | "FAILED_TO_SEND" | "RATE_LIMITED";
+    error?: "PERMISSION_DENIED" | "ALREADY_LOGGEDIN" | "DUPLICATE_EMAIL" | "FAILED_TO_SEND" | "RATE_LIMITED";
     errorMessage?: string;
   }
   export interface SetGroupAdminRequestDto {
@@ -704,9 +705,10 @@ declare namespace ApiTypes {
   export interface UpdateUserEmailRequestDto {
     userId: number;
     email: string;
+    emailVerificationCode?: string;
   }
   export interface UpdateUserEmailResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "DUPLICATE_EMAIL";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "DUPLICATE_EMAIL" | "INVALID_EMAIL_VERIFICATION_CODE";
   }
   export interface UpdateUserPasswordRequestDto {
     userId: number;

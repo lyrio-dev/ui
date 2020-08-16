@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Header, Button, Input } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Validator, isEmail } from "class-validator";
@@ -6,7 +6,7 @@ import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
-import { UserApi } from "@/api";
+import { UserApi, AuthApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
@@ -16,7 +16,7 @@ import { RouteError } from "@/AppRouter";
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserSecuritySettings({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
 
   return response;
 }
@@ -81,7 +81,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
       if (requestError) toast.error(requestError);
       else if (response.error === "WRONG_OLD_PASSWORD") {
         setWrongOldPassword(true);
-      } else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
+      } else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
       else {
         toast.success(_(".password.success"));
 
@@ -99,9 +99,57 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   // End change password
 
   // Start change email
-  // TODO: add email verify
   const [email, setEmail] = useState(props.meta.email);
   const [checkEmail, emailInvalid] = useFieldCheckSimple(email, value => isEmail(value));
+
+  const [emailVerificationCode, setEmailVerificationCode] = useState("");
+  const stateVerificationCodeTimeout = useState(0);
+  const [sendEmailVerificationCodeTimeout, setSendEmailVerificationCodeTimeout] = stateVerificationCodeTimeout;
+  const refStateVerificationCodeTimeout = useRef<typeof stateVerificationCodeTimeout>();
+  refStateVerificationCodeTimeout.current = stateVerificationCodeTimeout;
+
+  const [sendEmailVerificationCodePending, setSendEmailVerificationCodePending] = useState(false);
+  const [emailVerificationCodeError, setEmailVerificationCodeError] = useState(false);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      const [
+        sendEmailVerificationCodeTimeout,
+        setSendEmailVerificationCodeTimeout
+      ] = refStateVerificationCodeTimeout.current;
+      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(sendEmailVerificationCodeTimeout - 1);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  async function onSendEmailVerificationCode() {
+    if (sendEmailVerificationCodePending) return;
+    setSendEmailVerificationCodePending(true);
+
+    if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
+    } else {
+      const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
+        email: email,
+        type: "ChangeEmail",
+        locale: appState.locale
+      });
+      if (requestError) toast.error(requestError);
+      else if (response.error === "DUPLICATE_EMAIL") setDuplicateEmail(true);
+      else if (response.error)
+        toast.error(_(`user_edit.errors.${response.error}`, { errorMessage: response.errorMessage }));
+      else {
+        toast.success(_(".email.verification_code_sent"));
+        setSendEmailVerificationCodeTimeout(61);
+      }
+    }
+
+    setSendEmailVerificationCodePending(false);
+  }
+
+  function onChangeVerificationCode(code: string) {
+    setEmailVerificationCodeError(false);
+    setEmailVerificationCode(code);
+  }
 
   // Errors
   const [duplicateEmail, setDuplicateEmail] = useState(false);
@@ -112,21 +160,27 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     if (pendingChangeEmail) return;
     setPendingChangeEmail(true);
 
-    if (emailInvalid) {
+    if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
       const { requestError, response } = await UserApi.updateUserEmail({
         userId: props.meta.id,
-        email: email
+        email: email,
+        emailVerificationCode: emailVerificationCode
       });
       if (requestError) toast.error(requestError);
       else if (response.error === "DUPLICATE_EMAIL") setDuplicateEmail(true);
-      else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
+      else if (response.error === "INVALID_EMAIL_VERIFICATION_CODE") setEmailVerificationCodeError(true);
+      else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
       else {
         toast.success(_(".email.success"));
 
         if (props.meta.id === appState.currentUser.id) {
           appState.currentUser.email = email;
         }
+
+        setEmailVerificationCode("");
+        setEmailVerificationCodeError(false);
+        setSendEmailVerificationCodeTimeout(0);
       }
     }
 
@@ -212,6 +266,31 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
       <div className={style.notes}>
         {emailInvalid ? _(".email.invalid_email") : duplicateEmail && _(".email.duplicate_email")}
       </div>
+      {appState.serverPreference.requireEmailVerification && (
+        <>
+          <Header className={style.header} size="tiny" content={_(".email.email_verification_code")} />
+          <Input
+            className={style.notFullWidth}
+            fluid
+            value={emailVerificationCode}
+            onChange={(e, { value }) => !pendingChangeEmail && onChangeVerificationCode(value)}
+            error={emailVerificationCodeError}
+            action={
+              <Button
+                disabled={sendEmailVerificationCodeTimeout !== 0}
+                loading={sendEmailVerificationCodePending}
+                content={
+                  sendEmailVerificationCodeTimeout
+                    ? `${sendEmailVerificationCodeTimeout > 60 ? 60 : sendEmailVerificationCodeTimeout}s`
+                    : _(".email.send_email_verification_code")
+                }
+                onClick={onSendEmailVerificationCode}
+              />
+            }
+          />
+          <div className={style.notes}>{emailVerificationCodeError && _(".email.invalid_email_verification_code")}</div>
+        </>
+      )}
       <Button
         className={style.submit}
         loading={pendingChangeEmail}

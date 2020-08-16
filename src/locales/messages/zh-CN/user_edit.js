@@ -8,12 +8,14 @@ module.exports = {
   back_to_profile: "返回个人资料",
   back_to_profile_of_user: "返回该用户个人资料",
   admin_warning: "您正在使用管理权限查看与编辑其它用户的资料。",
-  error: {
+  errors: {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_USER: "无此用户。",
     DUPLICATE_USERNAME: "用户名已被使用。",
-    DUPLICATE_EMAIL: "电子邮箱已被使用。",
-    FAILED: "未知错误。"
+    DUPLICATE_EMAIL: "邮箱已被使用。",
+    FAILED: "未知错误。",
+    FAILED_TO_SEND: "发送邮件失败：{errorMessage}",
+    RATE_LIMITED: "您的操作过于频繁，请稍后再试。"
   },
   profile: {
     title: "个人资料",
@@ -109,6 +111,10 @@ module.exports = {
       email: "邮箱",
       invalid_email: "无效的邮箱地址。",
       duplicate_email: "该邮箱地址已被占用。",
+      email_verification_code: "邮箱验证码",
+      send_email_verification_code: "发送验证码",
+      verification_code_sent: "邮箱验证码已发送。",
+      invalid_email_verification_code: "无效的邮箱验证码。",
       success: "修改邮箱地址成功。",
       submit: "提交"
     }
