@@ -12,6 +12,8 @@ export type SendEmailVerificationCodeRequestDto = ApiTypes.SendEmailVerification
 export type SendEmailVerificationCodeResponseDto = ApiTypes.SendEmailVerificationCodeResponseDto;
 export type RegisterRequestDto = ApiTypes.RegisterRequestDto;
 export type RegisterResponseDto = ApiTypes.RegisterResponseDto;
+export type ResetPasswordRequestDto = ApiTypes.ResetPasswordRequestDto;
+export type ResetPasswordResponseDto = ApiTypes.ResetPasswordResponseDto;
 
 export const getSessionInfo = createGetApi<{ token: string; jsonp: string }, GetSessionInfoResponseDto>(
   "auth/getSessionInfo"
@@ -26,3 +28,4 @@ export const sendEmailVerifactionCode = createPostApi<
   SendEmailVerificationCodeResponseDto
 >("auth/sendEmailVerifactionCode");
 export const register = createPostApi<RegisterRequestDto, RegisterResponseDto>("auth/register");
+export const resetPassword = createPostApi<ResetPasswordRequestDto, ResetPasswordResponseDto>("auth/resetPassword");

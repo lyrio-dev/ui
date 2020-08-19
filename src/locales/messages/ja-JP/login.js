@@ -3,6 +3,7 @@ module.exports = {
   login_to_your_account: "ログイン",
   username: "ユーザ名",
   password: "パスワード",
+  forgot_password: "[TBT] Forgot password",
   remember: "ログインの状態を保つ",
   forget: "パスワードを忘れた方はこちら",
   new_user: "アカウントを登録しましたか？",

@@ -536,6 +536,15 @@ declare namespace ApiTypes {
     error?: "PERMISSION_DENIED" | "NO_SUCH_JUDGE_CLIENT";
     key?: string;
   }
+  export interface ResetPasswordRequestDto {
+    email: string;
+    emailVerificationCode?: string;
+    newPassword: string;
+  }
+  export interface ResetPasswordResponseDto {
+    error?: "NO_SUCH_USER" | "INVALID_EMAIL_VERIFICATION_CODE";
+    token?: string;
+  }
   namespace Responses {
     export type $200 = string;
     export type $201 = ApiTypes.ResetJudgeClientKeyResponseDto;
@@ -548,11 +557,17 @@ declare namespace ApiTypes {
   }
   export interface SendEmailVerificationCodeRequestDto {
     email: string;
-    type: "Register" | "ChangeEmail";
+    type: "Register" | "ChangeEmail" | "ResetPassword";
     locale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface SendEmailVerificationCodeResponseDto {
-    error?: "PERMISSION_DENIED" | "ALREADY_LOGGEDIN" | "DUPLICATE_EMAIL" | "FAILED_TO_SEND" | "RATE_LIMITED";
+    error?:
+      | "PERMISSION_DENIED"
+      | "ALREADY_LOGGEDIN"
+      | "NO_SuCH_USER"
+      | "DUPLICATE_EMAIL"
+      | "FAILED_TO_SEND"
+      | "RATE_LIMITED";
     errorMessage?: string;
   }
   export interface SetGroupAdminRequestDto {

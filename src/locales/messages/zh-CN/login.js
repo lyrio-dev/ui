@@ -3,6 +3,7 @@ module.exports = {
   login_to_your_account: "登录你的账户",
   username: "用户名",
   password: "密码",
+  forgot_password: "忘记密码",
   remember: "保持登录",
   forget: "忘记密码",
   new_user: "新用户？",

@@ -73,8 +73,9 @@ const routes = withView(
   },
   mount({
     "/": lazy(() => import("./pages/home")),
-    "/login": lazy(() => import("./pages/login")),
-    "/register": lazy(() => import("./pages/register")),
+    "/login": lazy(() => import("./pages/auth/login")),
+    "/register": lazy(() => import("./pages/auth/register")),
+    "/forgot": lazy(() => import("./pages/auth/forgot")),
     "/problems": getRoute(() => import("./pages/problem"), "problems"),
     "/problem": getRoute(() => import("./pages/problem"), "problem"),
     "/submissions": getRoute(() => import("./pages/submission"), "submissions"),

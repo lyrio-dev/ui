@@ -1,18 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
-import ReactDOM from "react-dom";
-import { Grid, Header, Segment, Message, Image, Input, Button, Form, Icon } from "semantic-ui-react";
+import { Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
 import { route } from "navi";
-import { Link } from "react-navi";
 import { useNavigation, useCurrentRoute } from "react-navi";
 import { observer } from "mobx-react";
 
-import style from "./LoginPage.module.less";
+import style from "../common.module.less";
 import AppLogo from "@/assets/syzoj-applogo.svg";
 
 import { appState } from "@/appState";
 
 import { AuthApi } from "@/api";
-import { useIntlMessage } from "@/utils/hooks";
+import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
@@ -25,6 +23,8 @@ let LoginPage: React.FC = () => {
   const redirect = () => {
     navigation.navigate(currentRoute.url.query.loginRedirectUrl || "/");
   };
+
+  const navigateTo = useLoginOrRegisterNavigation();
 
   useEffect(() => {
     if (appState.currentUser) redirect();
@@ -47,14 +47,8 @@ let LoginPage: React.FC = () => {
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
 
-  const refForm = useRef(null);
-
-  // Ugly workaround
-  function getInput(name: string): HTMLInputElement {
-    const query = (x: string) => (ReactDOM.findDOMNode(refForm.current) as any).querySelector(x);
-    if (name === "username") return query("[autocomplete='username']");
-    else if (name === "password") return query("[autocomplete='current-password']");
-  }
+  const refUsernameInput = useRef<HTMLInputElement>();
+  const refPasswordInput = useRef<HTMLInputElement>();
 
   async function onSubmit() {
     if (pending) return;
@@ -80,13 +74,13 @@ let LoginPage: React.FC = () => {
             break;
           case "NO_SUCH_USER":
             setError("username", _(".no_such_user"));
-            getInput("username").focus();
-            getInput("username").select();
+            refUsernameInput.current.focus();
+            refUsernameInput.current.select();
             break;
           case "WRONG_PASSWORD":
             setError("password", _(".wrong_password"));
-            getInput("password").focus();
-            getInput("password").select();
+            refPasswordInput.current.focus();
+            refPasswordInput.current.select();
             break;
         }
       } else {
@@ -111,14 +105,14 @@ let LoginPage: React.FC = () => {
 
   return (
     <>
-      <Grid textAlign="center">
-        <Grid.Column className={style.wrapper}>
-          <Header as="h2" className={style.header} textAlign="center">
-            <Image as={AppLogo} className={style.logo} />
-            {_(".login_to_your_account")}
-          </Header>
-          <Form size="large" ref={refForm}>
-            <Segment>
+      <div className={style.wrapper}>
+        <Header as="h2" className={style.header} textAlign="center">
+          <Image as={AppLogo} className={style.logo} />
+          {_(".login_to_your_account")}
+        </Header>
+        <Form size="large">
+          <Segment>
+            <Ref innerRef={field => field && (refUsernameInput.current = field.querySelector("input"))}>
               <Form.Field
                 control={Input}
                 error={
@@ -137,10 +131,23 @@ let LoginPage: React.FC = () => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.keyCode === 13) {
                     e.preventDefault();
-                    getInput("password").focus();
+                    refPasswordInput.current.focus();
                   }
                 }}
               />
+            </Ref>
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                navigateTo("forgot");
+              }}
+              tabIndex={-1}
+              className={style.inputAction}
+            >
+              {_(".forgot_password")}
+            </a>
+            <Ref innerRef={field => field && (refPasswordInput.current = field.querySelector("input"))}>
               <Form.Field
                 control={Input}
                 error={
@@ -158,33 +165,41 @@ let LoginPage: React.FC = () => {
                 autoComplete="current-password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               />
+            </Ref>
 
-              <Button
-                className={successMessage && style.successButton}
-                primary={!successMessage}
-                color={successMessage ? "green" : null}
-                fluid
-                size="large"
-                loading={pending && !successMessage}
-                onClick={() => onSubmit()}
-              >
-                {successMessage ? (
-                  <>
-                    <Icon name="checkmark" />
-                    {successMessage}
-                  </>
-                ) : (
-                  _(".login")
-                )}
-              </Button>
-            </Segment>
-          </Form>
-          <Message className={style.message}>
-            {_(".new_user")}
-            <Link href="/register">{_(".register")}</Link>
-          </Message>
-        </Grid.Column>
-      </Grid>
+            <Button
+              className={successMessage && style.successButton}
+              primary={!successMessage}
+              color={successMessage ? "green" : null}
+              fluid
+              size="large"
+              loading={pending && !successMessage}
+              onClick={() => onSubmit()}
+            >
+              {successMessage ? (
+                <>
+                  <Icon name="checkmark" />
+                  {successMessage}
+                </>
+              ) : (
+                _(".login")
+              )}
+            </Button>
+          </Segment>
+        </Form>
+        <Message className={style.message}>
+          {_(".new_user")}
+          <a
+            href="#"
+            onClick={e => {
+              e.preventDefault();
+              navigateTo("register");
+            }}
+          >
+            {_(".register")}
+          </a>
+        </Message>
+      </div>
     </>
   );
 };

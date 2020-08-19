@@ -1,18 +1,16 @@
-import React, { useEffect, useState, useRef, useReducer } from "react";
-import ReactDOM from "react-dom";
-import { Grid, Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
+import React, { useEffect, useState, useRef } from "react";
+import { Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
 import { route } from "navi";
-import { Link } from "react-navi";
 import { useNavigation, useCurrentRoute } from "react-navi";
 import { observer } from "mobx-react";
 
-import style from "./RegisterPage.module.less";
+import style from "../common.module.less";
 import AppLogo from "@/assets/syzoj-applogo.svg";
 
 import { appState } from "@/appState";
 
 import { AuthApi } from "@/api";
-import { useIntlMessage, useFieldCheck } from "@/utils/hooks";
+import { useIntlMessage, useFieldCheck, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
@@ -25,6 +23,8 @@ let RegisterPage: React.FC = () => {
   const redirect = () => {
     navigation.navigate(currentRoute.url.query.loginRedirectUrl || "/");
   };
+
+  const navigateTo = useLoginOrRegisterNavigation();
 
   useEffect(() => {
     if (appState.currentUser) redirect();
@@ -302,10 +302,10 @@ let RegisterPage: React.FC = () => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.keyCode === 13) {
                     e.preventDefault();
-                    (appState.serverPreference.requireEmailVerification
-                      ? refEmailVerificationCodeInput
-                      : refPasswordInput
-                    ).current.focus();
+                    if (appState.serverPreference.requireEmailVerification) {
+                      refEmailVerificationCodeInput.current.focus();
+                      if (sendEmailVerificationCodeTimeout === 0) onSendEmailVerificationCode();
+                    } else refPasswordInput.current.focus();
                   }
                 }}
               />
@@ -427,7 +427,15 @@ let RegisterPage: React.FC = () => {
         </Form>
         <Message className={style.message}>
           {_(".already_have_account")}
-          <Link href="/login">{_(".login")}</Link>
+          <a
+            href="#"
+            onClick={e => {
+              e.preventDefault();
+              navigateTo("login");
+            }}
+          >
+            {_(".login")}
+          </a>
         </Message>
       </div>
     </>
