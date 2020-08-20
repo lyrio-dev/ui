@@ -66,7 +66,7 @@ let ForgetPage: React.FC = () => {
     getPasswordUIValidateStatus,
     getPasswordUIHelp,
     getCurrentPassword
-  ] = useFieldCheck(password, false, 100, value => {
+  ] = useFieldCheck(password, false, false, value => {
     if (!value) return _(".empty_password");
     if (!isValidPassword(value)) return _(".invalid_password");
     return true;
@@ -77,7 +77,8 @@ let ForgetPage: React.FC = () => {
     waitForRetypePasswordCheck,
     getRetypePasswordUIValidateStatus,
     getRetypePasswordUIHelp
-  ] = useFieldCheck(retypePassword, true, 100, value => {
+  ] = useFieldCheck(retypePassword, true, false, value => {
+    console.log("retype check: ", retypePassword, getCurrentPassword());
     if (value !== getCurrentPassword()) return _(".passwords_do_not_match");
     if (!value) return _(".empty_password");
     return true;
@@ -98,6 +99,7 @@ let ForgetPage: React.FC = () => {
       refPasswordInput.current.focus();
       refPasswordInput.current.select();
     } else if (!(await waitForRetypePasswordCheck())) {
+      console.log(password, retypePassword);
       toast.error(_(".passwords_do_not_match_message"));
       refRetypePasswordInput.current.focus();
       refRetypePasswordInput.current.select();
@@ -252,6 +254,7 @@ let ForgetPage: React.FC = () => {
                 }}
                 action={
                   <Button
+                    tabIndex={-1}
                     disabled={sendEmailVerificationCodeTimeout !== 0}
                     loading={sendEmailVerificationCodePending}
                     content={
@@ -315,6 +318,7 @@ let ForgetPage: React.FC = () => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.keyCode === 13) {
                     e.preventDefault();
+                    checkRetypePassword(); // Since the focus is not lost, forcibly re-check the field
                     onSubmit();
                   }
                 }}

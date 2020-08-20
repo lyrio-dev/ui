@@ -104,7 +104,7 @@ let RegisterPage: React.FC = () => {
     getPasswordUIValidateStatus,
     getPasswordUIHelp,
     getCurrentPassword
-  ] = useFieldCheck(password, false, 100, value => {
+  ] = useFieldCheck(password, false, false, value => {
     if (!value) return _(".empty_password");
     if (!isValidPassword(value)) return _(".invalid_password");
     return true;
@@ -115,7 +115,7 @@ let RegisterPage: React.FC = () => {
     waitForRetypePasswordCheck,
     getRetypePasswordUIValidateStatus,
     getRetypePasswordUIHelp
-  ] = useFieldCheck(retypePassword, true, 100, value => {
+  ] = useFieldCheck(retypePassword, true, false, value => {
     if (value !== getCurrentPassword()) return _(".passwords_do_not_match");
     if (!value) return _(".empty_password");
     return true;
@@ -340,6 +340,7 @@ let RegisterPage: React.FC = () => {
                     }}
                     action={
                       <Button
+                        tabIndex={-1}
                         disabled={sendEmailVerificationCodeTimeout !== 0}
                         loading={sendEmailVerificationCodePending}
                         content={
@@ -402,6 +403,13 @@ let RegisterPage: React.FC = () => {
                 autoComplete="new-password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRetypePassword(e.target.value)}
                 onBlur={() => checkRetypePassword()}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.keyCode === 13) {
+                    e.preventDefault();
+                    checkRetypePassword(); // Since the focus is not lost, forcibly re-check the field
+                    onSubmit();
+                  }
+                }}
               />
             </Ref>
 
