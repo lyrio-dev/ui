@@ -23,6 +23,11 @@ interface Window {
   };
 
   fatalError(messages: string[], stack?: string): void;
+
+  // For get session info JSONP API
+  sessionInfo: ApiTypes.GetSessionInfoResponseDto;
+  getSessionInfoCallback: (sessionInfo: ApiTypes.GetSessionInfoResponseDto) => void;
+  refreshSession: (tokan: string) => void;
 }
 
 /// <reference types="react-scripts" />

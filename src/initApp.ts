@@ -3,13 +3,15 @@ import { appState, initAppStateStore } from "@/appState";
 // Wait for getSessionInfo JSONP API returns
 async function waitForSessionInitialization() {
   const sessionInfo =
-    window["sessionInfo"] ||
+    window.sessionInfo ||
     (await new Promise(resolve => {
-      window["getSessionInfoCallback"] = (sessionInfo: any) => {
+      window.getSessionInfoCallback = sessionInfo => {
         resolve(sessionInfo);
-        delete window["getSessionInfoCallback"];
+        delete window.getSessionInfoCallback;
       };
     }));
+
+  delete window.sessionInfo;
 
   appState.currentUser = sessionInfo.userMeta;
   appState.currentUserJoinedGroupsCount = sessionInfo.joinedGroupsCount;
@@ -23,6 +25,6 @@ export default async function initApp() {
 }
 
 export const refreshSession = async () => {
-  window["refreshSession"](appState.token);
+  window.refreshSession(appState.token);
   await waitForSessionInitialization();
 };
