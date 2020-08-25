@@ -118,6 +118,24 @@ module.exports = {
       invalid_email_verification_code: "[TBT] Invalid email verification code",
       success: "メールアドレス変更に成功しました。",
       submit: "変更"
+    },
+    sessions: {
+      header: "[TBT] Sessions",
+      revoke_all: "[TBT] Logout all",
+      confirm_revoke_all: "[TBT] Confirm logout all",
+      success_revoke_all: "[TBT] Successfully logged out all sessions of this user.",
+      success_revoke_all_current_user: "[TBT] Successfully logged out all your other sessions.",
+      current: "[TBT] Current session",
+      last_active: "[TBT] Last seen {time}",
+      revoke: "[TBT] Logout",
+      confirm_revoke: "[TBT] Confirm logout",
+      success_revoke: "[TBT] Successfully logged out the session.",
+      login_ip: "[TBT] Logged-in on {ip}   ·   ",
+      login_ip_location: "[TBT] Logged-in on {ip}   ·   ", // Currently we don't support IP location in other languages
+      no_sessions: "[TBT] This user has no sessions",
+      unknown_os_browser: "[TBT] Unknown browser and OS",
+      notes_current_user:
+        '[TBT] All logged-in sessions of your account are above. If you see a session used by others, logout it and change your password immediately.\nChanging your password in "Reset your password" page will logout ALL your sessions automatically.'
     }
   },
   privilege: {

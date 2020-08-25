@@ -290,6 +290,17 @@ declare namespace ApiTypes {
     judgeClients: ApiTypes.JudgeClientInfoDto[];
     hasManagePermission: boolean;
   }
+  export interface ListUserSessionsRequestDto {
+    userId: number;
+  }
+  export interface ListUserSessionsResponseDto {
+    error?: "PERMISSION_DENIED";
+    sessions?: ApiTypes.UserSessionDto[];
+    /**
+     * Only available when querying the current user
+     */
+    currentSessionId?: number;
+  }
   export interface LocalizedProblemTagDto {
     id: number;
     name: string;
@@ -542,12 +553,22 @@ declare namespace ApiTypes {
     newPassword: string;
   }
   export interface ResetPasswordResponseDto {
-    error?: "NO_SUCH_USER" | "INVALID_EMAIL_VERIFICATION_CODE";
+    error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER" | "INVALID_EMAIL_VERIFICATION_CODE";
     token?: string;
   }
   namespace Responses {
     export type $200 = string;
     export type $201 = ApiTypes.ResetJudgeClientKeyResponseDto;
+  }
+  export interface RevokeUserSessionRequestDto {
+    userId: number;
+    /**
+     * Falsy to revoke ALL sessions of the user (except the current session, if the user is current user)
+     */
+    sessionId?: number;
+  }
+  export interface RevokeUserSessionResponseDto {
+    error?: "PERMISSION_DENIED";
   }
   export interface SearchGroupResponseDto {
     groupMetas: ApiTypes.GroupMetaDto[];
@@ -564,7 +585,7 @@ declare namespace ApiTypes {
     error?:
       | "PERMISSION_DENIED"
       | "ALREADY_LOGGEDIN"
-      | "NO_SuCH_USER"
+      | "NO_SUCH_USER"
       | "DUPLICATE_EMAIL"
       | "FAILED_TO_SEND"
       | "RATE_LIMITED";
@@ -783,5 +804,13 @@ declare namespace ApiTypes {
     codeFormatterOptions?: string;
     defaultCodeLanguage?: string;
     defaultCodeLanguageOptions?: {};
+  }
+  export interface UserSessionDto {
+    sessionId: number;
+    loginIp: string;
+    loginIpLocation: string;
+    userAgent: string;
+    loginTime: number;
+    lastAccessTime: number;
   }
 }

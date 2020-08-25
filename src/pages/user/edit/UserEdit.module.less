@@ -66,6 +66,7 @@
   display: flex;
   margin-top: 8px;
   font-size: 13px;
+  white-space: pre;
   color: rgba(0, 0, 0, 0.4);
 }
 
@@ -122,5 +123,79 @@
 
   + :global(.button) {
     margin-top: 14px !important;
+  }
+}
+
+.revokeAll {
+  float: right;
+}
+
+.sessionListItem {
+  display: flex;
+  align-items: center;
+
+  .light {
+    margin: 0 15px 0 8px !important;
+
+    &:global(.grey) {
+      opacity: 0.3;
+    }
+  }
+
+  .iconWrapper {
+    width: 55px;
+    text-align: center;
+    font-size: 45px;
+    margin-right: 10px;
+
+    :global(.icon) {
+      &:global(.terminal)         { color: rgba(0  , 0  , 0  , 0.4); }
+      &:global(.mobile.alternate) { color: rgba(0  , 0  , 0  , 0.4); }
+      &:global(.tablet.alternate) { color: rgba(0  , 0  , 0  , 0.4); }
+      &:global(.desktop)          { color: rgba(0  , 0  , 0  , 0.4); }
+      &:global(.windows)          { color: rgba(0  , 173, 239     ); }
+      &:global(.apple)            { color: rgba(125, 125, 125     ); }
+      &:global(.ubuntu)           { color: rgba(221, 72 , 20      ); }
+      &:global(.centos)           { color: rgba(147, 33 , 120     ); }
+      &:global(.suse)             { color: rgba(115, 186, 37      ); }
+      &:global(.fedora)           { color: rgba(60 , 110, 180     ); }
+      &:global(.freebsd)          { color: rgba(176, 1  , 15      ); }
+      &:global(.linux)            { color: rgba(0  , 0  , 0  , 0.7); }
+    }
+  }
+
+  .info {
+    flex-grow: 1;
+    line-height: 1.7;
+
+    .browserAndOs {
+      .os, .browser {
+        font-weight: bold;
+      }
+
+      .os ~ .browser {
+        font-weight: normal;
+        color: rgb(122, 122, 122);
+
+        &::before {
+          display: inline-block;
+          white-space: pre;
+          content: "   /   "
+        }
+      }
+    }
+
+    .loginIpLocationTime {
+      font-size: 0.95em;
+
+      .loginIpLocation {
+        color: rgb(122, 122, 122);
+        white-space: pre;
+      }
+
+      .time {
+        color: rgb(189, 189, 189);
+      }
+    }
   }
 }

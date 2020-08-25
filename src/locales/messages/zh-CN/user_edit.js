@@ -117,6 +117,24 @@ module.exports = {
       invalid_email_verification_code: "无效的邮箱验证码。",
       success: "修改邮箱地址成功。",
       submit: "提交"
+    },
+    sessions: {
+      header: "会话",
+      revoke_all: "全部下线",
+      confirm_revoke_all: "确认全部下线",
+      success_revoke_all: "已将该用户的会话全部下线。",
+      success_revoke_all_current_user: "已将您的其他会话全部下线。",
+      current: "当前会话",
+      last_active: "最近在线于{time}",
+      revoke: "下线",
+      confirm_revoke: "确认下线",
+      success_revoke: "已将该会话下线。",
+      login_ip: "登录于 {ip}   ·   ",
+      login_ip_location: "登录于 {ip}（{location}） ·    ",
+      no_sessions: "该用户暂无会话",
+      unknown_os_browser: "未知浏览器/操作系统",
+      notes_current_user:
+        "以上为您的用户已登录的所有会话，如发现异常登录，请将其下线并立刻修改密码。\n通过「重置密码」页面修改密码后将自动下线全部会话。"
     }
   },
   privilege: {

@@ -119,6 +119,24 @@ module.exports = {
       invalid_email_verification_code: "Invalid email verification code",
       success: "Email changed successfully.",
       submit: "Submit"
+    },
+    sessions: {
+      header: "Sessions",
+      revoke_all: "Logout all",
+      confirm_revoke_all: "Confirm logout all",
+      success_revoke_all: "Successfully logged out all sessions of this user.",
+      success_revoke_all_current_user: "Successfully logged out all your other sessions.",
+      current: "Current session",
+      last_active: "Last seen {time}",
+      revoke: "Logout",
+      confirm_revoke: "Confirm logout",
+      success_revoke: "Successfully logged out the session.",
+      login_ip: "Logged-in on {ip}   ·   ",
+      login_ip_location: "Logged-in on {ip}   ·   ", // Currently we don't support IP location in other languages
+      no_sessions: "This user has no sessions",
+      unknown_os_browser: "Unknown browser and OS",
+      notes_current_user:
+        'All logged-in sessions of your account are above. If you see a session used by others, logout it and change your password immediately.\nChanging your password in "Reset your password" page will logout ALL your sessions automatically.'
     }
   },
   privilege: {

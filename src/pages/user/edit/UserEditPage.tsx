@@ -19,7 +19,7 @@ enum EditType {
 type DataTypes =
   | ApiTypes.GetUserProfileResponseDto
   | ApiTypes.GetUserPreferenceResponseDto
-  | ApiTypes.GetUserSecuritySettingsResponseDto
+  | (ApiTypes.GetUserSecuritySettingsResponseDto & ApiTypes.ListUserSessionsResponseDto)
   | ApiTypes.GetUserMetaResponseDto;
 interface UserEditPageProps {
   type: EditType;

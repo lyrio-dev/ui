@@ -153,7 +153,8 @@ module.exports = override(
     use: "workerize-loader",
   }),
   addWebpackAlias({
-    ["@"]: __dirname + "/src"
+    ["@"]: __dirname + "/src",
+    ["semantic-ui-css"]: "fomantic-ui-css"
   }),
   addWebpackPlugin(new MonacoWebpackPlugin({
     languages: ["cpp"]
