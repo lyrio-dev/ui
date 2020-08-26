@@ -384,7 +384,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   const [openTagManagerPending, setOpenTagManagerPending] = useState(false);
   const headerButtons = (
     <div className={style.headerButtons}>
-      {props.response.permissions.manageTags && appState.isScreenWidthIn(540, Infinity) && (
+      {props.response.permissions.manageTags && !isMobile && (
         <Button
           primary
           size="tiny"
@@ -479,7 +479,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
               <Table.HeaderCell width={1}>#</Table.HeaderCell>
               <Table.HeaderCell textAlign="left">{_(".column_title")}</Table.HeaderCell>
               <Table.HeaderCell width={1}>{_(".column_submission_count")}</Table.HeaderCell>
-              <Table.HeaderCell width={1}>{_(".column_accepted_rate")}</Table.HeaderCell>
+              {!isMobile && <Table.HeaderCell width={1}>{_(".column_accepted_rate")}</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -525,12 +525,14 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                   </div>
                 </Table.Cell>
                 <Table.Cell>{problem.meta.submissionCount}</Table.Cell>
-                <Table.Cell>
-                  {Math.ceil((problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0).toFixed(
-                    2
-                  )}
-                  %
-                </Table.Cell>
+                {!isMobile && (
+                  <Table.Cell>
+                    {Math.ceil(
+                      (problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0
+                    ).toFixed(2)}
+                    %
+                  </Table.Cell>
+                )}
               </Table.Row>
             ))}
           </Table.Body>
