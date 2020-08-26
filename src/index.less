@@ -17,6 +17,12 @@
   margin-bottom: 8px !important;
 }
 
+// fomantic-ui-css set the .ui.selection.dropdown's padding-right too large
+// Let's change it back
+.ui.selection.dropdown {
+  padding-right: 2.1em !important;
+}
+
 // https://github.com/Semantic-Org/Semantic-UI-React/issues/3133
 .ui.dimmer .ui.workaround.loader::before {
   border-color: rgba(0, 0, 0, 0.1);
