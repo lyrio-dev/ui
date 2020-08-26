@@ -22,18 +22,18 @@ module.exports = {
       O: {
         name: "Optimization",
         values: {
-          "0": "-O0 (disable optimization)",
-          "1": "-O1",
-          "2": "-O2",
-          "3": "-O3",
+          0: "-O0 (disable optimization)",
+          1: "-O1",
+          2: "-O2",
+          3: "-O3",
           fast: "-Ofast (fastest)"
         }
       },
       m: {
         name: "Architecture",
         values: {
-          "64": "64-bit",
-          "32": "32-bit",
+          64: "64-bit",
+          32: "32-bit",
           x32: "64-bit (with 32-bit pointers)"
         }
       }
