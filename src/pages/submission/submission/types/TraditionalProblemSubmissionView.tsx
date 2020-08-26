@@ -39,7 +39,7 @@ type TraditionalProblemSubmissionViewProps = ProblemTypeSubmissionViewProps<
 >;
 
 const TraditionalProblemSubmissionView: React.FC<TraditionalProblemSubmissionViewProps> = props => {
-  const _ = useIntlMessage("submission_statistics");
+  const _ = useIntlMessage("submission");
 
   return (
     <>
