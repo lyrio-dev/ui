@@ -17,24 +17,27 @@
     margin-left: -3px !important;
   }
 
-  &> :global(.text) :global(.icon) {
+  & > :global(.icon) {
     opacity: 0.5;
   }
 
-  &:global(.active) > :global(.text) :global(.icon) {
+  &:global(.active) > :global(.icon) {
     opacity: 1;
   }
 
-  > :global(.text) {
-    .inMenu {
-      display: none;
-    }
+  .inMenu {
+    display: none;
   }
 
   :global(.menu) {
     :global(.icon) {
       display: none;
     }
+
+    .inMenu {
+      display: inline;
+    }
+
     .notInMenu {
       display: none;
     }
@@ -43,6 +46,10 @@
 
 .queryInputCodeLanguage div[role=listbox] {
   width: 150px !important;
+
+  :global(.icon:not(.dropdown)) {
+    margin-right: 11px !important;
+  }
 }
 
 .queryInputStatus div[role=listbox] {
@@ -67,7 +74,7 @@
 }
 
 // If the current value is "all", display it like a placeholder
-.selectedAll div[role=listbox]:not(:global(.active)) > :global(.text) > span {
+.selectedAll div[role=listbox]:not(:global(.active)) > span {
   color: rgba(191, 191, 191, 0.87);
 }
 

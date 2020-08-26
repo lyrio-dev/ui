@@ -48,12 +48,12 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
       key: file.filename,
       value: file.filename,
       text: (
-        <>
+        <div className={style.itemWrapper}>
           {props.iconInputOrOutput && <Icon className={style.iconInputOrOutput} name={props.iconInputOrOutput} />}
           <Icon name={getFileIcon(file.filename)} className={style.iconFile} />
           <div className={style.filename}>{"\u200E" + file.filename}</div>
           <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
-        </>
+        </div>
       )
     })),
     onChange: (e, { value }) => props.onChange(value as string)
