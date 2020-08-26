@@ -1211,7 +1211,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                     item
                     value={newProblemType}
                     options={Object.values(ProblemType).map(type => ({
-                      text: _(`.type.${type}`),
+                      text: _(`problem.type.${type}`),
                       value: type,
                       key: type
                     }))}
@@ -1340,7 +1340,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                   onAddSampleAfter={null}
                   onDeleteSample={null}
                 />
-                <Dimmer active={true} inverted>
+                <Dimmer active={true}>
                   <Button primary onClick={() => onAddSample()}>
                     {_(".sample_editor.add_sample_when_empty")}
                   </Button>
