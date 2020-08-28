@@ -568,7 +568,7 @@ declare namespace ApiTypes {
     sessionId?: number;
   }
   export interface RevokeUserSessionResponseDto {
-    error?: "PERMISSION_DENIED";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_USER";
   }
   export interface SearchGroupResponseDto {
     groupMetas: ApiTypes.GroupMetaDto[];
@@ -718,13 +718,13 @@ declare namespace ApiTypes {
   }
   export interface UpdateProblemRequestUpdatingLocalizedContentDto {
     locale: "en_US" | "zh_CN" | "ja_JP";
-    title?: string;
-    contentSections?: ApiTypes.ProblemContentSectionDto[];
+    title: string;
+    contentSections: ApiTypes.ProblemContentSectionDto[];
   }
   export interface UpdateProblemStatementRequestDto {
     problemId: number;
     localizedContents: ApiTypes.UpdateProblemRequestUpdatingLocalizedContentDto[];
-    samples?: ApiTypes.ProblemSampleDataMemberDto[];
+    samples: ApiTypes.ProblemSampleDataMemberDto[];
     problemTagIds: number[];
   }
   export interface UpdateProblemStatementResponseDto {
@@ -737,14 +737,6 @@ declare namespace ApiTypes {
   }
   export interface UpdateProblemTagResponseDto {
     error?: "NO_SUCH_PROBLEM_TAG" | "PERMISSION_DENIED";
-  }
-  export interface UpdateUserEmailRequestDto {
-    userId: number;
-    email: string;
-    emailVerificationCode?: string;
-  }
-  export interface UpdateUserEmailResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "DUPLICATE_EMAIL" | "INVALID_EMAIL_VERIFICATION_CODE";
   }
   export interface UpdateUserPasswordRequestDto {
     userId: number;
@@ -772,6 +764,13 @@ declare namespace ApiTypes {
   }
   export interface UpdateUserProfileResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "DUPLICATE_USERNAME" | "DUPLICATE_EMAIL";
+  }
+  export interface UpdateUserSelfEmailRequestDto {
+    email: string;
+    emailVerificationCode?: string;
+  }
+  export interface UpdateUserSelfEmailResponseDto {
+    error?: "PERMISSION_DENIED" | "DUPLICATE_EMAIL" | "INVALID_EMAIL_VERIFICATION_CODE";
   }
   export interface UserAvatarDto {
     type: "gravatar" | "github" | "qq";

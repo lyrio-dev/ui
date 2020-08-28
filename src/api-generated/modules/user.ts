@@ -25,8 +25,8 @@ export type GetUserSecuritySettingsRequestDto = ApiTypes.GetUserSecuritySettings
 export type GetUserSecuritySettingsResponseDto = ApiTypes.GetUserSecuritySettingsResponseDto;
 export type UpdateUserPasswordRequestDto = ApiTypes.UpdateUserPasswordRequestDto;
 export type UpdateUserPasswordResponseDto = ApiTypes.UpdateUserPasswordResponseDto;
-export type UpdateUserEmailRequestDto = ApiTypes.UpdateUserEmailRequestDto;
-export type UpdateUserEmailResponseDto = ApiTypes.UpdateUserEmailResponseDto;
+export type UpdateUserSelfEmailRequestDto = ApiTypes.UpdateUserSelfEmailRequestDto;
+export type UpdateUserSelfEmailResponseDto = ApiTypes.UpdateUserSelfEmailResponseDto;
 
 export const searchUser = createGetApi<{ query: string; wildcard?: string }, SearchUserResponseDto>("user/searchUser");
 export const getUserMeta = createPostApi<GetUserMetaRequestDto, GetUserMetaResponseDto>("user/getUserMeta");
@@ -52,6 +52,6 @@ export const getUserSecuritySettings = createPostApi<
 export const updateUserPassword = createPostApi<UpdateUserPasswordRequestDto, UpdateUserPasswordResponseDto>(
   "user/updateUserPassword"
 );
-export const updateUserEmail = createPostApi<UpdateUserEmailRequestDto, UpdateUserEmailResponseDto>(
-  "user/updateUserEmail"
+export const updateUserSelfEmail = createPostApi<UpdateUserSelfEmailRequestDto, UpdateUserSelfEmailResponseDto>(
+  "user/updateUserSelfEmail"
 );

@@ -175,8 +175,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
 
     if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
-      const { requestError, response } = await UserApi.updateUserEmail({
-        userId: props.meta.id,
+      const { requestError, response } = await UserApi.updateUserSelfEmail({
         email: email,
         emailVerificationCode: emailVerificationCode
       });
@@ -306,51 +305,57 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         content={_(".password.submit")}
         onClick={onSubmitChangePassword}
       />
-      <Header className={style.sectionHeader} size="large" content={_(".email.header")} />
-      <Header className={style.header} size="tiny" content={_(".email.email")} />
-      <Input
-        className={style.notFullWidth}
-        fluid
-        value={email}
-        onChange={(e, { value }) => !pendingChangeEmail && (setEmail(value), setDuplicateEmail(false))}
-        onBlur={checkEmail}
-        error={emailInvalid || duplicateEmail}
-      />
-      <div className={style.notes}>
-        {emailInvalid ? _(".email.invalid_email") : duplicateEmail && _(".email.duplicate_email")}
-      </div>
-      {appState.serverPreference.requireEmailVerification && (
+      {props.meta.id === appState.currentUser.id && (
         <>
-          <Header className={style.header} size="tiny" content={_(".email.email_verification_code")} />
+          <Header className={style.sectionHeader} size="large" content={_(".email.header")} />
+          <Header className={style.header} size="tiny" content={_(".email.email")} />
           <Input
             className={style.notFullWidth}
             fluid
-            value={emailVerificationCode}
-            onChange={(e, { value }) => !pendingChangeEmail && onChangeVerificationCode(value)}
-            error={emailVerificationCodeError}
-            action={
-              <Button
-                disabled={sendEmailVerificationCodeTimeout !== 0}
-                loading={sendEmailVerificationCodePending}
-                content={
-                  sendEmailVerificationCodeTimeout
-                    ? `${sendEmailVerificationCodeTimeout > 60 ? 60 : sendEmailVerificationCodeTimeout}s`
-                    : _(".email.send_email_verification_code")
-                }
-                onClick={onSendEmailVerificationCode}
-              />
-            }
+            value={email}
+            onChange={(e, { value }) => !pendingChangeEmail && (setEmail(value), setDuplicateEmail(false))}
+            onBlur={checkEmail}
+            error={emailInvalid || duplicateEmail}
           />
-          <div className={style.notes}>{emailVerificationCodeError && _(".email.invalid_email_verification_code")}</div>
+          <div className={style.notes}>
+            {emailInvalid ? _(".email.invalid_email") : duplicateEmail && _(".email.duplicate_email")}
+          </div>
+          {appState.serverPreference.requireEmailVerification && (
+            <>
+              <Header className={style.header} size="tiny" content={_(".email.email_verification_code")} />
+              <Input
+                className={style.notFullWidth}
+                fluid
+                value={emailVerificationCode}
+                onChange={(e, { value }) => !pendingChangeEmail && onChangeVerificationCode(value)}
+                error={emailVerificationCodeError}
+                action={
+                  <Button
+                    disabled={sendEmailVerificationCodeTimeout !== 0}
+                    loading={sendEmailVerificationCodePending}
+                    content={
+                      sendEmailVerificationCodeTimeout
+                        ? `${sendEmailVerificationCodeTimeout > 60 ? 60 : sendEmailVerificationCodeTimeout}s`
+                        : _(".email.send_email_verification_code")
+                    }
+                    onClick={onSendEmailVerificationCode}
+                  />
+                }
+              />
+              <div className={style.notes}>
+                {emailVerificationCodeError && _(".email.invalid_email_verification_code")}
+              </div>
+            </>
+          )}
+          <Button
+            className={style.submit}
+            loading={pendingChangeEmail}
+            primary
+            content={_(".email.submit")}
+            onClick={onSubmitChangeEmail}
+          />
         </>
       )}
-      <Button
-        className={style.submit}
-        loading={pendingChangeEmail}
-        primary
-        content={_(".email.submit")}
-        onClick={onSubmitChangeEmail}
-      />
       <Header
         className={style.sectionHeader + " " + style.bottomAttached}
         size="large"
