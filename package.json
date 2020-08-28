@@ -33,7 +33,7 @@
     "css-element-queries": "^1.2.3",
     "customize-cra": "^1.0.0-alpha.0",
     "dayjs": "^1.8.34",
-    "dtsgenerator": "^3.3.0",
+    "dtsgenerator": "2.7.0",
     "file-loader": "^6.0.0",
     "flat": "^5.0.2",
     "fomantic-ui-css": "^2.8.6",

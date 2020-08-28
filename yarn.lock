@@ -4840,10 +4840,10 @@ commander@^4.1.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
   integrity sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
 
-commander@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-6.0.0.tgz#2b270da94f8fb9014455312f829a1129dbf8887e"
-  integrity sha512-s7EA+hDtTYNhuXkTlhqew4txMZVdszBmKWSPEMxGr8ru8JXR7bLUFIAtPhcSuFdJQ0ILMxnJi8GkQL0yvDy/YA==
+commander@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
+  integrity sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
 
 commitizen@^4.0.3:
   version "4.0.3"
@@ -5132,7 +5132,7 @@ create-react-context@^0.3.0:
     gud "^1.0.0"
     warning "^4.0.3"
 
-cross-fetch@^3.0.5:
+cross-fetch@^3.0.4:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.5.tgz#2739d2981892e7ab488a7ad03b92df2816e03f4c"
   integrity sha512-FFLcLtraisj5eteosnX1gf01qYDCOc4fDy0+euOt8Kn9YBY2NtXL/pCoYPavw24NIQkQqm5ZOLsGD5Zzj0gyew==
@@ -5829,20 +5829,19 @@ dotenv@8.2.0:
   resolved "https://registry.npm.taobao.org/dotenv/download/dotenv-8.2.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fdotenv%2Fdownload%2Fdotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha1-l+YZJZradQ7qPk6j4mvO6lQksWo=
 
-dtsgenerator@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/dtsgenerator/-/dtsgenerator-3.3.0.tgz#c880ff26a8ef6bdd232ccd4b81f9ce4b7086a42f"
-  integrity sha512-TeLO8pcgGGO9jKJqDCigNA9qbqu0WzYsWpjChTCV3guhl9Al3jkXXnpTrKTbjraaxtFIScqdmk0dyC+9qZvDbA==
+dtsgenerator@2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/dtsgenerator/-/dtsgenerator-2.7.0.tgz#172da811df0222ab05e9ce4bfddc425211cbcc14"
+  integrity sha512-DHlO4AiBQjc2kEtzed+mt5lZwbnpOVYSoXeDEIutLhuLMnq4sUwc1nbihU4Z1CcM2E9Dj7xF+pUSLkDoEOcNMw==
   dependencies:
-    commander "^6.0.0"
-    cross-fetch "^3.0.5"
+    commander "^5.1.0"
+    cross-fetch "^3.0.4"
     debug "^4.1.1"
     glob "^7.1.6"
     https-proxy-agent "^5.0.0"
     js-yaml "^3.14.0"
     mkdirp "^1.0.4"
     tslib "^2.0.0"
-    typescript "^3.9.7"
 
 duplexer@^0.1.1:
   version "0.1.1"
@@ -13572,11 +13571,6 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npm.taobao.org/typedarray/download/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
-
-typescript@^3.9.7:
-  version "3.9.7"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
-  integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
 typescript@~4.0.2:
   version "4.0.2"
