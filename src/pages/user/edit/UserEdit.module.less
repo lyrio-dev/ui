@@ -101,8 +101,22 @@
 }
 
 .sectionHeader {
+  display: flex;
+  align-items: center;
   padding-bottom: 10px !important;
-  border-bottom: 1px solid #ddd !important;
+  height: 41.5px;
+
+  .text {
+    flex-grow: 1;
+  }
+
+  &:not(.bottomAttached) {
+    border-bottom: 1px solid #ddd !important;
+  }
+
+  &.bottomAttached {
+    margin-bottom: 0;
+  }
 }
 
 .privilegeRow {
@@ -127,7 +141,11 @@
 }
 
 .revokeAll {
-  float: right;
+  margin-right: 0 !important;
+}
+
+.sessionList {
+  margin-top: 0 !important;
 }
 
 .sessionListItem {

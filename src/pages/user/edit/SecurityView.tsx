@@ -352,14 +352,14 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         onClick={onSubmitChangeEmail}
       />
       <Header
-        className={style.sectionHeader}
+        className={style.sectionHeader + " " + style.bottomAttached}
         size="large"
         content={
           <>
-            {_(".sessions.header")}
+            <span className={style.text}>{_(".sessions.header")}</span>
             {sessions.some(session => session.sessionId !== props.currentSessionId) && (
               <Popup
-                trigger={<Button className={style.revokeAll} content={_(".sessions.revoke_all")} />}
+                trigger={<Button basic negative className={style.revokeAll} content={_(".sessions.revoke_all")} />}
                 content={
                   <Button content={_(".sessions.confirm_revoke_all")} negative onClick={() => onRevokeSession()} />
                 }
@@ -374,7 +374,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         }
       />
       {sessions.length ? (
-        <SegmentGroup>
+        <SegmentGroup className={style.sessionList}>
           {sessions
             .sort((a, b) => b.lastAccessTime - a.lastAccessTime)
             .map(session => {
