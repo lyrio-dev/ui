@@ -17,7 +17,7 @@ import { RouteError } from "@/AppRouter";
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserProfile({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
 
   return response;
 }
@@ -144,7 +144,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
       });
 
       if (requestError) toast.error(requestError);
-      else if (response.error) toast.error(_(`user_edit.error.${response.error}`));
+      else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
       else {
         toast.success(_("user_edit.preference.success"));
         setTitleUsername(username);

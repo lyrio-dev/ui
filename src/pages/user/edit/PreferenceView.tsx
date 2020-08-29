@@ -21,7 +21,7 @@ import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserPreference({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
 
   await CodeFormatter.ready;
 
