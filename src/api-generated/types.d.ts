@@ -119,7 +119,6 @@ declare namespace ApiTypes {
     extraFormData: {};
     fileFieldName: string;
   }
-  export interface GetAllProblemTagsOfAllLocalesRequestDto {}
   export interface GetAllProblemTagsOfAllLocalesResponseDto {
     error?: "PERMISSION_DENIED";
     tags?: ApiTypes.ProblemTagWithAllLocalesDto[];

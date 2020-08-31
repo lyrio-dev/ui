@@ -38,7 +38,6 @@ export type UpdateProblemTagRequestDto = ApiTypes.UpdateProblemTagRequestDto;
 export type UpdateProblemTagResponseDto = ApiTypes.UpdateProblemTagResponseDto;
 export type DeleteProblemTagRequestDto = ApiTypes.DeleteProblemTagRequestDto;
 export type DeleteProblemTagResponseDto = ApiTypes.DeleteProblemTagResponseDto;
-export type GetAllProblemTagsOfAllLocalesRequestDto = ApiTypes.GetAllProblemTagsOfAllLocalesRequestDto;
 export type GetAllProblemTagsOfAllLocalesResponseDto = ApiTypes.GetAllProblemTagsOfAllLocalesResponseDto;
 export type DeleteProblemRequestDto = ApiTypes.DeleteProblemRequestDto;
 export type DeleteProblemResponseDto = ApiTypes.DeleteProblemResponseDto;
@@ -93,10 +92,9 @@ export const updateProblemTag = createPostApi<UpdateProblemTagRequestDto, Update
 export const deleteProblemTag = createPostApi<DeleteProblemTagRequestDto, DeleteProblemTagResponseDto>(
   "problem/deleteProblemTag"
 );
-export const getAllProblemTagsOfAllLocales = createPostApi<
-  GetAllProblemTagsOfAllLocalesRequestDto,
-  GetAllProblemTagsOfAllLocalesResponseDto
->("problem/getAllProblemTagsOfAllLocales");
+export const getAllProblemTagsOfAllLocales = createPostApi<void, GetAllProblemTagsOfAllLocalesResponseDto>(
+  "problem/getAllProblemTagsOfAllLocales"
+);
 export const deleteProblem = createPostApi<DeleteProblemRequestDto, DeleteProblemResponseDto>("problem/deleteProblem");
 export const changeProblemType = createPostApi<ChangeProblemTypeRequestDto, ChangeProblemTypeResponseDto>(
   "problem/changeProblemType"

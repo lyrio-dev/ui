@@ -521,7 +521,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
 
     setPendingOpen(true);
 
-    const { requestError, response } = await ProblemApi.getAllProblemTagsOfAllLocales({});
+    const { requestError, response } = await ProblemApi.getAllProblemTagsOfAllLocales();
     if (requestError || response.error) toast.error(requestError || _(`.error.${response.error}`));
 
     setPendingOpen(false);
