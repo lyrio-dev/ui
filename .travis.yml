@@ -1,7 +1,0 @@
-# Just build. We don't have tests.
-language: node_js
-node_js:
-  - lts/*
-env:
-  - SYZOJ_NG_APP_CONFIG_FILE=./config-example.yaml
-script: yarn build
