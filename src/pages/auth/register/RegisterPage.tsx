@@ -14,6 +14,7 @@ import { useIntlMessage, useFieldCheck, useLoginOrRegisterNavigation } from "@/u
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
+import PseudoLink from "@/components/PseudoLink";
 
 let RegisterPage: React.FC = () => {
   const _ = useIntlMessage("register");
@@ -435,15 +436,7 @@ let RegisterPage: React.FC = () => {
         </Form>
         <Message className={style.message}>
           {_(".already_have_account")}
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              navigateTo("login");
-            }}
-          >
-            {_(".login")}
-          </a>
+          <PseudoLink onClick={() => navigateTo("login")}>{_(".login")}</PseudoLink>
         </Message>
       </div>
     </>

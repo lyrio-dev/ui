@@ -217,3 +217,111 @@
     }
   }
 }
+
+// Below are for Audit View
+.autoFormGroup {
+  display: flex;
+
+  .inputs {
+    flex-grow: 1;
+    display: flex;
+
+    :global(.input), input { width: 100% !important; }
+
+    .inputActionQuery { width: 35% !important; }
+    
+    .inputIp { width: 25% !important; }
+    
+    .inputObjectId { width: 20% !important; }
+  }
+
+  .filterButton {
+    white-space: nowrap;
+  }
+}
+
+.auditLogs {
+  max-width: initial !important;
+  margin-top: 14px !important;
+  
+  .logItem {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  
+    .action {
+      font-weight: normal;
+  
+      &::before {
+        content: "   –   ";
+        white-space: pre;
+      }
+    }
+
+    .message {
+      &:global(.title) {
+        display: flex;
+        align-items: center;
+      }
+
+      margin-top: 8px;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .codeboxSegment {
+      margin-top: 3px;
+      margin-bottom: 12px;
+
+      .copyDetailsJson {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 25px;
+        height: 25px;
+        opacity: 0.3;
+        font-size: 18px;
+        text-align: center;
+        line-height: 25px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 0.5;
+        }
+
+        &:active {
+          opacity: 0.7;
+        }
+
+        :global(.icon) {
+          margin: 0 !important;
+        }
+      }
+
+      pre {
+        max-height: 250px !important;
+      }
+    }
+
+    .info {
+      margin-top: 8px;
+
+      font-size: 1em !important;
+
+      .item {
+        color: rgba(0, 0, 0, 0.4) !important;
+        margin: 0 !important;
+
+        &:not(:first-child) {
+          &::before {
+            content: "   |   ";
+            white-space: pre;
+          }
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  text-align: center;
+}

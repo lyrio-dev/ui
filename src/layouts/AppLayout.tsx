@@ -15,7 +15,6 @@ import GlobalProgressBar from "@/components/GlobalProgressBar";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { appConfig } from "@/appConfig";
 import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { AuthApi } from "@/api";

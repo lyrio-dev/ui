@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import lodashIsEqual from "lodash.isequal";
 
 import DefaultAvatar from "@/assets/default-avatar.svg";
@@ -10,6 +11,13 @@ interface UserAvatarProps extends ImageProps {
   imageSize?: number;
   onError?: () => void;
 }
+
+const defaultAvatarDataUrl = (() => {
+  const div = document.createElement("div");
+  ReactDOM.render(<DefaultAvatar />, div);
+  const svg = new XMLSerializer().serializeToString(div.firstElementChild);
+  return "data:image/svg+xml;base64," + btoa(svg);
+})();
 
 function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
   switch (avatar.type) {
@@ -62,7 +70,7 @@ const UserAvatar: React.FC<UserAvatarProps> = props => {
   }
 
   return error || props.placeholder ? (
-    <Image as={DefaultAvatar} {...imageProps} />
+    <Image src={defaultAvatarDataUrl} {...imageProps} />
   ) : (
     <Image src={url} {...imageProps} onError={onImageError} />
   );

@@ -75,7 +75,7 @@ module.exports = override(
     languages: ["cpp"]
   })),
   addBabelPlugin(["prismjs", {
-    "languages": ["yaml", "cpp"]
+    "languages": ["yaml", "cpp", "json"]
   }]),
   overrideHtmlWebpackPluginConfig({
     inject: false,

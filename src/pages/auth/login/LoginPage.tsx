@@ -14,6 +14,7 @@ import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
+import PseudoLink from "@/components/PseudoLink";
 
 let LoginPage: React.FC = () => {
   const _ = useIntlMessage("login");
@@ -136,17 +137,9 @@ let LoginPage: React.FC = () => {
                 }}
               />
             </Ref>
-            <a
-              href="#"
-              onClick={e => {
-                e.preventDefault();
-                navigateTo("forgot");
-              }}
-              tabIndex={-1}
-              className={style.inputAction}
-            >
+            <PseudoLink onClick={() => navigateTo("forgot")} tabIndex={-1} className={style.inputAction}>
               {_(".forgot_password")}
-            </a>
+            </PseudoLink>
             <Ref innerRef={field => field && (refPasswordInput.current = field.querySelector("input"))}>
               <Form.Field
                 control={Input}
@@ -189,15 +182,7 @@ let LoginPage: React.FC = () => {
         </Form>
         <Message className={style.message}>
           {_(".new_user")}
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
-              navigateTo("register");
-            }}
-          >
-            {_(".register")}
-          </a>
+          <PseudoLink onClick={() => navigateTo("register")}>{_(".register")}</PseudoLink>
         </Message>
       </div>
     </>

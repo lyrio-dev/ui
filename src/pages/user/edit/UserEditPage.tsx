@@ -13,18 +13,15 @@ enum EditType {
   Profile = "profile",
   Preference = "preference",
   Security = "security",
-  Privilege = "privilege"
+  Privilege = "privilege",
+  Audit = "audit"
 }
 
-type DataTypes =
-  | ApiTypes.GetUserProfileResponseDto
-  | ApiTypes.GetUserPreferenceResponseDto
-  | (ApiTypes.GetUserSecuritySettingsResponseDto & ApiTypes.ListUserSessionsResponseDto)
-  | ApiTypes.GetUserMetaResponseDto;
 interface UserEditPageProps {
+  userId: number;
   type: EditType;
-  data: DataTypes;
-  view: React.FC<DataTypes>;
+  data: unknown;
+  view: React.FC<unknown>;
 }
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
@@ -32,7 +29,7 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
   const View = props.view;
 
-  const isEditingCurrentUser = props.data.meta.id === appState.currentUser.id;
+  const isEditingCurrentUser = props.userId === appState.currentUser.id;
 
   const showPrivilegeTab =
     appState.currentUserPrivileges.length > 0 || appState.currentUser.isAdmin || props.type === EditType.Privilege;
@@ -60,6 +57,13 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
                 {_(".menu.privilege")}
               </Menu.Item>
             )}
+            <Menu.Item active={props.type === EditType.Audit} as={Link} href="../audit">
+              <Icon.Group>
+                <Icon name="list alternate" />
+                <Icon corner name="check" />
+              </Icon.Group>
+              {_(".menu.audit")}
+            </Menu.Item>
           </Menu>
           {!isEditingCurrentUser && <Message className={style.adminWarning} content={_(".admin_warning")} warning />}
           <Link href="../..">
@@ -85,10 +89,12 @@ export default defineRoute(async request => {
     [EditType.Profile]: import("./ProfileView"),
     [EditType.Preference]: import("./PreferenceView"),
     [EditType.Security]: import("./SecurityView"),
-    [EditType.Privilege]: import("./PrivilegeView")
+    [EditType.Privilege]: import("./PrivilegeView"),
+    [EditType.Audit]: import("./AuditView")
   }[type];
 
-  const response = await fetchData(parseInt(request.params.userId) || 0);
+  const userId = Number(request.params.userId) || 0;
+  const response = await fetchData(userId, request.query);
 
-  return <UserEditPage type={type} data={response} view={View} />;
+  return <UserEditPage userId={userId} type={type} data={response} view={View} />;
 });

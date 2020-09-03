@@ -23,6 +23,8 @@ export type UpdateUserPreferenceRequestDto = ApiTypes.UpdateUserPreferenceReques
 export type UpdateUserPreferenceResponseDto = ApiTypes.UpdateUserPreferenceResponseDto;
 export type GetUserSecuritySettingsRequestDto = ApiTypes.GetUserSecuritySettingsRequestDto;
 export type GetUserSecuritySettingsResponseDto = ApiTypes.GetUserSecuritySettingsResponseDto;
+export type QueryAuditLogsRequestDto = ApiTypes.QueryAuditLogsRequestDto;
+export type QueryAuditLogsResponseDto = ApiTypes.QueryAuditLogsResponseDto;
 export type UpdateUserPasswordRequestDto = ApiTypes.UpdateUserPasswordRequestDto;
 export type UpdateUserPasswordResponseDto = ApiTypes.UpdateUserPasswordResponseDto;
 export type UpdateUserSelfEmailRequestDto = ApiTypes.UpdateUserSelfEmailRequestDto;
@@ -49,6 +51,7 @@ export const getUserSecuritySettings = createPostApi<
   GetUserSecuritySettingsRequestDto,
   GetUserSecuritySettingsResponseDto
 >("user/getUserSecuritySettings");
+export const queryAuditLogs = createPostApi<QueryAuditLogsRequestDto, QueryAuditLogsResponseDto>("user/queryAuditLogs");
 export const updateUserPassword = createPostApi<UpdateUserPasswordRequestDto, UpdateUserPasswordResponseDto>(
   "user/updateUserPassword"
 );

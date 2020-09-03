@@ -3,7 +3,8 @@ module.exports = {
     profile: "Profile",
     preference: "Preference",
     security: "Security",
-    privilege: "Privileges"
+    privilege: "Privileges",
+    audit: "Audit log"
   },
   back_to_profile: "Back to profile",
   back_to_profile_of_user: "Bask to the user's profile",
@@ -167,5 +168,20 @@ module.exports = {
     admin_only: "Only admins can change user's privileges.",
     submit: "Submit",
     success: "Privileges updated successfully"
+  },
+  audit: {
+    title: "Audit log",
+    header: "Audit log",
+    query: {
+      action_query: "Action",
+      ip: "IP Address",
+      first_object_id: "Object 1",
+      second_object_id: "Object 2",
+      filter: "Filter"
+    },
+    no_audit_log: "No audit log",
+    no_matched_audit_log: "No matched audit log",
+    copy_details: "Copy details",
+    goback: "Go back"
   }
 };

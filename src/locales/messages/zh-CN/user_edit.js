@@ -3,7 +3,8 @@ module.exports = {
     profile: "个人资料",
     preference: "偏好设置",
     security: "安全",
-    privilege: "特权"
+    privilege: "特权",
+    audit: "审计日志"
   },
   back_to_profile: "返回个人资料",
   back_to_profile_of_user: "返回该用户个人资料",
@@ -165,5 +166,20 @@ module.exports = {
     admin_only: "仅管理员可修改用户特权。",
     submit: "提交",
     success: "特权修改成功。"
+  },
+  audit: {
+    title: "审计日志",
+    header: "审计日志",
+    query: {
+      action_query: "操作",
+      ip: "IP 地址",
+      first_object_id: "主对象",
+      second_object_id: "次对象",
+      filter: "筛选"
+    },
+    no_audit_log: "暂无日志",
+    no_matched_audit_log: "找不到符合条件的日志",
+    copy_details: "复制详细信息",
+    goback: "返回"
   }
 };

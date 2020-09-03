@@ -405,6 +405,38 @@ declare namespace ApiTypes {
     user: ApiTypes.UserMetaDto;
     permissionLevel: 1 | 2;
   }
+  export interface QueryAuditLogsRequestDto {
+    userId?: number;
+    /**
+     * The query string for action field, will be matching as prefix.
+     */
+    actionQuery?: string;
+    ip?: string;
+    firstObjectId?: number;
+    secondObjectId?: number;
+    locale: "en_US" | "zh_CN" | "ja_JP";
+    skipCount: number;
+    takeCount: number;
+  }
+  export interface QueryAuditLogsResponseDto {
+    error?: "NO_SUCH_USER" | "PERMISSION_DENIED" | "TAKE_TOO_MANY";
+    results?: ApiTypes.QueryAuditLogsResponseItemDto[];
+    count?: number;
+  }
+  export interface QueryAuditLogsResponseItemDto {
+    user: ApiTypes.UserMetaDto;
+    ip: string;
+    ipLocation: string;
+    time: string; // date-time
+    action: string;
+    firstObjectType?: "User" | "Group" | "Problem" | "ProblemTag" | "Submission";
+    firstObjectId?: number;
+    firstObject?: {};
+    secondObjectType?: "User" | "Group" | "Problem" | "ProblemTag" | "Submission";
+    secondObjectId?: number;
+    secondObject?: {};
+    details?: {};
+  }
   export interface QueryParameters {
     query: ApiTypes.Parameters.Query;
     wildcard?: ApiTypes.Parameters.Wildcard;

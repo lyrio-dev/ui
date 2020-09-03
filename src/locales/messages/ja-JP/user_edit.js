@@ -3,7 +3,8 @@ module.exports = {
     profile: "プロファイル",
     preference: "環境設定",
     security: "セキュリティ",
-    privilege: "[TBT] Privileges"
+    privilege: "[TBT] Privileges",
+    audit: "[TBT] Audit log"
   },
   back_to_profile: "ユーザページに戻る",
   back_to_profile_of_user: "このユーザのプロファイルに戻る",
@@ -169,5 +170,20 @@ module.exports = {
     admin_only: "[TBT] Only admins can change user's privileges.",
     submit: "[TBT] Submit",
     success: "[TBT] Privileges updated successfully"
+  },
+  audit: {
+    title: "[TBT] Audit log",
+    header: "[TBT] Audit log",
+    query: {
+      action_query: "[TBT] Action",
+      ip: "[TBT] IP Address",
+      first_object_id: "[TBT] Object 1",
+      second_object_id: "[TBT] Object 2",
+      filter: "[TBT] Filter"
+    },
+    no_audit_log: "[TBT] No audit log",
+    no_matched_audit_log: "[TBT] No matched audit log",
+    copy_details: "[TBT] Copy details",
+    goback: "[TBT] Go back"
   }
 };
