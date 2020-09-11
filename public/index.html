@@ -56,12 +56,34 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
 
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+
   <meta name="theme-color" content="#000000" />
   <meta name="description" content="Web site created using create-react-app" />
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
+  <script>
+    // This is used for specify public path dynamicly for each request. Useful when you have multiple CDN servers.
+    // Use ngx_http_sub_module in your server to replace the "__public_path__" placeholder with your CDN path.
+    // If it's not replaced, the default "/" will be used.
+    try {
+      window.publicPath = __public_path__;
+    } catch (e) {
+      window.publicPath = "/";
+    }
+
+    function addLinkTag(rel, href, onerror) {
+      var link = document.createElement("link");
+      link.rel = rel;
+      link.href = href;
+      link.onerror = onerror;
+      document.head.appendChild(link);
+    }
+
+    addLinkTag("icon", window.publicPath + "favicon.ico");
+    addLinkTag("apple-touch-icon", window.publicPath + "logo192.png");
+    addLinkTag("manifest", window.publicPath + "manifest.json");
+  </script>
+
+  <!-- FIXME: Don't load fonts from fonts.googleapis.com -->
   <link href="https://fonts.googleapis.com/css?family=Saira:500&display=block" rel="stylesheet">
 
   <!-- Styles for error screen -->
@@ -229,7 +251,28 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
 
   <title><%= appConfig.siteName %></title>
 
-  <%= htmlWebpackPlugin.tags.headTags %>
+  <!-- Handle public path for CSS <link> tags -->
+  <script>
+    function addCssLinkTag(href) {
+      addLinkTag("stylesheet", href, handleLoadingError);
+    }
+  </script>
+  <% for (const tag of htmlWebpackPlugin.tags.headTags) { %>
+    <%
+      if (tag.tagName === "link"
+       && tag.attributes
+       && tag.attributes.rel === "stylesheet"
+       && typeof tag.attributes.href === "string"
+       && tag.attributes.href.startsWith("/")
+      ) {
+    %>
+      <script>
+        addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(1)) %>);
+      </script>
+    <% } else { %>
+      <%= tag %>
+    <% } %>
+  <% } %>
 </head>
 
 <body>
@@ -243,21 +286,47 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
       Powered by <a href="https://github.com/syzoj" target="_blank">SYZOJ</a>
     </div>
   </div>
+
   <script
     crossorigin="anonymous"
     src="https://polyfill.io/v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015"
     onerror="handleLoadingError()"
   >
   </script>
+
   <% if (appConfig.crossOrigin) { %>
-  <script
-    src="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
-    data-slave="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/") %>"
-    onerror="handleLoadingError()"
-  >
-  </script>
+    <script
+      src="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
+      data-slave="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/") %>"
+      onerror="handleLoadingError()"
+    >
+    </script>
   <% } %>
-  <%= htmlWebpackPlugin.tags.bodyTags %>
+
+  <!-- Handle public path for <script> tags -->
+  <script>
+    function addScriptTag(src) {
+      var script = document.createElement("script");
+      script.src = src;
+      script.onerror = handleLoadingError;
+      document.body.appendChild(script);
+    }
+  </script>
+  <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
+    <%
+      if (tag.tagName === "script"
+       && tag.attributes
+       && typeof tag.attributes.src === "string"
+       && tag.attributes.src.startsWith("/")
+      ) {
+    %>
+      <script>
+        addScriptTag(window.publicPath + <%= safeStringify(tag.attributes.src.substr(1)) %>);
+      </script>
+    <% } else { %>
+      <%= tag %>
+    <% } %>
+  <% } %>
 </body>
 
 </html>
