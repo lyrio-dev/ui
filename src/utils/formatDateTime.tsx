@@ -2,7 +2,7 @@ import React from "react";
 
 export default function formatDateTime(date: Date | string | number): [JSX.Element, string] {
   if (!(date instanceof Date)) date = new Date(date);
-  let month = date.getMonth().toString();
+  let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();
   let hour = date.getHours().toString();
   let minute = date.getMinutes().toString();
