@@ -38,6 +38,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
+import MarkdownContent from "@/markdown/MarkdownContent";
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -483,7 +484,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               <Header size="large">{section.sectionTitle}</Header>
               {section.type === "TEXT" ? (
                 <>
-                  <p>{section.text}</p>
+                  <MarkdownContent content={section.text} />
                 </>
               ) : (
                 <>
@@ -553,7 +554,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                     </Grid.Row>
                     <Grid.Row className={style.sampleExplanation}>
                       <Grid.Column>
-                        <p>{section.text}</p>
+                        <MarkdownContent content={section.text} />
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>

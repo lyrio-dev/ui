@@ -126,13 +126,15 @@ export function setTheme(theme: CodeHighlighterTheme) {
   ]);
 }
 
-export function highlight(code: string, language: string) {
+export function highlight(code: string, language: string, alwaysFallback?: boolean) {
   if (language) {
     try {
-      // Check if the language is supported by tree-sitter and loaded.
-      const lang = loadedTreeSitterLanguages.get(language as any);
-      if (lang instanceof MonacoTreeSitter.Language) {
-        return MonacoTreeSitter.highlight(code, lang);
+      if (!alwaysFallback) {
+        // Check if the language is supported by tree-sitter and loaded.
+        const lang = loadedTreeSitterLanguages.get(language as any);
+        if (lang instanceof MonacoTreeSitter.Language) {
+          return MonacoTreeSitter.highlight(code, lang);
+        }
       }
 
       // Fallback to Prism.js

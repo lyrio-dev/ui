@@ -35,6 +35,7 @@ import { useIntlMessage, useConfirmUnload } from "@/utils/hooks";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
+import MarkdownContent from "@/markdown/MarkdownContent";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -274,7 +275,9 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
             <Grid.Row>
               <Grid.Column>
                 {preview || props.isPreview ? (
-                  <Segment basic>{props.section.text}</Segment>
+                  <Segment basic>
+                    <MarkdownContent content={props.section.text} />
+                  </Segment>
                 ) : (
                   <Form>
                     <TextArea
@@ -291,7 +294,9 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
             </Grid.Row>
           </Grid>
         ) : preview || props.isPreview ? (
-          <Segment basic>{props.section.text}</Segment>
+          <Segment basic>
+            <MarkdownContent content={props.section.text} />
+          </Segment>
         ) : (
           <Form>
             <TextArea
