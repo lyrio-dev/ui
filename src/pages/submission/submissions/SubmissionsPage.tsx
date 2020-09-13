@@ -15,7 +15,12 @@ import { CodeLanguage, codeLanguageOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import { isValidUsername } from "@/utils/validators";
 import StatusText from "@/components/StatusText";
-import { SubmissionItem, SubmissionItemMobile, SubmissionHeader } from "../componments/SubmissionItem";
+import {
+  SubmissionItem,
+  SubmissionItemMobile,
+  SubmissionHeader,
+  SubmissionHeaderMobile
+} from "../componments/SubmissionItem";
 import SimplePagination from "@/components/SimplePagination";
 import { defineRoute, RouteError } from "@/AppRouter";
 
@@ -321,7 +326,11 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
       ) : (
         <>
           <Table textAlign="center" basic="very" className={style.table} unstackable fixed>
-            {!isMobile && (
+            {isMobile ? (
+              <Table.Header>
+                <SubmissionHeaderMobile />
+              </Table.Header>
+            ) : (
               <Table.Header>
                 <SubmissionHeader page="submissions" />
               </Table.Header>

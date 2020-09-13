@@ -24,6 +24,37 @@ function parseSubmissionMeta(submission: ApiTypes.SubmissionMetaDto) {
   };
 }
 
+interface SubmissionHeaderProps {
+  page: "submission" | "submissions" | "statistics";
+  statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
+}
+
+export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
+  const _ = useIntlMessage("submission_item");
+
+  return (
+    <Table.Row
+      className={
+        style[props.page + "Page"] +
+        (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
+      }
+    >
+      <Table.HeaderCell className={style.columnStatus} textAlign="left">
+        {_(".columns.status")}
+      </Table.HeaderCell>
+      <Table.HeaderCell className={style.columnScore}>{_(".columns.score")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnProblemAndSubmitter} textAlign="left">
+        <div className={style.problem}>{_(".columns.problem")}</div>
+        <div className={style.submitter}>{_(".columns.submitter")}</div>
+      </Table.HeaderCell>
+      <Table.HeaderCell className={style.columnTime}>{_(".columns.time")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnMemory}>{_(".columns.memory")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnAnswer}>{_(".columns.answer")}</Table.HeaderCell>
+      <Table.HeaderCell className={style.columnSubmitTime}>{_(".columns.submit_time")}</Table.HeaderCell>
+    </Table.Row>
+  );
+};
+
 interface SubmissionItemProps {
   submission: ApiTypes.SubmissionMetaDto;
   page: "submission" | "submissions" | "statistics";
@@ -117,6 +148,36 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   );
 };
 
+export const SubmissionHeaderMobile: React.FC<{}> = () => {
+  const _ = useIntlMessage("submission_item");
+
+  return (
+    <Table.Row className={style.submissionItemMobile}>
+      <Table.HeaderCell>
+        <div className={style.flexContainer}>
+          <div>
+            <div>
+              <span>
+                <span>{_(".columns.status")}</span>
+                <span className={style.headerScoreColumn}>{_(".columns.score")}</span>
+              </span>
+            </div>
+            <div>{_(".columns.answer")}</div>
+          </div>
+
+          <div>
+            <div>{_(".columns.problem")}</div>
+            <div className={style.submitterAndTime}>
+              <div>{_(".columns.submitter")}</div>
+              <div>{_(".columns.submit_time")}</div>
+            </div>
+          </div>
+        </div>
+      </Table.HeaderCell>
+    </Table.Row>
+  );
+};
+
 interface SubmissionItemMobileProps {
   submission: ApiTypes.SubmissionMetaDto;
   statusText?: string;
@@ -166,37 +227,6 @@ export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props =
           </div>
         </div>
       </Table.Cell>
-    </Table.Row>
-  );
-};
-
-interface SubmissionHeaderProps {
-  page: "submission" | "submissions" | "statistics";
-  statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
-}
-
-export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
-  const _ = useIntlMessage("submission_item");
-
-  return (
-    <Table.Row
-      className={
-        style[props.page + "Page"] +
-        (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
-      }
-    >
-      <Table.HeaderCell className={style.columnStatus} textAlign="left">
-        {_(".columns.status")}
-      </Table.HeaderCell>
-      <Table.HeaderCell className={style.columnScore}>{_(".columns.score")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnProblemAndSubmitter} textAlign="left">
-        <div className={style.problem}>{_(".columns.problem")}</div>
-        <div className={style.submitter}>{_(".columns.submitter")}</div>
-      </Table.HeaderCell>
-      <Table.HeaderCell className={style.columnTime}>{_(".columns.time")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnMemory}>{_(".columns.memory")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnAnswer}>{_(".columns.answer")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnSubmitTime}>{_(".columns.submit_time")}</Table.HeaderCell>
     </Table.Row>
   );
 };

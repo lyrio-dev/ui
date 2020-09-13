@@ -198,14 +198,6 @@
 }
 
 .submissionItemMobile {
-  &:first-child td {
-    padding-top: 0 !important;
-  }
-
-  &:last-child td {
-    padding-bottom: 0 !important;
-  }
-
   .flexContainer {
     @line-spacing: 7px;
 
@@ -221,17 +213,19 @@
         width: 200px;
 
         // Row 1
-        > :nth-child(1) a {
-          display: flex;
-
-          > :nth-child(1) {
-            flex-grow: 1;
-          }
-
-          > :nth-child(2) {
-            flex-shrink: 0;
-            width: 39px;
-            text-align: center;
+        > :nth-child(1) > {
+          > a, > span {
+            display: flex;
+  
+            > :nth-child(1) {
+              flex-grow: 1;
+            }
+  
+            > :nth-child(2) {
+              flex-shrink: 0;
+              width: 39px;
+              text-align: center;
+            }
           }
         }
       }
@@ -239,6 +233,11 @@
       // Narrow screen
       @media only screen and (max-width: 539px) {
         width: 110px;
+
+        .headerScoreColumn::before {
+          white-space: pre;
+          content: "  /  ";
+        }
 
         :global(.statusicon) {
           margin-right: 8px !important;
