@@ -188,7 +188,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
       <Grid>
         <Grid.Row>
           <Grid.Column width={7}>
-            <div style={{ height: appState.windowHeight - 105 }} className={style.leftContainer}>
+            <div className={style.leftContainer}>
               <div className={style.header}>
                 <Header as="h1" content={_(".header") + " " + idString} />
                 <Popup

@@ -13,6 +13,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 function getTimeZone() {
   try {
@@ -165,7 +166,7 @@ let UserPage: React.FC<UserPageProps> = props => {
     appState.enterNewPage(`${props.meta.username}`);
   }, []);
 
-  const isMobile = appState.isScreenWidthIn(0, 768);
+  const isMobile = useScreenWidthWithin(0, 768);
 
   const avatar = (
     <div className={style.avatar}>

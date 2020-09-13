@@ -18,6 +18,7 @@ import { appState } from "@/appState";
 import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { AuthApi } from "@/api";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
@@ -220,7 +221,7 @@ let AppLayout: React.FC = props => {
     </Menu.Menu>
   );
 
-  const wide = appState.isScreenWidthIn(1024, Infinity);
+  const wide = useScreenWidthWithin(1024, Infinity);
 
   return (
     <>

@@ -37,6 +37,7 @@ import openUploadDialog from "@/utils/openUploadDialog";
 import pipeStream from "@/utils/pipeStream";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -190,7 +191,7 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
     return status;
   }
 
-  const isMobile = appState.isScreenWidthIn(0, 425 + 1);
+  const isMobile = useScreenWidthWithin(0, 425 + 1);
 
   return (
     <>
@@ -378,7 +379,7 @@ let FileTable: React.FC<FileTableProps> = props => {
     setDeleteSelectedPending(false);
   }
 
-  const isMobile = appState.isScreenWidthIn(0, 425 + 1);
+  const isMobile = useScreenWidthWithin(0, 425 + 1);
 
   return (
     <>
@@ -866,7 +867,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     });
   }
 
-  const isWideScreen = appState.isScreenWidthIn(960, Infinity);
+  const isWideScreen = useScreenWidthWithin(960, Infinity);
 
   const fileTableTestdata = (
     <>

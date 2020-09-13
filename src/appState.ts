@@ -13,37 +13,9 @@ function getBrowserLocale(): Locale {
   );
 }
 
-const isMobileSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
 export const browserDefaultLocale = getBrowserLocale();
 
 export class AppState {
-  constructor() {
-    // iOS's Mobile Safari won't trigger "resize" event when the <meta name="viewport"> tag is added
-
-    const refreshWindowSize = () => {
-      if (this.windowWidth !== window.innerWidth) this.windowWidth = window.innerWidth;
-      if (this.windowHeight !== window.innerHeight) this.windowHeight = window.innerHeight;
-    };
-
-    if (isMobileSafari) {
-      const continueRefreshWindowSize = () => {
-        refreshWindowSize();
-        window.requestAnimationFrame(continueRefreshWindowSize);
-      };
-      continueRefreshWindowSize();
-    } else window.addEventListener("resize", refreshWindowSize);
-  }
-
-  @observable
-  windowWidth: number = window.innerWidth;
-  @observable
-  windowHeight: number = window.innerHeight;
-
-  isScreenWidthIn = computedFn(function (this: AppState, l: number, r: number) {
-    return this.windowWidth >= l && this.windowWidth < r;
-  });
-
   // The current page's title
   @observable
   title: string = "";

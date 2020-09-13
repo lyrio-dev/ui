@@ -11,8 +11,8 @@ import { GroupMeta } from "@/interfaces/GroupMeta";
 import { UserApi, GroupApi } from "@/api";
 import toast from "@/utils/toast";
 import TableCellSearchDropdown from "./TableCellSearchDropdown";
-import { appState } from "@/appState";
 import UserAvatar from "./UserAvatar";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 type PermissionLevelDetails = Record<number, { title: string /* description: string; */ }>;
 
@@ -72,7 +72,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   const [permissions, setPermissions] = useState<PermissionsForResponse>(null);
 
-  const isMobile = appState.isScreenWidthIn(0, 768);
+  const isMobile = useScreenWidthWithin(0, 768);
 
   async function onSearchUser(input: string) {
     const { requestError, response } = await UserApi.searchUser({

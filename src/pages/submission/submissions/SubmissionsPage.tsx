@@ -23,6 +23,7 @@ import {
 } from "../componments/SubmissionItem";
 import SimplePagination from "@/components/SimplePagination";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 const SUBMISSIONS_PER_PAGE = 10;
 
@@ -205,8 +206,8 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
     });
   }
 
-  const isWideScreen = appState.isScreenWidthIn(1024, Infinity);
-  const isMobile = appState.isScreenWidthIn(0, 768);
+  const isWideScreen = useScreenWidthWithin(1024, Infinity);
+  const isMobile = useScreenWidthWithin(0, 768);
 
   return (
     <>

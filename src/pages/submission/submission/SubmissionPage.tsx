@@ -22,6 +22,7 @@ import * as CodeHighlighter from "@/utils/CodeHighlighter";
 import { CodeBox, AnsiCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -345,9 +346,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     else downloadFile(response.downloadInfo[0].downloadUrl, filename);
   }
 
-  const isWideScreen = appState.isScreenWidthIn(1024, Infinity);
-  const isMobile = appState.isScreenWidthIn(0, 768);
-  const isNarrowMobile = appState.isScreenWidthIn(0, 425);
+  const isWideScreen = useScreenWidthWithin(1024, Infinity);
+  const isMobile = useScreenWidthWithin(0, 768);
+  const isNarrowMobile = useScreenWidthWithin(0, 425);
 
   const samples = (fullInfo && fullInfo.samples) || [];
   const samplesRunning = samples.some(sample => sample.running);

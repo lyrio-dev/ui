@@ -3,7 +3,7 @@ import { Pagination as UIPagination, Icon } from "semantic-ui-react";
 import { observer } from "mobx-react";
 
 import style from "./Pagination.module.less";
-import { appState } from "@/appState";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 interface PaginationProps {
   totalCount: number;
@@ -15,27 +15,34 @@ interface PaginationProps {
 let Pagination: React.FC<PaginationProps> = props => {
   const totalPages = Math.ceil(props.totalCount / props.itemsPerPage);
 
-  let siblingRange = 1,
-    size = "mini";
-  if (appState.isScreenWidthIn(0, 375 + 1)) {
+  const screenWidthLessThan376 = useScreenWidthWithin(0, 376);
+  const screenWidthLessThan426 = useScreenWidthWithin(0, 426);
+  const screenWidthLessThan540 = useScreenWidthWithin(0, 540);
+  const screenWidthLessThan640 = useScreenWidthWithin(0, 640);
+  const screenWidthLessThan768 = useScreenWidthWithin(0, 768);
+  const screenWidthLessThan880 = useScreenWidthWithin(0, 880);
+  const screenWidthLessThan1024 = useScreenWidthWithin(0, 1024);
+
+  let siblingRange: number, size: string;
+  if (screenWidthLessThan376) {
     siblingRange = 0;
     size = "mini";
-  } else if (appState.isScreenWidthIn(0, 425 + 1)) {
+  } else if (screenWidthLessThan426) {
     siblingRange = 1;
     size = "mini";
-  } else if (appState.isScreenWidthIn(426, 540)) {
+  } else if (screenWidthLessThan540) {
     siblingRange = 1;
     size = "small";
-  } else if (appState.isScreenWidthIn(540, 640)) {
+  } else if (screenWidthLessThan640) {
     siblingRange = 2;
     size = "small";
-  } else if (appState.isScreenWidthIn(640, 768)) {
+  } else if (screenWidthLessThan768) {
     siblingRange = 3;
     size = "small";
-  } else if (appState.isScreenWidthIn(768, 880)) {
+  } else if (screenWidthLessThan880) {
     siblingRange = 4;
     size = "small";
-  } else if (appState.isScreenWidthIn(880, 1024)) {
+  } else if (screenWidthLessThan1024) {
     siblingRange = 5;
     size = null;
   } else {

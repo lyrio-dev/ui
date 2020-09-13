@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import style from "./SimplePagination.module.less";
 
-import { appState } from "@/appState";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 interface SimplePaginationProps {
   hasPrevPage: boolean;
@@ -13,14 +13,12 @@ interface SimplePaginationProps {
 }
 
 let SimplePagination: React.FC<SimplePaginationProps> = props => {
-  let size = "mini";
-  if (appState.isScreenWidthIn(0, 375 + 1)) size = "mini";
-  else if (appState.isScreenWidthIn(0, 425 + 1)) size = "mini";
-  else if (appState.isScreenWidthIn(426, 540)) size = "small";
-  else if (appState.isScreenWidthIn(540, 640)) size = "small";
-  else if (appState.isScreenWidthIn(640, 768)) size = "small";
-  else if (appState.isScreenWidthIn(768, 880)) size = "small";
-  else if (appState.isScreenWidthIn(880, 1024)) size = null;
+  const screenWidthLessThan376 = useScreenWidthWithin(0, 376);
+  const screenWidthLessThan880 = useScreenWidthWithin(0, 880);
+
+  let size: string;
+  if (screenWidthLessThan376) size = "mini";
+  else if (screenWidthLessThan880) size = "small";
   else size = null;
 
   return (

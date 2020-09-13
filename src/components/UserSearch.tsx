@@ -8,8 +8,8 @@ import { UserApi } from "@/api";
 import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { useDebouncedCallback } from "use-debounce/lib";
-import { appState } from "@/appState";
 import UserAvatar from "./UserAvatar";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 interface UserSearchProps {
   className?: string;
@@ -48,7 +48,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
     setPending(false);
   }, 500);
 
-  const isMobile = appState.isScreenWidthIn(0, 768);
+  const isMobile = useScreenWidthWithin(0, 768);
 
   return (
     <Search

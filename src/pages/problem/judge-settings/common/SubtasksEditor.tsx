@@ -10,6 +10,7 @@ import { appState } from "@/appState";
 import { useIntlMessage, useDialog } from "@/utils/hooks";
 import TestDataFileSelector from "./TestDataFileSelector";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 interface Testcase {
   uuid: string;
@@ -613,6 +614,8 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
     });
   }
 
+  const isWideScreen = useScreenWidthWithin(1128, Infinity);
+
   return (
     <>
       {autoAddTestcaseDialog.element}
@@ -634,7 +637,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
             )}
           </strong>
           <div className={style.subtaskTitleTestcasesCount}>
-            {appState.windowWidth >= 100
+            {isWideScreen
               ? _(".subtasks.subtask_testcases_count", {
                   count: props.subtask.testcases.length.toString()
                 })

@@ -17,6 +17,7 @@ import ProblemTagManager from "./ProblemTagManager";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 // Parsed from querystring, without pagination
 interface ProblemSetPageSearchQuery {
@@ -88,7 +89,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
 
   const navigation = useNavigation();
 
-  const isMobile = appState.isScreenWidthIn(0, 768);
+  const isMobile = useScreenWidthWithin(0, 768);
 
   const refOnOpenTagManager = useRef<() => Promise<boolean>>();
 

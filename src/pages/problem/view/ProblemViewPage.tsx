@@ -39,6 +39,7 @@ import { StatusIcon } from "@/components/StatusText";
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
 import MarkdownContent from "@/markdown/MarkdownContent";
+import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -70,7 +71,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const _ = useIntlMessage("problem");
   const navigation = useNavigation();
 
-  const isMobile = appState.isScreenWidthIn(0, 768);
+  const isMobile = useScreenWidthWithin(0, 768);
 
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
   const title = props.problem.localizedContentsOfLocale.title.trim() || _(".no_title");
