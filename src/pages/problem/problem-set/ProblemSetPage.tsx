@@ -89,7 +89,8 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
 
   const navigation = useNavigation();
 
-  const isMobile = useScreenWidthWithin(0, 768);
+  const isMobileOrPad = useScreenWidthWithin(0, 1024);
+  const isVeryNarrowScreen = useScreenWidthWithin(0, 640);
 
   const refOnOpenTagManager = useRef<() => Promise<boolean>>();
 
@@ -275,7 +276,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.keyCode === 13 && onAddFilterKeyword()}
           noResultsMessage={_(".no_result_title")}
           onSearchChange={(e, { value }) => setSearchKeyword(value)}
-          input={{ iconPosition: "left", fluid: isMobile }}
+          input={{ iconPosition: "left", fluid: isMobileOrPad }}
         />
       ) : searchMode === "tag" ? (
         // Search tag
@@ -285,7 +286,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           value={searchKeyword}
           showNoResults={false}
           onSearchChange={(e, { value }) => setSearchKeyword(value)}
-          input={{ iconPosition: "left", fluid: isMobile }}
+          input={{ iconPosition: "left", fluid: isMobileOrPad }}
         />
       ) : (
         // Search user
@@ -385,7 +386,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   const [openTagManagerPending, setOpenTagManagerPending] = useState(false);
   const headerButtons = (
     <div className={style.headerButtons}>
-      {props.response.permissions.manageTags && !isMobile && (
+      {props.response.permissions.manageTags && !isVeryNarrowScreen && (
         <Button
           primary
           size="tiny"
@@ -417,7 +418,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   return (
     <>
       <ProblemTagManager refOpen={refOnOpenTagManager} />
-      {isMobile ? (
+      {isMobileOrPad ? (
         <>
           <div className={style.headerSearchRow}>{headerSearch}</div>
           <div className={style.headerSearchFiltersRow}>{headerSearchFilters}</div>
@@ -480,7 +481,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
               <Table.HeaderCell width={1}>#</Table.HeaderCell>
               <Table.HeaderCell textAlign="left">{_(".column_title")}</Table.HeaderCell>
               <Table.HeaderCell width={1}>{_(".column_submission_count")}</Table.HeaderCell>
-              {!isMobile && <Table.HeaderCell width={1}>{_(".column_accepted_rate")}</Table.HeaderCell>}
+              {!isVeryNarrowScreen && <Table.HeaderCell width={1}>{_(".column_accepted_rate")}</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -526,7 +527,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                   </div>
                 </Table.Cell>
                 <Table.Cell>{problem.meta.submissionCount}</Table.Cell>
-                {!isMobile && (
+                {!isVeryNarrowScreen && (
                   <Table.Cell>
                     {Math.ceil(
                       (problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0
