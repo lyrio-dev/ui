@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Link } from "react-navi";
-import { Table, Grid, Icon, Popup, Ref } from "semantic-ui-react";
+import { Table, Icon, Popup, Ref } from "semantic-ui-react";
 
 import style from "./SubmissionItem.module.less";
 
@@ -85,6 +85,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
           context={refAnswerInfoIcon}
           content={props.answerInfo}
           disabled={!props.answerInfo}
+          hoverable
           trigger={
             <span>
               {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
@@ -268,16 +269,19 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
       disabled={!props.answerInfo}
       position={props.isMobile ? "left center" : "bottom center"}
       on="hover"
+      hoverable
       trigger={
         <div>
           <Icon name="file" />
-          {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
-            <>
-              {_(`code_language.${submission.codeLanguage}.name`)}
-              &nbsp;/&nbsp;
-            </>
-          )}
-          <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+          <span>
+            {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
+              <>
+                {_(`code_language.${submission.codeLanguage}.name`)}
+                &nbsp;/&nbsp;
+              </>
+            )}
+            <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+          </span>
         </div>
       }
     />
