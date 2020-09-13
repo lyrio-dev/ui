@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { Link, useNavigation, useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
@@ -27,8 +27,16 @@ let AppLayout: React.FC = props => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const refScrollView = useRef<HTMLDivElement>();
+
   navigation.subscribe(route => {
-    if (route.type === "ready") setSidebarOpen(false);
+    if (route.type === "ready") {
+      setSidebarOpen(false);
+
+      // Reset the scroll position to the top
+      // Notice that the scroll position won't be back after "Go back" operation in browser (i.e. history popstate)
+      if (refScrollView) refScrollView.current.scrollTop = 0;
+    }
   });
 
   async function onLogoutClick() {
@@ -258,7 +266,7 @@ let AppLayout: React.FC = props => {
               {wide ? topBarItemsForWideScreen : topBarItemsForNarrowScreen}
             </Container>
           </Menu>
-          <div className={style.appContentContainer} id="scrollView">
+          <div className={style.appContentContainer} id="scrollView" ref={refScrollView}>
             <Container id={style.mainUiContainer}>{props.children}</Container>
             {footer}
           </div>
