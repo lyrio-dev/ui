@@ -15,7 +15,7 @@ import { CodeLanguage, codeLanguageOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import { isValidUsername } from "@/utils/validators";
 import StatusText from "@/components/StatusText";
-import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
+import { SubmissionItem, SubmissionItemMobile, SubmissionHeader } from "../componments/SubmissionItem";
 import SimplePagination from "@/components/SimplePagination";
 import { defineRoute, RouteError } from "@/AppRouter";
 
@@ -201,6 +201,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   }
 
   const isWideScreen = appState.isScreenWidthIn(1024, Infinity);
+  const isMobile = appState.isScreenWidthIn(0, 768);
 
   return (
     <>
@@ -320,9 +321,11 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
       ) : (
         <>
           <Table textAlign="center" basic="very" className={style.table} unstackable fixed>
-            <Table.Header>
-              <SubmissionHeader page="submissions" />
-            </Table.Header>
+            {!isMobile && (
+              <Table.Header>
+                <SubmissionHeader page="submissions" />
+              </Table.Header>
+            )}
             <Table.Body>
               {submissions.map(submission => {
                 let status = null;
@@ -341,7 +344,15 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
                       status = "Waiting";
                   }
                 }
-                return (
+                return isMobile ? (
+                  <SubmissionItemMobile
+                    key={submission.id}
+                    submission={{
+                      ...submission,
+                      status: status || submission.status
+                    }}
+                  />
+                ) : (
                   <SubmissionItem
                     key={submission.id}
                     submission={{

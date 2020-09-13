@@ -12,6 +12,18 @@ import StatusText from "@/components/StatusText";
 import ScoreText from "@/components/ScoreText";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 
+function parseSubmissionMeta(submission: ApiTypes.SubmissionMetaDto) {
+  return {
+    submission,
+    submissionLink: `/submission/${submission.id}`,
+    timeString: formatDateTime(submission.submitTime),
+    problemIdString: submission.problem.displayId ? "#" + submission.problem.displayId : "P" + submission.problem.id,
+    problemUrl: submission.problem.displayId
+      ? `/problem/${submission.problem.displayId}`
+      : `/problem/by-id/${submission.problem.id}`
+  };
+}
+
 interface SubmissionItemProps {
   submission: ApiTypes.SubmissionMetaDto;
   page: "submission" | "submissions" | "statistics";
@@ -30,16 +42,7 @@ interface SubmissionItemProps {
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   const _ = useIntlMessage("submission_item");
 
-  const submission = props.submission;
-  const submissionLink = `/submission/${submission.id}`;
-  const timeString = formatDateTime(submission.submitTime);
-
-  const problemIdString = submission.problem.displayId
-    ? "#" + submission.problem.displayId
-    : "P" + submission.problem.id;
-  const problemUrl = submission.problem.displayId
-    ? `/problem/${submission.problem.displayId}`
-    : `/problem/by-id/${submission.problem.id}`;
+  const { submission, submissionLink, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
 
   const refAnswerInfoIcon = useRef<HTMLElement>();
 
@@ -113,6 +116,59 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   );
 };
 
+interface SubmissionItemMobileProps {
+  submission: ApiTypes.SubmissionMetaDto;
+  statusText?: string;
+}
+
+// For mobile view of submissions page only
+// Not for submission page and statistics page
+export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props => {
+  const _ = useIntlMessage("submission_item");
+
+  const { submission, submissionLink, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
+
+  return (
+    <Table.Row className={style.submissionItemMobile}>
+      <Table.Cell>
+        <div className={style.flexContainer}>
+          <div>
+            <div>
+              <Link href={submissionLink}>
+                <StatusText status={submission.status} statusText={props.statusText} />
+                <ScoreText score={submission.score || 0} />
+              </Link>
+            </div>
+            <div>
+              {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
+                <>
+                  <Link href={submissionLink}>{_(`code_language.${submission.codeLanguage}.name`)}</Link>
+                  &nbsp;/&nbsp;
+                </>
+              )}
+              <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+            </div>
+          </div>
+
+          <div>
+            <div>
+              <Link href={problemUrl}>
+                {problemIdString}. {submission.problemTitle}
+              </Link>
+            </div>
+            <div className={style.submitterAndTime}>
+              <div>
+                <UserLink user={submission.submitter} />
+              </div>
+              <div title={timeString[1]}>{timeString[0]}</div>
+            </div>
+          </div>
+        </div>
+      </Table.Cell>
+    </Table.Row>
+  );
+};
+
 interface SubmissionHeaderProps {
   page: "submission" | "submissions" | "statistics";
   statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
@@ -161,15 +217,7 @@ interface SubmissionItemExtraRowsProps {
 export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = props => {
   const _ = useIntlMessage("submission_item");
 
-  const submission = props.submission;
-  const timeString = formatDateTime(submission.submitTime);
-
-  const problemIdString = submission.problem.displayId
-    ? "#" + submission.problem.displayId
-    : "P" + submission.problem.id;
-  const problemUrl = submission.problem.displayId
-    ? `/problem/${submission.problem.displayId}`
-    : `/problem/by-id/${submission.problem.id}`;
+  const { submission, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
 
   const columnStatus = (props.statusPopup || (x => x))(
     <div className={style.extraRowsColumnStatus}>
