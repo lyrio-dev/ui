@@ -99,7 +99,6 @@ let ForgetPage: React.FC = () => {
       refPasswordInput.current.focus();
       refPasswordInput.current.select();
     } else if (!(await waitForRetypePasswordCheck())) {
-      console.log(password, retypePassword);
       toast.error(_(".passwords_do_not_match_message"));
       refRetypePasswordInput.current.focus();
       refRetypePasswordInput.current.select();

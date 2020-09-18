@@ -46,7 +46,6 @@ let SubmitAnswerProblemSubmitView: React.FC<SubmitAnswerProblemSubmitViewProps> 
   const selectedWantedFiles = selectedFiles.filter(file => wantedFiles.includes(file.name));
 
   const [editorContents, setEditorContents] = useState<string[]>(Array(wantedFiles.length).fill(""));
-  console.log(editorContents);
 
   // If the editor contents are not empty, and user choose some files, warn the user the editor contents will not be submitted.
   const editorContentsNotEmpty = editorContents.some(s => s);
