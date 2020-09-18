@@ -474,18 +474,23 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
             let message: string;
             if (props.requestedLocale && props.problem.localizedContentsOfLocale.locale !== props.requestedLocale) {
               message = _("common.localized_content_unavailable.requested_unavailable", {
-                display_locale: _(`language.${props.problem.localizedContentsOfLocale.locale}`)
+                display_locale: `<b>${_(`language.${props.problem.localizedContentsOfLocale.locale}`)}</b>`
               });
             } else if (
               !props.requestedLocale &&
               props.problem.localizedContentsOfLocale.locale !== appState.contentLocale
             ) {
               message = _("common.localized_content_unavailable.preferred_unavailable", {
-                display_locale: _(`language.${props.problem.localizedContentsOfLocale.locale}`)
+                display_locale: `<b>${_(`language.${props.problem.localizedContentsOfLocale.locale}`)}</b>`
               });
             } else return;
 
-            return <Message onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)} content={message} />;
+            return (
+              <Message
+                onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)}
+                content={<span dangerouslySetInnerHTML={{ __html: message }} />}
+              />
+            );
           })()}
           {props.problem.localizedContentsOfLocale.contentSections.map((section, i) => (
             <React.Fragment key={i}>
