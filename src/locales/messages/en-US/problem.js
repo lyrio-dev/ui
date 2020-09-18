@@ -5,11 +5,17 @@ module.exports = {
     non_public: "Non-Public",
     no_display_id: "No ID"
   },
+  fileio: {
+    fileio: "File IO",
+    input: "Input",
+    output: "Output"
+  },
   show_tags: "Show Tags",
   hide_tags: "Hide Tags",
   type: {
     TRADITIONAL: "Traditional",
-    INTERACTION: "Interaction"
+    INTERACTION: "Interaction",
+    SUBMIT_ANSWER: "Submit Answer"
   },
   statistic: {
     submissions: "Subs.",
@@ -49,10 +55,21 @@ module.exports = {
     PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "A public problem must have an ID.",
     DUPLICATE_DISPLAY_ID: "ID {displayId} has already used."
   },
+  upload_error: "Failed to upload file: {error}",
   submit: {
     last_submission: "Last Sub.",
     back_to_statement: "Back to Statement",
     skip_samples: "Skip Samples",
+    upload_files: "Upload files",
+    choose_files: "Choose ...",
+    selected_archive: "Selected a archive file.",
+    selected_valid_files: "Selected {all} file(s). {valid} of them are valid.",
+    selected_files: "Selected {all} file(s).",
+    cancel_select_files: "Cancel selected files",
+    clear_editor_to_use_upload_left: "To use file uploading, please ",
+    clear_editor: "clear the editor's contents",
+    clear_editor_to_use_upload_right: ".",
+    fill_in_editor_or_upload_file: "Fill in the editor(s) with your answer or upload file(s).",
     submit: "Submit"
   },
   permission_level: {

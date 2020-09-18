@@ -29,7 +29,9 @@ const metaEditorOptions: Options<typeof MetaEditor> = {
 
 const subtasksEditorOptions: Options<typeof SubtasksEditor> = {
   enableTimeMemoryLimit: true,
-  enableOutputFile: false
+  enableInputFile: false,
+  enableOutputFile: false,
+  enableUserOutputFilename: false
 };
 
 type InteractorInterface = "stdio" | "shm";

@@ -16,10 +16,8 @@ import {
 import { Link } from "react-navi";
 import { v4 as uuid } from "uuid";
 import lodashIsEqual from "lodash.isequal";
-import axios from "axios";
 import { WritableStream } from "web-streams-polyfill/ponyfill/es6";
 import * as streamsaver from "streamsaver";
-import "streamsaver/examples/zip-stream";
 import pAll from "p-all";
 import { useDebounce } from "use-debounce";
 import { FormattedMessage } from "react-intl";
@@ -38,6 +36,8 @@ import pipeStream from "@/utils/pipeStream";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
+import { createZipStream } from "@/utils/zip";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -594,7 +594,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
       return;
     }
 
-    downloadFile(response.downloadInfo[0].downloadUrl, filename);
+    downloadFile(response.downloadInfo[0].downloadUrl);
   }
 
   async function onDownloadFilesAsArchive(type: "TestData" | "AdditionalFile", filenames: string[]) {
@@ -610,7 +610,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 
     const { downloadInfo } = response;
     let i = 0;
-    const zipStream = new (window as any).ZIP({
+    const zipStream = createZipStream({
       async pull(ctrl) {
         if (i == downloadInfo.length) return ctrl.close();
 
@@ -765,100 +765,47 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     const uploadTasks: Array<() => Promise<void>> = [];
     for (const item of uploadingFileList) {
       uploadTasks.push(async () => {
-        try {
-          updateFileUploadInfo(item.uuid, {
-            progressType: "Requesting",
-            progress: 0
-          });
-
-          let uuid: string;
-          async function tryAddFile(beforeDoUpload: boolean) {
-            const { requestError, response } = await ProblemApi.addProblemFile({
-              problemId: props.problem.meta.id,
-              type,
-              size: item.upload.file.size,
-              filename: item.filename,
-              uuid: uuid
-            });
-            if (requestError) throw requestError;
-
-            if (response.uploadInfo && beforeDoUpload) {
-              return response.uploadInfo;
-            }
-
-            if (response.error) throw _(`.error.${response.error}`);
-
-            return null;
-          }
-
-          const uploadUrlInfo = await tryAddFile(true);
-          if (uploadUrlInfo) {
-            // If upload is required
-            const cancelTokenSource = axios.CancelToken.source();
-            let cancelled = false;
-            const cancel = () => {
-              if (cancelled) return;
-              cancelled = true;
-              cancelTokenSource.cancel();
-            };
-
-            uuid = uploadUrlInfo.uuid;
-
-            try {
-              if (uploadUrlInfo.method === "PUT") {
-                await axios.put(uploadUrlInfo.url, item.upload.file, {
-                  cancelToken: cancelTokenSource.token,
-                  onUploadProgress: e =>
-                    updateFileUploadInfo(item.uuid, {
-                      progressType: "Uploading",
-                      progress: (e.loaded / e.total) * 100,
-                      cancel
-                    })
-                });
-              } else {
-                const formData = new FormData();
-                Object.entries(uploadUrlInfo.extraFormData).forEach(([key, value]) =>
-                  formData.append(key, value as string)
-                );
-                formData.append(uploadUrlInfo.fileFieldName, item.upload.file);
-                await axios.post(uploadUrlInfo.url, formData, {
-                  cancelToken: cancelTokenSource.token,
-                  onUploadProgress: e =>
-                    updateFileUploadInfo(item.uuid, {
-                      progressType: "Uploading",
-                      progress: (e.loaded / e.total) * 100,
-                      cancel
-                    })
-                });
-              }
-            } catch (e) {
-              if (cancelled) {
-                updateFileUploadInfo(item.uuid, {
-                  progressType: "Cancelled",
-                  cancel: null
-                });
-                return;
-              }
-
-              throw e;
-            }
-
+        const { uploadCancelled, uploadError, requestError, response } = await callApiWithFileUpload(
+          ProblemApi.addProblemFile,
+          {
+            problemId: props.problem.meta.id,
+            type,
+            filename: item.filename
+          },
+          item.upload.file,
+          progress =>
             updateFileUploadInfo(item.uuid, {
-              progressType: "Requesting",
-              progress: 100
-            });
+              progressType: progress.status,
+              progress: progress.progress * 100
+            }),
+          cancelFunction =>
+            updateFileUploadInfo(item.uuid, {
+              cancel: cancelFunction
+            })
+        );
 
-            await tryAddFile(false);
-          }
-
-          updateFileUploadInfo(item.uuid, null);
-        } catch (e) {
-          console.log("Error uploading file", e);
+        if (uploadCancelled) {
+          updateFileUploadInfo(item.uuid, {
+            progressType: "Cancelled",
+            cancel: null
+          });
+        } else if (uploadError) {
+          console.log("Error uploading file", uploadError);
           updateFileUploadInfo(item.uuid, {
             progressType: "Error",
-            error: e.toString()
+            error: String(uploadError)
           });
-        }
+        } else if (requestError) {
+          updateFileUploadInfo(item.uuid, {
+            progressType: "Error",
+            error: requestError
+          });
+        } else if (response.error) {
+          updateFileUploadInfo(item.uuid, {
+            progressType: "Error",
+            error: _(`.error.${response.error}`)
+          });
+        } else updateFileUploadInfo(item.uuid, null);
       });
     }
 

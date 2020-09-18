@@ -34,6 +34,9 @@ module.exports = {
       INVALID_DEPENDENCY: "子任务 {1} 的依赖子任务编号 {2} 无效。",
       NO_SUCH_INPUT_FILE: "子任务 {1} 的测试点 {2} 所引用的输入文件 {3} 不存在。",
       NO_SUCH_OUTPUT_FILE: "子任务 {1} 的测试点 {2} 所引用的输出文件 {3} 不存在。",
+      INVALID_USER_OUTPUT_FILENAME: "子任务 {1} 的测试点 {2} 所要求的用户输出文件 {3} 无效。",
+      DUPLICATE_USER_OUTPUT_FILENAME:
+        "子任务 {1} 的测试点 {2} 所要求的用户输出文件 {3} 与子任务 {4} 的测试点 {5} 重复。",
       INVALID_CHECKER_TYPE: "未知错误。",
       INVALID_CHECKER_OPTIONS: "未知错误。",
       INVALID_CHECKER_INTERFACE: "未知错误。",
@@ -41,7 +44,9 @@ module.exports = {
       NO_SUCH_CHECKER_FILE: "检查器文件 {1} 不存在。",
       INVALID_CHECKER_LANGUAGE_OPTIONS: "未知错误。",
       INVALID_TIME_LIMIT_CHECKER: "检查器的时间限制无效。",
+      INVALID_MEMORY_LIMIT_CHECKER: "检查器的空间限制无效。",
       TIME_LIMIT_TOO_LARGE_CHECKER: "检查器的时间限制 {1} ms 过大，请联系管理员。",
+      MEMORY_LIMIT_TOO_LARGE_CHECKER: "检查器的空间限制 {1} ms 过大，请联系管理员。",
       INVALID_INTERACTOR: "未知错误。",
       INVALID_INTERACTOR_INTERFACE: "未知错误。",
       INVALID_INTERACTOR_SHARED_MEMORY_SIZE: "未知错误。",
@@ -49,7 +54,9 @@ module.exports = {
       INVALID_INTERACTOR_LANGUAGE: "未知错误。",
       NO_SUCH_INTERACTOR_FILE: "交互器文件 {1} 不存在。",
       INVALID_TIME_LIMIT_INTERACTOR: "交互器的时间限制无效。",
+      INVALID_MEMORY_LIMIT_INTERACTOR: "交互器的空间限制无效。",
       TIME_LIMIT_TOO_LARGE_INTERACTOR: "交互器的时间限制 {1} ms 过大，请联系管理员。",
+      MEMORY_LIMIT_TOO_LARGE_INTERACTOR: "交互器的空间限制 {1} ms 过大，请联系管理员。",
       INVALID_EXTRA_SOURCE_FILES: "未知错误。",
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "未知错误。",
       INVALID_EXTRA_SOURCE_FILES_DST: "附加源文件 {3} 的目标文件名无效。",
@@ -167,8 +174,10 @@ module.exports = {
     no_testcases: "暂无测试点",
     testcase: {
       input_file: "输入文件",
+      input_file_not_needed: "不需要输入文件",
       output_file: "输出文件",
-      output_file_not_needed: "不需要输出文件"
+      output_file_not_needed: "不需要输出文件",
+      user_output_filename: "用户输出文件名"
     },
     testcase_add: {
       before: "在此测试点前",
@@ -184,7 +193,8 @@ module.exports = {
   },
   file_selector: {
     no_matching_files: "找不到匹配的文件。",
-    file_not_found_warning: "数据包中找不到该文件。"
+    file_not_found_warning: "数据包中找不到该文件。",
+    empty: "空"
   },
   extra_source_files: {
     option: "编译时加入附加源文件",

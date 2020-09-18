@@ -13,6 +13,8 @@ interface SubmitViewFrameProps {
   showSkipSamples: boolean;
   mainContent: React.ReactNode;
   sidebarContent: React.ReactNode;
+  submitDisabled: boolean;
+  onGetSubmitFile?: () => Promise<Blob>;
 
   inSubmitView: boolean;
   pendingSubmit: boolean;
@@ -20,7 +22,7 @@ interface SubmitViewFrameProps {
   submissionContent: unknown;
   onCloseSubmitView: () => void;
   onUpdateSubmissionContent: (path: string, value: unknown) => void;
-  onSubmit: () => void;
+  onSubmit: (onGetSubmitFile?: () => Promise<Blob>) => void;
 }
 
 let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
@@ -49,8 +51,9 @@ let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
           fluid
           icon="paper plane"
           loading={props.pendingSubmit}
+          disabled={props.submitDisabled}
           content={_(".submit.submit")}
-          onClick={props.onSubmit}
+          onClick={() => props.onSubmit(props.onGetSubmitFile)}
         />
         {props.lastSubmission && props.lastSubmission.lastSubmission && (
           <div className={style.lastSubmission}>
@@ -70,6 +73,14 @@ let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
 
 SubmitViewFrame = observer(SubmitViewFrame);
 
+interface EditorWrapperProps {
+  disabled?: boolean;
+}
+
+const EditorWrapper: React.FC<EditorWrapperProps> = props => {
+  return <div className={style.editorWrapper + (props.disabled ? " " + style.disabled : "")}>{props.children}</div>;
+};
+
 export default Object.assign(SubmitViewFrame, {
-  wrapEditor: (editor: React.ReactNode) => <div className={style.editorWrapper}>{editor}</div>
+  EditorWrapper
 });

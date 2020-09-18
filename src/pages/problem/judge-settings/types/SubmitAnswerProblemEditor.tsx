@@ -6,56 +6,49 @@ import { JudgeInfoProcessor, EditorComponentProps, Options } from "../common/int
 import MetaEditor, { JudgeInfoWithMeta } from "../common/MetaEditor";
 import SubtasksEditor, { JudgeInfoWithSubtasks } from "../common/SubtasksEditor";
 import CheckerEditor, { JudgeInfoWithChecker } from "../common/CheckerEditor";
-import ExtraSourceFilesEditor, { JudgeInfoWithExtraSourceFiles } from "../common/ExtraSourceFilesEditor";
 
 const metaEditorOptions: Options<typeof MetaEditor> = {
-  enableTimeMemoryLimit: true,
-  enableFileIo: true,
-  enableRunSamples: true
+  enableTimeMemoryLimit: false,
+  enableFileIo: false,
+  enableRunSamples: false
 };
 
 const subtasksEditorOptions: Options<typeof SubtasksEditor> = {
-  enableTimeMemoryLimit: true,
-  enableInputFile: true,
+  enableTimeMemoryLimit: false,
+  enableInputFile: "optional",
   enableOutputFile: true,
-  enableUserOutputFilename: false
+  enableUserOutputFilename: true
 };
 
-export type JudgeInfoTraditional = JudgeInfoWithMeta &
-  JudgeInfoWithSubtasks &
-  JudgeInfoWithChecker &
-  JudgeInfoWithExtraSourceFiles;
-type TraditionalProblemEditorProps = EditorComponentProps<JudgeInfoTraditional>;
+export type JudgeInfoSubmitAnswer = JudgeInfoWithMeta & JudgeInfoWithSubtasks & JudgeInfoWithChecker;
+type SubmitAnswerProblemEditorProps = EditorComponentProps<JudgeInfoSubmitAnswer>;
 
-let TraditionalProblemEditor: React.FC<TraditionalProblemEditorProps> = props => {
+let SubmitAnswerProblemEditor: React.FC<SubmitAnswerProblemEditorProps> = props => {
   return (
     <>
       <MetaEditor {...props} options={metaEditorOptions} />
       <CheckerEditor {...props} />
       <SubtasksEditor {...props} options={subtasksEditorOptions} />
-      <ExtraSourceFilesEditor {...props} />
     </>
   );
 };
 
-TraditionalProblemEditor = observer(TraditionalProblemEditor);
+SubmitAnswerProblemEditor = observer(SubmitAnswerProblemEditor);
 
-const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoTraditional> = {
+const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoSubmitAnswer> = {
   parseJudgeInfo(raw, testData) {
     return Object.assign(
       {},
       MetaEditor.parseJudgeInfo(raw, testData, metaEditorOptions),
       CheckerEditor.parseJudgeInfo(raw, testData),
-      SubtasksEditor.parseJudgeInfo(raw, testData, subtasksEditorOptions),
-      ExtraSourceFilesEditor.parseJudgeInfo(raw, testData)
+      SubtasksEditor.parseJudgeInfo(raw, testData, subtasksEditorOptions)
     );
   },
   normalizeJudgeInfo(judgeInfo) {
     MetaEditor.normalizeJudgeInfo(judgeInfo, metaEditorOptions);
     CheckerEditor.normalizeJudgeInfo(judgeInfo);
     SubtasksEditor.normalizeJudgeInfo(judgeInfo, subtasksEditorOptions);
-    ExtraSourceFilesEditor.normalizeJudgeInfo(judgeInfo);
   }
 };
 
-export default Object.assign(TraditionalProblemEditor, judgeInfoProcessor);
+export default Object.assign(SubmitAnswerProblemEditor, judgeInfoProcessor);

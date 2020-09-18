@@ -36,7 +36,7 @@ module.exports = {
     NO_SUCH_FILE: "ファイルが存在しません。",
     TOO_MANY_FILES: "ファイル数が制限を超えました，管理者に連絡してください。",
     TOTAL_SIZE_TOO_LARGE: "データのサイズが制限を超えました，管理者に連絡してください。",
-    INVALID_OPERATION: "無効な操作です，やり直してください。",
-    NOT_UPLOADED: "アップロードしたファイルは存在しません。"
+    FILE_UUID_EXISTS: "[TBT] Unknown error.",
+    FILE_NOT_UPLOADED: "アップロードしたファイルは存在しません。"
   }
 };

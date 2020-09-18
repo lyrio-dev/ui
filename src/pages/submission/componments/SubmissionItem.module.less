@@ -49,6 +49,10 @@
 
 .columnAnswer {
   width: 130px;
+
+  .downloadIcon {
+    margin-left: 5px;
+  }
 }
 
 .columnSubmitTime {
@@ -322,16 +326,24 @@
       margin-right: 5px !important;
     }
 
+    .downloadIcon {
+      margin-left: 5px;
+    }
+
     @media only screen and (max-width: 767px) {
       > div:last-child {
         display: flex;
         flex-direction: row-reverse;
         align-items: center;
 
-        :global(.icon) {
+        :global(.icon):not(.downloadIcon) {
           margin-left: 5px !important;
           margin-right: 0 !important;
         }
+      }
+
+      .downloadIcon {
+        margin-right: 5px;
       }
     }
   }
@@ -347,4 +359,8 @@
 .extraRowsColumnSubmitter {
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.downloadIcon {
+  cursor: pointer;
 }

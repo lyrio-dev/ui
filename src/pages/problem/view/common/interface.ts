@@ -15,11 +15,12 @@ export interface ProblemTypeSubmitViewProps<JudgeInfo, SubmissionContent = objec
 
   onCloseSubmitView: () => void;
   onUpdateSubmissionContent: (path: string, value: unknown) => void;
-  onSubmit: () => Promise<void>;
+  onSubmit: (onGetSubmitFile?: () => Promise<Blob>) => Promise<void>;
 }
 
 export interface ProblemTypeView<JudgeInfo, SubmissionContent = object> {
   Labels: React.FC<ProblemTypeLabelsProps<JudgeInfo>>;
   SubmitView: React.FC<ProblemTypeSubmitViewProps<JudgeInfo, SubmissionContent>>;
   getDefaultSubmissionContent: () => SubmissionContent;
+  enableStatistics: () => boolean;
 }

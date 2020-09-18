@@ -13,6 +13,7 @@ interface TestDataFileSelectorProps {
   iconInputOrOutput?: SemanticICONS;
   label?: FormSelectProps["label"];
   testData: ApiTypes.ProblemFileDto[];
+  optional?: boolean;
   value: string;
   placeholder: string;
   onChange: (value: string) => void;
@@ -44,18 +45,37 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
         : undefined,
     placeholder: props.placeholder,
     value: props.value,
-    options: props.testData.map(file => ({
-      key: file.filename,
-      value: file.filename,
-      text: (
-        <div className={style.itemWrapper}>
-          {props.iconInputOrOutput && <Icon className={style.iconInputOrOutput} name={props.iconInputOrOutput} />}
-          <Icon name={getFileIcon(file.filename)} className={style.iconFile} />
-          <div className={style.filename}>{"\u200E" + file.filename}</div>
-          <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
-        </div>
-      )
-    })),
+    options: [
+      ...(props.optional
+        ? [
+            {
+              key: null,
+              value: null,
+              text: (
+                <div className={style.itemWrapper}>
+                  {props.iconInputOrOutput && (
+                    <Icon className={style.iconInputOrOutput + " " + style.invisible} name={props.iconInputOrOutput} />
+                  )}
+                  <Icon name="file code outline" className={style.iconFile + " " + style.invisible} />
+                  <div className={style.filename}>{"\u200E" + _(".file_selector.empty")}</div>
+                </div>
+              )
+            }
+          ]
+        : []),
+      ...props.testData.map(file => ({
+        key: file.filename,
+        value: file.filename,
+        text: (
+          <div className={style.itemWrapper}>
+            {props.iconInputOrOutput && <Icon className={style.iconInputOrOutput} name={props.iconInputOrOutput} />}
+            <Icon name={getFileIcon(file.filename)} className={style.iconFile} />
+            <div className={style.filename}>{"\u200E" + file.filename}</div>
+            <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
+          </div>
+        )
+      }))
+    ],
     onChange: (e, { value }) => props.onChange(value as string)
   };
 

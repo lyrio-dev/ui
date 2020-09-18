@@ -12,9 +12,8 @@ declare namespace ApiTypes {
   export interface AddProblemFileRequestDto {
     problemId: number;
     type: "TestData" | "AdditionalFile";
-    size: number;
     filename: string;
-    uuid?: string;
+    uploadInfo: ApiTypes.FileUploadInfoDto;
   }
   export interface AddProblemFileResponseDto {
     error?:
@@ -22,9 +21,9 @@ declare namespace ApiTypes {
       | "PERMISSION_DENIED"
       | "TOO_MANY_FILES"
       | "TOTAL_SIZE_TOO_LARGE"
-      | "INVALID_OPERATION"
-      | "NOT_UPLOADED";
-    uploadInfo?: ApiTypes.FileUploadInfoDto;
+      | "FILE_UUID_EXISTS"
+      | "FILE_NOT_UPLOADED";
+    signedUploadRequest?: ApiTypes.SignedFileUploadRequestDto;
   }
   export interface AddUserToGroupRequestDto {
     userId: number;
@@ -41,7 +40,7 @@ declare namespace ApiTypes {
   }
   export interface ChangeProblemTypeRequestDto {
     problemId: number;
-    type: "TRADITIONAL" | "INTERACTION";
+    type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
   }
   export interface ChangeProblemTypeResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "PROBLEM_HAS_SUBMISSION";
@@ -58,7 +57,7 @@ declare namespace ApiTypes {
     groupId?: number;
   }
   export interface CreateProblemRequestDto {
-    type: "TRADITIONAL" | "INTERACTION";
+    type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
     statement: ApiTypes.ProblemStatementDto;
   }
   export interface CreateProblemResponseDto {
@@ -112,12 +111,17 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED";
     downloadInfo?: ApiTypes.ProblemFileDownloadInfoDto[];
   }
+  export interface DownloadSubmissionFileRequestDto {
+    submissionId: number;
+    filename: string;
+  }
+  export interface DownloadSubmissionFileResponseDto {
+    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED" | "NO_FILE";
+    url?: string;
+  }
   export interface FileUploadInfoDto {
     uuid: string;
-    method: "POST" | "PUT";
-    url: string;
-    extraFormData: {};
-    fileFieldName: string;
+    size: number;
   }
   export interface GetAllProblemTagsOfAllLocalesResponseDto {
     error?: "PERMISSION_DENIED";
@@ -157,6 +161,7 @@ declare namespace ApiTypes {
     tagsOfLocale?: "en_US" | "zh_CN" | "ja_JP";
     samples?: boolean;
     judgeInfo?: boolean;
+    judgeInfoToBePreprocessed?: boolean;
     testData?: boolean;
     additionalFiles?: boolean;
     statistics?: boolean;
@@ -365,7 +370,7 @@ declare namespace ApiTypes {
   export interface ProblemMetaDto {
     id: number;
     displayId?: number;
-    type: "TRADITIONAL" | "INTERACTION";
+    type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
     isPublic: boolean;
     ownerId: number;
     locales: ("en_US" | "zh_CN" | "ja_JP")[];
@@ -675,6 +680,13 @@ declare namespace ApiTypes {
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";
   }
+  export interface SignedFileUploadRequestDto {
+    uuid: string;
+    method: "POST" | "PUT";
+    url: string;
+    extraFormData: {};
+    fileFieldName: string;
+  }
   export interface SubmissionBasicMetaDto {
     id: number;
     isPublic: boolean;
@@ -734,10 +746,12 @@ declare namespace ApiTypes {
   export interface SubmitRequestDto {
     problemId: number;
     content: {};
+    uploadInfo?: ApiTypes.FileUploadInfoDto;
   }
   export interface SubmitResponseDto {
-    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
+    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "FILE_TOO_LARGE" | "FILE_UUID_EXISTS" | "FILE_NOT_UPLOADED";
     submissionId?: number;
+    signedUploadRequest?: ApiTypes.SignedFileUploadRequestDto;
   }
   export interface UpdateProblemJudgeInfoRequestDto {
     problemId: number;

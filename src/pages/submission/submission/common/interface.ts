@@ -36,8 +36,12 @@ export interface ProblemTypeSubmissionViewProps<TestcaseResult extends TestcaseR
 }
 
 export interface ProblemTypeSubmissionViewHelper<SubmissionContent> {
-  getAnswerInfo: (content: SubmissionContent, _: IntlMessageFormatter) => React.ReactNode;
-  getHighlightLanguageList: (content: SubmissionContent) => CodeLanguage[];
+  config?: {
+    hideTimeMemory?: boolean;
+  };
+  getDownloadAnswerFilename?: (meta: ApiTypes.SubmissionMetaDto) => string;
+  getAnswerInfo?: (content: SubmissionContent, _: IntlMessageFormatter) => React.ReactNode;
+  getHighlightLanguageList?: (content: SubmissionContent) => CodeLanguage[];
 }
 
 export type ProblemTypeSubmissionView = React.FC<ProblemTypeSubmissionViewProps<TestcaseResultCommon, unknown>> &

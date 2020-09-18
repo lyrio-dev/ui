@@ -10,6 +10,8 @@ export type QuerySubmissionRequestDto = ApiTypes.QuerySubmissionRequestDto;
 export type QuerySubmissionResponseDto = ApiTypes.QuerySubmissionResponseDto;
 export type GetSubmissionDetailRequestDto = ApiTypes.GetSubmissionDetailRequestDto;
 export type GetSubmissionDetailResponseDto = ApiTypes.GetSubmissionDetailResponseDto;
+export type DownloadSubmissionFileRequestDto = ApiTypes.DownloadSubmissionFileRequestDto;
+export type DownloadSubmissionFileResponseDto = ApiTypes.DownloadSubmissionFileResponseDto;
 export type QuerySubmissionStatisticsRequestDto = ApiTypes.QuerySubmissionStatisticsRequestDto;
 export type QuerySubmissionStatisticsResponseDto = ApiTypes.QuerySubmissionStatisticsResponseDto;
 export type RejudgeSubmissionRequestDto = ApiTypes.RejudgeSubmissionRequestDto;
@@ -28,6 +30,10 @@ export const querySubmission = createPostApi<QuerySubmissionRequestDto, QuerySub
 export const getSubmissionDetail = createPostApi<GetSubmissionDetailRequestDto, GetSubmissionDetailResponseDto>(
   "submission/getSubmissionDetail"
 );
+export const downloadSubmissionFile = createPostApi<
+  DownloadSubmissionFileRequestDto,
+  DownloadSubmissionFileResponseDto
+>("submission/downloadSubmissionFile");
 export const querySubmissionStatistics = createPostApi<
   QuerySubmissionStatisticsRequestDto,
   QuerySubmissionStatisticsResponseDto

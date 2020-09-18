@@ -68,3 +68,20 @@
     margin-left: 10px;
   }
 }
+
+.editorWrapper.disabled {
+  position: relative;
+
+  &::before {
+    content: '';
+    display: block;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    transition: background-color 0.1s ease;
+    z-index: 1;
+  }
+}

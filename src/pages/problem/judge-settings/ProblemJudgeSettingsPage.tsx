@@ -291,6 +291,8 @@ async function getProblemTypeEditorComponent(type: ProblemType): Promise<Problem
           return import("./types/TraditionalProblemEditor");
         case ProblemType.INTERACTION:
           return import("./types/InteractionProblemEditor");
+        case ProblemType.SUBMIT_ANSWER:
+          return import("./types/SubmitAnswerProblemEditor");
       }
     })()
   ).default;

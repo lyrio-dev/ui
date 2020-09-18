@@ -7,10 +7,12 @@ function extractPath(path: string) {
 
 export function escapeLocalizedMessage(text: string) {
   text = text.split("&").join("&amp;").split("<").join("&lt;");
+  text = " " + text;
   return text;
 }
 
 export function unescapeLocalizedMessage(text: string) {
+  text = text.substr(1);
   text = text.split("&lt;").join("<").split("&amp;").join("&");
   return text;
 }

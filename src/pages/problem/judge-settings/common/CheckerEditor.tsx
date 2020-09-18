@@ -211,7 +211,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                       <label>{_(".meta.time_limit")}</label>
                       <Input
                         className={style.labeledInput}
-                        placeholder={props.judgeInfo["timeLimit"]}
+                        placeholder={props.judgeInfo["timeLimit"] ?? _(".meta.time_limit")}
                         value={checker.timeLimit == null ? "" : checker.timeLimit}
                         label="ms"
                         labelPosition="right"
@@ -227,7 +227,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                       <label>{_(".meta.memory_limit")}</label>
                       <Input
                         className={style.labeledInput}
-                        placeholder={props.judgeInfo["memoryLimit"]}
+                        placeholder={props.judgeInfo["memoryLimit"] ?? _(".meta.memory_limit")}
                         value={checker.memoryLimit == null ? "" : checker.memoryLimit}
                         label="MiB"
                         labelPosition="right"

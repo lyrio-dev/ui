@@ -89,21 +89,20 @@ let TraditionalProblemSubmitView: React.FC<TraditionalProblemSubmitViewProps> = 
         {...props}
         showSkipSamples={props.judgeInfo.runSamples}
         mainContent={
-          <>
-            {SubmitViewFrame.wrapEditor(
-              <CodeEditor
-                language={props.submissionContent.language}
-                value={props.submissionContent.code}
-                onChange={newValue => props.onUpdateSubmissionContent("code", newValue)}
-              />
-            )}
-          </>
+          <SubmitViewFrame.EditorWrapper>
+            <CodeEditor
+              language={props.submissionContent.language}
+              value={props.submissionContent.code}
+              onChange={newValue => props.onUpdateSubmissionContent("code", newValue)}
+            />
+          </SubmitViewFrame.EditorWrapper>
         }
         sidebarContent={
           <>
             <CodeLanguageAndOptions objectPath="" {...props} />
           </>
         }
+        submitDisabled={!props.submissionContent.code}
       />
     </>
   );
@@ -120,7 +119,8 @@ const traditionalProblemViews: ProblemTypeView<JudgeInfoTraditional> = {
         code: ""
       },
       CodeLanguageAndOptions.getDefault()
-    )
+    ),
+  enableStatistics: () => true
 };
 
 export default traditionalProblemViews;

@@ -1,0 +1,22 @@
+.tabbedEditor {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.tabMenuContainer {
+  flex-shrink: 0;
+}
+
+.tabMenu {
+  margin-bottom: 7px !important;
+}
+
+.wrapper {
+  flex-grow: 1;
+  overflow: hidden;
+
+  // Workaround https://bugs.webkit.org/show_bug.cgi?id=198375
+  flex-basis: 0;
+}

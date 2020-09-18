@@ -343,7 +343,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     });
     if (requestError) toast.error(requestError);
     else if (response.error) toast.error(_(`.error.${response.error}`));
-    else downloadFile(response.downloadInfo[0].downloadUrl, filename);
+    else downloadFile(response.downloadInfo[0].downloadUrl);
   }
 
   const isWideScreen = useScreenWidthWithin(1024, Infinity);
@@ -425,6 +425,8 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     return s.endsWith(".0") ? s.slice(0, -2) : s;
   }
 
+  const hideTimeMemory = props.ProblemTypeSubmissionView?.config?.hideTimeMemory;
+
   const getTestcasesAccordionPanels = (
     testcases: TestcaseProgressReference[],
     isSample: boolean,
@@ -474,6 +476,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             );
 
           const columnTime = (width: SemanticWIDTHS) =>
+            !hideTimeMemory &&
             testcaseResult && (
               <Grid.Column className={style.testcaseColumnTime} width={width}>
                 <span
@@ -490,6 +493,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
             );
 
           const columnMemory = (width: SemanticWIDTHS) =>
+            !hideTimeMemory &&
             testcaseResult && (
               <Grid.Column className={style.testcaseColumnMemory} width={width}>
                 <span
@@ -650,7 +654,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     )
   });
 
-  // TODO: Hide time and memory usage when not present
   const getSubtasksAccordionPanels = (getAdditionalSections: GetAdditionalSectionsCallback) =>
     subtasks.map((subtask, i) => ({
       key: i,
@@ -758,7 +761,23 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       />
     ));
 
-  const answerInfo = useMemo(() => props.ProblemTypeSubmissionView.getAnswerInfo(props.content, _), [props.content]);
+  const answerInfo = useMemo(
+    () =>
+      props.ProblemTypeSubmissionView.getAnswerInfo && props.ProblemTypeSubmissionView.getAnswerInfo(props.content, _),
+    [props.content]
+  );
+  const onDownloadAnswer =
+    props.ProblemTypeSubmissionView?.getDownloadAnswerFilename &&
+    (async () => {
+      const { requestError, response } = await SubmissionApi.downloadSubmissionFile({
+        submissionId: props.meta.id,
+        filename: props.ProblemTypeSubmissionView.getDownloadAnswerFilename(props.meta)
+      });
+
+      if (requestError) toast.error(requestError);
+      else if (response.error) toast.error(`.errors.${response.error}`);
+      else downloadFile(response.url);
+    });
 
   const [operationPending, setOperationPending] = useState(false);
 
@@ -964,15 +983,24 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       {!isMobile && (
         <Table textAlign="center" basic="very" unstackable fixed={isWideScreen} compact={isWideScreen ? false : "very"}>
           <Table.Header>
-            <SubmissionHeader page="submission" />
+            <SubmissionHeader
+              page="submission"
+              config={{
+                hideTimeMemory
+              }}
+            />
           </Table.Header>
           <Table.Body>
             <SubmissionItem
               submission={displayMeta}
               statusText={fullInfo.statusText}
               answerInfo={answerInfo}
+              onDownloadAnswer={onDownloadAnswer}
               page="submission"
               statusPopup={statusPopup}
+              config={{
+                hideTimeMemory
+              }}
             />
           </Table.Body>
         </Table>
@@ -981,8 +1009,12 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         <SubmissionItemExtraRows
           submission={displayMeta}
           answerInfo={answerInfo}
+          onDownloadAnswer={onDownloadAnswer}
           isMobile={isMobile}
           statusPopup={statusPopup}
+          config={{
+            hideTimeMemory
+          }}
         />
       )}
       <props.ProblemTypeSubmissionView
@@ -1018,12 +1050,16 @@ export default defineRoute(async request => {
           return import("./types/TraditionalProblemSubmissionView");
         case "INTERACTION":
           return import("./types/InteractionProblemSubmissionView");
+        case "SUBMIT_ANSWER":
+          return import("./types/SubmitAnswerProblemSubmissionView");
       }
     })()
   ).default;
 
   // Load highlight
-  const highlightLanguageList = ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content);
+  const highlightLanguageList =
+    ProblemTypeSubmissionView.getHighlightLanguageList &&
+    ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content);
   promises.concat((highlightLanguageList || []).map(CodeHighlighter.tryLoadTreeSitterLanguage));
 
   await Promise.all(promises);

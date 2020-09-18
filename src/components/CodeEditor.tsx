@@ -11,6 +11,7 @@ import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 
 export interface CodeEditorProps {
+  editorDidMount?: (editor: Monaco.editor.IStandaloneCodeEditor) => void;
   className?: string;
   value: string;
   language: CodeLanguage | string;
@@ -26,6 +27,8 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
     editorRef.current = editor;
     console.log("Monaco Editor:", editor);
     if (!mtsRef.current && languageObjectRef.current) initialize();
+
+    if (props.editorDidMount) props.editorDidMount(editor);
   }
 
   const languageRef = useRef<CodeLanguage | string>();

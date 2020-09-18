@@ -14,7 +14,8 @@ module.exports = {
   hide_tags: "タグを隠す",
   type: {
     TRADITIONAL: "Batch",
-    INTERACTION: "Interaction"
+    INTERACTION: "[TBT] Interaction",
+    SUBMIT_ANSWER: "[TBT] Submit Answer"
   },
   statistic: {
     submissions: "提出",
@@ -54,11 +55,22 @@ module.exports = {
     PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "公開する問題には ID を設定してください。",
     DUPLICATE_DISPLAY_ID: "ID {displayId} は使用されています。"
   },
+  upload_error: "[TBT] Failed to upload file: {error}",
   submit: {
     // This must be at most than full-width character characters e.g. "上次提交"
     last_submission: "[TBT] Last Sub.",
     back_to_statement: "戻る",
     skip_samples: "サンプルをスキップする",
+    upload_files: "[TBT] Upload files",
+    choose_files: "[TBT] Choose ...",
+    selected_archive: "[TBT] Selected a archive file.",
+    selected_valid_files: "[TBT] Selected {all} file(s). {valid} of them are valid.",
+    selected_files: "[TBT] Selected {all} file(s).",
+    cancel_select_files: "[TBT] Cancel selected files",
+    clear_editor_to_use_upload_left: "[TBT] To use file uploading, please ",
+    clear_editor: "[TBT] clear the editor(s)",
+    clear_editor_to_use_upload_right: "[TBT] .",
+    fill_in_editor_or_upload_file: "[TBT] Fill in the editor(s) with your answer or upload file(s).",
     submit: "提出"
   },
   permission_level: {

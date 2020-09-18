@@ -51,21 +51,20 @@ let InteractionProblemSubmitView: React.FC<InteractionProblemSubmitViewProps> = 
         {...props}
         showSkipSamples={props.judgeInfo.runSamples}
         mainContent={
-          <>
-            {SubmitViewFrame.wrapEditor(
-              <CodeEditor
-                language={props.submissionContent.language}
-                value={props.submissionContent.code}
-                onChange={newValue => props.onUpdateSubmissionContent("code", newValue)}
-              />
-            )}
-          </>
+          <SubmitViewFrame.EditorWrapper>
+            <CodeEditor
+              language={props.submissionContent.language}
+              value={props.submissionContent.code}
+              onChange={newValue => props.onUpdateSubmissionContent("code", newValue)}
+            />
+          </SubmitViewFrame.EditorWrapper>
         }
         sidebarContent={
           <>
             <CodeLanguageAndOptions objectPath="" {...props} />
           </>
         }
+        submitDisabled={!props.submissionContent.code}
       />
     </>
   );
@@ -82,7 +81,8 @@ const interactionProblemViews: ProblemTypeView<JudgeInfoInteraction> = {
         code: ""
       },
       CodeLanguageAndOptions.getDefault()
-    )
+    ),
+  enableStatistics: () => true
 };
 
 export default interactionProblemViews;

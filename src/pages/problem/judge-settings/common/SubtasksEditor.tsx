@@ -6,16 +6,17 @@ import update, { Spec } from "immutability-helper";
 
 import style from "./SubtasksEditor.module.less";
 
-import { appState } from "@/appState";
 import { useIntlMessage, useDialog } from "@/utils/hooks";
 import TestDataFileSelector from "./TestDataFileSelector";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { detectTestcasesByMatchingInputToOutput, detectTestcasesByMatchingOutputToInput } from "./detect-testcases";
 
 interface Testcase {
   uuid: string;
   inputFile?: string;
   outputFile?: string;
+  userOutputFilename?: string;
   timeLimit?: number;
   memoryLimit?: number;
   points?: number;
@@ -45,8 +46,10 @@ export interface JudgeInfoWithSubtasks {
 
 interface SubtasksEditorOptions {
   // Some of the problem types doesn't have ALL testcase props
-  enableTimeMemoryLimit: boolean; // TODO: stub
-  enableOutputFile: boolean;
+  enableTimeMemoryLimit: boolean;
+  enableInputFile: boolean | "optional";
+  enableOutputFile: boolean | "optional";
+  enableUserOutputFilename: boolean;
 }
 
 function randomColorFromUuid(uuid: string) {
@@ -99,29 +102,41 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
         attached
       >
         <Menu.Item className={style.itemTestcaseTitle}>#{props.testcaseIndex + 1}</Menu.Item>
-        <TestDataFileSelector
-          type="ItemSearchDropdown"
-          iconInputOrOutput="sign in"
-          testData={props.testData}
-          placeholder={_(".subtasks.testcase.input_file")}
-          value={props.testcase.inputFile}
-          onChange={value => props.onUpdate({ inputFile: value })}
-        />
+        {props.options.enableInputFile ? (
+          <TestDataFileSelector
+            type="ItemSearchDropdown"
+            iconInputOrOutput="sign in"
+            testData={props.testData}
+            placeholder={_(".subtasks.testcase.input_file")}
+            optional={props.options.enableInputFile === "optional"}
+            value={props.testcase.inputFile}
+            onChange={value => props.onUpdate({ inputFile: value })}
+          />
+        ) : (
+          <Menu.Item className={style.outputFileNotNeeded} content={_(".subtasks.testcase.input_file_not_needed")} />
+        )}
         <Menu.Menu position="right">
-          <Menu.Item className={style.itemTestcaseTimeLimit}>
-            <Input
-              transparent
-              placeholder={props.defaultTimeLimit}
-              value={props.testcase.timeLimit == null ? "" : props.testcase.timeLimit}
-              icon="clock"
-              iconPosition="left"
-              onChange={(e, { value }) =>
-                (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
-                props.onUpdate({ timeLimit: value === "" ? null : Number(value) })
-              }
-            />
-          </Menu.Item>
-          <Menu.Item className={style.itemLabel}>ms</Menu.Item>
+          {props.options.enableUserOutputFilename && (
+            <Menu.Item className={style.itemTestcaseUserOutputFilename}></Menu.Item>
+          )}
+          {props.options.enableTimeMemoryLimit && (
+            <>
+              <Menu.Item className={style.itemTestcaseTimeLimit}>
+                <Input
+                  transparent
+                  placeholder={props.defaultTimeLimit}
+                  value={props.testcase.timeLimit == null ? "" : props.testcase.timeLimit}
+                  icon="clock"
+                  iconPosition="left"
+                  onChange={(e, { value }) =>
+                    (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                    props.onUpdate({ timeLimit: value === "" ? null : Number(value) })
+                  }
+                />
+              </Menu.Item>
+              <Menu.Item className={style.itemLabel}>ms</Menu.Item>
+            </>
+          )}
           <Dropdown item icon="plus" className={`icon ${style.itemWithIcon}`}>
             <Dropdown.Menu>
               <Dropdown.Item
@@ -168,6 +183,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
             iconInputOrOutput="sign out"
             testData={props.testData}
             placeholder={_(".subtasks.testcase.output_file")}
+            optional={props.options.enableOutputFile === "optional"}
             value={props.testcase.outputFile}
             onChange={value => props.onUpdate({ outputFile: value })}
           />
@@ -175,20 +191,36 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
           <Menu.Item className={style.outputFileNotNeeded} content={_(".subtasks.testcase.output_file_not_needed")} />
         )}
         <Menu.Menu position="right">
-          <Menu.Item className={style.itemTestcaseMemoryLimit}>
-            <Input
-              transparent
-              placeholder={props.defaultMemoryLimit}
-              value={props.testcase.memoryLimit == null ? "" : props.testcase.memoryLimit}
-              icon="microchip"
-              iconPosition="left"
-              onChange={(e, { value }) =>
-                (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
-                props.onUpdate({ memoryLimit: value === "" ? null : Number(value) })
-              }
-            />
-          </Menu.Item>
-          <Menu.Item className={style.itemLabel}>MiB</Menu.Item>
+          {props.options.enableUserOutputFilename && (
+            <Menu.Item className={style.itemTestcaseUserOutputFilename}>
+              <Input
+                transparent
+                placeholder={props.testcase.outputFile || _(".subtasks.testcase.user_output_filename")}
+                value={props.testcase.userOutputFilename == null ? "" : props.testcase.userOutputFilename}
+                icon="file upload"
+                iconPosition="left"
+                onChange={(e, { value }) => props.onUpdate({ userOutputFilename: value === "" ? null : value })}
+              />
+            </Menu.Item>
+          )}
+          {props.options.enableTimeMemoryLimit && (
+            <>
+              <Menu.Item className={style.itemTestcaseMemoryLimit}>
+                <Input
+                  transparent
+                  placeholder={props.defaultMemoryLimit}
+                  value={props.testcase.memoryLimit == null ? "" : props.testcase.memoryLimit}
+                  icon="microchip"
+                  iconPosition="left"
+                  onChange={(e, { value }) =>
+                    (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                    props.onUpdate({ memoryLimit: value === "" ? null : Number(value) })
+                  }
+                />
+              </Menu.Item>
+              <Menu.Item className={style.itemLabel}>MiB</Menu.Item>
+            </>
+          )}
           <Ref innerRef={refOptionsButton}>
             <Dropdown item icon="bars" className={`icon ${style.itemWithIcon}`}>
               <Dropdown.Menu>
@@ -645,34 +677,38 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
           </div>
         </Menu.Item>
         <Menu.Menu position="right">
-          <Menu.Item className={style.itemSubtaskTimeLimit}>
-            <Input
-              transparent
-              placeholder={props.defaultTimeLimit}
-              value={props.subtask.timeLimit == null ? "" : props.subtask.timeLimit}
-              icon="clock"
-              iconPosition="left"
-              onChange={(e, { value }) =>
-                (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
-                props.onUpdate({ timeLimit: value === "" ? null : Number(value) })
-              }
-            />
-          </Menu.Item>
-          <Menu.Item className={style.itemLabel}>ms</Menu.Item>
-          <Menu.Item className={style.itemSubtaskMemoryLimit}>
-            <Input
-              transparent
-              placeholder={props.defaultMemoryLimit}
-              value={props.subtask.memoryLimit == null ? "" : props.subtask.memoryLimit}
-              icon="microchip"
-              iconPosition="left"
-              onChange={(e, { value }) =>
-                (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
-                props.onUpdate({ memoryLimit: value === "" ? null : Number(value) })
-              }
-            />
-          </Menu.Item>
-          <Menu.Item className={style.itemLabel}>MiB</Menu.Item>
+          {props.options.enableTimeMemoryLimit && (
+            <>
+              <Menu.Item className={style.itemSubtaskTimeLimit}>
+                <Input
+                  transparent
+                  placeholder={props.defaultTimeLimit}
+                  value={props.subtask.timeLimit == null ? "" : props.subtask.timeLimit}
+                  icon="clock"
+                  iconPosition="left"
+                  onChange={(e, { value }) =>
+                    (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                    props.onUpdate({ timeLimit: value === "" ? null : Number(value) })
+                  }
+                />
+              </Menu.Item>
+              <Menu.Item className={style.itemLabel}>ms</Menu.Item>
+              <Menu.Item className={style.itemSubtaskMemoryLimit}>
+                <Input
+                  transparent
+                  placeholder={props.defaultMemoryLimit}
+                  value={props.subtask.memoryLimit == null ? "" : props.subtask.memoryLimit}
+                  icon="microchip"
+                  iconPosition="left"
+                  onChange={(e, { value }) =>
+                    (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0)) &&
+                    props.onUpdate({ memoryLimit: value === "" ? null : Number(value) })
+                  }
+                />
+              </Menu.Item>
+              <Menu.Item className={style.itemLabel}>MiB</Menu.Item>
+            </>
+          )}
           <Menu.Item className={style.itemSubtaskScore}>
             <Input
               transparent
@@ -815,43 +851,6 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
 
 SubtaskEditor = observer(SubtaskEditor);
 
-function detectTestcasesFromTestData(testData: ApiTypes.ProblemFileDto[], enableOutputFile: boolean) {
-  if (!enableOutputFile)
-    return testData
-      .filter(file => file.filename.toLowerCase().endsWith(".in"))
-      .map(input => ({
-        inputFile: input.filename,
-        outputFile: null
-      }));
-  else
-    return testData
-      .filter(file => file.filename.toLowerCase().endsWith(".in"))
-      .map<[ApiTypes.ProblemFileDto, ApiTypes.ProblemFileDto, number[]]>(input => [
-        input,
-        testData.find(file =>
-          [".out", ".ans"]
-            .map(ext => input.filename.slice(0, -3).toLowerCase() + ext)
-            .includes(file.filename.toLowerCase())
-        ),
-        (input.filename.match(/\d+/g) || []).map(parseInt)
-      ])
-      .filter(([input, outputFile]) => outputFile)
-      .sort(([inputA, outputA, numbersA], [inputB, outputB, numbersB]) => {
-        const firstNonEqualIndex = [...Array(Math.max(numbersA.length, numbersB.length)).keys()].findIndex(
-          i => numbersA[i] !== numbersB[i]
-        );
-        return firstNonEqualIndex === -1
-          ? inputA.filename < inputB.filename
-            ? -1
-            : 1
-          : numbersA[firstNonEqualIndex] - numbersB[firstNonEqualIndex];
-      })
-      .map(([input, output]) => ({
-        inputFile: input.filename,
-        outputFile: output.filename
-      }));
-}
-
 type SubtasksEditorProps = EditorComponentProps<JudgeInfoWithSubtasks, SubtasksEditorOptions>;
 
 let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
@@ -859,9 +858,14 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
 
   const judgeInfo = props.judgeInfo;
 
-  const autoTestcases = useMemo(() => detectTestcasesFromTestData(props.testData, props.options.enableOutputFile), [
-    props.testData
-  ]);
+  const autoTestcases = useMemo(() => {
+    if (
+      props.options.enableInputFile === true ||
+      (props.options.enableInputFile === "optional" && props.options.enableOutputFile !== true)
+    )
+      return detectTestcasesByMatchingInputToOutput(props.testData, props.options.enableOutputFile === "optional");
+    else return detectTestcasesByMatchingOutputToInput(props.testData, props.options.enableInputFile === "optional");
+  }, [props.testData]);
 
   // Prevent losing subtasks by toggling "auto detect testcases"
   const [subtasksBackup, setSubtasksBackup] = useState(
@@ -1016,6 +1020,7 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
                 uuid: uuid(),
                 inputFile: null,
                 outputFile: null,
+                userOutputFilename: null,
                 points: null,
                 timeLimit: null,
                 memoryLimit: null
@@ -1086,11 +1091,15 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell width={2}>#</Table.HeaderCell>
-              <Table.HeaderCell width={props.options.enableOutputFile ? 7 : 14}>
-                {_(".subtasks.testcase.input_file")}
-              </Table.HeaderCell>
+              {props.options.enableInputFile && (
+                <Table.HeaderCell width={props.options.enableOutputFile ? 7 : 14}>
+                  {_(".subtasks.testcase.input_file")}
+                </Table.HeaderCell>
+              )}
               {props.options.enableOutputFile && (
-                <Table.HeaderCell width={7}>{_(".subtasks.testcase.output_file")}</Table.HeaderCell>
+                <Table.HeaderCell width={props.options.enableInputFile ? 7 : 14}>
+                  {_(".subtasks.testcase.output_file")}
+                </Table.HeaderCell>
               )}
             </Table.Row>
           </Table.Header>
@@ -1148,10 +1157,17 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
                       .map(x => x || {})
                       .map(rawTestcase => ({
                         uuid: uuid(),
-                        inputFile: typeof rawTestcase.inputFile === "string" ? rawTestcase.inputFile : "",
+                        inputFile:
+                          options.enableInputFile && typeof rawTestcase.inputFile === "string"
+                            ? rawTestcase.inputFile
+                            : "",
                         outputFile:
                           options.enableOutputFile && typeof rawTestcase.outputFile === "string"
                             ? rawTestcase.outputFile
+                            : "",
+                        userOutputFilename:
+                          options.enableUserOutputFilename && typeof rawTestcase.userOutputFilename === "string"
+                            ? rawTestcase.userOutputFilename
                             : "",
                         points: Number.isSafeInteger(rawTestcase.points) ? rawTestcase.points : null,
                         timeLimit:
@@ -1179,7 +1195,14 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
         for (const testcase of subtask.testcases) {
           delete testcase.uuid;
           if (testcase.points == null) delete testcase.points;
+
+          if (!options.enableInputFile) delete testcase.inputFile;
+          else if (!testcase.inputFile) testcase.inputFile = null;
+
           if (!options.enableOutputFile) delete testcase.outputFile;
+          else if (!testcase.outputFile) testcase.outputFile = null;
+
+          if (!options.enableUserOutputFilename || !testcase.userOutputFilename) delete testcase.userOutputFilename;
           if (!options.enableTimeMemoryLimit || testcase.timeLimit == null) delete testcase.timeLimit;
           if (!options.enableTimeMemoryLimit || testcase.memoryLimit == null) delete testcase.memoryLimit;
         }

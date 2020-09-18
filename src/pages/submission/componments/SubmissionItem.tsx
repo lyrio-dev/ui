@@ -24,9 +24,14 @@ function parseSubmissionMeta(submission: ApiTypes.SubmissionMetaDto) {
   };
 }
 
+interface SubmissionItemConfig {
+  hideTimeMemory?: boolean;
+}
+
 interface SubmissionHeaderProps {
   page: "submission" | "submissions" | "statistics";
   statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
+  config?: SubmissionItemConfig;
 }
 
 export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
@@ -47,8 +52,12 @@ export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
         <div className={style.problem}>{_(".columns.problem")}</div>
         <div className={style.submitter}>{_(".columns.submitter")}</div>
       </Table.HeaderCell>
-      <Table.HeaderCell className={style.columnTime}>{_(".columns.time")}</Table.HeaderCell>
-      <Table.HeaderCell className={style.columnMemory}>{_(".columns.memory")}</Table.HeaderCell>
+      {!props?.config?.hideTimeMemory && (
+        <>
+          <Table.HeaderCell className={style.columnTime}>{_(".columns.time")}</Table.HeaderCell>
+          <Table.HeaderCell className={style.columnMemory}>{_(".columns.memory")}</Table.HeaderCell>
+        </>
+      )}
       <Table.HeaderCell className={style.columnAnswer}>{_(".columns.answer")}</Table.HeaderCell>
       <Table.HeaderCell className={style.columnSubmitTime}>{_(".columns.submit_time")}</Table.HeaderCell>
     </Table.Row>
@@ -66,8 +75,13 @@ interface SubmissionItemProps {
   // Mouse hover on "answer" column to display
   answerInfo?: React.ReactNode;
 
+  // If passed, will show a download icon
+  onDownloadAnswer?: React.ReactNode;
+
   // Mouse hover on "status" to display
   statusPopup?: (statusNode: React.ReactElement) => React.ReactNode;
+
+  config?: SubmissionItemConfig;
 }
 
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
@@ -106,10 +120,14 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
           <UserLink user={submission.submitter} />
         </div>
       </Table.Cell>
-      <Table.Cell className={style.columnTime}>{Math.round(submission.timeUsed || 0) + " ms"}</Table.Cell>
-      <Table.Cell className={style.columnMemory} title={(submission.memoryUsed || 0) + " K"}>
-        {formatFileSize((submission.memoryUsed || 0) * 1024, 1)}
-      </Table.Cell>
+      {!props?.config?.hideTimeMemory && (
+        <>
+          <Table.Cell className={style.columnTime}>{Math.round(submission.timeUsed || 0) + " ms"}</Table.Cell>
+          <Table.Cell className={style.columnMemory} title={(submission.memoryUsed || 0) + " K"}>
+            {formatFileSize((submission.memoryUsed || 0) * 1024, 1)}
+          </Table.Cell>
+        </>
+      )}
       <Table.Cell className={style.columnAnswer}>
         <Popup
           className={style.popupOnIcon}
@@ -119,13 +137,13 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
           hoverable
           trigger={
             <span>
+              {props.answerInfo && (
+                <Ref innerRef={refAnswerInfoIcon}>
+                  <Icon name="info circle" />
+                </Ref>
+              )}
               {Object.values(CodeLanguage).includes(submission.codeLanguage as any) && (
                 <>
-                  {props.answerInfo && (
-                    <Ref innerRef={refAnswerInfoIcon}>
-                      <Icon name="info circle" />
-                    </Ref>
-                  )}
                   {props.page !== "submission" ? (
                     <Link href={submissionLink}>{_(`code_language.${submission.codeLanguage}.name`)}</Link>
                   ) : (
@@ -135,6 +153,9 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
                 </>
               )}
               <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
+              {props.onDownloadAnswer && (
+                <Icon className={style.downloadIcon} name="download" onClick={props.onDownloadAnswer} />
+              )}
             </span>
           }
           position="bottom center"
@@ -241,8 +262,13 @@ interface SubmissionItemExtraRowsProps {
   // Mouse hover on "answer" column to display
   answerInfo?: React.ReactNode;
 
+  // If passed, will show a download icon
+  onDownloadAnswer?: React.ReactNode;
+
   // Mouse hover on "status" to display
   statusPopup?: (statusNode: React.ReactElement) => React.ReactNode;
+
+  config?: SubmissionItemConfig;
 }
 
 export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = props => {
@@ -312,6 +338,9 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
             )}
             <span title={submission.answerSize + " B"}>{formatFileSize(submission.answerSize, 1)}</span>
           </span>
+          {props.onDownloadAnswer && (
+            <Icon className={style.downloadIcon} name="download" onClick={props.onDownloadAnswer} />
+          )}
         </div>
       }
     />
@@ -340,16 +369,22 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
             {columnTime}
             {columnAnswer}
           </div>
-          <div>
-            {columnMemory}
-            {columnSubmitTime}
-          </div>
+          {!props?.config?.hideTimeMemory && (
+            <div>
+              {columnMemory}
+              {columnSubmitTime}
+            </div>
+          )}
         </>
       ) : (
         <>
           <div>
-            {columnTime}
-            {columnMemory}
+            {!props?.config?.hideTimeMemory && (
+              <>
+                {columnMemory}
+                {columnSubmitTime}
+              </>
+            )}
             {columnAnswer}
             {columnSubmitTime}
           </div>

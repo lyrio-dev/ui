@@ -40,6 +40,7 @@ import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
 import MarkdownContent from "@/markdown/MarkdownContent";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -48,6 +49,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     tagsOfLocale: locale,
     samples: true,
     judgeInfo: true,
+    judgeInfoToBePreprocessed: true,
     statistics: true,
     permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"],
     lastSubmissionAndLastAcceptedSubmission: true
@@ -321,16 +323,21 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   const [submitPending, setSubmitPending] = useState(false);
 
-  async function onSubmit() {
+  async function onSubmit(onGetSubmitFile?: () => Promise<Blob>) {
     if (submitPending) return;
     setSubmitPending(true);
 
-    const { requestError, response } = await SubmissionApi.submit({
-      problemId: props.problem.meta.id,
-      content: submissionContent
-    });
+    const { uploadError, requestError, response } = await callApiWithFileUpload(
+      SubmissionApi.submit,
+      {
+        problemId: props.problem.meta.id,
+        content: submissionContent
+      },
+      onGetSubmitFile ? await onGetSubmitFile() : null
+    );
 
-    if (requestError) toast.error(requestError);
+    if (uploadError) toast.error(_(".upload_error", { error: String(uploadError) }));
+    else if (requestError) toast.error(requestError);
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
     } else navigation.navigate(`/submission/${response.submissionId}`);
@@ -603,16 +610,18 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                         }
                 }}
               />
-              <Menu.Item
-                name={_(".action.statistics")}
-                icon="sort content ascending"
-                as={Link}
-                href={
-                  props.idType === "id"
-                    ? `/submissions/statistics/by-id/${props.problem.meta.id}/fastest`
-                    : `/submissions/statistics/${props.problem.meta.displayId}/fastest`
-                }
-              />
+              {ProblemTypeView.enableStatistics() && (
+                <Menu.Item
+                  name={_(".action.statistics")}
+                  icon="sort content ascending"
+                  as={Link}
+                  href={
+                    props.idType === "id"
+                      ? `/submissions/statistics/by-id/${props.problem.meta.id}/fastest`
+                      : `/submissions/statistics/${props.problem.meta.displayId}/fastest`
+                  }
+                />
+              )}
               <Menu.Item
                 name={_(".action.discussion")}
                 icon="comment alternate"
@@ -748,6 +757,8 @@ async function getProblemTypeView(type: ProblemType): Promise<ProblemTypeView<an
           return import("./types/TraditionalProblemView");
         case ProblemType.INTERACTION:
           return import("./types/InteractionProblemView");
+        case ProblemType.SUBMIT_ANSWER:
+          return import("./types/SubmitAnswerProblemView");
       }
     })()
   ).default;

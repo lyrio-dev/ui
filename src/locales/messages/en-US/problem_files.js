@@ -33,6 +33,10 @@ module.exports = {
   error: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_PROBLEM: "No such problem.",
-    NO_SUCH_FILE: "No such file."
+    NO_SUCH_FILE: "No such file.",
+    TOO_MANY_FILES: "Too many files. Please contact the administrator.",
+    TOTAL_SIZE_TOO_LARGE: "Files total size too large. Please contact the administrator.",
+    FILE_UUID_EXISTS: "Unknown error.",
+    FILE_NOT_UPLOADED: "Couldn't find uploaded file."
   }
 };

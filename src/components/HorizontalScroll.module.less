@@ -1,0 +1,24 @@
+.outerWrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.middleWrapper {
+  position: absolute;
+  right: 0;
+  transform: rotate(-90deg) translateY(-100%);
+  transform-origin: right top;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.innerWrapper {
+  transform: rotate(90deg) translateX(100%);
+  transform-origin: right top;
+  overflow: visible;
+
+  &::after {
+    content: ' ';
+    display: table;
+  }
+}

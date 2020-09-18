@@ -40,6 +40,21 @@
     }
   }
 
+  .itemTestcaseUserOutputFilename {
+    width: 200px;
+    padding: 13px 13px !important;
+
+    :global(i.icon) {
+      opacity: 0.35;
+    }
+
+    &:focus-within {
+      & + .itemLabel, :global(i.icon) {
+        opacity: 1;
+      }
+    }
+  }
+
   .itemSubtaskScore {
     width: 70px;
     padding: 13px 14px 13px 8px !important;

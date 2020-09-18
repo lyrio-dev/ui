@@ -14,7 +14,8 @@ module.exports = {
   hide_tags: "隐藏标签",
   type: {
     TRADITIONAL: "传统",
-    INTERACTION: "交互"
+    INTERACTION: "交互",
+    SUBMIT_ANSWER: "提交答案"
   },
   statistic: {
     submissions: "提交",
@@ -53,10 +54,21 @@ module.exports = {
     PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "已公开的题目必须拥有 ID。",
     DUPLICATE_DISPLAY_ID: "ID {displayId} 已被使用。"
   },
+  upload_error: "上传失败：{error}",
   submit: {
     last_submission: "上次提交",
     back_to_statement: "返回题面",
     skip_samples: "跳过样例",
+    upload_files: "上传文件",
+    choose_files: "选择 ...",
+    selected_archive: "已选择归档文件。",
+    selected_valid_files: "已选择 {all} 个文件，其中 {valid} 个有效。",
+    selected_files: "已选择 {all} 个文件。",
+    cancel_select_files: "取消选择文件",
+    clear_editor_to_use_upload_left: "",
+    clear_editor: "清除编辑器内容",
+    clear_editor_to_use_upload_right: "以使用文件上传功能。",
+    fill_in_editor_or_upload_file: "在编辑器中填写答案，或者上传文件。",
     submit: "提交"
   },
   permission_level: {
