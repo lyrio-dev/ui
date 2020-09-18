@@ -11,6 +11,7 @@ module.exports = {
   "auth.change_password": "修改密码",
   "auth.change_others_password": "修改用户 [firstObject] 的密码",
   "auth.change_email": "修改邮箱",
+  "auth.request_reset_password": "请求重置密码",
 
   "group.create": "创建用户组 [firstObject]",
   "group.delete": "删除用户组 [firstObject]",

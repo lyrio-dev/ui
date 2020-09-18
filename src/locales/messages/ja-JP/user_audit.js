@@ -11,6 +11,7 @@ module.exports = {
   "auth.change_password": "[TBT] Change password",
   "auth.change_others_password": "[TBT] Change password of user [firstObject]",
   "auth.change_email": "[TBT] Change email",
+  "auth.request_reset_password": "[TBT] Request resetting password",
 
   "group.create": "[TBT] Create group [firstObject]",
   "group.delete": "[TBT] Delete group [firstObject]",
