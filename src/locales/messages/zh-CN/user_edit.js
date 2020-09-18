@@ -68,10 +68,12 @@ module.exports = {
     locale: {
       header: "语言",
       system: "偏好系统语言",
-      system_default: "浏览器默认（{name}）",
+      system_default: "浏览器默认",
+      system_default_name: "浏览器默认（{name}）",
       system_notes: "在页面底端处更改语言仅在本地浏览器内生效，在此处更改语言将对本账户生效。",
       content: "偏好内容语言",
-      content_default: "与系统语言相同（{name}）",
+      content_default: "与系统语言相同",
+      content_default_name: "与系统语言相同（{name}）",
       content_notes: "如果所选语言的内容不可用，则会为您展示默认语言版本的内容。"
     },
     code_language: {

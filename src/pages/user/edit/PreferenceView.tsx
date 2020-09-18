@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Header, Checkbox, TextArea, Button, Select, Flag } from "semantic-ui-react";
+import { Form, Header, Checkbox, TextArea, Button, Select, Flag, Icon } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { useNavigation } from "react-navi";
 import { FormattedMessage } from "react-intl";
@@ -13,7 +13,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
-import { CodeLanguage, filterValidLanguageOptions, getDefaultCodeLanguageOptions } from "@/interfaces/CodeLanguage";
+import { CodeLanguage, filterValidLanguageOptions } from "@/interfaces/CodeLanguage";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { RouteError } from "@/AppRouter";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
@@ -137,7 +137,7 @@ int main(int argc,char**argv)
       <Header className={style.sectionHeader} size="large" content={_(".locale.header")} />
       <Header className={style.header} size="tiny" content={_(".locale.system")} />
       <Select
-        className={style.notFullWidth}
+        className={style.notFullWidth + " " + style.localeSelect}
         fluid
         value={systemLocale || "DEFAULT"}
         onChange={(e, { value }) => setSystemLocale((value === "DEFAULT" ? null : value) as Locale)}
@@ -145,12 +145,18 @@ int main(int argc,char**argv)
           {
             key: "DEFAULT",
             value: "DEFAULT",
-            text: (
-              <>
-                <Flag name={localeMeta[defaultSystemLocale].flag as any} />
-                {_(".locale.system_default", { name: localeMeta[defaultSystemLocale].name })}
-              </>
-            )
+            text:
+              props.meta.id === appState.currentUser.id ? (
+                <>
+                  <Flag name={localeMeta[defaultSystemLocale].flag as any} />
+                  {_(".locale.system_default_name", { name: localeMeta[defaultSystemLocale].name })}
+                </>
+              ) : (
+                <>
+                  <Icon name="globe" />
+                  {_(".locale.system_default")}
+                </>
+              )
           },
           ...Object.entries(localeMeta).map(([locale, meta]) => ({
             text: (
@@ -167,7 +173,7 @@ int main(int argc,char**argv)
       <div className={style.notes}>{_(".locale.system_notes")}</div>
       <Header className={style.header} size="tiny" content={_(".locale.content")} />
       <Select
-        className={style.notFullWidth}
+        className={style.notFullWidth + " " + style.localeSelect}
         fluid
         value={contentLocale || "DEFAULT"}
         onChange={(e, { value }) => setContentLocale((value === "DEFAULT" ? null : value) as Locale)}
@@ -175,12 +181,18 @@ int main(int argc,char**argv)
           {
             key: "DEFAULT",
             value: "DEFAULT",
-            text: (
-              <>
-                <Flag name={localeMeta[defaultContentLocale].flag as any} />
-                {_(".locale.content_default", { name: localeMeta[defaultContentLocale].name })}
-              </>
-            )
+            text:
+              props.meta.id === appState.currentUser.id ? (
+                <>
+                  <Flag name={localeMeta[defaultContentLocale].flag as any} />
+                  {_(".locale.content_default_name", { name: localeMeta[defaultContentLocale].name })}
+                </>
+              ) : (
+                <>
+                  <Icon name="globe" />
+                  {_(".locale.content_default")}
+                </>
+              )
           },
           ...Object.entries(localeMeta).map(([locale, meta]) => ({
             text: (

@@ -68,11 +68,13 @@ module.exports = {
     locale: {
       header: "Language",
       system: "Preferred system language",
-      system_default: "Browser default ({name})",
+      system_default: "Browser default",
+      system_default_name: "Browser default ({name})",
       system_notes:
         "Changing language in the page footer only affects your local browser. Changing here will affect your account's logins everywhere.",
       content: "Preferred content language",
-      content_default: "Same as system language ({name})",
+      content_default: "Same as system language",
+      content_default_name: "Same as system language ({name})",
       content_notes:
         "If the selected language is not available for some contents, we'll display the default language versions of them."
     },

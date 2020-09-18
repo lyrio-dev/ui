@@ -68,11 +68,13 @@ module.exports = {
     locale: {
       header: "言語",
       system: "言語設定",
-      system_default: "ブラウザのデフォルト（{name}）",
+      system_default: "ブラウザのデフォルト",
+      system_default_name: "ブラウザのデフォルト（{name}）",
       system_notes:
         "フッターで言語を選択すると現在のブラウザにだけ適用されます。ここでの設定はアカウントに適用されます。",
       content: "問題文の言語",
-      content_default: "システムのデフォルト（{name}）",
+      content_default: "システムのデフォルト",
+      content_default_name: "システムのデフォルト（{name}）",
       content_notes: "選択した言語の問題文がない場合は、問題のデフォルト言語で表示します"
     },
     code_language: {
