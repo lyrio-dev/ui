@@ -24,6 +24,7 @@ import {
 import SimplePagination from "@/components/SimplePagination";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
 
 const SUBMISSIONS_PER_PAGE = 10;
 
@@ -63,18 +64,6 @@ async function fetchData(query: SubmissionsQuery) {
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
 
   return response;
-}
-
-enum SubmissionProgressType {
-  Preparing,
-  Compiling,
-  Running,
-  Finished
-}
-
-interface SubmissionProgressMessage {
-  progressMeta?: SubmissionProgressType;
-  resultMeta?: Partial<ApiTypes.SubmissionMetaDto>;
 }
 
 interface SubmissionsPageProps {
@@ -144,7 +133,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   // Subscribe to submission progress with the key
   const subscriptionKey = props.queryResult.progressSubscriptionKey;
   // Save the messages to a map, since we receive message delta each time
-  const messagesMapRef = useRef<Map<number, SubmissionProgressMessage>>();
+  const messagesMapRef = useRef<Map<number, SubmissionProgressMessageMetaOnly>>();
   useSocket(
     "submission-progress",
     {
@@ -161,16 +150,18 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
         const newSubmissions = [...submissions];
         for (const i in newSubmissions) {
           if (submissionId === newSubmissions[i].id) {
-            if (message.progressMeta) {
+            if (!message.progressMeta.resultMeta) {
+              // Not finished
               newSubmissions[i] = {
                 ...newSubmissions[i],
-                progressMeta: message.progressMeta
+                progressType: message.progressMeta.progressType
               };
             } else {
-              delete newSubmissions[i].progressMeta;
+              // Finished
+              delete newSubmissions[i].progressType;
               newSubmissions[i] = {
                 ...newSubmissions[i],
-                ...message.resultMeta
+                ...message.progressMeta.resultMeta
               };
             }
 
@@ -340,7 +331,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
               {submissions.map(submission => {
                 let status = null;
                 if (submission.status === "Pending") {
-                  switch (submission.progressMeta) {
+                  switch (submission.progressType) {
                     case SubmissionProgressType.Preparing:
                       status = "Preparing";
                       break;

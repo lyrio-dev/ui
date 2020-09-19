@@ -1,5 +1,5 @@
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
-import { SubmissionFullInfo } from "../SubmissionPage";
+import { SubmissionProgress, SubmissionProgressMeta } from "../SubmissionPage";
 import { useIntlMessage } from "@/utils/hooks";
 
 type IntlMessageFormatter = ReturnType<typeof useIntlMessage>;
@@ -28,7 +28,8 @@ export type GetAdditionalSectionsCallback<TestcaseResult extends TestcaseResultC
 
 export interface ProblemTypeSubmissionViewProps<TestcaseResult extends TestcaseResultCommon, SubmissionContent> {
   content: SubmissionContent;
-  fullInfo: SubmissionFullInfo<TestcaseResult>;
+  progress: SubmissionProgress<TestcaseResult>;
+  progressMeta: SubmissionProgressMeta;
   getCompilationMessage: () => React.ReactElement;
   getSystemMessage: () => React.ReactElement;
   getSubtasksView: (getAdditionalSections: GetAdditionalSectionsCallback<TestcaseResult>) => React.ReactElement;

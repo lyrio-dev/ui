@@ -116,7 +116,7 @@ declare namespace ApiTypes {
     filename: string;
   }
   export interface DownloadSubmissionFileResponseDto {
-    error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED" | "NO_FILE";
+    error?: "NO_SUCH_SUBMISSION" | "NO_SUCH_FILE" | "PERMISSION_DENIED";
     url?: string;
   }
   export interface FileUploadInfoDto {
@@ -208,7 +208,6 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
     meta?: ApiTypes.SubmissionMetaDto;
     content?: {};
-    result?: {};
     progress?: {};
     progressSubscriptionKey?: string;
     permissionRejudge?: boolean;
@@ -741,7 +740,7 @@ declare namespace ApiTypes {
     problem: ApiTypes.ProblemMetaDto;
     problemTitle: string;
     submitter: ApiTypes.UserMetaDto;
-    progressMeta?: 0 | 1 | 2 | 3;
+    progressType?: "Preparing" | "Compiling" | "Running" | "Finished";
   }
   export interface SubmitRequestDto {
     problemId: number;

@@ -23,6 +23,7 @@ import { CodeBox, AnsiCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -39,11 +40,8 @@ async function fetchData(submissionId: number) {
   return response as RemoveOptional<ApiTypes.GetSubmissionDetailResponseDto>;
 }
 
-interface SubmissionProgressMessage {
-  progressMeta?: SubmissionProgressType;
+interface SubmissionProgressMessage extends SubmissionProgressMessageMetaOnly {
   progressDetail?: SubmissionProgress;
-  resultMeta?: Partial<ApiTypes.SubmissionMetaDto>;
-  resultDetail?: SubmissionResult; // null if the result is "Canceled"
 }
 
 interface TestcaseProgressReference {
@@ -53,7 +51,7 @@ interface TestcaseProgressReference {
   testcaseHash?: string;
 }
 
-interface SubmissionProgress<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
+export interface SubmissionProgress<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
   progressType: SubmissionProgressType;
 
   // Only valid when finished
@@ -80,100 +78,24 @@ interface SubmissionProgress<TestcaseResult extends TestcaseResultCommon = Testc
   }[];
 }
 
-interface SubmissionResult<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
-  compile?: {
-    success: boolean;
-    message: string;
-  };
-  // For SystemError and ConfigurationError
-  systemMessage?: string;
-  // testcaseHash = hash(IF, OF, TL, ML) for traditional
-  //                hash(ID, OD, TL, ML) for samples
-  // ->
-  // result
-  testcaseResult?: Record<string, TestcaseResult>;
-  samples?: string[];
-  subtasks?: {
-    score: number;
-    fullScore: number;
-    testcases: string[]; // The hash of testcase (if null, it's "Skipped")
-  }[];
-}
-
-export enum SubmissionProgressType {
-  Preparing,
-  Compiling,
-  Running,
-  Finished
-}
-
-export interface SubmissionFullInfo<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> {
-  progressType?: SubmissionProgressType;
-
+export interface SubmissionProgressMeta {
   // e.g. "Running"
   status: string;
   // e.g. "Running 3/10"
-  statusText?: string;
+  statusText: string;
   score: number;
-  timeUsed?: number;
-  memoryUsed?: number;
-
-  compile?: {
-    success: boolean;
-    message: string;
-  };
-
-  systemMessage?: string;
-
-  // testcaseHash = hash(IF, OF, TL, ML) for traditional
-  //                hash(ID, OD, TL, ML) for samples
-  // ->
-  // result
-  testcaseResult?: Record<string, TestcaseResult>;
-  samples?: TestcaseProgressReference[];
-  subtasks?: {
-    score: number;
-    fullScore: number;
-    testcases: TestcaseProgressReference[];
-  }[];
+  timeUsed: number;
+  memoryUsed: number;
 }
 
-function parseResult<T extends TestcaseResultCommon>(
-  meta: ApiTypes.SubmissionMetaDto,
-  result: SubmissionResult<T>
-): SubmissionFullInfo<T> {
-  const toTestcaseProgressReference = (testcaseHash: string) =>
-    testcaseHash
-      ? {
-          testcaseHash: testcaseHash
-        }
-      : {
-          // Skipped
-          waiting: false,
-          running: false
-        };
-  return {
-    ...result,
-    progressType: SubmissionProgressType.Finished,
-    status: meta.status,
-    score: meta.score,
-    timeUsed: meta.timeUsed,
-    memoryUsed: meta.memoryUsed,
-    samples: result.samples && result.samples.map(toTestcaseProgressReference),
-    subtasks:
-      result.subtasks &&
-      result.subtasks.map(subtask => ({
-        ...subtask,
-        testcases: subtask.testcases.map(toTestcaseProgressReference)
-      }))
-  };
-}
-
-function parseProgress<T extends TestcaseResultCommon>(progress: SubmissionProgress<T>): SubmissionFullInfo<T> {
+function parseProgress<T extends TestcaseResultCommon>(
+  progress: SubmissionProgress<T>,
+  resultMeta?: ApiTypes.SubmissionBasicMetaDto
+): SubmissionProgressMeta {
   if (!progress) {
     return {
-      progressType: null,
       status: "Waiting",
+      statusText: "Waiting",
       score: 0,
       timeUsed: 0,
       memoryUsed: 0
@@ -191,11 +113,19 @@ function parseProgress<T extends TestcaseResultCommon>(progress: SubmissionProgr
     case SubmissionProgressType.Running:
       status = "Running";
       break;
+    case SubmissionProgressType.Finished:
+      status = resultMeta.status;
+      break;
   }
 
   let statusText = status,
     score = 0;
-  if (progress.progressType === SubmissionProgressType.Running) {
+
+  if (progress.progressType === SubmissionProgressType.Finished) {
+    // If finished, use the score from result meta
+    score = resultMeta.score;
+  } else if (progress.progressType === SubmissionProgressType.Running) {
+    // If NOT finished, calculate score and append progress to the status text
     let totalCount = 0,
       finishedCount = 0;
     for (const subtask of progress.subtasks) {
@@ -210,7 +140,12 @@ function parseProgress<T extends TestcaseResultCommon>(progress: SubmissionProgr
 
   let timeUsed = 0,
     memoryUsed = 0;
-  if (Array.isArray(progress.subtasks)) {
+  if (progress.progressType === SubmissionProgressType.Finished) {
+    // If finished, use the time/memory usage from result meta
+    timeUsed = resultMeta.timeUsed;
+    memoryUsed = resultMeta.memoryUsed;
+  } else if (Array.isArray(progress.subtasks)) {
+    // If NOT finished, calculate them
     for (const subtask of progress.subtasks) {
       for (const { testcaseHash } of subtask.testcases) {
         if (!testcaseHash) continue;
@@ -222,7 +157,6 @@ function parseProgress<T extends TestcaseResultCommon>(progress: SubmissionProgr
   }
 
   return {
-    ...progress,
     status,
     statusText,
     score: Math.round(score),
@@ -234,8 +168,7 @@ function parseProgress<T extends TestcaseResultCommon>(progress: SubmissionProgr
 interface SubmissionPageProps {
   meta: ApiTypes.SubmissionMetaDto;
   content: unknown;
-  result: SubmissionResult;
-  progress?: SubmissionProgress;
+  progress: SubmissionProgress;
   progressSubscriptionKey?: string;
   permissionRejudge: boolean;
   permissionCancel: boolean;
@@ -257,15 +190,16 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   // score and status are in this meta, but we still use them in full info
   const meta = props.meta;
   const [pending, setPending] = useState(meta.status === "Pending");
-  const stateFullInfo = useState(
-    pending
-      ? parseProgress(props.progress as SubmissionProgress)
-      : parseResult(meta, (props.result || {}) as SubmissionResult)
-  );
-  const [fullInfo, setFullInfo] = stateFullInfo;
 
-  const refStateFullInfo = useRef<typeof stateFullInfo>();
-  refStateFullInfo.current = stateFullInfo;
+  const stateProgress = useState(props.progress);
+  const [progress, setProgress] = stateProgress;
+  const refStateProgress = useRef<typeof stateProgress>();
+  refStateProgress.current = stateProgress;
+
+  const stateProgressMeta = useState(parseProgress(props.progress, props.meta));
+  const [progressMeta, setProgressMeta] = stateProgressMeta;
+  const refStateProgressMeta = useRef<typeof stateProgressMeta>();
+  refStateProgressMeta.current = stateProgressMeta;
 
   // Subscribe to submission progress with the key
   const subscriptionKey = props.progressSubscriptionKey;
@@ -281,22 +215,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         messageRef.current = patch(messageRef.current, messageDelta);
         const message = messageRef.current;
 
-        const [fullInfo, setFullInfo] = refStateFullInfo.current;
+        const [progress, setProgress] = refStateProgress.current;
+        const [progressMeta, setProgressMeta] = refStateProgressMeta.current;
 
-        if (message.resultMeta) {
-          setPending(false);
-          setFullInfo(
-            parseResult(
-              {
-                ...meta,
-                ...message.resultMeta
-              },
-              (message.resultDetail || {}) as SubmissionResult
-            )
-          );
-        } else {
-          setFullInfo(parseProgress(message.progressDetail as SubmissionProgress));
-        }
+        setProgress(message.progressDetail);
+        setProgressMeta(parseProgress(message.progressDetail, message.progressMeta?.resultMeta));
       });
     },
     () => {
@@ -311,10 +234,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   // displayMeta contains fields parsed from the progress
   const displayMeta: ApiTypes.SubmissionMetaDto = {
     ...meta,
-    timeUsed: fullInfo.timeUsed,
-    memoryUsed: fullInfo.memoryUsed,
-    status: fullInfo.status as any,
-    score: fullInfo.score
+    timeUsed: progressMeta.timeUsed,
+    memoryUsed: progressMeta.memoryUsed,
+    status: progressMeta.status as any,
+    score: progressMeta.score
   };
 
   const refDefaultCopyCodeBox = useRef<HTMLPreElement>(null);
@@ -350,7 +273,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const isMobile = useScreenWidthWithin(0, 768);
   const isNarrowMobile = useScreenWidthWithin(0, 425);
 
-  const samples = (fullInfo && fullInfo.samples) || [];
+  const samples = progress?.samples || [];
   const samplesRunning = samples.some(sample => sample.running);
   const samplesFinishedCount = samples.filter(sample => !sample.running && !sample.waiting).length;
   const samplesDisplayInfo = {
@@ -363,8 +286,8 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       if (!sample.testcaseHash) {
         samplesDisplayInfo.status = "Skipped";
         break;
-      } else if (fullInfo.testcaseResult[sample.testcaseHash].status !== "Accepted") {
-        samplesDisplayInfo.status = fullInfo.testcaseResult[sample.testcaseHash].status;
+      } else if (progress.testcaseResult[sample.testcaseHash].status !== "Accepted") {
+        samplesDisplayInfo.status = progress.testcaseResult[sample.testcaseHash].status;
         break;
       }
     }
@@ -374,7 +297,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     samplesDisplayInfo.statusText = samplesDisplayInfo.status + " " + samplesFinishedCount + "/" + samples.length;
   }
 
-  const subtasks = (fullInfo && fullInfo.subtasks) || [];
+  const subtasks = progress?.subtasks || [];
   const subtaskDisplayInfo: {
     status: string;
     statusText?: string;
@@ -388,7 +311,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       if (!testcase.waiting && !testcase.running) {
         finishedCount++;
         if (testcase.testcaseHash) {
-          const testcaseResult = fullInfo.testcaseResult[testcase.testcaseHash];
+          const testcaseResult = progress.testcaseResult[testcase.testcaseHash];
           if (!firstNonAcceptedStatus && testcaseResult.status !== "Accepted")
             firstNonAcceptedStatus = testcaseResult.status;
         } else {
@@ -433,7 +356,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     getAdditionalSections: GetAdditionalSectionsCallback
   ) =>
     testcases.map((testcase, i) => {
-      const testcaseResult = testcase.testcaseHash && fullInfo.testcaseResult[testcase.testcaseHash];
+      const testcaseResult = testcase.testcaseHash && progress.testcaseResult[testcase.testcaseHash];
       let status: string, expandable: boolean;
       if (testcase.waiting) {
         status = "Waiting";
@@ -735,9 +658,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     }));
 
   const getSubtasksView = (getAdditionalSections: GetAdditionalSectionsCallback) =>
-    fullInfo &&
-    fullInfo.subtasks &&
-    fullInfo.subtasks &&
+    subtasks.length > 0 &&
     (subtasks.length === 1 ? (
       <Accordion
         className={"styled fluid " + style.accordion}
@@ -993,7 +914,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           <Table.Body>
             <SubmissionItem
               submission={displayMeta}
-              statusText={fullInfo.statusText}
+              statusText={progressMeta.statusText}
               answerInfo={answerInfo}
               onDownloadAnswer={onDownloadAnswer}
               page="submission"
@@ -1018,16 +939,16 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         />
       )}
       <props.ProblemTypeSubmissionView
-        fullInfo={fullInfo}
+        progress={progress}
+        progressMeta={progressMeta}
         content={props.content}
         getCompilationMessage={() =>
-          fullInfo.compile &&
-          fullInfo.compile.message && (
-            <AnsiCodeBox title={_(".compilation_message")} ansiMessage={fullInfo.compile.message} />
+          progress?.compile?.message && (
+            <AnsiCodeBox title={_(".compilation_message")} ansiMessage={progress.compile.message} />
           )
         }
         getSystemMessage={() =>
-          fullInfo.systemMessage && <AnsiCodeBox title={_(".system_message")} ansiMessage={fullInfo.systemMessage} />
+          progress?.systemMessage && <AnsiCodeBox title={_(".system_message")} ansiMessage={progress.systemMessage} />
         }
         getSubtasksView={getSubtasksView}
         refDefaultCopyCodeBox={refDefaultCopyCodeBox}
