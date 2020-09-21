@@ -27,7 +27,7 @@ export function checkCodeFileExtension(language: CodeLanguage, filename: string)
   return codeLanguageExtensions[language].some(extension => filename.toLowerCase().endsWith(extension));
 }
 
-export const codeLanguageOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
+export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
   [CodeLanguage.CPP]: [
     {
       name: "compiler",
@@ -56,19 +56,19 @@ export const codeLanguageOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
   ]
 };
 
-export const getDefaultCodeLanguageOptions = (codeLanguage: CodeLanguage): Record<string, unknown> =>
-  Object.fromEntries(codeLanguageOptions[codeLanguage].map(({ name, defaultValue }) => [name, defaultValue]));
+export const getDefaultCompileAndRunOptions = (codeLanguage: CodeLanguage): Record<string, unknown> =>
+  Object.fromEntries(compileAndRunOptions[codeLanguage].map(({ name, defaultValue }) => [name, defaultValue]));
 
-export const filterValidLanguageOptions = (
+export const filterValidCompileAndRunOptions = (
   codeLanguage: CodeLanguage,
   inputOptions: Record<string, unknown>
 ): Record<string, unknown> =>
   Object.assign(
     {},
-    getDefaultCodeLanguageOptions(codeLanguage),
+    getDefaultCompileAndRunOptions(codeLanguage),
     Object.fromEntries(
       Object.entries(inputOptions || ({} as Record<string, unknown>)).filter(([name, value]) => {
-        const option = codeLanguageOptions[codeLanguage].find(option => option.name === name);
+        const option = compileAndRunOptions[codeLanguage].find(option => option.name === name);
         if (!option) return false;
         switch (option.type) {
           case CodeLanguageOptionType.Select:
@@ -81,7 +81,7 @@ export const filterValidLanguageOptions = (
 export const getPreferredCodeLanguage = () =>
   (appState.userPreference.defaultCodeLanguage as CodeLanguage) || Object.values(CodeLanguage)[0];
 
-export const getPreferredCodeLanguageOptions = (codeLanguage: CodeLanguage) =>
+export const getPreferredCompileAndRunOptions = (codeLanguage: CodeLanguage) =>
   codeLanguage === appState.userPreference.defaultCodeLanguage
-    ? filterValidLanguageOptions(codeLanguage, appState.userPreference.defaultCodeLanguageOptions)
-    : getDefaultCodeLanguageOptions(codeLanguage);
+    ? filterValidCompileAndRunOptions(codeLanguage, appState.userPreference.defaultCompileAndRunOptions)
+    : getDefaultCompileAndRunOptions(codeLanguage);

@@ -4,10 +4,10 @@ import { observer } from "mobx-react";
 
 import { useIntlMessage } from "@/utils/hooks";
 import {
-  codeLanguageOptions,
+  compileAndRunOptions,
   CodeLanguageOptionType,
   CodeLanguage,
-  getPreferredCodeLanguageOptions
+  getPreferredCompileAndRunOptions
 } from "@/interfaces/CodeLanguage";
 
 interface CodeLanguageAndOptionsProps {
@@ -15,23 +15,23 @@ interface CodeLanguageAndOptionsProps {
   elementAfterLanguageSelect?: React.ReactNode;
   headerForLanguage?: string;
   classNameForLanguage?: string;
-  classNameForLanguageOptions?: string;
+  classNameForCompileAndRunOptions?: string;
   language: CodeLanguage;
-  languageOptions: Record<string, unknown>;
+  compileAndRunOptions: Record<string, unknown>;
   onUpdateLanguage: (newLanguage: CodeLanguage) => void;
-  onUpdateLanguageOptions: (newLanguageOptions: Record<string, unknown>) => void;
+  onUpdateCompileAndRunOptions: (newCompileAndRunOptions: Record<string, unknown>) => void;
 }
 
 let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
   const _ = useIntlMessage("code_language");
 
-  const codeLanguageOptionsBackup = useRef(new Map<CodeLanguage, Record<string, unknown>>()).current;
+  const compileAndRunOptionsBackup = useRef(new Map<CodeLanguage, Record<string, unknown>>()).current;
   function onSwitchLanguage(newLanguage: CodeLanguage) {
     const oldLanguage = props.language;
-    codeLanguageOptionsBackup.set(oldLanguage, props.languageOptions);
+    compileAndRunOptionsBackup.set(oldLanguage, props.compileAndRunOptions);
     props.onUpdateLanguage(newLanguage);
-    props.onUpdateLanguageOptions(
-      codeLanguageOptionsBackup.get(newLanguage) || getPreferredCodeLanguageOptions(newLanguage)
+    props.onUpdateCompileAndRunOptions(
+      compileAndRunOptionsBackup.get(newLanguage) || getPreferredCompileAndRunOptions(newLanguage)
     );
   }
 
@@ -41,7 +41,7 @@ let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
         className={props.classNameForLanguage}
         label={props.headerForLanguage || _(".code_language")}
         value={props.language}
-        options={Object.keys(codeLanguageOptions).map(language => ({
+        options={Object.keys(compileAndRunOptions).map(language => ({
           key: language,
           value: language,
           text: _(`.${language}.name`)
@@ -49,15 +49,15 @@ let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
         onChange={(e, { value }) => !props.pending && onSwitchLanguage(value as CodeLanguage)}
       />
       {props.elementAfterLanguageSelect}
-      {codeLanguageOptions[props.language as CodeLanguage].map(option => {
+      {compileAndRunOptions[props.language as CodeLanguage].map(option => {
         switch (option.type) {
           case CodeLanguageOptionType.Select:
             return (
               <Form.Select
-                className={props.classNameForLanguageOptions}
+                className={props.classNameForCompileAndRunOptions}
                 key={option.name}
                 label={_(`.${props.language}.options.${option.name}.name`)}
-                value={props.languageOptions[option.name] as string}
+                value={props.compileAndRunOptions[option.name] as string}
                 options={option.values.map(value => ({
                   key: value,
                   value: value,
@@ -65,7 +65,9 @@ let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
                 }))}
                 onChange={(e, { value }) =>
                   !props.pending &&
-                  props.onUpdateLanguageOptions(Object.assign({}, props.languageOptions, { [option.name]: value }))
+                  props.onUpdateCompileAndRunOptions(
+                    Object.assign({}, props.compileAndRunOptions, { [option.name]: value })
+                  )
                 }
               />
             );

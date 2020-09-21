@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import objectPath from "object-path";
 
 import { useIntlMessage } from "@/utils/hooks";
-import { CodeLanguage, getPreferredCodeLanguage, getPreferredCodeLanguageOptions } from "@/interfaces/CodeLanguage";
+import { CodeLanguage, getPreferredCodeLanguage, getPreferredCompileAndRunOptions } from "@/interfaces/CodeLanguage";
 import CodeLanguageAndOptionsComponent from "@/components/CodeLanguageAndOptions";
 
 interface CodeLanguageAndOptionsProps {
@@ -19,7 +19,7 @@ let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
 
   const submissionContent = objectPath.get(props.submissionContent, props.objectPath) as {
     language: CodeLanguage;
-    languageOptions: Record<string, unknown>;
+    compileAndRunOptions: Record<string, unknown>;
   };
 
   function onUpdate(path: string, value: unknown) {
@@ -31,9 +31,9 @@ let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
       <CodeLanguageAndOptionsComponent
         pending={props.pendingSubmit}
         language={submissionContent.language}
-        languageOptions={submissionContent.languageOptions}
+        compileAndRunOptions={submissionContent.compileAndRunOptions}
         onUpdateLanguage={newLanguage => onUpdate("language", newLanguage)}
-        onUpdateLanguageOptions={languageOptions => onUpdate("languageOptions", languageOptions)}
+        onUpdateCompileAndRunOptions={compileAndRunOptions => onUpdate("compileAndRunOptions", compileAndRunOptions)}
       />
     </Form>
   );
@@ -45,6 +45,6 @@ export default Object.assign(CodeLanguageAndOptions, {
   getDefault: () => ({
     language: getPreferredCodeLanguage(),
     code: "",
-    languageOptions: getPreferredCodeLanguageOptions(getPreferredCodeLanguage())
+    compileAndRunOptions: getPreferredCompileAndRunOptions(getPreferredCodeLanguage())
   })
 });

@@ -11,7 +11,7 @@ import { SubmissionApi } from "@/api";
 import { appState } from "@/appState";
 import { useIntlMessage, useFieldCheckSimple, useSocket } from "@/utils/hooks";
 import toast from "@/utils/toast";
-import { CodeLanguage, codeLanguageOptions } from "@/interfaces/CodeLanguage";
+import { CodeLanguage, compileAndRunOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import { isValidUsername } from "@/utils/validators";
 import StatusText from "@/components/StatusText";
@@ -242,7 +242,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
                   </>
                 )
               },
-              ...Object.keys(codeLanguageOptions).map(language => ({
+              ...Object.keys(compileAndRunOptions).map(language => ({
                 key: language,
                 value: language,
                 text: (

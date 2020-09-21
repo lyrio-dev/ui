@@ -10,10 +10,10 @@ import SubtasksEditor, { JudgeInfoWithSubtasks } from "../common/SubtasksEditor"
 import ExtraSourceFilesEditor, { JudgeInfoWithExtraSourceFiles } from "../common/ExtraSourceFilesEditor";
 import {
   CodeLanguage,
-  filterValidLanguageOptions,
-  getPreferredCodeLanguageOptions,
+  filterValidCompileAndRunOptions,
+  getPreferredCompileAndRunOptions,
   checkCodeFileExtension,
-  codeLanguageOptions,
+  compileAndRunOptions,
   CodeLanguageOptionType
 } from "@/interfaces/CodeLanguage";
 import { useIntlMessage } from "@/utils/hooks";
@@ -40,7 +40,7 @@ interface InteractorConfig {
   interface: InteractorInterface;
   sharedMemorySize?: number;
   language: CodeLanguage;
-  languageOptions: Record<string, unknown>;
+  compileAndRunOptions: Record<string, unknown>;
   filename: string;
   timeLimit?: number;
   memoryLimit?: number;
@@ -74,10 +74,10 @@ function parseInteractorConfig(
         ? interactor.sharedMemorySize
         : 4,
     language: language,
-    languageOptions:
+    compileAndRunOptions:
       language === interactor.language
-        ? filterValidLanguageOptions(language, interactor.languageOptions)
-        : getPreferredCodeLanguageOptions(language),
+        ? filterValidCompileAndRunOptions(language, interactor.compileAndRunOptions)
+        : getPreferredCompileAndRunOptions(language),
     filename:
       interactor.filename && typeof interactor.filename === "string"
         ? interactor.filename
@@ -100,7 +100,7 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
 
   const setLanguageOption = (name: string, value: unknown) => {
     onUpdateInteractor({
-      languageOptions: Object.assign({}, interactor.languageOptions, {
+      compileAndRunOptions: Object.assign({}, interactor.compileAndRunOptions, {
         [name]: value
       })
     });
@@ -146,7 +146,7 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
               testData={props.testData}
               onChange={value => onUpdateInteractor({ filename: value })}
             />
-            <div className={style.languageOptions}>
+            <div className={style.compileAndRunOptions}>
               <CodeLanguageAndOptions
                 elementAfterLanguageSelect={
                   <Form.Field style={{ visibility: interactor.interface === "shm" ? "" : "hidden" }}>
@@ -167,9 +167,11 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
                   </Form.Field>
                 }
                 language={interactor.language}
-                languageOptions={interactor.languageOptions}
+                compileAndRunOptions={interactor.compileAndRunOptions}
                 onUpdateLanguage={newLanguage => onUpdateInteractor({ language: newLanguage })}
-                onUpdateLanguageOptions={languageOptions => onUpdateInteractor({ languageOptions: languageOptions })}
+                onUpdateCompileAndRunOptions={compileAndRunOptions =>
+                  onUpdateInteractor({ compileAndRunOptions: compileAndRunOptions })
+                }
               />
             </div>
             <Form.Group>

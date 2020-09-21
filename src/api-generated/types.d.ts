@@ -846,7 +846,7 @@ declare namespace ApiTypes {
     doNotFormatCodeByDefault?: boolean;
     codeFormatterOptions?: string;
     defaultCodeLanguage?: string;
-    defaultCodeLanguageOptions?: {};
+    defaultCompileAndRunOptions?: {};
   }
   export interface UserSessionDto {
     sessionId: number;

@@ -26,7 +26,7 @@ const SubmitAnswerProblemLabels: React.FC<SubmitAnswerProblemLabelsProps> = Reac
 interface SubmissionContent {
   language: CodeLanguage;
   code: string;
-  languageOptions: any;
+  compileAndRunOptions: any;
   skipSamples?: boolean;
 }
 

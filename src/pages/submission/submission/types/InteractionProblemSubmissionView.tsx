@@ -30,7 +30,7 @@ interface SubmissionTestcaseResultInteraction {
 interface SubmissionContentInteraction {
   language: CodeLanguage;
   code: string;
-  languageOptions: Record<string, string>;
+  compileAndRunOptions: Record<string, string>;
 }
 
 type InteractionProblemSubmissionViewProps = ProblemTypeSubmissionViewProps<
@@ -61,11 +61,11 @@ const helper: ProblemTypeSubmissionViewHelper<SubmissionContentInteraction> = {
   getAnswerInfo(content, _) {
     return (
       <>
-        <table className={style.languageOptions}>
+        <table className={style.compileAndRunOptions}>
           <tbody>
-            {Object.entries(content.languageOptions).map(([name, value]) => (
+            {Object.entries(content.compileAndRunOptions).map(([name, value]) => (
               <tr key={name}>
-                <td align="right" className={style.languageOptionsName}>
+                <td align="right" className={style.compileAndRunOptionsName}>
                   <strong>{_(`code_language.${content.language}.options.${name}.name`)}</strong>
                 </td>
                 <td>{_(`code_language.${content.language}.options.${name}.values.${value}`)}</td>

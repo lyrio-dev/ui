@@ -13,7 +13,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
-import { CodeLanguage, filterValidLanguageOptions } from "@/interfaces/CodeLanguage";
+import { CodeLanguage, filterValidCompileAndRunOptions } from "@/interfaces/CodeLanguage";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { RouteError } from "@/AppRouter";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
@@ -52,8 +52,8 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
       ? (props.preference.defaultCodeLanguage as CodeLanguage)
       : CodeLanguage.CPP
   );
-  const [defaultCodeLanguageOptions, setDefaultCodeLanguageOptions] = useState(
-    filterValidLanguageOptions(defaultCodeLanguage, props.preference.defaultCodeLanguageOptions)
+  const [defaultCompileAndRunOptions, setDefaultCompileAndRunOptions] = useState(
+    filterValidCompileAndRunOptions(defaultCodeLanguage, props.preference.defaultCompileAndRunOptions)
   );
 
   const defaultSystemLocale = browserDefaultLocale;
@@ -73,7 +73,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
         codeFormatterOptions,
         doNotFormatCodeByDefault,
         defaultCodeLanguage,
-        defaultCodeLanguageOptions
+        defaultCompileAndRunOptions
       }
     });
 
@@ -91,7 +91,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
         appState.userPreference.codeFormatterOptions = codeFormatterOptions;
         appState.userPreference.doNotFormatCodeByDefault = doNotFormatCodeByDefault;
         appState.userPreference.defaultCodeLanguage = defaultCodeLanguage;
-        appState.userPreference.defaultCodeLanguageOptions = defaultCodeLanguageOptions;
+        appState.userPreference.defaultCompileAndRunOptions = defaultCompileAndRunOptions;
       }
     }
 
@@ -211,11 +211,11 @@ int main(int argc,char**argv)
       <Form className={style.notFullWidth}>
         <CodeLanguageAndOptions
           headerForLanguage={_(".code_language.language")}
-          classNameForLanguageOptions={style.halfWidthFieldContainer}
+          classNameForCompileAndRunOptions={style.halfWidthFieldContainer}
           language={defaultCodeLanguage}
-          languageOptions={defaultCodeLanguageOptions}
+          compileAndRunOptions={defaultCompileAndRunOptions}
           onUpdateLanguage={setDefaultCodeLanguage}
-          onUpdateLanguageOptions={setDefaultCodeLanguageOptions}
+          onUpdateCompileAndRunOptions={setDefaultCompileAndRunOptions}
         />
       </Form>
       <div className={style.notes}>{_(".code_language.content_notes")}</div>

@@ -7,10 +7,10 @@ import style from "./CheckerEditor.module.less";
 import { useIntlMessage } from "@/utils/hooks";
 import {
   CodeLanguage,
-  filterValidLanguageOptions,
-  getPreferredCodeLanguageOptions,
+  filterValidCompileAndRunOptions,
+  getPreferredCompileAndRunOptions,
   checkCodeFileExtension,
-  codeLanguageOptions,
+  compileAndRunOptions,
   CodeLanguageOptionType
 } from "@/interfaces/CodeLanguage";
 import TestDataFileSelector from "./TestDataFileSelector";
@@ -39,7 +39,7 @@ interface CheckerTypeCustom {
   type: "custom";
   interface: string;
   language: CodeLanguage;
-  languageOptions: Record<string, unknown>;
+  compileAndRunOptions: Record<string, unknown>;
   filename: string;
   timeLimit?: number;
   memoryLimit?: number;
@@ -81,10 +81,10 @@ function parseCheckerConfig(checker: Partial<CheckerConfig>, testData: ApiTypes.
           ? checker.interface
           : CUSTOM_CHECKER_INTERFACES[0],
         language: language,
-        languageOptions:
+        compileAndRunOptions:
           language === checker.language
-            ? filterValidLanguageOptions(language, checker.languageOptions)
-            : getPreferredCodeLanguageOptions(language),
+            ? filterValidCompileAndRunOptions(language, checker.compileAndRunOptions)
+            : getPreferredCompileAndRunOptions(language),
         filename:
           checker.filename && typeof checker.filename === "string"
             ? checker.filename
@@ -188,7 +188,7 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                     testData={props.testData}
                     onChange={value => onUpdateChecker({ filename: value })}
                   />
-                  <div className={style.languageOptions}>
+                  <div className={style.compileAndRunOptions}>
                     <Form.Select
                       label={_(".checker.config.custom.interface")}
                       value={checker.interface}
@@ -201,9 +201,11 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
                     />
                     <CodeLanguageAndOptions
                       language={checker.language}
-                      languageOptions={checker.languageOptions}
+                      compileAndRunOptions={checker.compileAndRunOptions}
                       onUpdateLanguage={newLanguage => onUpdateChecker({ language: newLanguage })}
-                      onUpdateLanguageOptions={languageOptions => onUpdateChecker({ languageOptions: languageOptions })}
+                      onUpdateCompileAndRunOptions={compileAndRunOptions =>
+                        onUpdateChecker({ compileAndRunOptions: compileAndRunOptions })
+                      }
                     />
                   </div>
                   <Form.Group>
