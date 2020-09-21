@@ -64,6 +64,7 @@
 
 .notes {
   display: flex;
+  align-items: center;
   margin-top: 8px;
   font-size: 13px;
   white-space: pre;
@@ -120,7 +121,7 @@
 }
 
 .localeSelect {
-  :global(.icon), :global(.flag) {
+  :global(.icon:not(.dropdown)), :global(.flag) {
     margin-right: 11px !important;
   }
 }

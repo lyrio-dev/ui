@@ -104,6 +104,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
           <Form.Group>
             {props.options.enableFileIo && (
               <Form.Checkbox
+                className={style.checkbox}
                 width={8}
                 label={_(".meta.use_standard_io")}
                 checked={!judgeInfo.fileIo}
@@ -114,6 +115,7 @@ let MetaEditor: React.FC<MetaEditorProps> = props => {
             )}
             {props.options.enableRunSamples && (
               <Form.Checkbox
+                className={style.checkbox}
                 width={8}
                 label={_(".meta.run_samples")}
                 checked={judgeInfo.runSamples}

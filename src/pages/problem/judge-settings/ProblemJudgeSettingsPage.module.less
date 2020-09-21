@@ -43,8 +43,12 @@
   height: calc(100vh - 350px) !important;
 }
 
-.problemTypeForm {
+:global(#root) .problemTypeForm {
   margin-bottom: 14px;
+
+  .label {
+    margin-bottom: 0 !important;
+  }
 
   .field {
     display: flex;
