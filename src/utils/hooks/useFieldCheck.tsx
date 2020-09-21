@@ -63,7 +63,7 @@ export function useFieldCheck(
     }
   }
 
-  const [debouncedCheckField] = useDebouncedCallback(checkField, debounce || 1);
+  const debouncedCheckField = useDebouncedCallback(checkField, debounce || 1).callback;
 
   // If NOT checked, start a check and wait for it
   // If already checked, return immediately
@@ -101,7 +101,7 @@ export function useFieldCheck(
 
   // FIXME: debouncedCheckField won't return a promise
   return [
-    debounce ? async () => debouncedCheckField() : checkField,
+    debounce ? async () => void debouncedCheckField() : checkField,
     waitForCheck,
     getUIValidateStatus,
     getUIHelp,

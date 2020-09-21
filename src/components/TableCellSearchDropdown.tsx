@@ -22,7 +22,7 @@ const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props =>
   // If the search result returns after the input changed, don't show the result
   const [pending, setPending] = useState(false);
   const refInput = useRef("");
-  const [onSearch] = useDebouncedCallback(async (input: string) => {
+  const onSearch = useDebouncedCallback(async (input: string) => {
     input = input.trim();
     if (!input) return;
 
@@ -31,7 +31,7 @@ const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props =>
     setResult(await props.onSearch(input));
     if (refInput.current !== input) return;
     setPending(false);
-  }, 500);
+  }, 500).callback;
 
   function onSelect(index: number) {
     props.onSelect(result[index].data);

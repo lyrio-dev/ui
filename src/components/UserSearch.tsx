@@ -24,7 +24,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
   const [result, setResult] = useState<ApiTypes.UserMetaDto[]>([]);
   const [pending, setPending] = useState(false);
   const refInput = useRef("");
-  const [onSearch] = useDebouncedCallback(async (input: string) => {
+  const onSearch = useDebouncedCallback(async (input: string) => {
     input = input.trim();
     if (!input) return;
     const wildcardStart = input.startsWith("*");
@@ -46,7 +46,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
     }
 
     setPending(false);
-  }, 500);
+  }, 500).callback;
 
   const isMobile = useScreenWidthWithin(0, 768);
 

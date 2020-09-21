@@ -108,14 +108,14 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
     return str;
   }
 
-  const [debouncedUploadProgress, cancelDebouncedUploadProgress, callPendingDebouncedUploadProgress] = useDebounce(
+  const [debouncedUploadProgress, debouncedUploadProgressControlFunctions] = useDebounce(
     (props.file.upload && props.file.upload.progress) || 0,
     24,
     {
       maxWait: 24
     }
   );
-  if (props.file.upload && props.file.upload.progress === 100) callPendingDebouncedUploadProgress();
+  if (props.file.upload && props.file.upload.progress === 100) debouncedUploadProgressControlFunctions.flush();
 
   function getUploadStatus() {
     const status = (() => {
