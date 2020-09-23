@@ -86,21 +86,16 @@
       width: calc(100% + 1px);
     }
 
-    .itemWrapper {
+    :global(.menu) .iconInputOrOutput {
+      visibility: hidden;
+    }
+
+    :global(.text) {
       padding-left: 1px;
     }
 
-    .itemWrapper .iconInputOrOutput {
+    :global(.text) .iconInputOrOutput {
       margin-left: -0.5px;
-    }
-
-    :global(.menu) .itemWrapper {
-      padding-left: 0;
-
-      .iconInputOrOutput {
-        visibility: hidden;
-        margin-left: 0;
-      }
     }
   
     :global(.dropdown.icon) {
