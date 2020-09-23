@@ -27,7 +27,10 @@ let AppLayout: React.FC = props => {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const refScrollView = useRef<HTMLDivElement>();
+  useEffect(() => {
+    if (sidebarOpen !== document.documentElement.classList.contains(style.sidebarOpen))
+      document.documentElement.classList.toggle(style.sidebarOpen);
+  }, [sidebarOpen]);
 
   useEffect(() => {
     const subscription = navigation.subscribe(route => {
@@ -36,7 +39,7 @@ let AppLayout: React.FC = props => {
 
         // Reset the scroll position to the top
         // Notice that the scroll position won't be back after "Go back" operation in browser (i.e. history popstate)
-        if (refScrollView.current) refScrollView.current.scrollTop = 0;
+        document.body.scrollTop = 0;
       }
     });
 
@@ -235,47 +238,44 @@ let AppLayout: React.FC = props => {
 
   const wide = useScreenWidthWithin(1024, Infinity);
 
+  const sidebarOpenStatusClassName = sidebarOpen ? " " + style.sidebarOpen : "";
+
   return (
     <>
       <GlobalProgressBar isAnimating={!!loadingRoute} />
-      <Sidebar.Pushable as="div" className={style.sidebarPushable}>
-        <Sidebar
-          as={Menu}
-          className={style.sidebarMenu}
-          animation="push"
-          direction="right"
-          onHide={() => setSidebarOpen(false)}
-          vertical
-          visible={sidebarOpen}
-        >
-          <Menu.Item className={style.siteName} as={Link} href="/">
-            {appState.serverPreference.siteName}
-          </Menu.Item>
-          <Menu.Item>
-            {appState.currentUser ? (
-              <>
-                <Menu.Header>{appState.currentUser.username}</Menu.Header>
-                {userMenu(Menu)}
-              </>
-            ) : (
-              <Button.Group fluid>{loginAndRegisterButtons}</Button.Group>
-            )}
-          </Menu.Item>
-          {navMenuItems}
-        </Sidebar>
-        <Sidebar.Pusher dimmed={sidebarOpen} className={style.sidebarPusher}>
-          <Menu borderless fixed="top" className={style.menu}>
-            <Container id={style.mainMenuContainer}>
-              {logo}
-              {wide ? topBarItemsForWideScreen : topBarItemsForNarrowScreen}
-            </Container>
-          </Menu>
-          <div className={style.appContentContainer} id="scrollView" ref={refScrollView}>
-            <Container id={style.mainUiContainer}>{props.children}</Container>
-            {footer}
-          </div>
-        </Sidebar.Pusher>
-      </Sidebar.Pushable>
+      <Menu borderless fixed="top" className={style.menu}>
+        <Container id={style.mainMenuContainer}>
+          {logo}
+          {wide ? topBarItemsForWideScreen : topBarItemsForNarrowScreen}
+        </Container>
+      </Menu>
+      <Container id={style.mainUiContainer}>{props.children}</Container>
+      {footer}
+      <div className={style.sidebarDimmer + sidebarOpenStatusClassName} onClick={() => setSidebarOpen(false)}></div>
+      <Sidebar
+        as={Menu}
+        className={style.sidebarMenu + sidebarOpenStatusClassName}
+        animation="push"
+        direction="right"
+        // onHide={() => setSidebarOpen(false)}
+        vertical
+        visible
+      >
+        <Menu.Item className={style.siteName} as={Link} href="/">
+          {appState.serverPreference.siteName}
+        </Menu.Item>
+        <Menu.Item>
+          {appState.currentUser ? (
+            <>
+              <Menu.Header>{appState.currentUser.username}</Menu.Header>
+              {userMenu(Menu)}
+            </>
+          ) : (
+            <Button.Group fluid>{loginAndRegisterButtons}</Button.Group>
+          )}
+        </Menu.Item>
+        {navMenuItems}
+      </Sidebar>
     </>
   );
 };

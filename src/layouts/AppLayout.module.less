@@ -57,33 +57,52 @@
   padding: 1em 1.05em !important;
 }
 
-html, body, :global(#root), .sidebarPushable, .sidebarPusher {
-  overflow: hidden;
-  height: 100%;
-}
-
 @sidebarWidth: 180px;
 
-:global(.ui.visible.right.sidebar) ~ .sidebarPusher {
-  transform: translate3d(-@sidebarWidth, 0, 0) !important;
-}
-
-.sidebarMenu {
+:global(#root) .sidebarMenu {
+  transform: translateX(@sidebarWidth) !important;
   width: @sidebarWidth !important;
+  box-shadow: none !important;
+  transition: transform 0.5s ease, box-shadow 0.5s ease !important;
+
+  &.sidebarOpen {
+    transform: translateX(0) !important;
+    right: 0 !important;
+    box-shadow: 0 0 20px rgba(34, 36, 38, 0.15) !important;
+  }
 
   .userMenu {
     margin-top: 10px !important;
   }
 }
 
-.appContentContainer {
+.sidebarDimmer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  visibility: hidden;
+  opacity: 0;
+  z-index: 102; // Same as Semantic UI's sidebar menu
+  transition: right 0.5s ease, visibility 0.5s ease, opacity 0.5s ease !important;
+
+  &.sidebarOpen {
+    right: @sidebarWidth !important;
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+html.sidebarOpen {
+  overflow: hidden !important;
+}
+
+body {
+  display: block;
   margin-top: 49px;
   padding-top: 28px;
-  height: calc(100% - 49px);
-  overflow-y: auto;
-  overflow-y: overlay;
-  -webkit-overflow-scrolling: touch !important;
-  overflow-x: hidden;
 }
 
 @media only screen and (max-width: 1127px) {
@@ -115,7 +134,7 @@ html, body, :global(#root), .sidebarPushable, .sidebarPusher {
 // Reset SemanticUI scrollbar styles
 // TODO: Remove the scrollbar style from SemanticUI css with webpack
 @media only screen and (max-width: 767px) {
-  .appContentContainer {
+  body {
     padding-top: 15px;
   }
 

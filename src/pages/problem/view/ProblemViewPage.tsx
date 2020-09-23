@@ -299,18 +299,18 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const [submissionContent, setSubmissionContent] = useState(
     props.problem.lastSubmission.lastSubmissionContent || ProblemTypeView.getDefaultSubmissionContent()
   );
-  const scrollView = document.getElementById("scrollView");
+  const scrollElement = document.documentElement;
 
   function openSubmitView() {
-    refScrollTopBackup.current = scrollView.scrollTop;
-    scrollView.scrollTop = 0;
+    refScrollTopBackup.current = scrollElement.scrollTop;
+    scrollElement.scrollTop = 0;
     setInSubmitView(true);
   }
 
   function closeSubmitView() {
     // Restore scroll top if we're not on a mobile view
     window.requestAnimationFrame(() => {
-      scrollView.scrollTop = isMobile ? 0 : refScrollTopBackup.current;
+      scrollElement.scrollTop = isMobile ? 0 : refScrollTopBackup.current;
     });
     setInSubmitView(false);
   }
