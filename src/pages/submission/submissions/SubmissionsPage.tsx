@@ -203,7 +203,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   return (
     <>
       <Form className={style.queryForm}>
-        <Form.Group inline>
+        <Form.Group inline unstackable>
           <Form.Input
             className={style.queryInputProblemId}
             icon="hashtag"
