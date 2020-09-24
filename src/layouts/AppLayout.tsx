@@ -251,31 +251,34 @@ let AppLayout: React.FC = props => {
       </Menu>
       <Container id={style.mainUiContainer}>{props.children}</Container>
       {footer}
-      <div className={style.sidebarDimmer + sidebarOpenStatusClassName} onClick={() => setSidebarOpen(false)}></div>
-      <Sidebar
-        as={Menu}
-        className={style.sidebarMenu + sidebarOpenStatusClassName}
-        animation="push"
-        direction="right"
-        // onHide={() => setSidebarOpen(false)}
-        vertical
-        visible
-      >
-        <Menu.Item className={style.siteName} as={Link} href="/">
-          {appState.serverPreference.siteName}
-        </Menu.Item>
-        <Menu.Item>
-          {appState.currentUser ? (
-            <>
-              <Menu.Header>{appState.currentUser.username}</Menu.Header>
-              {userMenu(Menu)}
-            </>
-          ) : (
-            <Button.Group fluid>{loginAndRegisterButtons}</Button.Group>
-          )}
-        </Menu.Item>
-        {navMenuItems}
-      </Sidebar>
+      {!wide && (
+        <>
+          <div className={style.sidebarDimmer + sidebarOpenStatusClassName} onClick={() => setSidebarOpen(false)}></div>
+          <Sidebar
+            as={Menu}
+            className={style.sidebarMenu + sidebarOpenStatusClassName}
+            animation="push"
+            direction="right"
+            vertical
+            visible
+          >
+            <Menu.Item className={style.siteName} as={Link} href="/">
+              {appState.serverPreference.siteName}
+            </Menu.Item>
+            <Menu.Item>
+              {appState.currentUser ? (
+                <>
+                  <Menu.Header>{appState.currentUser.username}</Menu.Header>
+                  {userMenu(Menu)}
+                </>
+              ) : (
+                <Button.Group fluid>{loginAndRegisterButtons}</Button.Group>
+              )}
+            </Menu.Item>
+            {navMenuItems}
+          </Sidebar>
+        </>
+      )}
     </>
   );
 };
