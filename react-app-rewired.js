@@ -45,8 +45,19 @@ const addWebWorkerLoader = loaderOptions => config => {
   return config;
 };
 
-const overrideHtmlWebpackPluginConfig = options => config => {
-  lodashMerge(config.plugins[0].options, options);
+const overrideHtmlWebpackPluginConfig = () => config => {
+  // Ignore the header comment when minifying
+  const pluginOptions = config.plugins[0].options;
+  if (pluginOptions.minify) {
+    pluginOptions.minify.ignoreCustomComments = [/Menci/];
+  }
+
+  // Pass app config
+  lodashMerge(pluginOptions, {
+    inject: false,
+    appConfig
+  });
+
   return config;
 };
 
@@ -77,8 +88,5 @@ module.exports = override(
   addBabelPlugin(["prismjs", {
     "languages": ["yaml", "cpp", "json"]
   }]),
-  overrideHtmlWebpackPluginConfig({
-    inject: false,
-    appConfig
-  })
+  overrideHtmlWebpackPluginConfig()
 );
