@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { Link, useNavigation, useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
@@ -19,6 +19,8 @@ import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { AuthApi } from "@/api";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+
+export type NavButtonName = "home" | "problem_set" | "contests" | "submissions" | "members" | "discussion";
 
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
@@ -60,7 +62,7 @@ let AppLayout: React.FC = props => {
 
   const onLoginOrRegisterClick = useLoginOrRegisterNavigation();
 
-  const navButtons: Record<string, { icon: SemanticICONS; text: string; url?: string }> = {
+  const navButtons: Record<NavButtonName, { icon: SemanticICONS; text: string; url?: string }> = {
     home: {
       icon: "home",
       text: ".navbar.home",
@@ -94,7 +96,7 @@ let AppLayout: React.FC = props => {
   };
 
   const navMenuItems = Object.keys(navButtons).map(name => (
-    <Menu.Item key={name} as={Link} href={navButtons[name].url}>
+    <Menu.Item key={name} as={Link} href={navButtons[name].url} active={appState.activeNavButton === name}>
       <Icon name={navButtons[name].icon} />
       {_(navButtons[name].text)}
     </Menu.Item>

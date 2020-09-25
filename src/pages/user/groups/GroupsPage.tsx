@@ -324,7 +324,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
   const _ = useIntlMessage("groups");
 
   useEffect(() => {
-    appState.enterNewPage(_(".title"));
+    appState.enterNewPage(_(".title"), "members");
   }, [appState.locale]);
 
   const hasPrivilege = appState.currentUserHasPrivilege("MANAGE_USER_GROUP");

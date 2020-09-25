@@ -83,7 +83,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`.title`)} - ${props.response.meta.username}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${props.response.meta.username}`, null, false);
   }, [appState.locale]);
 
   const [actionQuery, setActionQuery] = useState(props.query.actionQuery);

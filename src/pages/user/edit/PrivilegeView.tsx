@@ -36,7 +36,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
   const _ = useIntlMessage("user_edit.privilege");
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
   }, [appState.locale]);
 
   const [pending, setPending] = useState(false);

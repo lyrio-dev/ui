@@ -41,7 +41,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   const [titleUsername, setTitleUsername] = useState(props.meta.username);
 
   useEffect(() => {
-    appState.enterNewPage(`${_(`.title`)} - ${titleUsername}`, false);
+    appState.enterNewPage(`${_(`.title`)} - ${titleUsername}`, null, false);
   }, [appState.locale, titleUsername]);
 
   const [username, setUsername] = useState(props.meta.username);

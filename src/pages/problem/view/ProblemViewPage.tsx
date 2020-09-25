@@ -79,7 +79,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const title = props.problem.localizedContentsOfLocale.title.trim() || _(".no_title");
 
   useEffect(() => {
-    appState.enterNewPage(`${idString}. ${title} - ${_(".title")}`);
+    appState.enterNewPage(`${idString}. ${title} - ${_(".title")}`, "problem_set");
   }, [appState.locale]);
 
   // Begin toggle tags

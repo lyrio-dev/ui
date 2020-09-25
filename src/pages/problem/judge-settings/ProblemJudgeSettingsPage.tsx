@@ -47,7 +47,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.enterNewPage(`${_(".title")} ${idString}`, false);
+    appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set", false);
   }, [appState.locale]);
 
   const ProblemTypeEditorComponent = props.ProblemTypeEditorComponent;

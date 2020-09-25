@@ -47,7 +47,7 @@ let UsersPage: React.FC<UsersPageProps> = props => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(_(".title"));
+    appState.enterNewPage(_(".title"), "members");
   }, [appState.locale]);
 
   function changePage(page: number) {

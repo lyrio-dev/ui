@@ -700,7 +700,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     !props.new && (props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`);
 
   useEffect(() => {
-    appState.enterNewPage(props.new ? `${_(".title_new")}` : `${_(".title_edit")} ${idString}`, false);
+    appState.enterNewPage(props.new ? `${_(".title_new")}` : `${_(".title_edit")} ${idString}`, "problem_set", false);
   }, [appState.locale]);
 
   const [localizedContents, setLocalizedContents] = useState(

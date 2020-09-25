@@ -9,7 +9,7 @@ let HomePage: React.FC = () => {
   const _ = useIntlMessage("home");
 
   useEffect(() => {
-    appState.enterNewPage(_(".title"));
+    appState.enterNewPage(_(".title"), "home");
   }, [appState.locale]);
 
   return <>Hello, world!</>;

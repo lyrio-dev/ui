@@ -3,6 +3,7 @@ import { computedFn } from "mobx-utils";
 import { create, persist } from "mobx-persist";
 
 import { Locale } from "./interfaces/Locale";
+import { NavButtonName } from "./layouts/AppLayout";
 
 function getBrowserLocale(): Locale {
   const supportedLocales: string[] = Object.values(Locale);
@@ -24,9 +25,13 @@ export class AppState {
   @observable
   responsiveLayout: boolean = true;
 
-  enterNewPage(title: string, responsiveLayout: boolean = true) {
+  @observable
+  activeNavButton: NavButtonName;
+
+  enterNewPage(title: string, activeNavButton: NavButtonName = null, responsiveLayout: boolean = true) {
     this.title = title;
     this.responsiveLayout = responsiveLayout;
+    this.activeNavButton = activeNavButton;
   }
 
   // The locale set by user on the page footer, saved in current browser

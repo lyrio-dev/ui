@@ -562,7 +562,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
 
   useEffect(() => {
-    appState.enterNewPage(`${_(".title")} ${idString}`);
+    appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");
   }, [appState.locale]);
 
   function transformResponseToFileTableItems(fileList: ApiTypes.ProblemFileDto[]): FileTableItem[] {

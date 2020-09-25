@@ -182,7 +182,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(`${_(".title")} #${props.meta.id}`);
+    appState.enterNewPage(`${_(".title")} #${props.meta.id}`, "submissions");
   }, [appState.locale]);
 
   // The meta only provides fields not changing with progress

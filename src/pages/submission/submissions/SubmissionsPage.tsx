@@ -76,7 +76,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(_(".title"));
+    appState.enterNewPage(_(".title"), "submissions");
   }, [appState.locale]);
 
   useEffect(() => {
