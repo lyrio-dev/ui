@@ -1,8 +1,5 @@
 const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin, disableEsLint } = require("customize-cra");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
-const lodashMerge = require("lodash.merge");
-
-const appConfig = require("./app-config");
 
 const addWebWorkerLoader = loaderOptions => config => {
   const mergedLoaderOptions = Object.assign({}, loaderOptions);
@@ -45,18 +42,15 @@ const addWebWorkerLoader = loaderOptions => config => {
   return config;
 };
 
-const overrideHtmlWebpackPluginConfig = () => config => {
+const patchHtmlWebpackPluginConfig = () => config => {
   // Ignore the header comment when minifying
   const pluginOptions = config.plugins[0].options;
   if (pluginOptions.minify) {
     pluginOptions.minify.ignoreCustomComments = [/Menci/];
   }
 
-  // Pass app config
-  lodashMerge(pluginOptions, {
-    inject: false,
-    appConfig
-  });
+  // Disable built-in CSS/JS injection since we insert the tags dynamicly
+  pluginOptions.inject = false;
 
   return config;
 };
@@ -88,5 +82,5 @@ module.exports = override(
   addBabelPlugin(["prismjs", {
     "languages": ["yaml", "cpp", "json"]
   }]),
-  overrideHtmlWebpackPluginConfig()
+  patchHtmlWebpackPluginConfig()
 );

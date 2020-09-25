@@ -18,11 +18,8 @@ declare module "*.wasm" {
 }
 
 interface Window {
-  appConfig: {
-    siteName: string;
-    apiEndpoint: string;
-    crossOrigin: boolean;
-  };
+  publicPath: string;
+  apiEndpoint: string;
 
   fatalError(messages: string[], stack?: string): void;
 

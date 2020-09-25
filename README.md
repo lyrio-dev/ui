@@ -26,15 +26,56 @@ $ cp config-example.yaml config.yaml
 
 By default this app listens on `0.0.0.0:3000`, you can change this with the environment variables `PORT` and `HOST`. You can use nginx as reversed proxy to access the app with a domain name like `syzoj-ng-app.test`.
 
-Start [syzoj-ng](https://github.com/syzoj/syzoj-ng) API server. For example, if the API server in accessible on `http://syzoj-ng.test`, the `config.yaml` should be like:
+Start [syzoj-ng](https://github.com/syzoj/syzoj-ng) API server. For example, if the API server in accessible on `http://syzoj-ng.test`, the API endpoint is actually `http://syzoj-ng.test` (without `/api`).
 
-```yaml
-siteName: SYZOJ NG
-apiEndpoint: http://syzoj-ng.test/api
-crossOrigin: true
+If the API endpoint is not the same as the syzoj-ng-app's root url, you should replace the `__api_endpoint__` string in syzoj-ng-app's HTML (e.g. with Nginx's `ngx_http_sub_module` module) with the API endpoint (in the form of JS string, e.g. `"http://syzoj-ng.test"`). To change the initial title of the page, replace `__default_title__`. To load compiled frontend resources from another host, replace `__public_path__`. All these replacements work in development or production environment.
+
+Here's a Nginx development configuration file for reference (don't forget to add the `.test` domains to your `hosts` or local DNS server):
+
+```nginx
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    server_name syzoj-ng-app.test;
+    listen 80;
+
+    location / {
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header Accept-Encoding "";
+
+        sub_filter '__default_title__' '"Default Title"';
+        sub_filter '__api_endpoint__' '"http://syzoj-ng.test"';
+        sub_filter_once on;
+
+        proxy_pass http://127.0.0.1:3000;
+    }
+}
+
+server {
+    server_name syzoj-ng.test;
+    listen 80;
+
+    location / {
+        proxy_read_timeout 300s;
+        proxy_send_timeout 300s;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $connection_upgrade;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_pass http://127.0.0.1:2002;
+    }
+}
 ```
 
-If you run API server and the frontend app server on different [origin](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS), you should enable `crossOrigin` in this server's config and configure the API server to white list this server's origin. For example, if you access this server on `http://syzoj-ng-app.test`:
+If you run API server and the frontend app server on different [origins](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) like me, you should enable `crossOrigin` in this server's config and configure the API server to white list this server's origin. For example, if you access this server on `http://syzoj-ng-app.test`:
 
 ```yaml
 security:

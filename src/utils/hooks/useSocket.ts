@@ -1,6 +1,5 @@
 import { useRef, useEffect } from "react";
 import SocketIO from "socket.io-client";
-import { appConfig } from "@/appConfig";
 
 export function useSocket(
   namespace: string,
@@ -13,7 +12,7 @@ export function useSocket(
 
   useEffect(() => {
     if (useOrNot) {
-      refSocket.current = SocketIO(appConfig.apiEndpoint + namespace, {
+      refSocket.current = SocketIO(window.apiEndpoint + namespace, {
         path: "/api/socket",
         transports: ["websocket"],
         query: query

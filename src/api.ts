@@ -1,6 +1,5 @@
 import axios from "axios";
 
-import { appConfig } from "./appConfig";
 import { appState } from "./appState";
 
 export interface ApiResponse<T> {
@@ -11,7 +10,7 @@ export interface ApiResponse<T> {
 async function request<T>(path: string, method: "get" | "post", params?: any, body?: any): Promise<ApiResponse<T>> {
   let response: any;
   try {
-    response = await axios(appConfig.apiEndpoint + "api/" + path, {
+    response = await axios(window.apiEndpoint + "api/" + path, {
       method: method,
       params: params,
       data: body && JSON.stringify(body),

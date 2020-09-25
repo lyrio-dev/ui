@@ -2,7 +2,6 @@ import React from "react";
 import { observer } from "mobx-react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
-import { appConfig } from "./appConfig";
 import { appState } from "./appState";
 
 import AppRouter from "./AppRouter";

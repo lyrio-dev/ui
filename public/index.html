@@ -42,8 +42,6 @@ function escapeHTML(str) {
   );
 }
 
-const appConfig = htmlWebpackPlugin.options.appConfig;
-
 htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
   if (tag.tagName === "script") {
     if (!tag.attributes) tag.attributes = {};
@@ -61,33 +59,63 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
   <meta name="description" content="Web site created using create-react-app" />
 
   <script>
-    // This is used for specify public path dynamicly for each request. Useful when you have multiple CDN servers.
-    // Use ngx_http_sub_module in your server to replace the "__public_path__" placeholder with your CDN path.
-    // If it's not replaced, the default "/" will be used.
-    try {
-      window.publicPath = __public_path__;
-    } catch (e) {
-      window.publicPath = "/";
-    }
+    var addLinkTag = (function () {
+      function normalizePath(path) {
+        while (path.endsWith("/")) path = path.slice(0, -1);
+        return path + "/";
+      }
 
-    function addLinkTag(rel, href, onerror) {
-      var link = document.createElement("link");
-      link.rel = rel;
-      link.href = href;
-      link.onerror = onerror;
-      document.head.appendChild(link);
-    }
+      // This is used for specify public path dynamicly for each request. Useful when you have multiple CDN servers.
+      // Use ngx_http_sub_module in your server to replace the "__public_path__" placeholder with your CDN path.
+      // You may need to add `proxy_set_header Accept-Encoding "";` to disable gzip for upstream traffic.
+      // If it's not replaced, the default "/" will be used.
+      var publicPath;
+      try {
+        publicPath = __public_path__;
+      } catch (e) {
+        publicPath = "";
+      }
+      window.publicPath = normalizePath(publicPath);
 
-    addLinkTag("icon", window.publicPath + "favicon.ico");
-    addLinkTag("apple-touch-icon", window.publicPath + "logo192.png");
-    addLinkTag("manifest", window.publicPath + "manifest.json");
+      // Specify the default title (before server info is retrieved) in the same way.
+      var title;
+      try {
+        title = __default_title__;
+      } catch (e) {
+        title = "SYZOJ";
+      }
+      document.title = title;
+
+      // Specify the API endpoint in the same way.
+      var apiEndpoint;
+      try {
+        apiEndpoint = __api_endpoint__;
+      } catch (e) {
+        apiEndpoint = "";
+      }
+      window.apiEndpoint = normalizePath(apiEndpoint);
+
+      function addLinkTag(rel, href, onerror) {
+        var link = document.createElement("link");
+        link.rel = rel;
+        link.href = href;
+        link.onerror = onerror;
+        document.head.appendChild(link);
+      }
+
+      addLinkTag("icon", publicPath + "favicon.ico");
+      addLinkTag("apple-touch-icon", publicPath + "logo192.png");
+      addLinkTag("manifest", publicPath + "manifest.json");
+
+      return addLinkTag;
+    })();
   </script>
 
   <!-- FIXME: Don't load fonts from fonts.googleapis.com -->
   <link href="https://fonts.googleapis.com/css?family=Saira:500&display=block" rel="stylesheet">
 
-  <!-- Styles for error screen -->
-  <style id="error-style">
+  <style id="initial-style">
+    /* Styles for error screen */
     #error {
       position: fixed;
       top: 0;
@@ -181,10 +209,8 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
     #error a:hover {
       color: #1e70bf;
     }
-  </style>
 
-  <!-- Show the top menu's border and shadow as a preview -->
-  <style id="app-preview-style">
+    /* Show the top menu's border and shadow as a preview */
     #root::before {
       content: " ";
       height: 47px;
@@ -200,11 +226,6 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
     }
   </style>
 
-  <!-- Initialize application config -->
-  <script>
-    window.appConfig = <%= safeStringify(appConfig) %>;
-  </script>
-
   <!-- Handle script errors -->
   <script>
     function fatalError(messages, stack) {
@@ -216,7 +237,7 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
 
       var styles = document.getElementsByTagName("style");
       for (var i = styles.length - 1; i >= 0; i--) {
-        if (styles[i].id === "error-style") continue;
+        if (styles[i].id === "initial-style") continue;
         styles[i].parentNode.removeChild(styles[i]);
       }
 
@@ -243,14 +264,12 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
         "加载应用程序时出现错误，请检查您的网络连接。"
       ]);
     }
-  </script>
 
-  <!-- Get session and server info -->
-  <script>
+    // Get session and server info
     function refreshSession(token) {
       function getSessionToken() {
         try {
-          return JSON.parse(localStorage["appState"])["token"]
+          return JSON.parse(localStorage["appState"])["token"];
         } catch (e) {
           return null;
         }
@@ -260,36 +279,33 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
       var script = document.createElement("script");
       script.async = true;
       script.onerror = handleLoadingError;
-      script.src = <%= safeStringify(appConfig.apiEndpoint + "api/auth/getSessionInfo") %> + "?jsonp=1&token=" + encodeURIComponent(token);
+      script.src = window.apiEndpoint + "api/auth/getSessionInfo?jsonp=1&token=" + encodeURIComponent(token);
       document.head.appendChild(script);
     }
     refreshSession();
-  </script>
 
-  <title><%= appConfig.siteName %></title>
+    (function () {
+      // Handle public path for CSS <link> tags
+      function addCssLinkTag(href) {
+        addLinkTag("stylesheet", href, handleLoadingError);
+      }
 
-  <!-- Handle public path for CSS <link> tags -->
-  <script>
-    function addCssLinkTag(href) {
-      addLinkTag("stylesheet", href, handleLoadingError);
-    }
+      <% for (const tag of htmlWebpackPlugin.tags.headTags) { %>
+        <%
+          if (tag.tagName === "link"
+           && tag.attributes
+           && tag.attributes.rel === "stylesheet"
+           && typeof tag.attributes.href === "string"
+           && tag.attributes.href.startsWith("/")
+          ) {
+        %>
+          addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(1)) %>);
+        <% } else { %>
+          <% throw new Error(`Couldn't handle this head tag: ${JSON.stringify(tag)}`); %>
+        <% } %>
+      <% } %>
+    })();
   </script>
-  <% for (const tag of htmlWebpackPlugin.tags.headTags) { %>
-    <%
-      if (tag.tagName === "link"
-       && tag.attributes
-       && tag.attributes.rel === "stylesheet"
-       && typeof tag.attributes.href === "string"
-       && tag.attributes.href.startsWith("/")
-      ) {
-    %>
-      <script>
-        addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(1)) %>);
-      </script>
-    <% } else { %>
-      <%= tag %>
-    <% } %>
-  <% } %>
 </head>
 
 <body>
@@ -311,39 +327,46 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
   >
   </script>
 
-  <% if (appConfig.crossOrigin) { %>
-    <script
-      src="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/xdomain.min.js") %>"
-      data-slave="<%= escapeHTML(appConfig.apiEndpoint + "api/cors/") %>"
-      onerror="handleLoadingError()"
-    >
-    </script>
-  <% } %>
-
-  <!-- Handle public path for <script> tags -->
+  <!-- Dynamicly generate <script> tags -->
   <script>
-    function addScriptTag(src) {
-      var script = document.createElement("script");
-      script.src = src;
-      script.onerror = handleLoadingError;
-      document.body.appendChild(script);
-    }
+    (function () {
+      function addScriptTag(src, attributes) {
+        var script = document.createElement("script");
+        script.src = src;
+        script.onerror = handleLoadingError;
+        for (var key in (attributes || {})) script.setAttribute(key, attributes[key]);
+        document.body.appendChild(script);
+      }
+
+      // Check for cross-origin API endpoint.
+      var apiEndpoint = window.apiEndpoint;
+      var apiEndpointUrl = new URL(apiEndpoint, document.location);
+      if (apiEndpointUrl.origin !== document.location.origin) {
+        // Load xdomain library from API host.
+        var apiHostCorsPath = apiEndpoint + "api/cors/";
+        addScriptTag(apiHostCorsPath + "xdomain.min.js", {
+          "data-slave": apiHostCorsPath
+        });
+      }
+
+      var publicPath = window.publicPath;
+      <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
+        <%
+          if (tag.tagName === "script"
+           && tag.attributes
+           && typeof tag.attributes.src === "string"
+           && tag.attributes.src.startsWith("/")
+          ) {
+        %>
+          addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(1)) %>);
+        <% } else if (tag.tagName === "script" && tag.innerHTML) { %>
+          <%= tag.innerHTML %>;
+        <% } else { %>
+          <% throw new Error(`Couldn't handle this body tag: ${JSON.stringify(tag)}`); %>
+        <% } %>
+      <% } %>
+    })();
   </script>
-  <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
-    <%
-      if (tag.tagName === "script"
-       && tag.attributes
-       && typeof tag.attributes.src === "string"
-       && tag.attributes.src.startsWith("/")
-      ) {
-    %>
-      <script>
-        addScriptTag(window.publicPath + <%= safeStringify(tag.attributes.src.substr(1)) %>);
-      </script>
-    <% } else { %>
-      <%= tag %>
-    <% } %>
-  <% } %>
 </body>
 
 </html>
