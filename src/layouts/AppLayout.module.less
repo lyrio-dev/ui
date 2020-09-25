@@ -103,9 +103,12 @@ html.sidebarOpen {
 }
 
 body {
+  @marginTop: 49px;
+
   display: block;
-  margin-top: 49px;
+  margin-top: @marginTop;
   padding-top: 28px;
+  min-height: calc(100vh - @marginTop);
 }
 
 @media only screen and (max-width: 1127px) {
