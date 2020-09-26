@@ -82,6 +82,7 @@
     "string-replace-to-array": "^1.0.3",
     "timeago.js": "^4.0.2",
     "tree-sitter-wasm-prebuilt": "^0.0.1",
+    "typeface-fira-code": "^1.1.4",
     "typeface-lato": "^0.0.75",
     "typeface-saira": "^0.0.72",
     "typescript": "~4.0.3",

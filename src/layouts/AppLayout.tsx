@@ -5,6 +5,8 @@ import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICON
 
 import "typeface-lato";
 import "typeface-saira";
+import "typeface-fira-code";
+
 import "semantic-ui-css/semantic.css";
 import "noty/lib/noty.css";
 import "noty/lib/themes/semanticui.css";

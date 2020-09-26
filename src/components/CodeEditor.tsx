@@ -82,7 +82,7 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
         options={Object.assign(
           {
             lineNumbersMinChars: 4,
-            fontFamily: '"Fira Mono", monospace'
+            fontFamily: '"Fira Code", monospace'
           },
           props.options
         )}
