@@ -27,25 +27,6 @@
 function safeStringify(object) {
   return JSON.stringify(object).split("<").join("\\u003C");
 }
-
-function escapeHTML(str) {
-  return str.replace(/[&<>'"]/g,
-    tag => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      "'": '&#39;',
-      '"': '&quot;'
-    }[tag] || tag)
-  );
-}
-
-htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
-  if (tag.tagName === "script") {
-    if (!tag.attributes) tag.attributes = {};
-    tag.attributes.onerror = "handleLoadingError()";
-  }
-})
 %>
 <!DOCTYPE html>
 <html>
