@@ -3,7 +3,9 @@ import { observer } from "mobx-react";
 import { Link, useNavigation, useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
 
-import "semantic-ui-css/semantic.min.css";
+import "typeface-lato";
+import "typeface-saira";
+import "semantic-ui-css/semantic.css";
 import "noty/lib/noty.css";
 import "noty/lib/themes/semanticui.css";
 

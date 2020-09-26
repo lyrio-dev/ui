@@ -13092,6 +13092,14 @@ string-length@^3.1.0:
     astral-regex "^1.0.0"
     strip-ansi "^5.2.0"
 
+string-replace-loader@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/string-replace-loader/-/string-replace-loader-2.3.0.tgz#7f29be7d73c94dd92eccd5c5a15651181d7ecd3d"
+  integrity sha512-HYBIHStViMKLZC/Lehxy42OuwsBaPzX/LjcF5mkJlE2SnHXmW6SW6eiHABTXnY8ZCm/REbdJ8qnA0ptmIzN0Ng==
+  dependencies:
+    loader-utils "^1.2.3"
+    schema-utils "^2.6.5"
+
 string-replace-to-array@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/string-replace-to-array/-/string-replace-to-array-1.0.3.tgz#c93eba999a5ee24d731aebbaf5aba36b5f18f7bf"
@@ -13719,6 +13727,16 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.npm.taobao.org/typedarray/download/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typeface-lato@^0.0.75:
+  version "0.0.75"
+  resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-0.0.75.tgz#8aa11c5611dc38416837c089b265a2abd1f7dd31"
+  integrity sha512-iA5uJD4PSTyIE4BDiSOexQeXkDkiJuX4Hu3wh3saJ06EB2TvJayab1Lbbmqq2je/LQv7KCQZHZmC0k4hedd8sw==
+
+typeface-saira@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-saira/-/typeface-saira-0.0.72.tgz#bfeda1096d449dca6f8cf8e96df20a7c801fbfe6"
+  integrity sha512-ioWQ39NHjyPe2UYHjtaf8xf0h9Xs2hTAbMd9IC/npHP+Ws67a/TYXUDGRQyZDsSb+kkqgKrPpCqB0aPhzk9oIA==
 
 typescript@~4.0.3:
   version "4.0.3"
