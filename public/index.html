@@ -93,6 +93,15 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
       }
       window.apiEndpoint = normalizePath(apiEndpoint);
 
+      // Specify the polyfill-service URL in the same way.
+      var polyfillServiceUrl;
+      try {
+        polyfillServiceUrl = __polyfill_service__;
+      } catch (e) {
+        polyfillServiceUrl = "https://polyfill.io";
+      }
+      window.polyfillServiceUrl = normalizePath(polyfillServiceUrl);
+
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");
         link.rel = rel;
@@ -315,13 +324,6 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
     </div>
   </div>
 
-  <script
-    crossorigin="anonymous"
-    src="https://polyfill.io/v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015"
-    onerror="handleLoadingError()"
-  >
-  </script>
-
   <!-- Dynamicly generate <script> tags -->
   <script>
     (function () {
@@ -332,6 +334,11 @@ htmlWebpackPlugin.tags.bodyTags.forEach(tag => {
         for (var key in (attributes || {})) script.setAttribute(key, attributes[key]);
         document.body.appendChild(script);
       }
+
+      // Load polyfill-service
+      addScriptTag(window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015", {
+        crossorigin: "anonymous"
+      });
 
       // Check for cross-origin API endpoint.
       var apiEndpoint = window.apiEndpoint;
