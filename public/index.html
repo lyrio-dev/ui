@@ -54,7 +54,8 @@ function safeStringify(object) {
       } catch (e) {
         publicPath = "";
       }
-      window.publicPath = normalizePath(publicPath);
+      publicPath = normalizePath(publicPath);
+      window.publicPath = publicPath;
 
       // Specify the default title (before server info is retrieved) in the same way.
       var title;
