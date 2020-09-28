@@ -8,7 +8,11 @@ function isEnterPressed(e: React.KeyboardEvent<HTMLInputElement>) {
   return false;
 }
 
-export function onEnterPress(onEnterPressHandler: () => void) {
-  return (e: React.KeyboardEvent<HTMLInputElement>) =>
-    onEnterPressHandler && isEnterPressed(e) && onEnterPressHandler();
+export function onEnterPress(onEnterPressHandler: (e: React.KeyboardEvent<HTMLInputElement>) => void) {
+  return (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (onEnterPressHandler && isEnterPressed(e)) {
+      e.preventDefault();
+      onEnterPressHandler(e);
+    }
+  };
 }

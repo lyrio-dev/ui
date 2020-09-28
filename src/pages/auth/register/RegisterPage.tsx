@@ -15,6 +15,7 @@ import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 let RegisterPage: React.FC = () => {
   const _ = useIntlMessage("register");
@@ -272,12 +273,7 @@ let RegisterPage: React.FC = () => {
                 autoComplete="username"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
                 onBlur={() => checkUsername()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    refEmailInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => refEmailInput.current.focus())}
               />
             </Ref>
 
@@ -300,15 +296,12 @@ let RegisterPage: React.FC = () => {
                 autoComplete="email"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 onBlur={() => checkEmail()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    if (appState.serverPreference.requireEmailVerification) {
-                      refEmailVerificationCodeInput.current.focus();
-                      if (sendEmailVerificationCodeTimeout === 0) onSendEmailVerificationCode();
-                    } else refPasswordInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => {
+                  if (appState.serverPreference.requireEmailVerification) {
+                    refEmailVerificationCodeInput.current.focus();
+                    if (sendEmailVerificationCodeTimeout === 0) onSendEmailVerificationCode();
+                  } else refPasswordInput.current.focus();
+                })}
               />
             </Ref>
 
@@ -333,12 +326,7 @@ let RegisterPage: React.FC = () => {
                     value={emailVerificationCode}
                     autoComplete="off"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeVerificationCode(e.target.value)}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      if (e.keyCode === 13) {
-                        e.preventDefault();
-                        refPasswordInput.current.focus();
-                      }
-                    }}
+                    onKeyPress={onEnterPress(() => refPasswordInput.current.focus())}
                     action={
                       <Button
                         tabIndex={-1}
@@ -377,12 +365,7 @@ let RegisterPage: React.FC = () => {
                 autoComplete="new-password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 onBlur={() => checkPassword()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    refRetypePasswordInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => refRetypePasswordInput.current.focus())}
               />
             </Ref>
             <Ref innerRef={field => field && (refRetypePasswordInput.current = field.querySelector("input"))}>
@@ -404,13 +387,10 @@ let RegisterPage: React.FC = () => {
                 autoComplete="new-password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRetypePassword(e.target.value)}
                 onBlur={() => checkRetypePassword()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    checkRetypePassword(); // Since the focus is not lost, forcibly re-check the field
-                    onSubmit();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => {
+                  checkRetypePassword(); // Since the focus is not lost, forcibly re-check the field
+                  onSubmit();
+                })}
               />
             </Ref>
 

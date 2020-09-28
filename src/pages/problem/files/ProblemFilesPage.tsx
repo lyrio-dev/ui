@@ -39,6 +39,7 @@ import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { createZipStream } from "@/utils/zip";
 import { getProblemIdString, getProblemUrl } from "../utils";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -235,13 +236,8 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
                           style={{ width: 230 }}
                           placeholder={_(".new_filename")}
                           value={newFilename}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewFilename(e.target.value)}
-                          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                            if (e.keyCode === 13) {
-                              e.preventDefault();
-                              onRename();
-                            }
-                          }}
+                          onChange={(e, { value }) => setNewFilename(value)}
+                          onKeyPress={onEnterPress(() => onRename())}
                         />
                         <Button primary loading={props.pending} onClick={onRename}>
                           {_(".rename")}

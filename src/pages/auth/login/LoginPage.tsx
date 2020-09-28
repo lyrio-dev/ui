@@ -15,6 +15,7 @@ import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 let LoginPage: React.FC = () => {
   const _ = useIntlMessage("login");
@@ -129,12 +130,7 @@ let LoginPage: React.FC = () => {
                 value={username}
                 autoComplete="username"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    refPasswordInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => refPasswordInput.current.focus())}
               />
             </Ref>
             <PseudoLink onClick={() => navigateTo("forgot")} tabIndex={-1} className={style.inputAction}>

@@ -28,6 +28,7 @@ import toast from "@/utils/toast";
 import UserLink from "@/components/UserLink";
 import UserAvatar from "@/components/UserAvatar";
 import UserSearch from "@/components/UserSearch";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 async function fetchData(): Promise<ApiTypes.GetGroupListResponseDto> {
   if (!appState.currentUser) throw new RouteError(<FormattedMessage id="groups.not_logged_in" />);
@@ -230,12 +231,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
                           autoComplete="username"
                           readOnly={pending}
                           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRenameInputValue(e.target.value)}
-                          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                            if (e.keyCode === 13) {
-                              e.preventDefault();
-                              onRename();
-                            }
-                          }}
+                          onKeyPress={onEnterPress(() => onRename())}
                         />
                         <Button primary disabled={pending} onClick={onRename}>
                           {_(".confirm_rename_group")}
@@ -378,12 +374,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
                   autoComplete="username"
                   readOnly={pending}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateGroupName(e.target.value)}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.keyCode === 13) {
-                      e.preventDefault();
-                      onCreateGroup();
-                    }
-                  }}
+                  onKeyPress={onEnterPress(() => onCreateGroup())}
                 />
                 <Button primary disabled={pending} onClick={onCreateGroup}>
                   {_(".confirm_create_group")}

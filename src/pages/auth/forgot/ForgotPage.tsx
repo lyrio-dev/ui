@@ -14,6 +14,7 @@ import { useIntlMessage, useFieldCheck } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 let ForgetPage: React.FC = () => {
   const _ = useIntlMessage("forgot");
@@ -218,13 +219,10 @@ let ForgetPage: React.FC = () => {
                 autoComplete="email"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 onBlur={() => checkEmail()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    if (sendEmailVerificationCodeTimeout === 0) onSendEmailVerificationCode();
-                    refEmailVerificationCodeInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => {
+                  if (sendEmailVerificationCodeTimeout === 0) onSendEmailVerificationCode();
+                  refEmailVerificationCodeInput.current.focus();
+                })}
               />
             </Ref>
 
@@ -245,12 +243,7 @@ let ForgetPage: React.FC = () => {
                 value={emailVerificationCode}
                 autoComplete="off"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeVerificationCode(e.target.value)}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    refPasswordInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => refPasswordInput.current.focus())}
                 action={
                   <Button
                     tabIndex={-1}
@@ -287,12 +280,7 @@ let ForgetPage: React.FC = () => {
                 autoComplete="new-password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 onBlur={() => checkPassword()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    refRetypePasswordInput.current.focus();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => refRetypePasswordInput.current.focus())}
               />
             </Ref>
             <Ref innerRef={field => field && (refRetypePasswordInput.current = field.querySelector("input"))}>
@@ -314,13 +302,10 @@ let ForgetPage: React.FC = () => {
                 autoComplete="new-password"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRetypePassword(e.target.value)}
                 onBlur={() => checkRetypePassword()}
-                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.keyCode === 13) {
-                    e.preventDefault();
-                    checkRetypePassword(); // Since the focus is not lost, forcibly re-check the field
-                    onSubmit();
-                  }
-                }}
+                onKeyPress={onEnterPress(() => {
+                  checkRetypePassword(); // Since the focus is not lost, forcibly re-check the field
+                  onSubmit();
+                })}
               />
             </Ref>
 

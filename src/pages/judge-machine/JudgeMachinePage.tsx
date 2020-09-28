@@ -10,6 +10,7 @@ import { JudgeClientApi } from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 interface JudgeClientSystemInfo {
   os: string;
@@ -180,12 +181,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                   placeholder={_(".add_new_name")}
                   value={addNewName}
                   onChange={(e, { value }) => setAddNewName(value)}
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.keyCode === 13 && addNewNameValid) {
-                      e.preventDefault();
-                      onAddJudgeClient();
-                    }
-                  }}
+                  onKeyPress={onEnterPress(() => addNewNameValid && onAddJudgeClient())}
                 />
                 <Button loading={addPending} disabled={!addNewNameValid} onClick={onAddJudgeClient}>
                   {_(".confirm_add")}

@@ -42,6 +42,7 @@ import MarkdownContent from "@/markdown/MarkdownContent";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { getProblemDisplayName, getProblemUrl } from "../utils";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -679,12 +680,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                         value={setDisplayIdInputValue}
                         autoComplete="username"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSetDisplayIdInputValue(e.target.value)}
-                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                          if (e.keyCode === 13) {
-                            e.preventDefault();
-                            onSetDisplayId();
-                          }
-                        }}
+                        onKeyPress={onEnterPress(() => onSetDisplayId())}
                       />
                       <Button loading={setDisplayIdPending} onClick={onSetDisplayId}>
                         {_(".action.set_display_id_submit")}

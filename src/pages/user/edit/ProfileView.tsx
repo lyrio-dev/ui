@@ -13,6 +13,7 @@ import toast from "@/utils/toast";
 import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
 import UserAvatar from "@/components/UserAvatar";
 import { RouteError } from "@/AppRouter";
+import { onEnterPress } from "@/utils/onEnterPress";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserProfile({ userId });
@@ -314,12 +315,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           value={avatarKeyValue}
           onChange={(e, { value }) => value.length <= 40 && setAvatarKeyValue(value.trim())}
           onBlur={applyAvatarKey}
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.keyCode === 13) {
-              e.preventDefault();
-              applyAvatarKey();
-            }
-          }}
+          onKeyPress={onEnterPress(() => applyAvatarKey())}
         />
         {avatarError && (
           <div className={style.notes}>
