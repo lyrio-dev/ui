@@ -13,12 +13,10 @@ interface SimplePaginationProps {
 }
 
 let SimplePagination: React.FC<SimplePaginationProps> = props => {
-  const screenWidthLessThan376 = useScreenWidthWithin(0, 376);
   const screenWidthLessThan880 = useScreenWidthWithin(0, 880);
 
   let size: string;
-  if (screenWidthLessThan376) size = "mini";
-  else if (screenWidthLessThan880) size = "small";
+  if (screenWidthLessThan880) size = "small";
   else size = null;
 
   return (
