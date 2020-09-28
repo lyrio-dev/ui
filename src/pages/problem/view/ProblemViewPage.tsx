@@ -41,6 +41,7 @@ import { ProblemTypeView } from "./common/interface";
 import MarkdownContent from "@/markdown/MarkdownContent";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
+import { getProblemDisplayName, getProblemUrl } from "../utils";
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -75,11 +76,15 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   const isMobile = useScreenWidthWithin(0, 768);
 
-  const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
-  const title = props.problem.localizedContentsOfLocale.title.trim() || _(".no_title");
+  const [idString, title, all] = getProblemDisplayName(
+    props.problem.meta,
+    props.problem.localizedContentsOfLocale.title,
+    _,
+    "tuple"
+  );
 
   useEffect(() => {
-    appState.enterNewPage(`${idString}. ${title} - ${_(".title")}`, "problem_set");
+    appState.enterNewPage(`${all} - ${_(".title")}`, "problem_set");
   }, [appState.locale]);
 
   // Begin toggle tags
@@ -115,7 +120,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     } else {
       const { requestError, response } = await ProblemApi.setProblemDisplayId({
         problemId: props.problem.meta.id,
-        displayId: parseInt(setDisplayIdInputValue)
+        displayId: Number(setDisplayIdInputValue)
       });
 
       if (requestError) toast.error(requestError);
@@ -126,27 +131,16 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
           })
         );
       } else {
-        if (!parseInt(setDisplayIdInputValue)) {
-          // displayId removed
-          navigation.navigate({
-            pathname: `/problem/by-id/${props.problem.meta.id}`,
-            query: props.requestedLocale
-              ? {
-                  locale: props.requestedLocale
-                }
-              : null
-          });
-        } else {
-          // Redirect to new displayId
-          navigation.navigate({
-            pathname: `/problem/${setDisplayIdInputValue}`,
-            query: props.requestedLocale
-              ? {
-                  locale: props.requestedLocale
-                }
-              : null
-          });
-        }
+        navigation.navigate({
+          pathname: !Number(setDisplayIdInputValue)
+            ? getProblemUrl(props.problem.meta.id, { use: "id" })
+            : getProblemUrl(Number(setDisplayIdInputValue), { use: "displayId" }),
+          query: props.requestedLocale
+            ? {
+                locale: props.requestedLocale
+              }
+            : null
+        });
       }
     }
 
@@ -636,11 +630,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 name={_(".action.files")}
                 icon="folder open"
                 as={Link}
-                href={
-                  props.idType === "id"
-                    ? `/problem/by-id/${props.problem.meta.id}/files`
-                    : `/problem/${props.problem.meta.displayId}/files`
-                }
+                href={getProblemUrl(props.problem.meta, { subRoute: "files" })}
               />
             </Menu>
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
@@ -650,10 +640,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   icon="edit"
                   as={Link}
                   href={{
-                    pathname:
-                      props.idType === "id"
-                        ? `/problem/by-id/${props.problem.meta.id}/edit`
-                        : `/problem/${props.problem.meta.displayId}/edit`,
+                    pathname: getProblemUrl(props.problem.meta, { subRoute: "edit" }),
                     query: props.requestedLocale
                       ? {
                           locale: props.requestedLocale
@@ -667,11 +654,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   name={_(".action.judge_settings")}
                   icon="cog"
                   as={Link}
-                  href={
-                    props.idType === "id"
-                      ? `/problem/by-id/${props.problem.meta.id}/judge-settings`
-                      : `/problem/${props.problem.meta.displayId}/judge-settings`
-                  }
+                  href={getProblemUrl(props.problem.meta, { subRoute: "judge-settings" })}
                 />
               )}
               {

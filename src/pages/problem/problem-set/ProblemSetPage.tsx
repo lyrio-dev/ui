@@ -18,6 +18,8 @@ import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import ProblemSearch from "@/components/ProblemSearch";
+import { getProblemDisplayName, getProblemIdString, getProblemUrl } from "../utils";
 
 // Parsed from querystring, without pagination
 interface ProblemSetPageSearchQuery {
@@ -27,10 +29,10 @@ interface ProblemSetPageSearchQuery {
   nonpublic: boolean;
 }
 
-async function fetchData(
+function generateRequestFromSearchQuery(
   searchQuery: ProblemSetPageSearchQuery,
-  currentPage: number
-): Promise<ApiTypes.QueryProblemSetResponseDto> {
+  currentPage = 1
+): ApiTypes.QueryProblemSetRequestDto {
   const requestBody: ApiTypes.QueryProblemSetRequestDto = {
     locale: appState.locale,
     skipCount: PROBLEMS_PER_PAGE * (currentPage - 1),
@@ -40,7 +42,17 @@ async function fetchData(
   if (searchQuery.tagIds.length > 0) requestBody.tagIds = searchQuery.tagIds;
   if (searchQuery.ownerId) requestBody.ownerId = searchQuery.ownerId;
   if (searchQuery.nonpublic) requestBody.nonpublic = true;
-  const { requestError, response } = await ProblemApi.queryProblemSet(requestBody);
+
+  return requestBody;
+}
+
+async function fetchData(
+  searchQuery: ProblemSetPageSearchQuery,
+  currentPage: number
+): Promise<ApiTypes.QueryProblemSetResponseDto> {
+  const { requestError, response } = await ProblemApi.queryProblemSet(
+    generateRequestFromSearchQuery(searchQuery, currentPage)
+  );
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(<FormattedMessage id={`problem_set.error.${response.error}`} />);
@@ -97,9 +109,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   // Begin search
   type SearchMode = "title" | "tag" | "user";
   const [searchMode, setSearchMode] = useState<SearchMode>("title");
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchTagKeyword, setSearchTagKeyword] = useState("");
   function changeSearchMode(newSearchMode: SearchMode) {
-    setSearchKeyword("");
+    setSearchTagKeyword("");
     setSearchMode(newSearchMode);
     if (newSearchMode === "tag") getTags();
   }
@@ -119,9 +131,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     () =>
       !tags || searchMode !== "tag"
         ? []
-        : !searchKeyword
+        : !searchTagKeyword
         ? Object.entries(tags)
-        : Object.entries(tags).filter(([tagId, tag]) => tag.name.indexOf(searchKeyword) !== -1),
+        : Object.entries(tags).filter(([tagId, tag]) => tag.name.indexOf(searchTagKeyword) !== -1),
     [tags]
   );
   const tagsCount = tagEntires.length;
@@ -153,11 +165,10 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     navigation.navigate({
       query: generateSearchQuery(Object.assign({}, props.searchQuery, filter))
     });
-    if (searchMode !== "tag") setSearchKeyword("");
+    if (searchMode !== "tag") setSearchTagKeyword("");
   }
 
-  function onAddFilterKeyword() {
-    if (!searchKeyword) return;
+  function onAddFilterKeyword(searchKeyword: string) {
     redirectWithFilter({
       keyword: searchKeyword.substr(0, 100)
     });
@@ -227,11 +238,14 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   }
   // End search
 
-  function changePage(page: number) {
+  function onPageChange(page: number) {
     navigation.navigate({
-      query: {
-        page: page.toString()
-      }
+      query: Object.assign(
+        {
+          page: page.toString()
+        },
+        generateSearchQuery(props.searchQuery)
+      )
     });
   }
 
@@ -241,7 +255,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         totalCount={props.response.count}
         currentPage={props.currentPage}
         itemsPerPage={PROBLEMS_PER_PAGE}
-        onPageChange={changePage}
+        onPageChange={onPageChange}
       />
     );
 
@@ -268,24 +282,20 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   const headerSearch = (
     <>
       {searchMode === "title" ? (
-        // Search title
-        <Search
+        <ProblemSearch
           className={style.search}
-          placeholder={_(".search_placeholder.title")}
-          value={searchKeyword}
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.keyCode === 13 && onAddFilterKeyword()}
-          noResultsMessage={_(".no_result_title")}
-          onSearchChange={(e, { value }) => setSearchKeyword(value)}
-          input={{ iconPosition: "left", fluid: isMobileOrPad }}
+          queryParameters={generateRequestFromSearchQuery(props.searchQuery)}
+          onResultSelect={problem => navigation.navigate(getProblemUrl(problem.meta))}
+          onEnterPress={searchKeyword => onAddFilterKeyword(searchKeyword)}
         />
       ) : searchMode === "tag" ? (
         // Search tag
         <Search
           className={style.search}
-          placeholder={_(".search_placeholder.tag")}
-          value={searchKeyword}
+          placeholder={_(".search_tag_placeholder")}
+          value={searchTagKeyword}
           showNoResults={false}
-          onSearchChange={(e, { value }) => setSearchKeyword(value)}
+          onSearchChange={(e, { value }) => setSearchTagKeyword(value)}
           input={{ iconPosition: "left", fluid: isMobileOrPad }}
         />
       ) : (
@@ -328,7 +338,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
       {!tags ? (
         <Loader active size="medium" />
       ) : tagsCount === 0 ? (
-        searchKeyword === "" ? (
+        searchTagKeyword === "" ? (
           <div className={style.placeholder}>{_(".no_matching_tags")}</div>
         ) : (
           <div className={style.placeholder}>{_(".no_tags")}</div>
@@ -497,18 +507,10 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                   </Table.Cell>
                 )}
                 <Table.Cell>
-                  <b>{problem.meta.displayId ? problem.meta.displayId : "P" + problem.meta.id}</b>
+                  <b>{getProblemIdString(problem.meta, { hideHashTagOnDisplayId: true })}</b>
                 </Table.Cell>
                 <Table.Cell textAlign="left" className={style.problemTitleCell}>
-                  <Link
-                    href={
-                      problem.meta.displayId
-                        ? `/problem/${problem.meta.displayId}`
-                        : `/problem/by-id/${problem.meta.id}`
-                    }
-                  >
-                    {problem.title.trim() || _(".no_title")}
-                  </Link>
+                  <Link href={getProblemUrl(problem.meta)}>{getProblemDisplayName(null, problem.title, _)}</Link>
                   {!problem.meta.isPublic && (
                     <Label
                       className={style.labelNonPublic}

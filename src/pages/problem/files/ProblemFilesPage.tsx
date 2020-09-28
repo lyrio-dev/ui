@@ -38,6 +38,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { createZipStream } from "@/utils/zip";
+import { getProblemIdString, getProblemUrl } from "../utils";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -559,7 +560,7 @@ interface ProblemFilesPageProps {
 let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   const _ = useIntlMessage("problem_files");
 
-  const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
+  const idString = getProblemIdString(props.problem.meta);
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");
@@ -824,11 +825,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
           className={style.back_to_problem}
           primary
           as={Link}
-          href={
-            props.idType === "id"
-              ? `/problem/by-id/${props.problem.meta.id}`
-              : `/problem/${props.problem.meta.displayId}`
-          }
+          href={getProblemUrl(props.problem.meta)}
           content={_(".back_to_problem")}
         />
       </Header>

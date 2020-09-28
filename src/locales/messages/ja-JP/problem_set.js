@@ -4,16 +4,12 @@ module.exports = {
     PERMISSION_DENIED: "権限がありません。",
     TAKE_TOO_MANY: "リクエストが制限を超えています。"
   },
-  search_placeholder: {
-    title: "ID / 問題名 …",
-    tag: "タグ …"
-  },
+  search_tag_placeholder: "タグ …",
   search_icon: {
     tag: "タグ",
     user: "アップロード者",
     nonpublic: "非公開"
   },
-  no_result_title: "制限を満たす問題はありません。",
   search_filters: "フィルタ検索",
   no_matching_tags: "マッチするタグは存在しません",
   no_tags: "タグはありません",

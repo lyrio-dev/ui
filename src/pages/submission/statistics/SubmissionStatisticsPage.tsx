@@ -14,6 +14,7 @@ import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem"
 import Pagination from "@/components/Pagination";
 import { getScoreColor } from "@/components/ScoreText";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { getProblemIdString } from "@/pages/problem/utils";
 
 const SUBMISSIONS_PER_PAGE = 10;
 
@@ -60,7 +61,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
   const _ = useIntlMessage("submission_statistics");
   const navigation = useNavigation();
 
-  const idString = props.idType === "id" ? `P${props.id}` : `#${props.id}`;
+  const idString = getProblemIdString(props.id, { use: props.idType });
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");

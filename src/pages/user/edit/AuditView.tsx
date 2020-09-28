@@ -21,6 +21,7 @@ import { UserMeta } from "@/interfaces/UserMeta";
 import PseudoLink from "@/components/PseudoLink";
 import { URLDescriptor } from "navi";
 import copyToClipboard from "@/utils/copyToClipboard";
+import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 
 const AUDIT_LOGS_PER_PAGE = 10;
 
@@ -175,17 +176,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
       }
       case "Problem": {
         const [problem, title] = object as [ApiTypes.ProblemMetaDto, string];
-        return wrap(
-          problem.displayId ? (
-            <Link href={`/problem/${problem.displayId}`}>
-              #{problem.displayId}. {title}
-            </Link>
-          ) : (
-            <Link href={`/problem/by-id/${problem.id}`}>
-              P{problem.id}. {title}
-            </Link>
-          )
-        );
+        return wrap(<Link href={getProblemUrl(problem)}>${getProblemDisplayName(problem, title, _)}</Link>);
       }
       case "ProblemTag": {
         const problemTag = object as ApiTypes.LocalizedProblemTagDto;

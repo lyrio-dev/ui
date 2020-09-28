@@ -4,16 +4,12 @@ module.exports = {
     PERMISSION_DENIED: "Permission denied.",
     TAKE_TOO_MANY: "Requested number of items per page exceeds the limit."
   },
-  search_placeholder: {
-    title: "Search ID / title ...",
-    tag: "Search tag ..."
-  },
+  search_tag_placeholder: "Search tag ...",
   search_icon: {
     tag: "Tag",
     user: "Owner",
     nonpublic: "Nonpublic"
   },
-  no_result_title: "No matching problems. (not implemented)",
   search_filters: "Search filters",
   no_matching_tags: "No matching tags",
   no_tags: "No tags",

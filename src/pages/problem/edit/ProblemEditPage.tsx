@@ -36,6 +36,7 @@ import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
 import MarkdownContent from "@/markdown/MarkdownContent";
+import { getProblemIdString, getProblemUrl } from "../utils";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -696,8 +697,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   const _ = useIntlMessage("problem_edit");
   const navigation = useNavigation();
 
-  const idString =
-    !props.new && (props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`);
+  const idString = !props.new && getProblemIdString(props.problem.meta);
 
   useEffect(() => {
     appState.enterNewPage(props.new ? `${_(".title_new")}` : `${_(".title_edit")} ${idString}`, "problem_set", false);
@@ -790,7 +790,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       else if (response.error) {
         toast.error(_(`.error.${response.error}`));
       } else {
-        navigation.navigate(`/problem/by-id/${response.id}`);
+        navigation.navigate(getProblemUrl(response.id));
       }
     } else {
       const { requestError, response } = await ProblemApi.updateStatement({
@@ -815,18 +815,9 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   function onBackToProblem() {
     if (props.new) {
       navigation.navigate("/problems");
-    } else if (props.idType === "displayId") {
-      navigation.navigate({
-        pathname: `/problem/${props.problem.meta.displayId}`,
-        query: props.requestedLocale
-          ? {
-              locale: props.requestedLocale
-            }
-          : null
-      });
     } else {
       navigation.navigate({
-        pathname: `/problem/by-id/${props.problem.meta.id}`,
+        pathname: getProblemUrl(props.problem.meta, { use: props.idType }),
         query: props.requestedLocale
           ? {
               locale: props.requestedLocale

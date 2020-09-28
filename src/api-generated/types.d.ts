@@ -451,6 +451,10 @@ declare namespace ApiTypes {
     tagIds?: number[];
     ownerId?: number;
     nonpublic?: boolean;
+    /**
+     * Pass true to return problem title only. For a preview in search bar.
+     */
+    titleOnly?: boolean;
     skipCount: number;
     takeCount: number;
   }
@@ -465,8 +469,8 @@ declare namespace ApiTypes {
   export interface QueryProblemSetResponseItemDto {
     meta: ApiTypes.ProblemMetaDto;
     title: string;
-    tags: ApiTypes.LocalizedProblemTagDto[];
-    resultLocale: "en_US" | "zh_CN" | "ja_JP";
+    tags?: ApiTypes.LocalizedProblemTagDto[];
+    resultLocale?: "en_US" | "zh_CN" | "ja_JP";
     submission?: ApiTypes.SubmissionBasicMetaDto;
   }
   export interface QueryProblemSetResponsePermissionDto {

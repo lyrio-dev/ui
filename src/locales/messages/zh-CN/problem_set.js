@@ -4,16 +4,12 @@ module.exports = {
     PERMISSION_DENIED: "权限不足。",
     TAKE_TOO_MANY: "请求每页项目数量超出限制。"
   },
-  search_placeholder: {
-    title: "ID / 题目名 …",
-    tag: "标签名 …"
-  },
+  search_tag_placeholder: "标签名 …",
   search_icon: {
     tag: "标签",
     user: "题目拥有者",
     nonpublic: "未公开"
   },
-  no_result_title: "没有符合条件的题目。（未实现）",
   search_filters: "搜索条件",
   no_matching_tags: "没有匹配的标签",
   no_tags: "暂无标签",

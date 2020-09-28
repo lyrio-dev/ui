@@ -11,16 +11,15 @@ import UserLink from "@/components/UserLink";
 import StatusText from "@/components/StatusText";
 import ScoreText from "@/components/ScoreText";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
+import { getProblemDisplayName, getProblemIdString, getProblemUrl } from "@/pages/problem/utils";
 
 function parseSubmissionMeta(submission: ApiTypes.SubmissionMetaDto) {
   return {
     submission,
     submissionLink: `/submission/${submission.id}`,
     timeString: formatDateTime(submission.submitTime),
-    problemIdString: submission.problem.displayId ? "#" + submission.problem.displayId : "P" + submission.problem.id,
-    problemUrl: submission.problem.displayId
-      ? `/problem/${submission.problem.displayId}`
-      : `/problem/by-id/${submission.problem.id}`
+    problemIdString: getProblemIdString(submission.problem),
+    problemUrl: getProblemUrl(submission.problem)
   };
 }
 
@@ -112,9 +111,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
       </Table.Cell>
       <Table.Cell className={style.columnProblemAndSubmitter} textAlign="left">
         <div className={style.problem}>
-          <Link href={problemUrl}>
-            {problemIdString}. {submission.problemTitle}
-          </Link>
+          <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
         </div>
         <div className={style.submitter}>
           <UserLink user={submission.submitter} />
@@ -235,9 +232,7 @@ export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props =
 
           <div>
             <div>
-              <Link href={problemUrl}>
-                {problemIdString}. {submission.problemTitle}
-              </Link>
+              <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
             </div>
             <div className={style.submitterAndTime}>
               <div>
@@ -292,9 +287,7 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
   const columnProblem = (
     <div className={style.extraRowsColumnProblem}>
       <Icon name="book" />
-      <Link href={problemUrl}>
-        {problemIdString}. {submission.problemTitle}
-      </Link>
+      <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
     </div>
   );
 

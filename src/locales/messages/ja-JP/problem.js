@@ -1,6 +1,5 @@
 module.exports = {
   title: "問題",
-  no_title: "[TBT] (No title)",
   meta_labels: {
     non_public: "非表示",
     no_display_id: "ID なし"

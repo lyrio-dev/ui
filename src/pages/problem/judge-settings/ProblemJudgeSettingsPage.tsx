@@ -18,6 +18,7 @@ import { HighlightedCodeBox } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeEditorComponent } from "./common/interface";
+import { getProblemIdString, getProblemUrl } from "../utils";
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -44,7 +45,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const _ = useIntlMessage("problem_judge_settings");
   const navigation = useNavigation();
 
-  const idString = props.idType === "id" ? `P${props.problem.meta.id}` : `#${props.problem.meta.displayId}`;
+  const idString = getProblemIdString(props.problem.meta);
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set", false);
@@ -78,11 +79,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   }
 
   function onBackToProblem() {
-    if (props.idType === "displayId") {
-      navigation.navigate(`/problem/${props.problem.meta.displayId}`);
-    } else {
-      navigation.navigate(`/problem/by-id/${props.problem.meta.id}`);
-    }
+    navigation.navigate(getProblemUrl(props.problem.meta, { use: props.idType }));
   }
 
   async function onSubmit() {
