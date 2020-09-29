@@ -278,7 +278,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             ]}
           />
           <Button
-            className={isWideScreen ? "labeled icon" : null}
+            className={style.queryButton + (isWideScreen ? " labeled icon" : "")}
             icon="search"
             content={isWideScreen ? _(".query.filter") : null}
             onClick={() => onFilter(false)}
