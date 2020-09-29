@@ -6,7 +6,7 @@ import * as Monaco from "monaco-editor";
 import style from "./TabbedEditor.module.less";
 
 import { useIntlMessage } from "@/utils/hooks";
-import CodeEditor from "@/components/CodeEditor";
+import CodeEditor from "@/components/LazyCodeEditor";
 import HorizontalScroll from "@/components/HorizontalScroll";
 
 interface TabbedEditorTab {
