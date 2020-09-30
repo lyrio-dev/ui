@@ -16,6 +16,7 @@ let Pagination: React.FC<PaginationProps> = props => {
   const totalPages = Math.ceil(props.totalCount / props.itemsPerPage);
 
   const screenWidthLessThan376 = useScreenWidthWithin(0, 376);
+  const screenWidthLessThan425 = useScreenWidthWithin(0, 425);
   const screenWidthLessThan540 = useScreenWidthWithin(0, 540);
   const screenWidthLessThan640 = useScreenWidthWithin(0, 640);
   const screenWidthLessThan768 = useScreenWidthWithin(0, 768);
@@ -26,24 +27,20 @@ let Pagination: React.FC<PaginationProps> = props => {
   if (screenWidthLessThan376) {
     siblingRange = 0;
     size = "small";
+  } else if (screenWidthLessThan425) {
+    siblingRange = 0;
   } else if (screenWidthLessThan540) {
     siblingRange = 1;
-    size = "small";
   } else if (screenWidthLessThan640) {
     siblingRange = 2;
-    size = "small";
   } else if (screenWidthLessThan768) {
     siblingRange = 3;
-    size = "small";
   } else if (screenWidthLessThan880) {
     siblingRange = 4;
-    size = "small";
   } else if (screenWidthLessThan1024) {
     siblingRange = 5;
-    size = null;
   } else {
     siblingRange = 6;
-    size = null;
   }
 
   return (

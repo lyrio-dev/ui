@@ -4,8 +4,6 @@ import { observer } from "mobx-react";
 
 import style from "./SimplePagination.module.less";
 
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
-
 interface SimplePaginationProps {
   hasPrevPage: boolean;
   hasNextPage: boolean;
@@ -13,16 +11,9 @@ interface SimplePaginationProps {
 }
 
 let SimplePagination: React.FC<SimplePaginationProps> = props => {
-  const screenWidthLessThan880 = useScreenWidthWithin(0, 880);
-
-  let size: string;
-  if (screenWidthLessThan880) size = "small";
-  else size = null;
-
   return (
     <div className={style.wrapper}>
       <Pagination
-        size={size}
         className={style.pagination}
         activePage={2}
         siblingRange={0}
