@@ -16,7 +16,7 @@ import { getScoreColor } from "@/components/ScoreText";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { getProblemIdString } from "@/pages/problem/utils";
 
-const SUBMISSIONS_PER_PAGE = 10;
+const SUBMISSIONS_PER_PAGE = appState.serverPreference.pagination.submissionStatistics;
 
 export enum SubmissionStatisticsType {
   Fastest = "Fastest",

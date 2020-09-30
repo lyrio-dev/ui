@@ -7,6 +7,7 @@ import { useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import PreviewSearch from "./PreviewSearch";
 import { getProblemDisplayName } from "@/pages/problem/utils";
+import { appState } from "@/appState";
 
 interface ProblemSearchProps {
   className?: string;
@@ -16,7 +17,7 @@ interface ProblemSearchProps {
   onEnterPress?: (searchKeyword: string) => void;
 }
 
-const SEARCH_PROBLEM_PREVIEW_LIST_LENGTH = 7;
+const SEARCH_PROBLEM_PREVIEW_LIST_LENGTH = appState.serverPreference.pagination.searchProblemsPreview;
 
 let ProblemSearch: React.FC<ProblemSearchProps> = props => {
   const _ = useIntlMessage("components.problem_search");

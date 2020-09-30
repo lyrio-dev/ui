@@ -26,7 +26,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
 
-const SUBMISSIONS_PER_PAGE = 10;
+const SUBMISSIONS_PER_PAGE = appState.serverPreference.pagination.submissions;
 
 interface SubmissionsQuery {
   problemId: number;

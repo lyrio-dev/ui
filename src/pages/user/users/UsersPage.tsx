@@ -15,7 +15,7 @@ import UserLink from "@/components/UserLink";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
 
-const USERS_PER_PAGE = 30;
+const USERS_PER_PAGE = appState.serverPreference.pagination.userList;
 
 enum SortBy {
   rating = "rating",

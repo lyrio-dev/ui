@@ -23,7 +23,7 @@ import { URLDescriptor } from "navi";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 
-const AUDIT_LOGS_PER_PAGE = 10;
+const AUDIT_LOGS_PER_PAGE = appState.serverPreference.pagination.userAuditLogs;
 
 interface AuditQuery {
   actionQuery?: string;

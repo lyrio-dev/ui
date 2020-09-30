@@ -83,8 +83,7 @@ function generateSearchQuery(searchQuery: ProblemSetPageSearchQuery): Record<str
   return query;
 }
 
-// TODO: Make this a config item, maybe from server?
-const PROBLEMS_PER_PAGE = 50;
+const PROBLEMS_PER_PAGE = appState.serverPreference.pagination.problemSet;
 
 interface ProblemSetPageProps {
   searchQuery: ProblemSetPageSearchQuery;

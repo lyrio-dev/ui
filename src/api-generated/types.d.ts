@@ -331,6 +331,15 @@ declare namespace ApiTypes {
   export interface PreferenceConfig {
     siteName: string;
     security: ApiTypes.PreferenceConfigSecurity;
+    pagination: ApiTypes.PreferenceConfigPagination;
+  }
+  export interface PreferenceConfigPagination {
+    problemSet: number;
+    searchProblemsPreview: number;
+    submissions: number;
+    submissionStatistics: number;
+    userList: number;
+    userAuditLogs: number;
   }
   export interface PreferenceConfigSecurity {
     requireEmailVerification: boolean;
