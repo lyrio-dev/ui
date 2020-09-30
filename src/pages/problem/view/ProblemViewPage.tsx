@@ -38,11 +38,71 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
-import MarkdownContent from "@/markdown/MarkdownContent";
+import MarkdownContent, { MarkdownContentPatcher } from "@/markdown/MarkdownContent";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { getProblemDisplayName, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { downloadProblemFile, downloadProblemFilesAsArchive } from "../files/ProblemFilesPage";
+
+export function useProblemViewMarkdownContentPatcher(problemId: number): MarkdownContentPatcher {
+  const _ = useIntlMessage();
+  const navigation = useNavigation();
+
+  const FILE_DOWNLOAD_LINK_PREFIX = "file:";
+  const FILE_DOWNLOAD_LINK_ALL_PREFIX = "allfiles:";
+
+  const FILE_DOWNLOAD_LINK_PREFIXES = [FILE_DOWNLOAD_LINK_PREFIX, FILE_DOWNLOAD_LINK_ALL_PREFIX];
+
+  function isStartedWithFileDownloadPrefix(url: string) {
+    return FILE_DOWNLOAD_LINK_PREFIXES.some(s => url.startsWith(s));
+  }
+
+  function tryParseAndDownload(fileUrl: string) {
+    if (fileUrl.startsWith(FILE_DOWNLOAD_LINK_ALL_PREFIX)) {
+      downloadProblemFilesAsArchive(
+        problemId,
+        fileUrl.substr(FILE_DOWNLOAD_LINK_ALL_PREFIX.length),
+        "AdditionalFile",
+        [],
+        _
+      );
+      return true;
+    } else if (fileUrl.startsWith(FILE_DOWNLOAD_LINK_PREFIX)) {
+      let filename = fileUrl.substr(FILE_DOWNLOAD_LINK_PREFIX.length);
+      while (filename.startsWith("/")) filename = filename.substr(1);
+
+      downloadProblemFile(problemId, "AdditionalFile", filename, _);
+      return true;
+    }
+
+    return false;
+  }
+
+  return {
+    onPatchRenderer(renderer) {
+      const originValidateLink = renderer.validateLink;
+      renderer.validateLink = url => originValidateLink(url) || isStartedWithFileDownloadPrefix(url.toLowerCase());
+    },
+    onPatchResult(element) {
+      async function onLinkClick(e: MouseEvent) {
+        const targetElement = e.target as HTMLElement;
+        if (targetElement.tagName === "A") {
+          const a = targetElement as HTMLAnchorElement;
+          if (tryParseAndDownload(a.href)) {
+            e.preventDefault();
+          }
+        }
+      }
+
+      element.addEventListener("click", onLinkClick);
+      return () => element.removeEventListener("click", onLinkClick);
+    },
+    onXssFileterAttr(tagName, attrName, value, escapeAttrValue) {
+      if (tagName === "a" && attrName === "href" && isStartedWithFileDownloadPrefix(value)) return true;
+    }
+  };
+}
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -356,6 +416,8 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     </Statistic.Group>
   );
 
+  const problemViewMarkdownContentPatcher = useProblemViewMarkdownContentPatcher(props.problem.meta.id);
+
   return (
     <>
       {permissionManager}
@@ -492,7 +554,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               <Header size="large">{section.sectionTitle}</Header>
               {section.type === "TEXT" ? (
                 <>
-                  <MarkdownContent content={section.text} />
+                  <MarkdownContent content={section.text} patcher={problemViewMarkdownContentPatcher} />
                 </>
               ) : (
                 <>
@@ -562,7 +624,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                     </Grid.Row>
                     <Grid.Row className={style.sampleExplanation}>
                       <Grid.Column>
-                        <MarkdownContent content={section.text} />
+                        <MarkdownContent content={section.text} patcher={problemViewMarkdownContentPatcher} />
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>

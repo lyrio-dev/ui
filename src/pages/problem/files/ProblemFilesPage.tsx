@@ -44,6 +44,100 @@ import { onEnterPress } from "@/utils/onEnterPress";
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
 
+export async function downloadProblemFile(
+  problemId: number,
+  type: "TestData" | "AdditionalFile",
+  filename: string,
+  _: (messageId: string, parameters?: Record<string, string>) => string
+) {
+  if (!filename) return toast.error(_("problem_files.error.NO_SUCH_FILE"));
+
+  const { requestError, response } = await ProblemApi.downloadProblemFiles({
+    problemId,
+    type,
+    filenameList: [filename]
+  });
+  if (requestError) return toast.error(requestError);
+  else if (response.downloadInfo.length === 0) return toast.error(_("problem_files.error.NO_SUCH_FILE"));
+
+  downloadFile(response.downloadInfo[0].downloadUrl);
+}
+
+export async function downloadProblemFilesAsArchive(
+  problemId: number,
+  filename: string,
+  type: "TestData" | "AdditionalFile",
+  filenames: string[],
+  _: (messageId: string, parameters?: Record<string, string>) => string
+) {
+  const { requestError, response } = await ProblemApi.downloadProblemFiles({
+    problemId,
+    type,
+    filenameList: filenames
+  });
+  if (requestError) return toast.error(requestError);
+  if (response.error) return toast.error(_(`problem_files.error.${response.error}`));
+
+  const { downloadInfo } = response;
+
+  if (downloadInfo.length === 0) return toast.error(_("problem_files.no_files_to_download"));
+
+  const fileStream = streamsaver.createWriteStream(filename);
+  let i = 0;
+  const zipStream = createZipStream({
+    async pull(ctrl) {
+      if (i == downloadInfo.length) return ctrl.close();
+
+      try {
+        const response = await fetch(downloadInfo[i].downloadUrl);
+        if (!response.ok) {
+          throw response.statusText;
+        }
+
+        ctrl.enqueue({
+          name: downloadInfo[i].filename,
+          stream: () => response.body
+        });
+      } catch (e) {
+        stopDownload();
+        toast.error(
+          _("problem_files.download_as_archive_error", {
+            filename: downloadInfo[i].filename,
+            error: e.toString()
+          })
+        );
+      }
+
+      i++;
+    }
+  });
+
+  const abortCallbackReceiver: { abort?: () => void } = {};
+
+  function stopDownload() {
+    abortCallbackReceiver.abort();
+  }
+
+  // If we are on an insecure context, StreamSaver will use a MITM page to download the file
+  // a beforeunload event is triggered by the library (not a user), so ignore it
+  let isBeforeUnloadTriggeredByLibrary = !window.isSecureContext;
+  function onBeforeUnload(e: BeforeUnloadEvent) {
+    if (isBeforeUnloadTriggeredByLibrary) {
+      isBeforeUnloadTriggeredByLibrary = false;
+      return;
+    }
+    e.returnValue = "";
+  }
+
+  window.addEventListener("unload", stopDownload);
+  window.addEventListener("beforeunload", onBeforeUnload);
+
+  await pipeStream(zipStream, fileStream, abortCallbackReceiver);
+
+  window.removeEventListener("unload", stopDownload);
+  window.removeEventListener("beforeunload", onBeforeUnload);
+}
+
 const MAX_UPLOAD_CONCURRENCY = 5;
 
 async function fetchData(idType: "id" | "displayId", id: number) {
@@ -580,87 +674,6 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
   refStateListAdditionalFiles.current = stateListAdditionalFiles;
   const fileListAdditionalFiles = stateListAdditionalFiles[0];
 
-  async function onDownloadFile(type: "TestData" | "AdditionalFile", filename: string) {
-    const { requestError, response } = await ProblemApi.downloadProblemFiles({
-      problemId: props.problem.meta.id,
-      type,
-      filenameList: [filename]
-    });
-    if (requestError) {
-      toast.error(requestError);
-      return;
-    }
-
-    downloadFile(response.downloadInfo[0].downloadUrl);
-  }
-
-  async function onDownloadFilesAsArchive(type: "TestData" | "AdditionalFile", filenames: string[]) {
-    const fileStream = streamsaver.createWriteStream(type + "_" + idString + ".zip");
-
-    const { requestError, response } = await ProblemApi.downloadProblemFiles({
-      problemId: props.problem.meta.id,
-      type,
-      filenameList: filenames
-    });
-    if (requestError) return toast.error(requestError);
-    if (response.error) return toast.error(`.error.${response.error}`);
-
-    const { downloadInfo } = response;
-    let i = 0;
-    const zipStream = createZipStream({
-      async pull(ctrl) {
-        if (i == downloadInfo.length) return ctrl.close();
-
-        try {
-          const response = await fetch(downloadInfo[i].downloadUrl);
-          if (!response.ok) {
-            throw response.statusText;
-          }
-
-          ctrl.enqueue({
-            name: downloadInfo[i].filename,
-            stream: () => response.body
-          });
-        } catch (e) {
-          stopDownload();
-          toast.error(
-            _(".download_as_archive_error", {
-              filename: downloadInfo[i].filename,
-              error: e.toString()
-            })
-          );
-        }
-
-        i++;
-      }
-    });
-
-    const abortCallbackReceiver: { abort?: () => void } = {};
-
-    function stopDownload() {
-      abortCallbackReceiver.abort();
-    }
-
-    // If we are on an insecure context, StreamSaver will use a MITM page to download the file
-    // a beforeunload event is triggered by the library (not a user), so ignore it
-    let isBeforeUnloadTriggeredByLibrary = !window.isSecureContext;
-    function onBeforeUnload(e: BeforeUnloadEvent) {
-      if (isBeforeUnloadTriggeredByLibrary) {
-        isBeforeUnloadTriggeredByLibrary = false;
-        return;
-      }
-      e.returnValue = "";
-    }
-
-    window.addEventListener("unload", stopDownload);
-    window.addEventListener("beforeunload", onBeforeUnload);
-
-    await pipeStream(zipStream, fileStream, abortCallbackReceiver);
-
-    window.removeEventListener("unload", stopDownload);
-    window.removeEventListener("beforeunload", onBeforeUnload);
-  }
-
   async function onRenameFile(
     type: "TestData" | "AdditionalFile",
     stateFileList: typeof stateListTestData,
@@ -829,8 +842,10 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
         color="green"
         files={fileListTestData}
-        onDownloadFile={filename => onDownloadFile("TestData", filename)}
-        onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("TestData", filenames)}
+        onDownloadFile={filename => downloadProblemFile(props.problem.meta.id, "TestData", filename, _)}
+        onDownloadFilesAsArchive={filenames =>
+          downloadProblemFilesAsArchive(props.problem.meta.id, `TestData_${idString}.zip`, "TestData", filenames, _)
+        }
         onRenameFile={(filename, newFilename) => onRenameFile("TestData", stateListTestData, filename, newFilename)}
         onDeleteFiles={filenames => onDeleteFiles("TestData", stateListTestData, filenames)}
         onUploadFiles={files => onUploadFiles("TestData", refStateListTestData, files)}
@@ -847,8 +862,16 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
         color="pink"
         files={fileListAdditionalFiles}
-        onDownloadFile={filename => onDownloadFile("AdditionalFile", filename)}
-        onDownloadFilesAsArchive={filenames => onDownloadFilesAsArchive("AdditionalFile", filenames)}
+        onDownloadFile={filename => downloadProblemFile(props.problem.meta.id, "AdditionalFile", filename, _)}
+        onDownloadFilesAsArchive={filenames =>
+          downloadProblemFilesAsArchive(
+            props.problem.meta.id,
+            `AdditionalFile_${idString}.zip`,
+            "AdditionalFile",
+            filenames,
+            _
+          )
+        }
         onRenameFile={(filename, newFilename) =>
           onRenameFile("AdditionalFile", stateListAdditionalFiles, filename, newFilename)
         }

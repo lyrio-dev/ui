@@ -30,6 +30,7 @@ module.exports = {
   progress_cancelled: "Cancelled",
   cancel_upload: "Cancel",
   back_to_problem: "Back to Problem",
+  no_files_to_download: "No files to download.",
   error: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_PROBLEM: "No such problem.",

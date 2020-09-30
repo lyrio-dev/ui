@@ -37,6 +37,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
 import MarkdownContent from "@/markdown/MarkdownContent";
 import { getProblemIdString, getProblemUrl } from "../utils";
+import { useProblemViewMarkdownContentPatcher } from "../view/ProblemViewPage";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -85,6 +86,8 @@ interface Sample {
 }
 
 interface LocalizedContentEditorSectionProps {
+  problemId: number;
+
   section: LocalizedContentSection;
   samples: Sample[];
 
@@ -109,6 +112,8 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
   const [preview, setPreview] = useState(false);
 
   const refOptionsButton = useRef(null);
+
+  const problemViewMarkdownContentPatcher = useProblemViewMarkdownContentPatcher(props.problemId);
 
   return (
     <>
@@ -277,7 +282,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               <Grid.Column>
                 {preview || props.isPreview ? (
                   <Segment basic>
-                    <MarkdownContent content={props.section.text} />
+                    <MarkdownContent content={props.section.text} patcher={problemViewMarkdownContentPatcher} />
                   </Segment>
                 ) : (
                   <Form>
@@ -296,7 +301,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
           </Grid>
         ) : preview || props.isPreview ? (
           <Segment basic>
-            <MarkdownContent content={props.section.text} />
+            <MarkdownContent content={props.section.text} patcher={problemViewMarkdownContentPatcher} />
           </Segment>
         ) : (
           <Form>
@@ -316,6 +321,8 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
 };
 
 interface LocalizedContentEditorProps {
+  problemId: number;
+
   localizedContent: LocalizedContent;
   samples: Sample[];
 
@@ -421,6 +428,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
       {props.localizedContent.contentSections.map((section, index) => (
         <LocalizedContentEditorSection
           key={section.uuid}
+          problemId={props.problemId}
           section={section}
           samples={props.samples}
           isPreview={preview}
@@ -1263,6 +1271,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                     className: style.localeTabPane,
                     content: (
                       <LocalizedContentEditor
+                        problemId={props.problem?.meta?.id}
                         localizedContent={localizedContents[locale]}
                         samples={samples}
                         isOnly={Object.keys(localizedContents).length === 1}

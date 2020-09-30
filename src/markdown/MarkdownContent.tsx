@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import MarkdownIt from "markdown-it";
 
 import { renderMarkdown } from "./markdown";
 import { renderMath } from "./mathjax";
@@ -6,10 +7,24 @@ import { sanitize } from "./sanitize";
 import { highlight } from "@/utils/CodeHighlighter";
 
 import style from "./MarkdownContent.module.less";
+import { useNavigation } from "react-navi";
+import { wrap } from "module";
+
+export interface MarkdownContentPatcher {
+  onPatchRenderer?: (renderer: MarkdownIt) => void;
+  onPatchResult?: (element: HTMLDivElement) => (() => void) | void;
+  onXssFileterAttr?: (
+    tagName: string,
+    attrName: string,
+    value: string,
+    escapeAttrValue: (value: string) => string
+  ) => string | boolean | void;
+}
 
 interface MarkdownContentProps {
   content: string;
   noSanitize?: boolean;
+  patcher?: MarkdownContentPatcher;
 }
 
 // Patch rendered-markdown's styles for semantic-ui
@@ -51,11 +66,12 @@ function patchStyles(wrapper: HTMLDivElement) {
 const MarkdownContent: React.FC<MarkdownContentProps> = props => {
   const html = useMemo(() => {
     const [markdownResult, highlightPlaceholders, mathPlaceholders, findPlaceholderElement] = renderMarkdown(
-      props.content
+      props.content,
+      props.patcher?.onPatchRenderer
     );
 
     const wrapper = document.createElement("div");
-    wrapper.innerHTML = props.noSanitize ? markdownResult : sanitize(markdownResult);
+    wrapper.innerHTML = props.noSanitize ? markdownResult : sanitize(markdownResult, props.patcher?.onXssFileterAttr);
 
     // Render highlights
     highlightPlaceholders.forEach(item => {
@@ -72,9 +88,45 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
     patchStyles(wrapper);
 
     return wrapper.innerHTML;
-  }, [props.content, props.noSanitize]);
+  }, [props.content, props.noSanitize, props.patcher]);
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  const navigation = useNavigation();
+  const [wrapperElement, setWrapperElement] = useState<HTMLDivElement>();
+  useEffect(() => {
+    if (!wrapperElement) return;
+
+    const cleanCallbacks: ((() => void) | void)[] = [];
+
+    // Fix internal links with dynamic generated `<a>` will NOT trigger react-navi's navigation
+    async function onLinkClick(e: MouseEvent) {
+      const targetElement = e.target as HTMLElement;
+      if (targetElement.tagName === "A") {
+        const a = targetElement as HTMLAnchorElement;
+        if (!["", "_self"].includes(a.target.toLowerCase())) return;
+
+        // `new URL` may throw an exception
+        try {
+          const url = new URL(a.href, document.location.href);
+          // Check internal links
+          if (url.origin === document.location.origin) {
+            e.preventDefault();
+            navigation.navigate(url.pathname + url.search + url.hash);
+          }
+        } catch (e) {}
+      }
+    }
+
+    wrapperElement.addEventListener("click", onLinkClick);
+    cleanCallbacks.push(() => wrapperElement.removeEventListener("click", onLinkClick));
+
+    // Call patcher
+    const onPatchResult = props.patcher?.onPatchResult;
+    if (onPatchResult && wrapperElement) cleanCallbacks.push(onPatchResult(wrapperElement));
+
+    return () => cleanCallbacks.forEach(fn => fn && fn());
+  }, [props.patcher, wrapperElement]);
+
+  return <div dangerouslySetInnerHTML={{ __html: html }} ref={setWrapperElement} />;
 };
 
 export default React.memo(MarkdownContent);

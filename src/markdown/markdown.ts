@@ -18,7 +18,8 @@ export interface MarkdownMathPlaceholder {
 
 // [result, highlightPlaceholders, mathPlaceholders, findPlaceholderElement]
 export function renderMarkdown(
-  text: string
+  text: string,
+  onPatchRenderer?: (renderer: MarkdownIt) => void
 ): [
   string,
   MarkdownHighlightPlaceholder[],
@@ -81,6 +82,8 @@ export function renderMarkdown(
     blockRenderer: (code: string) => addMathPlaceholder(code, true)
   });
   renderer.use(MarkdownItMergeCells);
+
+  if (onPatchRenderer) onPatchRenderer(renderer);
 
   return [renderer.render(text), highlightPlaceholders, mathPlaceholders, findPlaceholderElement];
 }

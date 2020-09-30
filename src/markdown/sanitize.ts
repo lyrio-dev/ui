@@ -1,4 +1,4 @@
-import { FilterXSS, escapeAttrValue } from "xss";
+import { FilterXSS, escapeAttrValue, EscapeHandler } from "xss";
 
 // Get the default white list
 const xssWhiteList = require("xss/lib/default").whiteList;
@@ -15,18 +15,35 @@ Object.keys(xssWhiteList).forEach(tag => {
 // The "data-id" arrtibute is used for highlight and math rendering
 xssWhiteList["span"].push("data-id");
 
-const xss = new FilterXSS({
-  whiteList: xssWhiteList,
-  stripIgnoreTag: true,
-  onTagAttr: (tag, name, value, isWhiteAttr) => {
-    // Allow data URIs for <img>
-    if (tag.toLowerCase() === "img" && name.toLowerCase() === "src" && value.startsWith("data:image/")) {
-      return name + '="' + escapeAttrValue(value) + '"';
-    }
-  }
-});
+function originalAttrValue(name: string, value: string) {
+  return name + '="' + escapeAttrValue(value) + '"';
+}
 
-export function sanitize(html: string) {
+export function sanitize(
+  html: string,
+  onTagAttr?: (
+    tagName: string,
+    attrName: string,
+    value: string,
+    escapeAttrValue: (value: string) => string
+  ) => boolean | string | void
+) {
+  const xss = new FilterXSS({
+    whiteList: xssWhiteList,
+    stripIgnoreTag: true,
+    onTagAttr: (tag, name, value, isWhiteAttr) => {
+      if (onTagAttr) {
+        const result = onTagAttr(tag, name, value, escapeAttrValue);
+        if (typeof result === "string") return result;
+        else if (result === true) return originalAttrValue(name, value);
+      }
+
+      // Allow data URIs for <img>
+      if (tag.toLowerCase() === "img" && name.toLowerCase() === "src" && value.startsWith("data:image/"))
+        return originalAttrValue(name, value);
+    }
+  });
+
   const filteredHtml = xss.process(html);
   if (!filteredHtml) return "";
 
