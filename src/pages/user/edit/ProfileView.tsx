@@ -162,7 +162,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   }
 
   const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
-  const allowUserChangeUsername = appState.serverPreference.allowUserChangeUsername;
+  const allowUserChangeUsername = appState.serverPreference.security.allowUserChangeUsername;
 
   return (
     <div className={style.profileContainer}>

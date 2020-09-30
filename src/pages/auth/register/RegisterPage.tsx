@@ -297,7 +297,7 @@ let RegisterPage: React.FC = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                 onBlur={() => checkEmail()}
                 onKeyPress={onEnterPress(() => {
-                  if (appState.serverPreference.requireEmailVerification) {
+                  if (appState.serverPreference.security.requireEmailVerification) {
                     refEmailVerificationCodeInput.current.focus();
                     if (sendEmailVerificationCodeTimeout === 0) onSendEmailVerificationCode();
                   } else refPasswordInput.current.focus();
@@ -307,7 +307,7 @@ let RegisterPage: React.FC = () => {
 
             {
               /* email verification code */
-              appState.serverPreference.requireEmailVerification && (
+              appState.serverPreference.security.requireEmailVerification && (
                 <Ref
                   innerRef={field => field && (refEmailVerificationCodeInput.current = field.querySelector("input"))}
                 >

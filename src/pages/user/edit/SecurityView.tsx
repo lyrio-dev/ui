@@ -320,7 +320,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
           <div className={style.notes}>
             {emailInvalid ? _(".email.invalid_email") : duplicateEmail && _(".email.duplicate_email")}
           </div>
-          {appState.serverPreference.requireEmailVerification && (
+          {appState.serverPreference.security.requireEmailVerification && (
             <>
               <Header className={style.header} size="tiny" content={_(".email.email_verification_code")} />
               <Input

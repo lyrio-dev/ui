@@ -330,6 +330,9 @@ declare namespace ApiTypes {
   }
   export interface PreferenceConfig {
     siteName: string;
+    security: ApiTypes.PreferenceConfigSecurity;
+  }
+  export interface PreferenceConfigSecurity {
     requireEmailVerification: boolean;
     allowUserChangeUsername: boolean;
     allowEveryoneCreateProblem: boolean;
