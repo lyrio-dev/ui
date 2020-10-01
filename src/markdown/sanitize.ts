@@ -1,4 +1,4 @@
-import { FilterXSS, escapeAttrValue, EscapeHandler } from "xss";
+import { FilterXSS, escapeAttrValue } from "xss";
 
 // Get the default white list
 const xssWhiteList = require("xss/lib/default").whiteList;

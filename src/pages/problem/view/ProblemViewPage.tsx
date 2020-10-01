@@ -47,7 +47,6 @@ import { downloadProblemFile, downloadProblemFilesAsArchive } from "../files/Pro
 
 export function useProblemViewMarkdownContentPatcher(problemId: number): MarkdownContentPatcher {
   const _ = useIntlMessage();
-  const navigation = useNavigation();
 
   const FILE_DOWNLOAD_LINK_PREFIX = "file:";
   const FILE_DOWNLOAD_LINK_ALL_PREFIX = "allfiles:";

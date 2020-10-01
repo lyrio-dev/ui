@@ -8,7 +8,6 @@ import { highlight } from "@/utils/CodeHighlighter";
 
 import style from "./MarkdownContent.module.less";
 import { useNavigation } from "react-navi";
-import { wrap } from "module";
 
 export interface MarkdownContentPatcher {
   onPatchRenderer?: (renderer: MarkdownIt) => void;
