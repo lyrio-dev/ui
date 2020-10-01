@@ -31,6 +31,7 @@ module.exports = {
   cancel_upload: "取消上传",
   back_to_problem: "返回题目",
   no_files_to_download: "无任何文件可下载。",
+  invalid_filename: "无效的文件名。",
   error: {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_PROBLEM: "无此题目。",

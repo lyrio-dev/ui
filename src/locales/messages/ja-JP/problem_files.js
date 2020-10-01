@@ -31,6 +31,7 @@ module.exports = {
   cancel_upload: "キャンセル",
   back_to_problem: "戻る",
   no_files_to_download: "[TBT] No files to download.",
+  invalid_filename: "[TBT] Invalid filename.",
   error: {
     PERMISSION_DENIED: "権限がありません。",
     NO_SUCH_PROBLEM: "問題が存在しません。",

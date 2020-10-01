@@ -15,3 +15,9 @@ export function isValidEmail(email: string): boolean {
 export function isValidDisplayId(displayId: string): boolean {
   return validator.isInt(displayId);
 }
+
+export function isValidFilename(filename: string): boolean {
+  const forbiddenCharacters = ["/", "\x00"];
+  const reservedFilenames = [".", ".."];
+  return forbiddenCharacters.every(ch => filename.indexOf(ch) === -1) && !reservedFilenames.includes(filename);
+}

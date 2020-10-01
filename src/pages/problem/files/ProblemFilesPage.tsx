@@ -40,6 +40,7 @@ import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { createZipStream } from "@/utils/zip";
 import { getProblemIdString, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { isValidFilename } from "@/utils/validators";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -445,6 +446,12 @@ let FileTable: React.FC<FileTableProps> = props => {
     if (uploadingCount) return;
 
     openUploadDialog(files => {
+      if (files.some(file => !isValidFilename(file.name))) {
+        // This shouldn't happen
+        toast.error(_(".invalid_filename"));
+        return;
+      }
+
       const doUpload = () => props.onUploadFiles(files);
 
       // Cancelled and Error uploads will not be shown as overriding
@@ -680,6 +687,11 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     filename: string,
     newFilename: string
   ) {
+    if (!isValidFilename(newFilename)) {
+      toast.error(_(".invalid_filename"));
+      return;
+    }
+
     const { requestError, response } = await ProblemApi.renameProblemFile({
       problemId: props.problem.meta.id,
       type,
