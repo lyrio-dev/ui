@@ -38,6 +38,8 @@
     "file-loader": "^6.0.0",
     "flat": "^5.0.2",
     "fomantic-ui-css": "^2.8.7",
+    "fontsource-dm-mono": "^3.0.5",
+    "fontsource-jetbrains-mono": "^3.0.5",
     "fs-extra": "^9.0.1",
     "gravatar": "^1.8.1",
     "hack-font": "source-foundry/Hack#1eddf94",

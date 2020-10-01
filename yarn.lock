@@ -5421,6 +5421,16 @@ fomantic-ui-css@^2.8.7:
   dependencies:
     jquery "^3.4.0"
 
+fontsource-dm-mono@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/fontsource-dm-mono/-/fontsource-dm-mono-3.0.5.tgz#a173aeb487e05280c7aca9dc57dbcfd3f1241246"
+  integrity sha512-tH+YEwvSaVNKWf58zOMU4TDLrECHBttNJSNWkDN+yAnrUzbzrJteNHbJJnAt47Uf/0utbv+GSDygQPEjobuMaA==
+
+fontsource-jetbrains-mono@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/fontsource-jetbrains-mono/-/fontsource-jetbrains-mono-3.0.5.tgz#667f007067837aacb8c33a1acb9385a1008a665f"
+  integrity sha512-1BCPh1V61umUOq21HitHpdRmOx4BsQiXl4H3AeoRkfQkqcBT4XDoZJNTAodlrEsNry0yBuzsByIDtkXrfFItaw==
+
 for-in@^0.1.3:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-0.1.8.tgz#d8773908e31256109952b1fdb9b3fa867d2775e1"
