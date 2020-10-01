@@ -9,6 +9,8 @@ import style from "./CodeEditor.module.less";
 
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
+import { appState } from "@/appState";
+import { availableCodeFonts } from "@/webfonts";
 
 export interface CodeEditorProps {
   editorDidMount?: (editor: Monaco.editor.IStandaloneCodeEditor) => void;
@@ -71,6 +73,8 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
     }
   }
 
+  const fontSize = appState.userPreference.font?.codeFontSize || 14;
+
   return (
     <div
       ref={initializeResizeSensor}
@@ -82,7 +86,12 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
         options={Object.assign(
           {
             lineNumbersMinChars: 4,
-            fontFamily: '"Fira Code", monospace'
+            fontFamily: `"${
+              appState.userPreference.font?.codeFontFace || availableCodeFonts[0] || "monospace"
+            }", monospace`,
+            fontSize: fontSize,
+            lineHeight: (appState.userPreference.font?.codeLineHeight || 1.3) * fontSize,
+            fontLigatures: appState.userPreference.font?.codeFontLigatures !== false
           },
           props.options
         )}

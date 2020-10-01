@@ -79,9 +79,9 @@ export const filterValidCompileAndRunOptions = (
   );
 
 export const getPreferredCodeLanguage = () =>
-  (appState.userPreference.defaultCodeLanguage as CodeLanguage) || Object.values(CodeLanguage)[0];
+  (appState.userPreference.code?.defaultLanguage as CodeLanguage) || Object.values(CodeLanguage)[0];
 
 export const getPreferredCompileAndRunOptions = (codeLanguage: CodeLanguage) =>
-  codeLanguage === appState.userPreference.defaultCodeLanguage
-    ? filterValidCompileAndRunOptions(codeLanguage, appState.userPreference.defaultCompileAndRunOptions)
+  codeLanguage === appState.userPreference.code?.defaultLanguage
+    ? filterValidCompileAndRunOptions(codeLanguage, appState.userPreference.code?.defaultCompileAndRunOptions)
     : getDefaultCompileAndRunOptions(codeLanguage);

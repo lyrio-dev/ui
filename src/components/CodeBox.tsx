@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Segment, SegmentProps } from "semantic-ui-react";
 import AnsiToHtmlConverter from "ansi-to-html";
 
@@ -13,10 +13,50 @@ interface CodeBoxProps {
   title?: React.ReactNode;
   content?: React.ReactNode;
   html?: string;
+  fontFaceOverride?: string;
+  fontSizeOverride?: number;
+  lineHeightOverride?: number;
+  fontLigaturesOverride?: boolean;
 }
 
 export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, ref) => {
   const content = !props.html ? props.content : undefined;
+  const [preElement, setPreElement] = useState<HTMLPreElement>();
+
+  function refPre(pre: HTMLPreElement) {
+    if (typeof ref === "function") ref(pre);
+    else if (ref) ref.current = pre;
+
+    setPreElement(pre);
+  }
+
+  useEffect(() => {
+    // Override font
+    if (preElement) {
+      if (props.fontFaceOverride)
+        preElement.style.setProperty("font-family", `"${props.fontFaceOverride}"`, "important");
+      else preElement.style.removeProperty("font-family");
+
+      if (typeof props.fontSizeOverride === "number")
+        preElement.style.setProperty("font-size", `${props.fontSizeOverride}px`, "important");
+      else preElement.style.removeProperty("font-size");
+
+      if (typeof props.lineHeightOverride === "number")
+        preElement.style.setProperty("line-height", String(props.lineHeightOverride), "important");
+      else preElement.style.removeProperty("line-height");
+
+      // fontLigatures is enabled by default
+      if (props.fontLigaturesOverride === false)
+        preElement.style.setProperty("font-variant-ligatures", "none", "important");
+      else preElement.style.removeProperty("font-variant-ligatures");
+    }
+  }, [
+    preElement,
+    props.fontFaceOverride,
+    props.fontSizeOverride,
+    props.lineHeightOverride,
+    props.fontLigaturesOverride
+  ]);
 
   return (
     (props.html || content) && (
@@ -28,7 +68,7 @@ export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, re
         >
           {props.children}
           <pre
-            ref={ref}
+            ref={refPre}
             className={style.codeBoxContent}
             dangerouslySetInnerHTML={props.html && { __html: props.html }}
           >
@@ -48,6 +88,10 @@ interface HighlightedCodeBoxProps {
   title?: React.ReactNode;
   code: string;
   language: string;
+  fontFaceOverride?: string;
+  fontSizeOverride?: number;
+  lineHeightOverride?: number;
+  fontLigaturesOverride?: boolean;
 }
 
 export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCodeBoxProps>((props, ref) => {
@@ -59,6 +103,10 @@ export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCo
       segment={props.segment}
       title={props.title}
       html={html}
+      fontFaceOverride={props.fontFaceOverride}
+      fontSizeOverride={props.fontSizeOverride}
+      lineHeightOverride={props.lineHeightOverride}
+      fontLigaturesOverride={props.fontLigaturesOverride}
       ref={ref}
     >
       {props.children}

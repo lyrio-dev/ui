@@ -78,6 +78,17 @@ module.exports = {
       content_notes:
         "If the selected language is not available for some contents, we'll display the default language versions of them."
     },
+    font: {
+      header: "Font",
+      code_font_face: "Code Font",
+      system_default: "monospace (browser default)",
+      code_font_size: "Code Font Size",
+      code_line_height: "Code Line Height",
+      code_font_ligatures: "Enable Ligatures",
+      code_font_ligatures_notes:
+        "Ligatures could display some combining symbols in a more readable form. Only several fonts support this feature.",
+      code_preview: "Preview"
+    },
     code_language: {
       header: "Programming Language",
       language: "Default language",

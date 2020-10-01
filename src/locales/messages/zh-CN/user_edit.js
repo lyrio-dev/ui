@@ -76,6 +76,16 @@ module.exports = {
       content_default_name: "与系统语言相同（{name}）",
       content_notes: "如果所选语言的内容不可用，则会为您展示默认语言版本的内容。"
     },
+    font: {
+      header: "字体",
+      code_font_face: "代码字体",
+      system_default: "monospace（浏览器默认）",
+      code_font_size: "代码字体大小",
+      code_line_height: "代码行高",
+      code_font_ligatures: "启用连字（Ligatures）",
+      code_font_ligatures_notes: "连字（Ligatures）功能可将部分组合符号显示为更易于阅读的形式。仅部分字体支持此功能。",
+      code_preview: "预览"
+    },
     code_language: {
       header: "编程语言",
       language: "默认语言",

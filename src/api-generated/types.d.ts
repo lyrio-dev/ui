@@ -856,13 +856,29 @@ declare namespace ApiTypes {
     rating: number;
     registrationTime: string; // date-time
   }
-  export interface UserPreferenceDto {
-    systemLocale?: "en_US" | "zh_CN" | "ja_JP";
-    contentLocale?: "en_US" | "zh_CN" | "ja_JP";
-    doNotFormatCodeByDefault?: boolean;
-    codeFormatterOptions?: string;
-    defaultCodeLanguage?: string;
+  export interface UserPreferenceCodeDto {
+    defaultLanguage?: string;
     defaultCompileAndRunOptions?: {};
+  }
+  export interface UserPreferenceCodeFormatterDto {
+    disableByDefault?: boolean;
+    options?: string;
+  }
+  export interface UserPreferenceDto {
+    locale?: ApiTypes.UserPreferenceLocaleDto;
+    font?: ApiTypes.UserPreferenceFontDto;
+    codeFormatter?: ApiTypes.UserPreferenceCodeFormatterDto;
+    code?: ApiTypes.UserPreferenceCodeDto;
+  }
+  export interface UserPreferenceFontDto {
+    codeFontFace?: string;
+    codeFontSize?: number;
+    codeLineHeight?: number;
+    codeFontLigatures?: boolean;
+  }
+  export interface UserPreferenceLocaleDto {
+    system?: "en_US" | "zh_CN" | "ja_JP";
+    content?: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface UserSessionDto {
     sessionId: number;

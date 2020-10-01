@@ -77,6 +77,17 @@ module.exports = {
       content_default_name: "システムのデフォルト（{name}）",
       content_notes: "選択した言語の問題文がない場合は、問題のデフォルト言語で表示します"
     },
+    font: {
+      header: "[TBT] Font",
+      code_font_face: "[TBT] Code Font",
+      system_default: "[TBT] monospace (browser default)",
+      code_font_size: "[TBT] Code Font Size",
+      code_line_height: "[TBT] Code Line Height",
+      code_font_ligatures: "[TBT] Enable Ligatures",
+      code_font_ligatures_notes:
+        "[TBT] Ligatures could display some combining symbols in a more readable form. Only several fonts support this feature.",
+      code_preview: "[TBT] Preview"
+    },
     code_language: {
       header: "プログラミング言語",
       language: "プログラミング言語",

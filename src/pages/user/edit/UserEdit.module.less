@@ -63,6 +63,10 @@
 
 .checkbox {
   margin-top: 8px;
+
+  &.largeMargin {
+    margin-top: 22px;
+  }
 }
 
 .notes {
@@ -126,6 +130,18 @@
 .localeSelect {
   :global(.icon:not(.dropdown)), :global(.flag) {
     margin-right: 11px !important;
+  }
+}
+
+.forceLoadFonts {
+  visibility: hidden;
+  position: absolute;
+  pointer-events: none;
+}
+
+.fontSelect {
+  :global(.active.item) {
+    font-weight: inherit !important;
   }
 }
 

@@ -7253,6 +7253,10 @@ gzip-size@5.1.1:
     duplexer "^0.1.1"
     pify "^4.0.1"
 
+hack-font@source-foundry/Hack#1eddf94:
+  version "3.3.0"
+  resolved "https://codeload.github.com/source-foundry/Hack/tar.gz/1eddf943125a3f06945b86dbb7f55704a517331c"
+
 handle-thing@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/handle-thing/download/handle-thing-2.0.0.tgz#0e039695ff50c93fc288557d696f3c1dc6776754"
@@ -13733,15 +13737,40 @@ typeface-fira-code@^1.1.4:
   resolved "https://registry.yarnpkg.com/typeface-fira-code/-/typeface-fira-code-1.1.4.tgz#ef36e81c43af0d01a69c15191da416467055d873"
   integrity sha512-RInwMBx+jPn42hsPAzu6DWyoReLHximaMix5/brUJGPpthPs1QRH6qCXuUrndnLi1dqV551bb+qepudVygFDMQ==
 
+typeface-inconsolata@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-inconsolata/-/typeface-inconsolata-0.0.72.tgz#6b5c92132c7d3e83f7a17025087d8d717ada63d5"
+  integrity sha512-ITFhcI2ANWmSEPVgQgPJHh6RyiCf1pnkRXj1VxjsxfSwRrXFGgGITRJV+HxW7kTRDx+3/6RReT2/SWsMPqJaTA==
+
 typeface-lato@^0.0.75:
   version "0.0.75"
   resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-0.0.75.tgz#8aa11c5611dc38416837c089b265a2abd1f7dd31"
   integrity sha512-iA5uJD4PSTyIE4BDiSOexQeXkDkiJuX4Hu3wh3saJ06EB2TvJayab1Lbbmqq2je/LQv7KCQZHZmC0k4hedd8sw==
 
+typeface-pt-mono@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-pt-mono/-/typeface-pt-mono-0.0.72.tgz#1ce4a636d335c77bb01712ba136a99f764647a04"
+  integrity sha512-7AMVSvB0oT2TDPyCJlVKSIxPjspI08Rlhg/SEUwQORSyalZgtSt2pDJEvVZuJbBIak70oB2ts6vL4iunYPUGKA==
+
+typeface-roboto-mono@^0.0.75:
+  version "0.0.75"
+  resolved "https://registry.yarnpkg.com/typeface-roboto-mono/-/typeface-roboto-mono-0.0.75.tgz#00c4543662066a837c014c251ee5140fb66a5ad8"
+  integrity sha512-dYfyXd6HrKyMC/PuBAAtay0tZKsBrzxIW/fBY325vLxFfi/IDKSuyTkWxkU4lyZV6KPHetFnJ661PNXzz2FS/w==
+
 typeface-saira@^0.0.72:
   version "0.0.72"
   resolved "https://registry.yarnpkg.com/typeface-saira/-/typeface-saira-0.0.72.tgz#bfeda1096d449dca6f8cf8e96df20a7c801fbfe6"
   integrity sha512-ioWQ39NHjyPe2UYHjtaf8xf0h9Xs2hTAbMd9IC/npHP+Ws67a/TYXUDGRQyZDsSb+kkqgKrPpCqB0aPhzk9oIA==
+
+typeface-source-code-pro@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/typeface-source-code-pro/-/typeface-source-code-pro-1.1.3.tgz#46113e0ad1729ed2a6b950bb4a77748f65bbf6ef"
+  integrity sha512-BAQ8I7Xy5zS5+KuG+gjRPNYCdfwL8vSF9jT8q9wzCRiiOG4h7id5zt8wcQx59riGRbRsgycRfs/ubyAm2z/FJQ==
+
+typeface-ubuntu-mono@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.72.tgz#3ecdb1dc90900522451c90661da7ae316a6fdb8b"
+  integrity sha512-l+Tt4NVCeceb42wNk3iev35xt3d+O3NxPtYq90k70OXjbtQtvUGDNaDB9uouJ1Y7Co0V6DgKHNS5S5ljBz9QRA==
 
 typescript@~4.0.3:
   version "4.0.3"

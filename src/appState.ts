@@ -41,15 +41,15 @@ export class AppState {
 
   @computed
   get locale(): Locale {
-    if (this.localLocale && this.localLocale === (this.userPreference.systemLocale || browserDefaultLocale)) {
+    if (this.localLocale && this.localLocale === (this.userPreference.locale?.system || browserDefaultLocale)) {
       setTimeout(() => (this.localLocale = null), 0);
     }
-    return this.localLocale || (this.userPreference.systemLocale as Locale) || browserDefaultLocale;
+    return this.localLocale || (this.userPreference.locale?.system as Locale) || browserDefaultLocale;
   }
 
   @computed
   get contentLocale(): Locale {
-    return (this.userPreference.contentLocale as Locale) || this.locale;
+    return (this.userPreference.locale?.content as Locale) || this.locale;
   }
 
   @persist
