@@ -95,7 +95,7 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
           },
           props.options
         )}
-        editorDidMount={editorDidMount}
+        editorDidMount={editorDidMount as any}
         onChange={props.onChange}
       />
     </div>
