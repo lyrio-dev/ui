@@ -49,6 +49,25 @@ declare namespace ApiTypes {
     usernameAvailable?: boolean;
     emailAvailable?: boolean;
   }
+  export interface CreateDiscussionReplyRequestDto {
+    discussionId: number;
+    content: string;
+    isPublic?: boolean;
+  }
+  export interface CreateDiscussionReplyResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
+    reply?: ApiTypes.DiscussionReplyDto;
+  }
+  export interface CreateDiscussionRequestDto {
+    problemId?: number;
+    title: string;
+    content: string;
+    isPublic?: boolean;
+  }
+  export interface CreateDiscussionResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM";
+    discussionId?: number;
+  }
   export interface CreateGroupRequestDto {
     groupName: string;
   }
@@ -71,6 +90,18 @@ declare namespace ApiTypes {
   export interface CreateProblemTagResponseDto {
     error?: "PERMISSION_DENIED";
     id?: number;
+  }
+  export interface DeleteDiscussionReplyRequestDto {
+    discussionReplyId: number;
+  }
+  export interface DeleteDiscussionReplyResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION_REPLY";
+  }
+  export interface DeleteDiscussionRequestDto {
+    discussionId: number;
+  }
+  export interface DeleteDiscussionResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
   }
   export interface DeleteGroupRequestDto {
     groupId: number;
@@ -101,6 +132,54 @@ declare namespace ApiTypes {
   }
   export interface DeleteSubmissionResponseDto {
     error?: "NO_SUCH_SUBMISSION" | "PERMISSION_DENIED";
+  }
+  export interface DiscussionDto {
+    meta: ApiTypes.DiscussionMetaDto;
+    content: string;
+    problem?: ApiTypes.GetDiscussionAndRepliesResponseProblemDto;
+    publisher: ApiTypes.UserMetaDto;
+    reactions: ApiTypes.DiscussionOrReplyReactionsDto;
+    permissions: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
+  }
+  export interface DiscussionGroupPermissionDto {
+    group: ApiTypes.GroupMetaDto;
+    permissionLevel: 1 | 2;
+  }
+  export interface DiscussionMetaDto {
+    id: number;
+    title: string;
+    publishTime: string; // date-time
+    editTime: string; // date-time
+    sortTime: string; // date-time
+    replyCount: number;
+    isPublic: boolean;
+    publisherId: number;
+    problemId?: number;
+  }
+  export interface DiscussionOrReplyReactionsDto {
+    count: {};
+    currentUserReactions: string[];
+  }
+  export interface DiscussionPermissionsDto {
+    userPermissions: ApiTypes.DiscussionUserPermissionDto[];
+    groupPermissions: ApiTypes.DiscussionGroupPermissionDto[];
+  }
+  export interface DiscussionReplyDto {
+    id: number;
+    content: string;
+    publishTime: string; // date-time
+    editTime: string; // date-time
+    isPublic: boolean;
+    publisher: ApiTypes.UserMetaDto;
+    reactions: ApiTypes.DiscussionOrReplyReactionsDto;
+    /**
+     * MANAGE_PERMISSION is not valid for replies.
+     */
+    permissions: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
+  }
+  export interface DiscussionUserPermissionDto {
+    user: ApiTypes.UserMetaDto;
+    permissionLevel: 1 | 2;
   }
   export interface DownloadProblemFilesRequestDto {
     problemId: number;
@@ -133,6 +212,72 @@ declare namespace ApiTypes {
   export interface GetAllProblemTagsResponseDto {
     tags: ApiTypes.LocalizedProblemTagDto[];
   }
+  export interface GetDiscussionAndRepliesRequestDto {
+    locale: "en_US" | "zh_CN" | "ja_JP";
+    discussionId: number;
+    /**
+     * `HeadTail` is for the first query of a discussion page while `IdRange` is for loading the ramaining.
+     */
+    queryRepliesType?: "HeadTail" | "IdRange";
+    getDiscussion?: boolean;
+    /**
+     * Only valid for `type` = `HeadTail`.
+     */
+    headTakeCount?: number;
+    /**
+     * Only valid for `type` = `HeadTail`.
+     */
+    tailTakeCount?: number;
+    /**
+     * Only valid for `type` = `IdRange`.
+     */
+    beforeId?: number;
+    /**
+     * Only valid for `type` = `IdRange`.
+     */
+    afterId?: number;
+    /**
+     * Only valid for `type` = `IdRange`.
+     */
+    idRangeTakeCount?: number;
+  }
+  export interface GetDiscussionAndRepliesResponseDto {
+    error?: "NO_SUCH_DISCUSSION" | "PERMISSION_DENIED" | "TAKE_TOO_MANY";
+    discussion?: ApiTypes.DiscussionDto;
+    /**
+     * Only valid for `type` = `HeadTail`.
+     */
+    repliesHead?: ApiTypes.DiscussionReplyDto[];
+    /**
+     * Only valid for `type` = `HeadTail`.
+     */
+    repliesTail?: ApiTypes.DiscussionReplyDto[];
+    /**
+     * Only valid for `type` = `HeadTail`.
+     */
+    repliesTotalCount?: number;
+    /**
+     * Only valid for `type` = `IdRange`.
+     */
+    repliesInRange?: ApiTypes.DiscussionReplyDto[];
+    /**
+     * Only valid for `type` = `IdRange`.
+     */
+    repliesCountInRange?: number;
+    permissionCreateNewDiscussion?: boolean;
+  }
+  export interface GetDiscussionAndRepliesResponseProblemDto {
+    meta: ApiTypes.ProblemMetaDto;
+    title: string;
+  }
+  export interface GetDiscussionPermissionsRequestDto {
+    id: number;
+  }
+  export interface GetDiscussionPermissionsResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
+    permissions?: ApiTypes.DiscussionPermissionsDto;
+    haveManagePermissionsPermission?: boolean;
+  }
   export interface GetGroupListResponseDto {
     groups: ApiTypes.GroupMetaDto[];
     groupsWithAdminPermission: number[];
@@ -157,6 +302,7 @@ declare namespace ApiTypes {
     displayId?: number;
     owner?: boolean;
     localizedContentsOfLocale?: "en_US" | "zh_CN" | "ja_JP";
+    localizedContentsTitleOnly?: boolean;
     localizedContentsOfAllLocales?: boolean;
     tagsOfLocale?: "en_US" | "zh_CN" | "ja_JP";
     samples?: boolean;
@@ -332,6 +478,11 @@ declare namespace ApiTypes {
     siteName: string;
     security: ApiTypes.PreferenceConfigSecurity;
     pagination: ApiTypes.PreferenceConfigPagination;
+    misc: ApiTypes.PreferenceConfigMisc;
+  }
+  export interface PreferenceConfigMisc {
+    discussionReactionEmojis: string[];
+    discussionReactionAllowCustomEmojis: boolean;
   }
   export interface PreferenceConfigPagination {
     problemSet: number;
@@ -340,6 +491,11 @@ declare namespace ApiTypes {
     submissionStatistics: number;
     userList: number;
     userAuditLogs: number;
+    discussions: number;
+    searchDiscussionsPreview: number;
+    discussionReplies: number;
+    discussionRepliesHead: number;
+    discussionRepliesMore: number;
   }
   export interface PreferenceConfigSecurity {
     requireEmailVerification: boolean;
@@ -348,6 +504,9 @@ declare namespace ApiTypes {
     allowNonAdminEditPublicProblem: boolean;
     allowOwnerManageProblemPermission: boolean;
     allowOwnerDeleteProblem: boolean;
+    discussionDefaultPublic: boolean;
+    discussionReplyDefaultPublic: boolean;
+    allowEveryoneCreateDiscussion: boolean;
   }
   export interface ProblemContentSectionDto {
     sectionTitle: string;
@@ -445,13 +604,50 @@ declare namespace ApiTypes {
     ipLocation: string;
     time: string; // date-time
     action: string;
-    firstObjectType?: "User" | "Group" | "Problem" | "ProblemTag" | "Submission";
+    firstObjectType?: "User" | "Group" | "Problem" | "ProblemTag" | "Submission" | "Discussion" | "DiscussionReply";
     firstObjectId?: number;
     firstObject?: {};
-    secondObjectType?: "User" | "Group" | "Problem" | "ProblemTag" | "Submission";
+    secondObjectType?: "User" | "Group" | "Problem" | "ProblemTag" | "Submission" | "Discussion" | "DiscussionReply";
     secondObjectId?: number;
     secondObject?: {};
     details?: {};
+  }
+  export interface QueryDiscussionsRequestDto {
+    locale: "en_US" | "zh_CN" | "ja_JP";
+    keyword?: string;
+    /**
+     * `null` for global. `-1` for ALL problems.
+     */
+    problemId?: number;
+    publisherId?: number;
+    nonpublic?: boolean;
+    /**
+     * Pass true to return discussion title only. For a preview in search bar.
+     */
+    titleOnly?: boolean;
+    skipCount: number;
+    takeCount: number;
+  }
+  export interface QueryDiscussionsResponseDiscussionDto {
+    meta: ApiTypes.DiscussionMetaDto;
+    problem?: ApiTypes.QueryDiscussionsResponseProblemDto;
+    publisher: ApiTypes.UserMetaDto;
+  }
+  export interface QueryDiscussionsResponseDto {
+    error?: "TAKE_TOO_MANY" | "NO_SUCH_PROBLEM" | "NO_SUCH_USER" | "PERMISSION_DENIED";
+    discussions?: ApiTypes.QueryDiscussionsResponseDiscussionDto[];
+    permissions?: ApiTypes.QueryDiscussionsResponsePermissionDto;
+    count?: number;
+    filterPublisher?: ApiTypes.UserMetaDto;
+    filterProblem?: ApiTypes.QueryDiscussionsResponseProblemDto;
+  }
+  export interface QueryDiscussionsResponsePermissionDto {
+    createDiscussion?: boolean;
+    filterNonpublic?: boolean;
+  }
+  export interface QueryDiscussionsResponseProblemDto {
+    meta: ApiTypes.ProblemMetaDto;
+    title: string;
   }
   export interface QueryParameters {
     query: ApiTypes.Parameters.Query;
@@ -590,7 +786,7 @@ declare namespace ApiTypes {
   export interface RenameProblemFileResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "NO_SUCH_FILE";
   }
-  export type RequestBody = ApiTypes.ResetJudgeClientKeyRequestDto;
+  export type RequestBody = ApiTypes.SetDiscussionPermissionsRequestDto;
   export interface ResetJudgeClientKeyRequestDto {
     id: number;
   }
@@ -609,7 +805,7 @@ declare namespace ApiTypes {
   }
   namespace Responses {
     export type $200 = string;
-    export type $201 = ApiTypes.ResetJudgeClientKeyResponseDto;
+    export type $201 = ApiTypes.SetDiscussionPermissionsResponseDto;
   }
   export interface RevokeUserSessionRequestDto {
     userId: number;
@@ -641,6 +837,37 @@ declare namespace ApiTypes {
       | "FAILED_TO_SEND"
       | "RATE_LIMITED";
     errorMessage?: string;
+  }
+  export interface SetDiscussionPermissionsRequestDto {
+    discussionId: number;
+    userPermissions: ApiTypes.SetDiscussionPermissionsRequestUserPermissionDto[];
+    groupPermissions: ApiTypes.SetDiscussionPermissionsRequestGroupPermissionDto[];
+  }
+  export interface SetDiscussionPermissionsRequestGroupPermissionDto {
+    groupId: number;
+    permissionLevel: 1 | 2;
+  }
+  export interface SetDiscussionPermissionsRequestUserPermissionDto {
+    userId: number;
+    permissionLevel: 1 | 2;
+  }
+  export interface SetDiscussionPermissionsResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION" | "NO_SUCH_USER" | "NO_SUCH_GROUP";
+    errorObjectId?: number;
+  }
+  export interface SetDiscussionPublicRequestDto {
+    discussionId: number;
+    isPublic: boolean;
+  }
+  export interface SetDiscussionPublicResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
+  }
+  export interface SetDiscussionReplyPublicRequestDto {
+    discussionReplyId: number;
+    isPublic: boolean;
+  }
+  export interface SetDiscussionReplyPublicResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION_REPLY";
   }
   export interface SetGroupAdminRequestDto {
     userId: number;
@@ -767,6 +994,30 @@ declare namespace ApiTypes {
     error?: "PERMISSION_DENIED" | "NO_SUCH_PROBLEM" | "FILE_TOO_LARGE" | "FILE_UUID_EXISTS" | "FILE_NOT_UPLOADED";
     submissionId?: number;
     signedUploadRequest?: ApiTypes.SignedFileUploadRequestDto;
+  }
+  export interface ToggleReactionRequestDto {
+    type: "Discussion" | "DiscussionReply";
+    id: number;
+    emoji: string;
+    reaction: boolean;
+  }
+  export interface ToggleReactionResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION" | "NO_SUCH_DISCUSSION_REPLY" | "INVALID_EMOJI";
+  }
+  export interface UpdateDiscussionReplyRequestDto {
+    discussionReplyId: number;
+    content: string;
+  }
+  export interface UpdateDiscussionReplyResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION_REPLY";
+  }
+  export interface UpdateDiscussionRequestDto {
+    discussionId: number;
+    title: string;
+    content: string;
+  }
+  export interface UpdateDiscussionResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
   }
   export interface UpdateProblemJudgeInfoRequestDto {
     problemId: number;

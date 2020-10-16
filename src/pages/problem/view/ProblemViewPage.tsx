@@ -32,7 +32,7 @@ import { useIntlMessage, useLoginOrRegisterNavigation, useDialog } from "@/utils
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
-import PermissionManager from "@/components/PermissionManager";
+import PermissionManager from "@/components/LazyPermissionManager";
 import { sortTags } from "../problemTag";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
@@ -247,7 +247,8 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       return {
         owner: response.owner,
         userPermissions: response.permissions.userPermissions,
-        groupPermissions: response.permissions.groupPermissions
+        groupPermissions: response.permissions.groupPermissions,
+        haveSubmitPermission: props.problem.permissionOfCurrentUser.MANAGE_PERMISSION
       };
     }
     return null;
@@ -277,7 +278,6 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   const permissionManager = (
     <PermissionManager
-      haveSubmitPermission={props.problem.permissionOfCurrentUser.MANAGE_PERMISSION}
       objectDescription={_(".action.permission_manager_description", { idString })}
       permissionsLevelDetails={{
         1: {
@@ -686,7 +686,13 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               <Menu.Item
                 name={_(".action.discussion")}
                 icon="comment alternate"
-                onClick={() => console.log("discussion")}
+                as={Link}
+                href={{
+                  pathname: "/discussions",
+                  query: {
+                    problemId: props.problem.meta.id
+                  }
+                }}
               />
               <Menu.Item
                 name={_(".action.files")}

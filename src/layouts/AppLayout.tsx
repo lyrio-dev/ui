@@ -90,8 +90,8 @@ let AppLayout: React.FC = props => {
     },
     discussion: {
       icon: "comments",
-      text: ".navbar.discussion"
-      // url: "/discussion"
+      text: ".navbar.discussion",
+      url: "/discussions"
     }
   };
 
@@ -139,9 +139,16 @@ let AppLayout: React.FC = props => {
           <Icon name="book" />
           {_(".header.user.problems")}
         </ContainerComponent.Item>
+        <ContainerComponent.Item
+          as={Link}
+          href={{ pathname: "/discussions", query: { publisherId: appState.currentUser.id } }}
+        >
+          <Icon name="book" />
+          {_(".header.user.discussions")}
+        </ContainerComponent.Item>
         {appState.currentUserJoinedGroupsCount > 0 && (
           <ContainerComponent.Item as={Link} href="/users/groups">
-            <Icon name="users" />
+            <Icon name="comments" />
             {_(".header.user.groups")}
           </ContainerComponent.Item>
         )}

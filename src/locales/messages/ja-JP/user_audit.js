@@ -46,5 +46,15 @@ module.exports = {
   "user.change_username": "[TBT] Change username",
   "user.change_others_username": "[TBT] Change username of user [firstObject]",
   "user.change_email": "[TBT] Change email (privileged)",
-  "user.change_others_email": "[TBT] Change email of user [firstObject]"
+  "user.change_others_email": "[TBT] Change email of user [firstObject]",
+
+  "discussion.update": "[TBT] Edit discussion [firstObject]",
+  "discussion.update_reply": "[TBT] Edit reply [secondObject] of discussion [firstObject]",
+  "discussion.delete": "[TBT] Delete discussion [firstObject]",
+  "discussion.delete_reply": "[TBT] Delete reply [secondObject] of [firstObject]",
+  "discussion.set_public": "[TBT] Set discussion [firstObject] public",
+  "discussion.set_non_public": "[TBT] Set discussion [firstObject] nonpublic",
+  "discussion.set_reply_public": "[TBT] Set reply [secondObject] of discussion [firstObject] public",
+  "discussion.set_reply_non_public": "[TBT] Set reply [secondObject] of discussion [firstObject] nonpublic",
+  "discussion.set_permissions": "[TBT] Set permissions of discussion [firstObject]"
 };

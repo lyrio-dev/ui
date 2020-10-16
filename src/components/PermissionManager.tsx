@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, Button, Popup, Header, Icon, Dropdown } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import update from "immutability-helper";
@@ -40,13 +40,13 @@ interface PermissionsForResponse {
   owner: UserMeta;
   userPermissions: UserPermissionDtoForResponse[];
   groupPermissions: GroupPermissionDtoForResponse[];
+  haveSubmitPermission: boolean;
 }
 
 export interface PermissionManagerProps {
-  haveSubmitPermission: boolean;
   objectDescription: string; // e.g. "Problem #1"
   permissionsLevelDetails: PermissionLevelDetails;
-  refOpen: React.MutableRefObject<() => Promise<boolean>>;
+  refOpen: React.Ref<() => Promise<boolean>>;
   onGetInitialPermissions: () => Promise<PermissionsForResponse>;
   onSubmitPermissions: (
     userPermissions: UserPermissionDtoForRequest[],
@@ -323,18 +323,18 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                       value: permissionLevel,
                       text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
                       disabled:
-                        !props.haveSubmitPermission && Number(permissionLevel) !== userPermission.permissionLevel
+                        !permissions.haveSubmitPermission && Number(permissionLevel) !== userPermission.permissionLevel
                     }))}
                     onChange={(e, { value }) => changeUserPermission(index, value as number)}
                   />
                 </Table.Cell>
                 <Table.Cell textAlign="right">
-                  <Icon name="delete" disabled={!props.haveSubmitPermission} onClick={() => deleteUser(index)} />
+                  <Icon name="delete" disabled={!permissions.haveSubmitPermission} onClick={() => deleteUser(index)} />
                 </Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
-          {props.haveSubmitPermission && (
+          {permissions.haveSubmitPermission && (
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell colSpan={4} className={style.columnDropdown}>
@@ -372,19 +372,24 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                         value: permissionLevel,
                         text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
                         disabled:
-                          !props.haveSubmitPermission && Number(permissionLevel) !== groupPermission.permissionLevel
+                          !permissions.haveSubmitPermission &&
+                          Number(permissionLevel) !== groupPermission.permissionLevel
                       }))}
                       onChange={(e, { value }) => changeGroupPermission(index, value as number)}
                     />
                   </Table.Cell>
                   <Table.Cell width={5} textAlign="right">
-                    <Icon name="delete" disabled={!props.haveSubmitPermission} onClick={() => deleteGroup(index)} />
+                    <Icon
+                      name="delete"
+                      disabled={!permissions.haveSubmitPermission}
+                      onClick={() => deleteGroup(index)}
+                    />
                   </Table.Cell>
                 </Table.Row>
               ))
             )}
           </Table.Body>
-          {props.haveSubmitPermission && (
+          {permissions.haveSubmitPermission && (
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell colSpan={3} className={style.columnDropdown}>
@@ -412,9 +417,9 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         />
         <Button
           positive
-          content={props.haveSubmitPermission ? _(".submit") : _(".no_submit_permission")}
+          content={permissions.haveSubmitPermission ? _(".submit") : _(".no_submit_permission")}
           loading={pendingSubmit}
-          disabled={!props.haveSubmitPermission}
+          disabled={!permissions.haveSubmitPermission}
           onClick={() => onSubmit()}
         />
       </>
@@ -422,21 +427,26 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   );
 
   const [pendingOpen, setPendingOpen] = useState(false);
-  props.refOpen.current = async () => {
-    if (opened || pendingOpen) return;
+  useEffect(() => {
+    const open = async () => {
+      if (opened || pendingOpen) return;
 
-    setPendingOpen(true);
-    const initialPermissions = await props.onGetInitialPermissions();
-    setPendingOpen(false);
+      setPendingOpen(true);
+      const initialPermissions = await props.onGetInitialPermissions();
+      setPendingOpen(false);
 
-    if (!initialPermissions) return false;
+      if (!initialPermissions) return false;
 
-    setOpened(true);
-    setPermissions(initialPermissions);
+      setOpened(true);
+      setPermissions(initialPermissions);
 
-    dialog.open();
-    return true;
-  };
+      dialog.open();
+      return true;
+    };
+
+    if (typeof props.refOpen === "function") props.refOpen(open);
+    else (props.refOpen as React.MutableRefObject<() => Promise<boolean>>).current = open;
+  }, [props.refOpen, props.onGetInitialPermissions, opened, pendingOpen, dialog]);
 
   return dialog.element;
 };

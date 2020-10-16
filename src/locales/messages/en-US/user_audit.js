@@ -46,5 +46,15 @@ module.exports = {
   "user.change_username": "Change username",
   "user.change_others_username": "Change username of user [firstObject]",
   "user.change_email": "Change email (privileged)",
-  "user.change_others_email": "Change email of user [firstObject]"
+  "user.change_others_email": "Change email of user [firstObject]",
+
+  "discussion.update": "Edit discussion [firstObject]",
+  "discussion.update_reply": "Edit reply [secondObject] of discussion [firstObject]",
+  "discussion.delete": "Delete discussion [firstObject]",
+  "discussion.delete_reply": "Delete reply [secondObject] of [firstObject]",
+  "discussion.set_public": "Set discussion [firstObject] public",
+  "discussion.set_non_public": "Set discussion [firstObject] nonpublic",
+  "discussion.set_reply_public": "Set reply [secondObject] of discussion [firstObject] public",
+  "discussion.set_reply_non_public": "Set reply [secondObject] of discussion [firstObject] nonpublic",
+  "discussion.set_permissions": "Set permissions of discussion [firstObject]"
 };

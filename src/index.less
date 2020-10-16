@@ -45,8 +45,23 @@ body {
   border-color: #767676 transparent transparent;
 }
 
+// Twemoji
+.emoji {
+  height: 1em;
+
+  &.text {
+    vertical-align: middle;
+    position: relative;
+    top: -.1rem;
+  }
+}
+
 /* Global styles */
 
 pre {
   tab-size: 4;
+}
+
+p, textarea {
+  line-height: 1.4285em !important;
 }

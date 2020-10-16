@@ -22,6 +22,7 @@ import PseudoLink from "@/components/PseudoLink";
 import { URLDescriptor } from "navi";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
+import { getDiscussionDisplayTitle, getDiscussionUrl } from "@/pages/discussion/utils";
 
 const AUDIT_LOGS_PER_PAGE = appState.serverPreference.pagination.userAuditLogs;
 
@@ -176,7 +177,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
       }
       case "Problem": {
         const [problem, title] = object as [ApiTypes.ProblemMetaDto, string];
-        return wrap(<Link href={getProblemUrl(problem)}>${getProblemDisplayName(problem, title, _)}</Link>);
+        return wrap(<Link href={getProblemUrl(problem)}>{getProblemDisplayName(problem, title, _)}</Link>);
       }
       case "ProblemTag": {
         const problemTag = object as ApiTypes.LocalizedProblemTagDto;
@@ -198,8 +199,23 @@ const AuditView: React.FC<AuditViewProps> = props => {
       case "Submission": {
         return wrap(<Link href={`/submission/${objectId}`}>#{objectId}</Link>);
       }
+      case "Discussion": {
+        const discussion = object as ApiTypes.DiscussionMetaDto;
+        return wrap(
+          <Link href={getDiscussionUrl(discussion)}>
+            #{discussion.id} {getDiscussionDisplayTitle(discussion.title, _)}
+          </Link>
+        );
+      }
+      case "DiscussionReply": {
+        return wrap(<PseudoLink>#{objectId}</PseudoLink>);
+      }
       default:
-        return wrap("Unknown object");
+        return wrap(
+          <PseudoLink>
+            Unknown {objectType} #{objectId}
+          </PseudoLink>
+        );
     }
   }
 
@@ -309,7 +325,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
                       {(() => {
                         const message = (replace(
                           _(`user_audit.${result.action}`),
-                          /\[(.+)\]/g,
+                          /\[(.+?)\]/g,
                           (match: string, key: string) => {
                             switch (key) {
                               case "firstObject":
@@ -321,7 +337,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
                                 );
                               case "secondObject":
                                 return renderObject(
-                                  1,
+                                  2,
                                   result.secondObjectType,
                                   result.secondObjectId,
                                   result.secondObject

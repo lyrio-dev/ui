@@ -21,6 +21,7 @@ export interface MarkdownContentPatcher {
 }
 
 interface MarkdownContentProps {
+  className?: string;
   content: string;
   noSanitize?: boolean;
   patcher?: MarkdownContentPatcher;
@@ -125,7 +126,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
     return () => cleanCallbacks.forEach(fn => fn && fn());
   }, [props.patcher, wrapperElement]);
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} ref={setWrapperElement} />;
+  return <div className={props.className} dangerouslySetInnerHTML={{ __html: html }} ref={setWrapperElement} />;
 };
 
 export default React.memo(MarkdownContent);

@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import ReactDOM from "react-dom";
+import { ImageProps, Image } from "semantic-ui-react";
 import lodashIsEqual from "lodash.isequal";
 
 import DefaultAvatar from "@/assets/default-avatar.svg";
-import { ImageProps, Image } from "semantic-ui-react";
+import svgToDataUrl from "@/utils/svgToUrl";
 
 interface UserAvatarProps extends ImageProps {
   userAvatar: ApiTypes.UserAvatarDto;
@@ -12,12 +12,7 @@ interface UserAvatarProps extends ImageProps {
   onError?: () => void;
 }
 
-const defaultAvatarDataUrl = (() => {
-  const div = document.createElement("div");
-  ReactDOM.render(<DefaultAvatar />, div);
-  const svg = new XMLSerializer().serializeToString(div.firstElementChild);
-  return "data:image/svg+xml;base64," + btoa(svg);
-})();
+const defaultAvatarDataUrl = svgToDataUrl(DefaultAvatar);
 
 function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
   switch (avatar.type) {

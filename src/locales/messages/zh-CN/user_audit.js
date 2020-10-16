@@ -46,5 +46,15 @@ module.exports = {
   "user.change_username": "修改用户名",
   "user.change_others_username": "修改用户 [firstObject] 的用户名",
   "user.change_email": "修改邮箱（特权）",
-  "user.change_others_email": "修改用户 [firstObject] 的邮箱"
+  "user.change_others_email": "修改用户 [firstObject] 的邮箱",
+
+  "discussion.update": "编辑讨论 [firstObject]",
+  "discussion.update_reply": "编辑讨论 [firstObject] 的回复 [secondObject]",
+  "discussion.delete": "删除讨论 [firstObject]",
+  "discussion.delete_reply": "删除讨论 [firstObject] 的回复 [secondObject]",
+  "discussion.set_public": "将讨论 [firstObject] 设为公开",
+  "discussion.set_non_public": "将讨论 [firstObject] 设为非公开",
+  "discussion.set_reply_public": "将讨论 [firstObject] 的回复 [secondObject] 设为公开",
+  "discussion.set_reply_non_public": "将讨论 [firstObject] 的回复 [secondObject] 设为非公开",
+  "discussion.set_permissions": "修改讨论 [firstObject] 的权限"
 };

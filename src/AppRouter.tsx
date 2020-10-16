@@ -83,6 +83,8 @@ const routes = withView(
     "/users": getRoute(() => import("./pages/user"), "users"),
     "/users/groups": getRoute(() => import("./pages/user"), "groups"),
     "/user": getRoute(() => import("./pages/user"), "user"),
+    "/discussions": getRoute(() => import("./pages/discussion"), "discussions"),
+    "/discussion": getRoute(() => import("./pages/discussion"), "discussion"),
     "/judge-machine": lazy(() => import("./pages/judge-machine"))
   })
 );

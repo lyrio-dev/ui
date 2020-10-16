@@ -1,0 +1,115 @@
+.allProblemsLink {
+  color: inherit !important;
+  font-weight: normal !important;
+  cursor: inherit !important;
+}
+
+// PC only
+.headerRightControls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+  height: 40px;
+
+  @media only screen and (min-width: 768px) {
+    margin-top: 14px;
+    margin-bottom: 7px;
+  }
+
+  .headerButtons > :global(.button) {
+    margin-left: 15px;
+  }
+}
+
+.search :global(.results) {
+  width: 100% !important;
+}
+
+.searchMenu {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 8px !important;
+
+  .searchMenuItem {
+    height: 40px !important;
+    width: 40px !important;
+
+    > :global(.icon) {
+      opacity: 0.5 !important;
+    }
+
+    &:hover, &:global(.active) {
+      > :global(.icon) {
+        opacity: 0.7 !important;
+      }
+    }
+  }
+}
+
+.headerSearchFiltersRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  > strong {
+    margin-right: 10px;
+  }
+
+  :global(.ui.label) {
+    margin: 2px !important;
+  }
+}
+
+.pagination:not(:empty) {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 18px;
+}
+
+.nowrapRow {
+  white-space: nowrap;
+}
+
+.row {
+  height: 44px;
+}
+
+.twoRow {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  @line-spacing: 7px;
+
+  > div {
+    // Row 1: title
+
+    // Row: problem
+
+    // Row last 1: publisher & sort time
+    &:nth-last-child(1) {
+      display: flex;
+
+      // Column 1: publisher
+      > :nth-child(1) {
+        flex-grow: 1;
+      }
+
+      // Column 2: sort time
+      > :nth-child(2) {
+        text-align: right;
+        width: fit-content;
+      }
+    }
+
+    &:not(:last-child) {
+      margin-bottom: @line-spacing;
+    }
+  }
+}
