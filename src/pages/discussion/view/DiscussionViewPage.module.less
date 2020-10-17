@@ -317,24 +317,29 @@
     max-height: 1600px;
   }
 
-  &.currentUser:not(.edit.discussion) > .bubble {
-    > .header, .triangle::before {
-      border-color: @border-color-current-user !important;
-      background-color: @header-background-current-user !important;
-    }
-
-    > :global(.segment) {
-      border-left-color: @border-color-current-user !important;
-      border-right-color: @border-color-current-user !important;
-
-      &:last-child {
-        border-bottom-color: @border-color-current-user !important;
+  &.currentUser {
+    // &:not(.edit.discussion)
+    &:not(.edit), &:not(.discussion) {
+      > .bubble {
+        > .header, .triangle::before {
+          border-color: @border-color-current-user !important;
+          background-color: @header-background-current-user !important;
+        }
+    
+        > :global(.segment) {
+          border-left-color: @border-color-current-user !important;
+          border-right-color: @border-color-current-user !important;
+    
+          &:last-child {
+            border-bottom-color: @border-color-current-user !important;
+          }
+        }
+    
+        > .mainSegment .editor {
+          border-left-color: @border-color-current-user !important;
+          border-right-color: @border-color-current-user !important;
+        }
       }
-    }
-
-    > .mainSegment .editor {
-      border-left-color: @border-color-current-user !important;
-      border-right-color: @border-color-current-user !important;
     }
   }
 
