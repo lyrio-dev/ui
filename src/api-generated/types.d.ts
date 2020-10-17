@@ -269,6 +269,7 @@ declare namespace ApiTypes {
   export interface GetDiscussionAndRepliesResponseProblemDto {
     meta: ApiTypes.ProblemMetaDto;
     title: string;
+    titleLocale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface GetDiscussionPermissionsRequestDto {
     id: number;
@@ -648,6 +649,7 @@ declare namespace ApiTypes {
   export interface QueryDiscussionsResponseProblemDto {
     meta: ApiTypes.ProblemMetaDto;
     title: string;
+    titleLocale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface QueryParameters {
     query: ApiTypes.Parameters.Query;
