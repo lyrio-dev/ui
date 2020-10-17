@@ -29,7 +29,6 @@
 
   .problem {
     max-width: min-content;
-    flex-basis: calc(100% - 70px);
     flex-grow: 1;
   }
 
@@ -324,6 +323,7 @@
         opacity: 0.7;
       }
       margin-right: 5px !important;
+      flex-shrink: 0;
     }
 
     .downloadIcon {
@@ -350,15 +350,25 @@
 }
 
 .extraRowsColumnProblem {
-  text-overflow: ellipsis;
-  overflow: hidden;
   flex-basis: calc(100% - 80px);
   flex-grow: 1;
+  display: flex;
+  align-items: center;
+
+  &::after {
+    content: "";
+    width: 14px;
+    display: block;
+  }
 }
 
-.extraRowsColumnSubmitter {
-  text-overflow: ellipsis;
+.extraRowsColumnProblem, .extraRowsColumnSubmitter {
   overflow: hidden;
+
+  > a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .downloadIcon {
