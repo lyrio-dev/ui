@@ -1030,6 +1030,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         {items.map((item, i) =>
           item.type === "EditReply" ? (
             <DiscussionEditor
+              key={item.reply.id}
               publisher={item.reply.publisher}
               content={item.editReplyContent}
               type="UpdateReply"
