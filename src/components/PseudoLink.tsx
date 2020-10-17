@@ -8,14 +8,7 @@ type PseudoLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
 const PseudoLink: React.FC<PseudoLinkProps> = React.memo(props => {
   return (
-    <a
-      {...props}
-      href=""
-      onClick={e => {
-        e.preventDefault();
-        if (props.onClick) props.onClick(e);
-      }}
-    >
+    <a {...props} ref={element => element && element.setAttribute("href", "javascript:void(0)")}>
       {props.children}
     </a>
   );
