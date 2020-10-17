@@ -400,7 +400,6 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
       {props.response.permissions.manageTags && !isVeryNarrowScreen && (
         <Button
           primary
-          size="tiny"
           className="labeled icon"
           icon="tag"
           content={_(".manage_tags")}
@@ -409,14 +408,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         />
       )}
       {props.response.permissions.createProblem && (
-        <Button
-          size="tiny"
-          className="labeled icon"
-          icon="plus"
-          content={_(".add_problem")}
-          as={Link}
-          href="/problem/new"
-        />
+        <Button className="labeled icon" icon="plus" content={_(".add_problem")} as={Link} href="/problem/new" />
       )}
     </div>
   );

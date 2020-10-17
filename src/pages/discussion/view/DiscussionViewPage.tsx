@@ -975,7 +975,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
 
   const actions = props.response.permissionCreateNewDiscussion && (
     <Button
-      size="mini"
+      primary
       className="labeled icon"
       icon="plus"
       content={_(".add_discussion")}

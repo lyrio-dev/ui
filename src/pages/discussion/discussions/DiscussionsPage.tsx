@@ -360,7 +360,8 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
     <div className={style.headerButtons}>
       {props.response.permissions.createDiscussion && (
         <Button
-          size={isMobileOrPad ? "small" : "mini"}
+          size={isMobileOrPad ? "small" : null}
+          primary
           className={isMobileOrPad ? "icon" : "labeled icon"}
           icon="plus"
           content={isMobileOrPad ? "" : _(".add_discussion")}
