@@ -26,7 +26,7 @@ import LoadMoreBackground from "./LoadMoreBackground.svg";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
 import { DiscussionApi } from "@/api";
-import { useAsyncCallbackPending, useIntlMessage, useDialog, useFocusWithin } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage, useDialog, useFocusWithin, useConfirmUnload } from "@/utils/hooks";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { getDiscussionDisplayTitle } from "../utils";
 import toast from "@/utils/toast";
@@ -470,7 +470,7 @@ interface DiscussionEditorProps {
   type: "UpdateReply" | "NewReply" | "UpdateDiscussion" | "NewDiscussion";
   onChangeContent: (content: string) => void;
   onCancel?: () => void;
-  onSubmit: (content: string) => Promise<void>;
+  onSubmit: (content: string) => Promise<boolean>;
 
   // Only for new/update discussion
   title?: string;
@@ -487,6 +487,9 @@ export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
   const [preview, setPreview] = useState(false);
 
   const [editorFocused, setEditor] = useFocusWithin();
+
+  const [modified, setModified] = useState(false);
+  useConfirmUnload(() => modified);
 
   const isDiscussion = props.type === "NewDiscussion" || props.type === "UpdateDiscussion";
   const isUpdate = props.type === "UpdateDiscussion" || props.type === "UpdateReply";
@@ -517,7 +520,12 @@ export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
               className={style.title}
               placeholder={_(".placeholder.title")}
               value={props.title}
-              onChange={(e, { value }) => !pendingSubmit && props.onChangeTitle(value)}
+              onChange={(e, { value }) => {
+                if (!pendingSubmit) {
+                  setModified(true);
+                  props.onChangeTitle(value);
+                }
+              }}
             />
           )}
           <div className={style.headerContents}>
@@ -548,7 +556,12 @@ export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
                     : _(".placeholder.add_reply")
                 }
                 value={props.content}
-                onChange={(e, { value }) => !pendingSubmit && props.onChangeContent(String(value))}
+                onChange={(e, { value }) => {
+                  if (!pendingSubmit) {
+                    setModified(true);
+                    props.onChangeContent(String(value));
+                  }
+                }}
               />
             </Ref>
           </Form>
@@ -579,7 +592,9 @@ export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
                         : ".actions.update_discussion"
                       : ".actions.update_reply"
                   )}
-                  onClick={onSubmit}
+                  onClick={async () => {
+                    if (await onSubmit()) setModified(false);
+                  }}
                   loading={pendingSubmit}
                   disabled={props.noSubmitPermission}
                 />
@@ -613,7 +628,10 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    appState.enterNewPage(`${props.response.discussion.meta.title} - ${_(".title")}`, "discussion");
+    appState.enterNewPage(
+      `${getDiscussionDisplayTitle(props.response.discussion.meta.title, _)} - ${_(".title")}`,
+      "discussion"
+    );
   }, [appState.locale]);
 
   // Load LoadMore's background
@@ -879,7 +897,11 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         }
       ]);
       setNewReplyContent("");
+
+      return true;
     }
+
+    return false;
   }
 
   function onEnterEdit(id: number) {
@@ -908,7 +930,11 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         type: "Reply",
         reply: Object.assign({}, item.reply, { content, editTime: response.editTime })
       }));
+
+      return true;
     }
+
+    return false;
   }
 
   function onQuote(username: string, text: string) {
