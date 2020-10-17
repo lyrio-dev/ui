@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Header, Icon, Label, Menu, Segment, Table } from "semantic-ui-react";
 import { Link, useNavigation } from "react-navi";
+import { URLDescriptor } from "navi";
 import { FormattedMessage } from "react-intl";
 import { observer } from "mobx-react";
 
@@ -19,6 +20,15 @@ import toast from "@/utils/toast";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import UserLink from "@/components/UserLink";
 import formatDateTime from "@/utils/formatDateTime";
+
+export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
+  return {
+    pathname: "/discussion/new",
+    query: problemId && {
+      problemId: String(problemId)
+    }
+  };
+}
 
 export function getBreadcrumb(
   problem: { meta: ApiTypes.ProblemMetaDto; title: string },
@@ -355,12 +365,7 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
           icon="plus"
           content={isMobileOrPad ? "" : _(".add_discussion")}
           as={Link}
-          href={{
-            pathname: "/discussion/new",
-            query: props.response.filterProblem && {
-              problemId: props.response.filterProblem.meta.id
-            }
-          }}
+          href={getNewDiscussionUrl(props.response.filterProblem?.meta?.id)}
         />
       )}
     </div>
@@ -421,8 +426,8 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
             </Header>
             {props.response.permissions.createDiscussion && (
               <Segment.Inline>
-                <Button primary as={Link} href="/problem/new">
-                  {_(".no_discussions.clear_filters")}
+                <Button primary as={Link} href={getNewDiscussionUrl(props.response.filterProblem?.meta?.id)}>
+                  {_(".no_discussions.create")}
                 </Button>
               </Segment.Inline>
             )}

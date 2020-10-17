@@ -38,7 +38,7 @@ import PseudoLink from "@/components/PseudoLink";
 import svgToDataUrl from "@/utils/svgToUrl";
 import { onEnterPress } from "@/utils/onEnterPress";
 import PermissionManager from "@/components/LazyPermissionManager";
-import { getBreadcrumb } from "../discussions/DiscussionsPage";
+import { getBreadcrumb, getNewDiscussionUrl } from "../discussions/DiscussionsPage";
 
 const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
@@ -974,12 +974,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       icon="plus"
       content={_(".add_discussion")}
       as={Link}
-      href={{
-        pathname: "/discussion/new",
-        query: discussion.problem && {
-          problemId: discussion.problem.meta.id
-        }
-      }}
+      href={getNewDiscussionUrl(discussion.problem?.meta?.id)}
     />
   );
 
