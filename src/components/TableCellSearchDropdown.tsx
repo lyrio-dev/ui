@@ -29,7 +29,11 @@ const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props =>
     setPending(true);
     refInput.current = input;
     setResult(await props.onSearch(input));
-    if (refInput.current !== input) return;
+    if (refInput.current !== input) {
+      // Still pending
+      return;
+    }
+
     setPending(false);
   }, 500).callback;
 

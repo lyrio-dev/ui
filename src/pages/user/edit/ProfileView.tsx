@@ -10,7 +10,7 @@ import style from "./UserEdit.module.less";
 import { UserApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
+import { useIntlMessage, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
 import UserAvatar from "@/components/UserAvatar";
 import { RouteError } from "@/AppRouter";
 import { onEnterPress } from "@/utils/onEnterPress";
@@ -119,11 +119,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
 
   const [avatarError, setAvatarError] = useState(false);
 
-  const [pending, setPending] = useState(false);
-  async function onSubmit() {
-    if (pending) return;
-    setPending(true);
-
+  const [pending, onSubmit] = useAsyncCallbackPending(async () => {
     if (urlInvalid) {
       toast.error(_(".error_invalid_url"));
     } else {
@@ -157,9 +153,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
         }
       }
     }
-
-    setPending(false);
-  }
+  });
 
   const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
   const allowUserChangeUsername = appState.serverPreference.security.allowUserChangeUsername;

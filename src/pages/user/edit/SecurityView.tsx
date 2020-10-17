@@ -11,7 +11,7 @@ import style from "./UserEdit.module.less";
 import { UserApi, AuthApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage, useFieldCheckSimple } from "@/utils/hooks";
+import { useIntlMessage, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
 import { isValidPassword } from "@/utils/validators";
 import { RouteError } from "@/AppRouter";
 import fixChineseSpace from "@/utils/fixChineseSpace";
@@ -76,12 +76,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     checkRetypePassword();
   }
 
-  const [pendingChangePassword, setPendingChangePassword] = useState(false);
-
-  async function onSubmitChangePassword() {
-    if (pendingChangePassword) return;
-    setPendingChangePassword(true);
-
+  const [pendingChangePassword, onSubmitChangePassword] = useAsyncCallbackPending(async () => {
     if ((oldPasswordInvalid && !hasPrivilege) || newPasswordInvalid || retypePasswordInvalid) {
     } else if (!newPassword) setEmptyNewPassword(true);
     else if (!retypePassword) setEmptyRetypePassword(true);
@@ -106,9 +101,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         setEmptyRetypePassword(false);
       }
     }
-
-    setPendingChangePassword(false);
-  }
+  });
   // End change password
 
   // Start change email
@@ -121,24 +114,8 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   const refStateVerificationCodeTimeout = useRef<typeof stateVerificationCodeTimeout>();
   refStateVerificationCodeTimeout.current = stateVerificationCodeTimeout;
 
-  const [sendEmailVerificationCodePending, setSendEmailVerificationCodePending] = useState(false);
   const [emailVerificationCodeError, setEmailVerificationCodeError] = useState(false);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      const [
-        sendEmailVerificationCodeTimeout,
-        setSendEmailVerificationCodeTimeout
-      ] = refStateVerificationCodeTimeout.current;
-      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(sendEmailVerificationCodeTimeout - 1);
-    }, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  async function onSendEmailVerificationCode() {
-    if (sendEmailVerificationCodePending) return;
-    setSendEmailVerificationCodePending(true);
-
+  const [sendEmailVerificationCodePending, onSendEmailVerificationCode] = useAsyncCallbackPending(async () => {
     if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
       const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
@@ -155,9 +132,18 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         setSendEmailVerificationCodeTimeout(61);
       }
     }
+  });
 
-    setSendEmailVerificationCodePending(false);
-  }
+  useEffect(() => {
+    const id = setInterval(() => {
+      const [
+        sendEmailVerificationCodeTimeout,
+        setSendEmailVerificationCodeTimeout
+      ] = refStateVerificationCodeTimeout.current;
+      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(sendEmailVerificationCodeTimeout - 1);
+    }, 1000);
+    return () => clearInterval(id);
+  }, []);
 
   function onChangeVerificationCode(code: string) {
     setEmailVerificationCodeError(false);
@@ -167,12 +153,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   // Errors
   const [duplicateEmail, setDuplicateEmail] = useState(false);
 
-  const [pendingChangeEmail, setPendingChangeEmail] = useState(false);
-
-  async function onSubmitChangeEmail() {
-    if (pendingChangeEmail) return;
-    setPendingChangeEmail(true);
-
+  const [pendingChangeEmail, onSubmitChangeEmail] = useAsyncCallbackPending(async () => {
     if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
       const { requestError, response } = await UserApi.updateUserSelfEmail({
@@ -195,9 +176,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         setSendEmailVerificationCodeTimeout(0);
       }
     }
-
-    setPendingChangeEmail(false);
-  }
+  });
   // End change email
 
   // Start session management
@@ -208,14 +187,9 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     return () => clearInterval(id);
   }, []);
 
-  const [revokeSessionPending, setRevokeSessionPending] = useState(false);
-  const [revokeAllPopupOpen, setRevokeAllPopupOpen] = useState(false);
   const [sessions, setSessions] = useState(props.sessions);
-
-  async function onRevokeSession(sessionId?: number) {
-    if (revokeSessionPending) return;
-    setRevokeSessionPending(true);
-
+  const [revokeAllPopupOpen, setRevokeAllPopupOpen] = useState(false);
+  const [, onRevokeSession] = useAsyncCallbackPending(async (sessionId?: number) => {
     const { requestError, response } = await AuthApi.revokeUserSession({
       userId: props.meta.id,
       sessionId
@@ -236,8 +210,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     }
 
     setRevokeAllPopupOpen(false);
-    setRevokeSessionPending(false);
-  }
+  });
   // End session management
 
   return (

@@ -28,7 +28,7 @@ import { ProblemApi, SubmissionApi } from "@/api";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useIntlMessage, useLoginOrRegisterNavigation, useDialog } from "@/utils/hooks";
+import { useIntlMessage, useLoginOrRegisterNavigation, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
@@ -170,11 +170,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   // Begin set display ID
   const [setDisplayIdInputValue, setSetDisplayIdInputValue] = useState((props.problem.meta.displayId || "").toString());
-  const [setDisplayIdPending, setSetDisplayIdPending] = useState(false);
-  async function onSetDisplayId() {
-    if (setDisplayIdPending) return;
-    setSetDisplayIdPending(true);
-
+  const [setDisplayIdPending, onSetDisplayId] = useAsyncCallbackPending(async () => {
     if (!isValidDisplayId(setDisplayIdInputValue)) {
       toast.error(_(".error.INVALID_DISPLAY_ID"));
     } else {
@@ -203,17 +199,11 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         });
       }
     }
-
-    setSetDisplayIdPending(false);
-  }
+  });
   // End set display ID
 
   // Begin set public
-  const [setPublicPending, setSetPublicPending] = useState(false);
-  async function onSetPublic(isPublic: boolean) {
-    if (setPublicPending) return;
-    setSetPublicPending(true);
-
+  const [setPublicPending, onSetPublic] = useAsyncCallbackPending(async (isPublic: boolean) => {
     const { requestError, response } = await ProblemApi.setProblemPublic({
       problemId: props.problem.meta.id,
       isPublic
@@ -223,9 +213,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
     } else return navigation.refresh();
-
-    setSetPublicPending(false);
-  }
+  });
   // End set public
 
   // Begin "localized content unavailable" message
@@ -295,7 +283,17 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   // End Permission Manager
 
   // Begin delete
-  const [deletePending, setDeletePending] = useState(false);
+  const [deletePending, onDelete] = useAsyncCallbackPending(async () => {
+    const { requestError, response } = await ProblemApi.deleteProblem({
+      problemId: props.problem.meta.id
+    });
+    if (requestError) toast.error(requestError);
+    else if (response.error) toast.error(_(`.error.${response.error}`));
+    else {
+      toast.success(_(".action.delete_success"));
+      navigation.navigate("/problems");
+    }
+  });
   const deleteDialog = useDialog(
     {
       basic: true
@@ -326,23 +324,6 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       </>
     )
   );
-
-  async function onDelete() {
-    if (deletePending) return;
-    setDeletePending(true);
-
-    const { requestError, response } = await ProblemApi.deleteProblem({
-      problemId: props.problem.meta.id
-    });
-    if (requestError) toast.error(requestError);
-    else if (response.error) toast.error(_(`.error.${response.error}`));
-    else {
-      toast.success(_(".action.delete_success"));
-      navigation.navigate("/problems");
-    }
-
-    setDeletePending(false);
-  }
   // End delete
 
   const ProblemTypeView = props.ProblemTypeView;

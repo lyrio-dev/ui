@@ -7,7 +7,7 @@ import style from "./ProblemSetPage.module.less";
 
 import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { sortTags, sortTagColors } from "../problemTag";
 import { FormattedMessage } from "react-intl";
@@ -392,7 +392,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   );
 
   // The tag manager couldn't display correctly without 540px screen width
-  const [openTagManagerPending, setOpenTagManagerPending] = useState(false);
+  const [openTagManagerPending, onOpenTagManager] = useAsyncCallbackPending(
+    async () => await refOnOpenTagManager.current()
+  );
   const headerButtons = (
     <div className={style.headerButtons}>
       {props.response.permissions.manageTags && !isVeryNarrowScreen && (
@@ -403,12 +405,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           icon="tag"
           content={_(".manage_tags")}
           loading={openTagManagerPending}
-          onClick={async () => {
-            if (openTagManagerPending) return;
-            setOpenTagManagerPending(true);
-            await refOnOpenTagManager.current();
-            setOpenTagManagerPending(false);
-          }}
+          onClick={onOpenTagManager}
         />
       )}
       {props.response.permissions.createProblem && (

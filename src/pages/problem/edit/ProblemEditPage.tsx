@@ -31,7 +31,7 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage, useConfirmUnload } from "@/utils/hooks";
+import { useIntlMessage, useConfirmUnload, useAsyncCallbackPending } from "@/utils/hooks";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
@@ -745,12 +745,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   const [newProblemType, setNewProblemType] = useState(ProblemType.TRADITIONAL);
 
   const [modified, setModified] = useState(false);
-  const [pendingSubmit, setPendingSubmit] = useState(false);
-  async function onSubmit() {
-    if (pendingSubmit) return;
-
-    setPendingSubmit(true);
-
+  const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
     // Swap the default locale to the first of the array.
     const localizedContentsPayload = Object.keys(localizedContents)
       .map((locale: Locale, index, locales: Locale[]) => {
@@ -816,9 +811,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         setModified(false);
       }
     }
-
-    setPendingSubmit(false);
-  }
+  });
 
   function onBackToProblem() {
     if (props.new) {

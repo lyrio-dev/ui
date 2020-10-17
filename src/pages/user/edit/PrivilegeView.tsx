@@ -8,7 +8,7 @@ import style from "./UserEdit.module.less";
 import { UserApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
 
 export async function fetchData(userId: number) {
@@ -39,11 +39,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
   }, [appState.locale]);
 
-  const [pending, setPending] = useState(false);
-  async function onSubmit() {
-    if (pending) return;
-    setPending(true);
-
+  const [pending, onSubmit] = useAsyncCallbackPending(async () => {
     const { requestError, response } = await UserApi.setUserPrivileges({
       userId: props.meta.id,
       privileges: [...privileges]
@@ -53,9 +49,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
     else {
       toast.success(_(".success"));
     }
-
-    setPending(false);
-  }
+  });
 
   const [privileges, setPrivileges] = useState(new Set(props.privileges as Privilege[]));
   function togglePrivilege(privilege: Privilege, has: boolean) {

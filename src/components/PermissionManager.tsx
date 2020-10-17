@@ -5,7 +5,7 @@ import update from "immutability-helper";
 
 import style from "./PermissionManager.module.less";
 
-import { useIntlMessage, useConfirmUnload, useDialog } from "@/utils/hooks";
+import { useIntlMessage, useConfirmUnload, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { GroupMeta } from "@/interfaces/GroupMeta";
 import { UserApi, GroupApi } from "@/api";
@@ -236,11 +236,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
     dialog.close();
   }
 
-  const [pendingSubmit, setPendingSubmit] = useState(false);
-  async function onSubmit() {
-    if (pendingSubmit) return;
-    setPendingSubmit(true);
-
+  const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
     const response = await props.onSubmitPermissions(
       permissions.userPermissions.map(({ user, permissionLevel }) => ({
         userId: user.id,
@@ -266,9 +262,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         )
       );
     }
-
-    setPendingSubmit(false);
-  }
+  });
 
   const getUsernameAndEmailColumns = (user: UserMeta) => (
     <>

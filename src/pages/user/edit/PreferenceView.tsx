@@ -10,7 +10,7 @@ import style from "./UserEdit.module.less";
 import { UserApi } from "@/api";
 import { appState, browserDefaultLocale } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
@@ -77,12 +77,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const defaultSystemLocale = browserDefaultLocale;
   const defaultContentLocale = systemLocale || browserDefaultLocale;
 
-  const [pending, setPending] = useState(false);
-
-  async function onSubmit() {
-    if (pending) return;
-    setPending(true);
-
+  const [pending, onSubmit] = useAsyncCallbackPending(async () => {
     const preference: ApiTypes.UserPreferenceDto = {
       locale: {
         system: systemLocale,
@@ -122,9 +117,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
         }
       }
     }
-
-    setPending(false);
-  }
+  });
 
   // XD I write this because I'm studying the course -- Introduction to Database Systems
   const fontPreviewCode = `puts("Tell me something about Menci~www");

@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import style from "./JudgeMachinePage.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
 import { JudgeClientApi } from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
@@ -141,12 +141,10 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
   }
 
   const [addPopupOpened, setAddPopupOpened] = useState(false);
-  const [addPending, setAddPending] = useState(false);
   const [addNewName, setAddNewName] = useState("");
   const addNewNameValid = addNewName.length >= 1 && addNewName.length <= 80;
-  async function onAddJudgeClient() {
+  const [addPending, onAddJudgeClient] = useAsyncCallbackPending(async () => {
     if (addPending) return;
-    setAddPending(true);
 
     const { requestError, response } = await JudgeClientApi.addJudgeClient({
       name: addNewName,
@@ -159,10 +157,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
       navigation.refresh();
     }
 
-    setAddPending(false);
     setAddPopupOpened(false);
     setAddNewName("");
-  }
+  });
 
   return (
     <>

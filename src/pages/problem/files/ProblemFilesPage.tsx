@@ -27,7 +27,7 @@ import style from "./ProblemFilesPage.module.less";
 import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
@@ -466,16 +466,11 @@ let FileTable: React.FC<FileTableProps> = props => {
 
   const refSelectedInfoDropdown = useRef(null);
   const [selectedInfoDropdownOpen, setSelectedInfoDropdownOpen] = useState(false);
-  const [deleteSelectedPending, setDeleteSelectedPending] = useState(false);
   const [popupDeleteSelectedOpen, setPopupDeleteSelectedOpen] = useState(false);
-
-  async function onDeleteSelected() {
-    if (deleteSelectedPending) return;
-    setDeleteSelectedPending(true);
+  const [deleteSelectedPending, onDeleteSelected] = useAsyncCallbackPending(async () => {
     await props.onDeleteFiles(selectedFilesArray.map(file => file.filename));
     setPopupDeleteSelectedOpen(false);
-    setDeleteSelectedPending(false);
-  }
+  });
 
   const isMobile = useScreenWidthWithin(0, 425 + 1);
 

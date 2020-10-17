@@ -22,7 +22,7 @@ import style from "./GroupsPage.module.less";
 
 import { appState } from "@/appState";
 import { GroupApi } from "@/api";
-import { useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
 import toast from "@/utils/toast";
 import UserLink from "@/components/UserLink";
@@ -328,13 +328,9 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
   const [groups, setGroups] = useState(props.response.groups);
   const [groupsWithAdminPermission, setGroupsWithAdminPermission] = useState(props.response.groupsWithAdminPermission);
 
-  const [pending, setPending] = useState(false);
   const [createGroupName, setCreateGroupName] = useState("");
   const [createGroupPopupOpen, setCreateGroupPopupOpen] = useState(false);
-  async function onCreateGroup() {
-    if (pending) return;
-    setPending(true);
-
+  const [pendingCreateGroup, onCreateGroup] = useAsyncCallbackPending(async () => {
     const { requestError, response } = await GroupApi.createGroup({
       groupName: createGroupName
     });
@@ -354,9 +350,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
       setCreateGroupName("");
       setCreateGroupPopupOpen(false);
     }
-
-    setPending(false);
-  }
+  });
 
   return (
     <>
@@ -372,11 +366,11 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
                   placeholder={_(".create_group_name")}
                   value={createGroupName}
                   autoComplete="username"
-                  readOnly={pending}
+                  readOnly={pendingCreateGroup}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCreateGroupName(e.target.value)}
                   onKeyPress={onEnterPress(() => onCreateGroup())}
                 />
-                <Button primary disabled={pending} onClick={onCreateGroup}>
+                <Button primary loading={pendingCreateGroup} onClick={onCreateGroup}>
                   {_(".confirm_create_group")}
                 </Button>
               </Form>

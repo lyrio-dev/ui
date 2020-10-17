@@ -36,7 +36,10 @@ const PreviewSearch = <T extends {}>(props: PropsWithChildren<PreviewSearchProps
 
     const results = await props.onSearch(input);
 
-    if (refInput.current !== input) return;
+    if (refInput.current !== input) {
+      // Still pending
+      return;
+    }
 
     setResults(results || []);
     setPending(false);
