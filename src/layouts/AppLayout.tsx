@@ -20,7 +20,7 @@ import toast from "@/utils/toast";
 import { AuthApi } from "@/api";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
-export type NavButtonName = "home" | "problem_set" | "contests" | "submissions" | "members" | "discussion";
+export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
 
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
@@ -73,11 +73,11 @@ let AppLayout: React.FC = props => {
       text: ".navbar.problem_set",
       url: "/problems"
     },
-    contests: {
-      icon: "calendar",
-      text: ".navbar.contests"
-      // url: "/contests"
-    },
+    // contests: {
+    //   icon: "calendar",
+    //   text: ".navbar.contests",
+    //   url: "/contests"
+    // },
     submissions: {
       icon: "hourglass",
       text: ".navbar.submissions",
