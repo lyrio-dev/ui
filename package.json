@@ -84,7 +84,6 @@
     "semantic-ui-react": "^1.3.0",
     "socket.io-client": "^2.3.0",
     "streamsaver": "^2.0.4",
-    "string-replace-loader": "^2.3.0",
     "string-replace-to-array": "^1.0.3",
     "timeago.js": "^4.0.2",
     "tree-sitter-wasm-prebuilt": "^0.0.1",

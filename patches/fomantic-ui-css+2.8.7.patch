@@ -1,0 +1,12 @@
+diff --git a/node_modules/fomantic-ui-css/semantic.css b/node_modules/fomantic-ui-css/semantic.css
+index e43cb19..c1d2929 100644
+--- a/node_modules/fomantic-ui-css/semantic.css
++++ b/node_modules/fomantic-ui-css/semantic.css
+@@ -8,7 +8,6 @@
+  * http://opensource.org/licenses/MIT
+  *
+  */
+-@import url('https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin&display=swap');
+ /*!
+  * # Fomantic-UI - Reset
+  * http://github.com/fomantic/Fomantic-UI/

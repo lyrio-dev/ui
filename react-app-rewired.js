@@ -42,40 +42,6 @@ const addWebWorkerLoader = loaderOptions => config => {
   return config;
 };
 
-const patchSemanticUiCssGoogleFonts = () => config => {
-  const semanticUiCssTestRegex = /semantic\.css$/;
-  const loaderOptions = {
-    loader: "string-replace-loader",
-    options: {
-      search: /@import url\([\S\s]*?fonts\.googleapis\.com[^\n]*/g,
-      replace: ""
-    }
-  };
-
-  for (const rule of config.module.rules) {
-    if (rule.oneOf) {
-      for (const one of rule.oneOf) {
-        if (one.test.toString() === /\.css$/.toString()) {
-          const newRule = {
-            test: semanticUiCssTestRegex,
-            use: [
-              ...one.use,
-              loaderOptions
-            ],
-            sideEffects: true
-          };
-
-          rule.oneOf.unshift(newRule);
-          
-          return config;
-        }
-      }
-    }
-  }
-
-  throw new Error(`Couldn't find the rule for CSS files.`);
-}
-
 const patchHtmlWebpackPluginConfig = () => config => {
   // Ignore the header comment when minifying
   const pluginOptions = config.plugins[0].options;
@@ -116,6 +82,5 @@ module.exports = override(
   addBabelPlugin(["prismjs", {
     "languages": ["yaml", "cpp", "json"]
   }]),
-  patchHtmlWebpackPluginConfig(),
-  patchSemanticUiCssGoogleFonts()
+  patchHtmlWebpackPluginConfig()
 );
