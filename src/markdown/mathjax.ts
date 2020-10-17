@@ -28,7 +28,26 @@ const mathDocument = mathjax.document(document, {
 mathDocument.updateDocument();
 
 export function renderMath(math: string, display: boolean) {
-  return mathDocument.convert(math, {
-    display
-  });
+  try {
+    return mathDocument.convert(math, {
+      display
+    });
+  } catch (e) {
+    console.log(e);
+
+    const wrapper = document.createElement("mjx-container");
+    wrapper.className = "MathJax";
+    wrapper.setAttribute("jax", "SVG");
+    if (display) wrapper.setAttribute("display", "true");
+
+    const message = document.createElement("span");
+    message.innerText = `Failed to render math, ${String(e)}`;
+    message.style.fontWeight = "bold";
+    message.style.display = "inline-block";
+    message.style.border = "2px solid #000";
+    message.style.padding = "0 4px";
+
+    wrapper.appendChild(message);
+    return wrapper;
+  }
 }
