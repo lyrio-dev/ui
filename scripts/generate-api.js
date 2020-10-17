@@ -89,7 +89,7 @@ function normalizeModuleName(moduleName, forFilename) {
   for (const moduleName in tags) {
     const types = Array.from(tags[moduleName].schemas);
     let code = "";
-    
+
     code += generatedMessage;
     code += '/// <reference path="../types.d.ts" />\n\n';
 

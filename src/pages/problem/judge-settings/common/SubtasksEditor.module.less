@@ -19,22 +19,22 @@
   .itemSubtaskTimeLimit, .itemSubtaskMemoryLimit {
     width: 95px;
     padding: 13px 13px !important;
-  
+
     input {
       text-align: center !important;
       padding-left: 19px !important;
     }
-  
+
     :global(i.icon) {
       opacity: 0.35;
     }
-    
+
     &:focus-within {
       & + .itemLabel, :global(i.icon) {
         opacity: 1;
       }
     }
-  
+
     + .itemLabel::before {
       display: none;
     }
@@ -58,7 +58,7 @@
   .itemSubtaskScore {
     width: 70px;
     padding: 13px 14px 13px 8px !important;
-  
+
     :global(i.icon) {
       opacity: 0.35;
     }
@@ -68,7 +68,7 @@
         opacity: 1;
       }
     }
-  
+
     input {
       text-align: center !important;
       padding-right: 14px !important;
@@ -77,24 +77,24 @@
 
   .itemTestcaseTimeLimit, .itemTestcaseMemoryLimit {
     width: 120px;
-  
+
     input {
       text-align: center !important;
     }
-  
+
     :global(i.icon) {
       opacity: 0.35;
     }
-  
+
     &:focus-within {
       & + .itemLabel, :global(i.icon) {
         opacity: 1;
       }
     }
-  
+
     + .itemLabel {
       width: 35px;
-  
+
       &::before {
         display: none;
       }
@@ -104,12 +104,12 @@
   .itemTestcaseScore {
     width: 70px;
     padding: 13px 14px 13px 8px !important;
-  
+
     input {
       text-align: center !important;
       padding-right: 14px !important;
     }
-  
+
     &:focus-within {
       :global(i.icon) {
         opacity: 1;
@@ -180,7 +180,7 @@
   &.color_9::before { background-color: @color_9 !important; }
   &.color_10::before { background-color: @color_10 !important; }
   &.color_11::before { background-color: @color_11 !important; }
-  &.color_12::before { background-color: @color_12 !important; }  
+  &.color_12::before { background-color: @color_12 !important; }
 }
 
 .itemTestcaseTitle {

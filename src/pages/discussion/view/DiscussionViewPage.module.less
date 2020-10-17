@@ -19,7 +19,7 @@
 
     flex-grow: 1;
     line-height: @title-height;
-  
+
     :global(.header) {
       display: inline;
       font-weight: normal;
@@ -28,14 +28,14 @@
       height: @title-height;
       vertical-align: middle;
     }
-  
+
     .replyCount {
       &::before {
         margin: 0 10px;
         content: "·";
         white-space: pre;
       }
-  
+
       color: #777;
       height: @title-height;
       display: inline;
@@ -46,7 +46,7 @@
       line-height: 1 !important;
     }
   }
-  
+
   .actions {
     flex-shrink: 0;
 
@@ -95,7 +95,7 @@
     height: @desktop-avatar-size;
     margin-right: @desktop-avatar-margin;
     flex: 0 0 auto;
-    
+
     img {
       border-radius: 4px;
     }
@@ -109,7 +109,7 @@
   @header-padding-left-right: 14px;
   @header-padding-top-bottom: 7px;
   @header-border-radius: 4px;
-  
+
   @editor-min-height-reply: 130px;
   @editor-min-height-discussion: 260px;
   @editor-max-height-reply: 260px;
@@ -150,13 +150,13 @@
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-  
+
         .avatar {
           width: 20px;
           height: 20px;
           margin-right: 8px;
         }
-  
+
         .username::after {
           content: " ";
           white-space: pre;
@@ -203,7 +203,7 @@
 
         .actionIcon {
           margin-right: 9px;
-          
+
           &:last-child {
             margin-right: 0px;
           }
@@ -257,12 +257,12 @@
     .emojiList {
       padding: 0 !important;
       overflow: hidden;
-  
+
       .emojiListWrapper {
         margin-bottom: -1px;
         display: flex;
         flex-wrap: wrap;
-  
+
         .emojiItem {
           display: flex;
           align-items: center;
@@ -270,11 +270,11 @@
           border-right: 1px solid @border-color;
           border-bottom: 1px solid @border-color;
           cursor: pointer;
-  
+
           &.selected {
             background-color: @header-background-current-user;
           }
-    
+
           .emoji {
             font-size: @emoji-font-size;
             display: flex;
@@ -283,7 +283,7 @@
           }
         }
       }
-    }  
+    }
 
     > :last-child {
       margin-bottom: 0 !important;
@@ -325,16 +325,16 @@
           border-color: @border-color-current-user !important;
           background-color: @header-background-current-user !important;
         }
-    
+
         > :global(.segment) {
           border-left-color: @border-color-current-user !important;
           border-right-color: @border-color-current-user !important;
-    
+
           &:last-child {
             border-bottom-color: @border-color-current-user !important;
           }
         }
-    
+
         > .mainSegment .editor {
           border-left-color: @border-color-current-user !important;
           border-right-color: @border-color-current-user !important;
@@ -375,12 +375,12 @@
           min-height: 0;
           height: @header-one-row-height;
           margin-top: 0;
-  
+
           > :global(.item) {
             padding-top: 0px;
             padding-bottom: 0px;
             transition: none;
-  
+
             &:global(.active) {
               font-weight: normal;
             }
@@ -423,7 +423,7 @@
   &.edit {
     > .bubble > .header {
       border-bottom-color: @border-color !important;
-      
+
       > .headerContents > :global(.menu) {
         border-bottom-color: @border-color !important;
 
@@ -447,10 +447,10 @@
     &.edit:not(.discussion) > .bubble.editorFocused {
       > .header {
         border-bottom-color: @border-color-focused-editor !important;
-  
+
         > .headerContents > :global(.menu) {
           border-bottom-color: @border-color-focused-editor !important;
-  
+
           > :global(.item):global(.active) {
             border-color: @border-color-focused-editor !important;
           }
@@ -478,14 +478,14 @@
         }
         background-color: @vertical-line-color;
       }
-    
+
       &:not(:first-child)::before {
         top: -@vertical-line-height;
       }
-    
+
       &:not(:last-child)::after {
         bottom: -@vertical-line-height;
-      }  
+      }
     }
   }
 

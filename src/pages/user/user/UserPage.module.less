@@ -11,7 +11,7 @@
 
   > div {
     width: 100%;
-  
+
     &::before {
       content: "";
       float: left;
@@ -25,7 +25,7 @@
     margin-top: 15px !important;
     margin-bottom: 1px !important;
   }
-  
+
   .bio {
     margin-bottom: 20px !important;
   }
@@ -129,33 +129,33 @@
     div[data-level="2"] > div { background-color: #7bc96f; }
     div[data-level="3"] > div { background-color: #239a3b; }
     div[data-level="4"] > div { background-color: #196127; }
-  
+
     .graph {
       display: inline-flex;
       flex-direction: row;
       direction: ltr;
       text-align: left;
-    
+
       .label {
         font-size: 11px;
         color: #767676;
       }
-    
+
       // Columns
       > div {
         width: @subwayGraphCellSize;
-    
+
         // Week labels
         &:first-child {
           width: 25px;
           margin-right: 5px;
           line-height: 12px;
-    
+
           > div:nth-child(even) {
             visibility: hidden;
           }
         }
-    
+
         > div {
           height: @subwayGraphCellSize;
 
@@ -185,7 +185,7 @@
         > span {
           color: #767676;
         }
-        
+
         > div {
           margin-top: @subwayGraphMargin;
           margin-right: @subwayGraphMargin;
