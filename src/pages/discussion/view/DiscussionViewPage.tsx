@@ -900,7 +900,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     else {
       mergeItem(id, item => ({
         type: "Reply",
-        reply: Object.assign({}, item.reply, { content })
+        reply: Object.assign({}, item.reply, { content, editTime: response.editTime })
       }));
     }
   }

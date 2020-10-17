@@ -1010,6 +1010,7 @@ declare namespace ApiTypes {
   }
   export interface UpdateDiscussionReplyResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION_REPLY";
+    editTime?: string; // date-time
   }
   export interface UpdateDiscussionRequestDto {
     discussionId: number;
