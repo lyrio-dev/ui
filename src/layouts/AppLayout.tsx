@@ -118,54 +118,48 @@ let AppLayout: React.FC = props => {
     </>
   );
 
-  const userMenu = (ContainerComponent: typeof Dropdown | typeof Menu) => (
+  const userMenu = () => (
     <>
-      <ContainerComponent.Menu className={style.userMenu}>
-        <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}`}>
+      <Dropdown.Menu className={style.userMenu}>
+        <Dropdown.Item as={Link} href={`/user/${appState.currentUser.id}`}>
           <Icon name="user" />
           {_(".header.user.profile")}
-        </ContainerComponent.Item>
-        <ContainerComponent.Item
+        </Dropdown.Item>
+        <Dropdown.Item
           as={Link}
           href={{ pathname: "/submissions", query: { submitter: appState.currentUser.username } }}
         >
           <Icon name="hourglass half" />
           {_(".header.user.submissions")}
-        </ContainerComponent.Item>
-        <ContainerComponent.Item
-          as={Link}
-          href={{ pathname: "/problems", query: { ownerId: appState.currentUser.id } }}
-        >
+        </Dropdown.Item>
+        <Dropdown.Item as={Link} href={{ pathname: "/problems", query: { ownerId: appState.currentUser.id } }}>
           <Icon name="book" />
           {_(".header.user.problems")}
-        </ContainerComponent.Item>
-        <ContainerComponent.Item
-          as={Link}
-          href={{ pathname: "/discussions", query: { publisherId: appState.currentUser.id } }}
-        >
+        </Dropdown.Item>
+        <Dropdown.Item as={Link} href={{ pathname: "/discussions", query: { publisherId: appState.currentUser.id } }}>
           <Icon name="book" />
           {_(".header.user.discussions")}
-        </ContainerComponent.Item>
+        </Dropdown.Item>
         {appState.currentUserJoinedGroupsCount > 0 && (
-          <ContainerComponent.Item as={Link} href="/users/groups">
+          <Dropdown.Item as={Link} href="/users/groups">
             <Icon name="comments" />
             {_(".header.user.groups")}
-          </ContainerComponent.Item>
+          </Dropdown.Item>
         )}
-        {ContainerComponent === Dropdown && <Dropdown.Divider />}
-        <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/profile`}>
+        {Dropdown === Dropdown && <Dropdown.Divider />}
+        <Dropdown.Item as={Link} href={`/user/${appState.currentUser.id}/edit/profile`}>
           <Icon name="edit" />
           {_(".header.user.edit_profile")}
-        </ContainerComponent.Item>
-        <ContainerComponent.Item as={Link} href={`/user/${appState.currentUser.id}/edit/preference`}>
+        </Dropdown.Item>
+        <Dropdown.Item as={Link} href={`/user/${appState.currentUser.id}/edit/preference`}>
           <Icon name="cog" />
           {_(".header.user.preference")}
-        </ContainerComponent.Item>
-        <ContainerComponent.Item onClick={onLogoutClick}>
+        </Dropdown.Item>
+        <Dropdown.Item onClick={onLogoutClick}>
           <Icon name="power" />
           {_(".header.user.logout")}
-        </ContainerComponent.Item>
-      </ContainerComponent.Menu>
+        </Dropdown.Item>
+      </Dropdown.Menu>
     </>
   );
 
@@ -222,7 +216,7 @@ let AppLayout: React.FC = props => {
       <div className="ui simple dropdown item">
         {appState.currentUser.username}
         {icon && <i className="dropdown icon"></i>}
-        {userMenu(Dropdown)}
+        {userMenu()}
       </div>
     </Menu.Menu>
   );
@@ -274,16 +268,11 @@ let AppLayout: React.FC = props => {
             <Menu.Item className={style.siteName} as={Link} href="/">
               {appState.serverPreference.siteName}
             </Menu.Item>
-            <Menu.Item>
-              {appState.currentUser ? (
-                <>
-                  <Menu.Header>{appState.currentUser.username}</Menu.Header>
-                  {userMenu(Menu)}
-                </>
-              ) : (
+            {!appState.currentUser && (
+              <Menu.Item>
                 <Button.Group fluid>{loginAndRegisterButtons}</Button.Group>
-              )}
-            </Menu.Item>
+              </Menu.Item>
+            )}
             {navMenuItems}
           </Sidebar>
         </>
