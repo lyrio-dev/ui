@@ -67,6 +67,8 @@
     "noty": "^3.2.0-beta",
     "object-path": "^0.11.4",
     "p-all": "^3.0.0",
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.1.2",
     "prismjs": "^1.21.0",
     "react": "^16.13.1",
@@ -111,7 +113,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\" \"src/**/*.tsx\"",
-    "generate-api": "node scripts/generate-api.js $API_HOST/docs-json && prettier --write \"src/api-generated/**/*.ts\""
+    "generate-api": "node scripts/generate-api.js $API_HOST/docs-json && prettier --write \"src/api-generated/**/*.ts\"",
+    "postinstall": "patch-package"
   },
   "eslintConfig": {
     "extends": "react-app"

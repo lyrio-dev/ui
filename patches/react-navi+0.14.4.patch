@@ -1,0 +1,16 @@
+diff --git a/node_modules/react-navi/dist/es/Link.js b/node_modules/react-navi/dist/es/Link.js
+index 206c99d..f8b12a8 100644
+--- a/node_modules/react-navi/dist/es/Link.js
++++ b/node_modules/react-navi/dist/es/Link.js
+@@ -78,9 +78,9 @@ export var useLinkProps = function (_a) {
+                 "This value is no longer supported - please set it to \"mount\" instead.");
+         }
+     }
+-    // Prefetch on hover by default.
++    // Prefetch disabled by default.
+     if (prefetch === undefined) {
+-        prefetch = 'hover';
++        prefetch = false;
+     }
+     var hashScrollBehaviorFromContext = React.useContext(HashScrollContext);
+     var context = React.useContext(NaviContext);
