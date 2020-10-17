@@ -94,7 +94,7 @@
     width: @desktop-avatar-size;
     height: @desktop-avatar-size;
     margin-right: @desktop-avatar-margin;
-    flex-shrink: 0;
+    flex: 0 0 auto;
     
     img {
       border-radius: 4px;
@@ -116,7 +116,11 @@
   @editor-max-height-discussion: 390px;
 
   .bubble {
-    flex-grow: 1;
+    width: 100%;
+    @media only screen and (min-width: 768px) {
+      width: calc(100% - @desktop-avatar-size - @desktop-avatar-margin);
+    }
+    flex: 0 0 auto;
     position: relative;
 
     > :global(.segment) {
@@ -246,6 +250,10 @@
       }
     }
 
+    .content {
+      overflow: auto;
+    }
+
     .emojiList {
       padding: 0 !important;
       overflow: hidden;
@@ -300,7 +308,16 @@
     // }
   }
 
-  &.currentUser:not(.discussion) > .bubble {
+  // Limit the height of markdown contents
+  &.discussion .content {
+    max-height: 20000px;
+  }
+
+  &:not(.discussion) .content {
+    max-height: 1600px;
+  }
+
+  &.currentUser:not(.edit.discussion) > .bubble {
     > .header, .triangle::before {
       border-color: @border-color-current-user !important;
       background-color: @header-background-current-user !important;
@@ -422,7 +439,7 @@
     }
 
     // highlight focused editor
-    &:not(.discussion) > .bubble.editorFocused {
+    &.edit:not(.discussion) > .bubble.editorFocused {
       > .header {
         border-bottom-color: @border-color-focused-editor !important;
   
@@ -442,7 +459,8 @@
   }
 
   &:not(.new), .items.mobile & {
-    &:not(.discussion) {
+    // &:not(.edit.discussion)
+    &:not(.edit), &:not(.discussion) {
       &:not(:first-child)::before, &:not(:last-child)::after {
         content: " ";
         display: block;
@@ -467,7 +485,7 @@
   }
 
   @media only screen and (min-width: 768px) {
-    &.new:not(.discussion) {
+    &.edit.new:not(.discussion) {
       margin-top: -@vertical-line-height;
     }
   }

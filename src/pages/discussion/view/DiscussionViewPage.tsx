@@ -347,7 +347,13 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
   ) : null;
 
   return (
-    <div className={style.item + (props.publisher.id === appState.currentUser?.id ? " " + style.currentUser : "")}>
+    <div
+      className={
+        style.item +
+        (props.type === "Discussion" ? " " + style.discussion : "") +
+        (props.publisher.id === appState.currentUser?.id ? " " + style.currentUser : "")
+      }
+    >
       {confirmDeleteDialog.element}
       {!isMobile && (
         <div className={style.avatar}>
@@ -432,7 +438,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
             </div>
           </div>
         </Header>
-        <Segment attached>
+        <Segment attached className={style.content}>
           <MarkdownContent content={props.content} />
         </Segment>
         {emojisAndCount.length > 0 && (
