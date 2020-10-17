@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MarkdownIt from "markdown-it";
+import { useNavigation } from "react-navi";
+
+import style from "./MarkdownContent.module.less";
 
 import { renderMarkdown } from "./markdown";
 import { renderMath } from "./mathjax";
 import { sanitize } from "./sanitize";
 import { highlight } from "@/utils/CodeHighlighter";
-
-import style from "./MarkdownContent.module.less";
-import { useNavigation } from "react-navi";
 
 export interface MarkdownContentPatcher {
   onPatchRenderer?: (renderer: MarkdownIt) => void;
@@ -126,7 +126,13 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
     return () => cleanCallbacks.forEach(fn => fn && fn());
   }, [props.patcher, wrapperElement]);
 
-  return <div className={props.className} dangerouslySetInnerHTML={{ __html: html }} ref={setWrapperElement} />;
+  return (
+    <div
+      className={style.markdownContent + (props.className ? " " + props.className : "")}
+      dangerouslySetInnerHTML={{ __html: html }}
+      ref={setWrapperElement}
+    />
+  );
 };
 
 export default React.memo(MarkdownContent);

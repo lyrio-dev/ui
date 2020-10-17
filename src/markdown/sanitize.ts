@@ -47,6 +47,5 @@ export function sanitize(
   const filteredHtml = xss.process(html);
   if (!filteredHtml) return "";
 
-  // Prevent overflow
-  return `<div style="position: relative; overflow: hidden; ">${filteredHtml}</div>`;
+  return filteredHtml;
 }
