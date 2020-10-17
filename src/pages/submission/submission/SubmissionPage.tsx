@@ -587,7 +587,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       }
     })(),
     content: (
-      <Accordion.Content className={style.accordionContent}>
+      <Accordion.Content className={style.accordionContent + " " + style.subtaskContent}>
         <Accordion
           className={"styled fluid " + style.subAccordion}
           panels={getTestcasesAccordionPanels(samples, true, getAdditionalSections)}
@@ -667,7 +667,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         }
       })(),
       content: (
-        <Accordion.Content className={style.accordionContent}>
+        <Accordion.Content className={style.accordionContent + " " + style.subtaskContent}>
           <Accordion
             className={"styled fluid " + style.subAccordion}
             panels={getTestcasesAccordionPanels(subtask.testcases, false, getAdditionalSections)}
