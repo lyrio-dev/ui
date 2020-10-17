@@ -79,6 +79,7 @@ export interface SubmissionProgress<TestcaseResult extends TestcaseResultCommon 
 }
 
 export interface SubmissionProgressMeta {
+  pending: boolean;
   // e.g. "Running"
   status: string;
   // e.g. "Running 3/10"
@@ -93,16 +94,28 @@ function parseProgress<T extends TestcaseResultCommon>(
   resultMeta?: ApiTypes.SubmissionBasicMetaDto
 ): SubmissionProgressMeta {
   if (!progress) {
-    return {
-      status: "Waiting",
-      statusText: "Waiting",
-      score: 0,
-      timeUsed: 0,
-      memoryUsed: 0
-    };
+    if (resultMeta?.status === "Canceled")
+      return {
+        pending: false,
+        status: "Canceled",
+        statusText: "Canceled",
+        score: 0,
+        timeUsed: 0,
+        memoryUsed: 0
+      };
+    else
+      return {
+        pending: true,
+        status: "Waiting",
+        statusText: "Waiting",
+        score: 0,
+        timeUsed: 0,
+        memoryUsed: 0
+      };
   }
 
-  let status = "";
+  let status = "",
+    pending = true;
   switch (progress.progressType) {
     case SubmissionProgressType.Preparing:
       status = "Preparing";
@@ -115,6 +128,7 @@ function parseProgress<T extends TestcaseResultCommon>(
       break;
     case SubmissionProgressType.Finished:
       status = resultMeta.status;
+      pending = false;
       break;
   }
 
@@ -128,14 +142,16 @@ function parseProgress<T extends TestcaseResultCommon>(
     // If NOT finished, calculate score and append progress to the status text
     let totalCount = 0,
       finishedCount = 0;
-    for (const subtask of progress.subtasks) {
-      score += subtask.score;
-      for (const testcase of subtask.testcases) {
-        totalCount++;
-        if (!testcase.running && !testcase.waiting) finishedCount++;
+    if (Array.isArray(progress.subtasks)) {
+      for (const subtask of progress.subtasks) {
+        score += subtask.score;
+        for (const testcase of subtask.testcases) {
+          totalCount++;
+          if (!testcase.running && !testcase.waiting) finishedCount++;
+        }
       }
+      statusText += ` ${finishedCount}/${totalCount}`;
     }
-    statusText += ` ${finishedCount}/${totalCount}`;
   }
 
   let timeUsed = 0,
@@ -157,6 +173,7 @@ function parseProgress<T extends TestcaseResultCommon>(
   }
 
   return {
+    pending,
     status,
     statusText,
     score: Math.round(score),
@@ -188,8 +205,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   // The meta only provides fields not changing with progress
   // score, status, time, memory are in the full info
   // score and status are in this meta, but we still use them in full info
-  const meta = props.meta;
-  const [pending, setPending] = useState(meta.status === "Pending");
+  const meta: Pick<
+    ApiTypes.SubmissionMetaDto,
+    "id" | "problem" | "isPublic" | "codeLanguage" | "answerSize" | "submitTime" | "problemTitle" | "submitter"
+  > = props.meta;
 
   const stateProgress = useState(props.progress);
   const [progress, setProgress] = stateProgress;
@@ -783,7 +802,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
 
   const showRejudge = props.permissionRejudge;
-  const showCancel = props.permissionCancel && pending;
+  const showCancel = props.permissionCancel && progressMeta.pending;
   const showTogglePublic = props.permissionSetPublic;
   const showDelete = props.permissionDelete;
 
