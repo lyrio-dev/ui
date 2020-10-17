@@ -465,7 +465,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             {props.response.permissions.createProblem && (
               <Segment.Inline>
                 <Button primary as={Link} href="/problem/new">
-                  {_(".no_problem.clear_filters")}
+                  {_(".no_problem.create")}
                 </Button>
               </Segment.Inline>
             )}
