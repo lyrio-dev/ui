@@ -391,7 +391,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
                 : "";
 
               return (
-                <Segment className={style.sessionListItem}>
+                <Segment key={session.sessionId} className={style.sessionListItem}>
                   <Label
                     className={style.light}
                     size="small"
