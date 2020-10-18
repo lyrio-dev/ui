@@ -29,7 +29,7 @@ const metaEditorOptions: Options<typeof MetaEditor> = {
 
 const subtasksEditorOptions: Options<typeof SubtasksEditor> = {
   enableTimeMemoryLimit: true,
-  enableInputFile: false,
+  enableInputFile: true,
   enableOutputFile: false,
   enableUserOutputFilename: false
 };
