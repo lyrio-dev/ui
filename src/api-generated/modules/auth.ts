@@ -19,7 +19,7 @@ export type ListUserSessionsResponseDto = ApiTypes.ListUserSessionsResponseDto;
 export type RevokeUserSessionRequestDto = ApiTypes.RevokeUserSessionRequestDto;
 export type RevokeUserSessionResponseDto = ApiTypes.RevokeUserSessionResponseDto;
 
-export const getSessionInfo = createGetApi<{ token: string; jsonp: string }, GetSessionInfoResponseDto>(
+export const getSessionInfo = createGetApi<{ token?: string; jsonp?: string }, GetSessionInfoResponseDto>(
   "auth/getSessionInfo"
 );
 export const login = createPostApi<LoginRequestDto, LoginResponseDto>("auth/login");

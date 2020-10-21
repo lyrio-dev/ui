@@ -14,6 +14,7 @@ import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { isValidUsername } from "@/utils/validators";
 
 function getTimeZone() {
   try {
@@ -23,10 +24,10 @@ function getTimeZone() {
   }
 }
 
-async function fetchData(userId: number): Promise<[Date, Required<typeof response>]> {
+async function fetchData(query: { userId?: number; username?: string }): Promise<[Date, Required<typeof response>]> {
   const now = new Date();
   const { requestError, response } = await UserApi.getUserDetail({
-    userId,
+    ...query,
     timezone: getTimeZone(),
     now: now.toISOString()
   });
@@ -373,9 +374,18 @@ let UserPage: React.FC<UserPageProps> = props => {
 
 UserPage = observer(UserPage);
 
-export default defineRoute(async request => {
-  const userId = parseInt(request.params.userId) || 0;
-  const [now, response] = await fetchData(userId);
+export default {
+  byId: defineRoute(async request => {
+    const userId = parseInt(request.params.userId) || 0;
+    const [now, response] = await fetchData({ userId });
 
-  return <UserPage now={now} {...response} />;
-});
+    return <UserPage now={now} {...response} />;
+  }),
+  byUsername: defineRoute(async request => {
+    const username = request.params.username;
+    if (!isValidUsername(username)) throw new RouteError(<FormattedMessage id={"user.error.NO_SUCH_USER"} />);
+    const [now, response] = await fetchData({ username });
+
+    return <UserPage now={now} {...response} />;
+  })
+};

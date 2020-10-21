@@ -1,13 +1,16 @@
 import React from "react";
 import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { Link } from "react-navi";
+import { Link, useCurrentRoute, useNavigation } from "react-navi";
 
 import style from "./UserEdit.module.less";
 
 import { appState } from "@/appState";
 import { useIntlMessage } from "@/utils/hooks";
-import { defineRoute } from "@/AppRouter";
+import { defineRoute, RouteError } from "@/AppRouter";
+import { UserApi } from "@/api-generated";
+import { isValidUsername } from "@/utils/validators";
+import { FormattedMessage } from "react-intl";
 
 enum EditType {
   Profile = "profile",
@@ -21,11 +24,14 @@ interface UserEditPageProps {
   userId: number;
   type: EditType;
   data: unknown;
-  view: React.FC<unknown>;
+  view: React.FC<any>;
+  byUsername: boolean;
 }
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
   const _ = useIntlMessage("user_edit");
+  const currentRoute = useCurrentRoute();
+  const navigation = useNavigation();
 
   const View = props.view;
 
@@ -33,6 +39,18 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
   const showPrivilegeTab =
     appState.currentUserPrivileges.length > 0 || appState.currentUser.isAdmin || props.type === EditType.Privilege;
+
+  // If username is changed, navigate to the new url
+  function onChangeUsername(newUsername: string) {
+    if (props.byUsername) {
+      // /u/:username/edit/profile
+      // ["", "u", ":username", "edit", "profile"]
+      // The :username is [2]
+      const splitted = currentRoute.url.pathname.split("/");
+      splitted[2] = newUsername;
+      navigation.navigate(splitted.join("/"));
+    }
+  }
 
   return (
     <>
@@ -72,7 +90,7 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
           </Link>
         </div>
         <div className={style.main}>
-          <View {...props.data} />
+          <View {...props.data} onChangeUsername={onChangeUsername} />
         </div>
       </div>
     </>
@@ -81,8 +99,7 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
 UserEditPage = observer(UserEditPage);
 
-export default defineRoute(async request => {
-  let type = request.params.type as EditType;
+async function getView(userId: number, type: EditType, query: Record<string, string>, byUsername: boolean) {
   if (!Object.values(EditType).includes(type)) type = EditType.Profile;
 
   const { fetchData, View } = await {
@@ -93,8 +110,26 @@ export default defineRoute(async request => {
     [EditType.Audit]: import("./AuditView")
   }[type];
 
-  const userId = Number(request.params.userId) || 0;
-  const response = await fetchData(userId, request.query);
+  const response = await fetchData(userId, query);
 
-  return <UserEditPage userId={userId} type={type} data={response} view={View} />;
-});
+  return <UserEditPage userId={userId} type={type} data={response} view={View} byUsername={byUsername} />;
+}
+
+export default {
+  byId: defineRoute(
+    async request =>
+      await getView(Number(request.params.userId) || 0, request.params.type as EditType, request.query, false)
+  ),
+  byUsername: defineRoute(async request => {
+    const username = request.params.username;
+    if (!isValidUsername(username)) throw new RouteError(<FormattedMessage id={`user_edit.errors.NO_SUCH_USER`} />);
+
+    const { requestError, response } = await UserApi.getUserMeta({
+      username
+    });
+    if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
+    else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+
+    return await getView(response.meta.id, request.params.type as EditType, request.query, true);
+  })
+};

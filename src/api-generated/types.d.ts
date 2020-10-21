@@ -199,7 +199,7 @@ declare namespace ApiTypes {
     url?: string;
   }
   export interface FileUploadInfoDto {
-    uuid: string;
+    uuid?: string;
     size: number;
   }
   export interface GetAllProblemTagsOfAllLocalesResponseDto {
@@ -341,11 +341,17 @@ declare namespace ApiTypes {
     localizedNames?: ApiTypes.ProblemTagLocalizedNameDto[];
   }
   export interface GetSessionInfoResponseDto {
-    userMeta: ApiTypes.UserMetaDto;
-    joinedGroupsCount: number;
-    userPrivileges: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
-    userPreference: ApiTypes.UserPreferenceDto;
-    serverPreference: ApiTypes.PreferenceConfig;
+    userMeta?: ApiTypes.UserMetaDto;
+    joinedGroupsCount?: number;
+    userPrivileges?: (
+      | "MANAGE_USER"
+      | "MANAGE_USER_GROUP"
+      | "MANAGE_PROBLEM"
+      | "MANAGE_CONTEST"
+      | "MANAGE_DISCUSSION"
+    )[];
+    userPreference?: ApiTypes.UserPreferenceDto;
+    serverPreference?: ApiTypes.PreferenceConfig;
   }
   export interface GetSubmissionDetailRequestDto {
     submissionId: string;
@@ -363,7 +369,8 @@ declare namespace ApiTypes {
     permissionDelete?: boolean;
   }
   export interface GetUserDetailRequestDto {
-    userId: number;
+    userId?: number;
+    username?: string;
     timezone: string;
     now: string;
   }
@@ -458,11 +465,24 @@ declare namespace ApiTypes {
     nameLocale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface LoginRequestDto {
+    /**
+     * A SYZOJ 2 username is allowed to check if a user is not migrated.
+     */
     username: string;
     password: string;
   }
   export interface LoginResponseDto {
-    error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER" | "WRONG_PASSWORD";
+    error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER" | "WRONG_PASSWORD" | "USER_NOT_MIGRATED";
+    token?: string;
+  }
+  export interface MigrateUserRequestDto {
+    oldUsername: string;
+    oldPassword: string;
+    newUsername: string;
+    newPassword: string;
+  }
+  export interface MigrateUserResponseDto {
+    error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER" | "WRONG_PASSWORD" | "ALREADY_MIGRATED" | "DUPLICATE_USERNAME";
     token?: string;
   }
   namespace Parameters {
@@ -543,6 +563,7 @@ declare namespace ApiTypes {
     displayId?: number;
     type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
     isPublic: boolean;
+    publicTime: string; // date-time
     ownerId: number;
     locales: ("en_US" | "zh_CN" | "ja_JP")[];
     submissionCount?: number;
@@ -736,6 +757,14 @@ declare namespace ApiTypes {
     count?: number;
     scores?: number[];
   }
+  export interface QueryUserMigrationInfoRequestDto {
+    oldUsername: string;
+  }
+  export interface QueryUserMigrationInfoResponseDto {
+    error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER";
+    migrated?: boolean;
+    usernameMustChange?: boolean;
+  }
   export interface RegisterRequestDto {
     username: string;
     email: string;
@@ -833,9 +862,10 @@ declare namespace ApiTypes {
   export interface SendEmailVerificationCodeResponseDto {
     error?:
       | "PERMISSION_DENIED"
-      | "ALREADY_LOGGEDIN"
-      | "NO_SUCH_USER"
       | "DUPLICATE_EMAIL"
+      | "NO_SUCH_USER"
+      | "USER_NOT_MIGRATED"
+      | "ALREADY_LOGGEDIN"
       | "FAILED_TO_SEND"
       | "RATE_LIMITED";
     errorMessage?: string;
@@ -928,8 +958,8 @@ declare namespace ApiTypes {
     uuid: string;
     method: "POST" | "PUT";
     url: string;
-    extraFormData: {};
-    fileFieldName: string;
+    extraFormData?: {};
+    fileFieldName?: string;
   }
   export interface SubmissionBasicMetaDto {
     id: number;

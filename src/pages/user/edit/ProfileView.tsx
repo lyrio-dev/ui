@@ -34,6 +34,7 @@ interface ProfileViewProps {
   publicEmail: boolean;
   avatarInfo: string;
   information: ApiTypes.UserInformationDto;
+  onChangeUsername: (newUsername: string) => void;
 }
 
 const ProfileView: React.FC<ProfileViewProps> = props => {
@@ -151,6 +152,8 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           appState.currentUser.email = email;
           appState.currentUser.bio = bio;
         }
+
+        if (username !== props.meta.username) props.onChangeUsername(username);
       }
     }
   });

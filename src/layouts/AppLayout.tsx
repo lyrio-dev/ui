@@ -121,7 +121,7 @@ let AppLayout: React.FC = props => {
   const userMenu = () => (
     <>
       <Dropdown.Menu className={style.userMenu}>
-        <Dropdown.Item as={Link} href={`/user/${appState.currentUser.id}`}>
+        <Dropdown.Item as={Link} href={`/u/${appState.currentUser.username}`}>
           <Icon name="user" />
           {_(".header.user.profile")}
         </Dropdown.Item>
@@ -147,11 +147,11 @@ let AppLayout: React.FC = props => {
           </Dropdown.Item>
         )}
         {Dropdown === Dropdown && <Dropdown.Divider />}
-        <Dropdown.Item as={Link} href={`/user/${appState.currentUser.id}/edit/profile`}>
+        <Dropdown.Item as={Link} href={`/u/${appState.currentUser.username}/edit/profile`}>
           <Icon name="edit" />
           {_(".header.user.edit_profile")}
         </Dropdown.Item>
-        <Dropdown.Item as={Link} href={`/user/${appState.currentUser.id}/edit/preference`}>
+        <Dropdown.Item as={Link} href={`/u/${appState.currentUser.username}/edit/preference`}>
           <Icon name="cog" />
           {_(".header.user.preference")}
         </Dropdown.Item>
