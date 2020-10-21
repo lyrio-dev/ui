@@ -312,6 +312,7 @@ declare namespace ApiTypes {
     testData?: boolean;
     additionalFiles?: boolean;
     statistics?: boolean;
+    discussionCount?: boolean;
     permissionOfCurrentUser?: ("View" | "Modify" | "ManagePermission" | "ManagePublicness" | "Delete")[];
     permissions?: boolean;
     lastSubmissionAndLastAcceptedSubmission?: boolean;
@@ -327,6 +328,7 @@ declare namespace ApiTypes {
     judgeInfo?: {};
     testData?: ApiTypes.ProblemFileDto[];
     additionalFiles?: ApiTypes.ProblemFileDto[];
+    discussionCount?: number;
     permissionOfCurrentUser?: ApiTypes.ProblemPermissionOfCurrentUserDto;
     permissions?: ApiTypes.ProblemPermissionsDto;
     lastSubmission?: ApiTypes.ProblemLastSubmissionDto;
@@ -811,7 +813,7 @@ declare namespace ApiTypes {
   export interface RenameProblemFileResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "NO_SUCH_FILE";
   }
-  export type RequestBody = ApiTypes.SetDiscussionPermissionsRequestDto;
+  export type RequestBody = ApiTypes.QueryUserMigrationInfoRequestDto;
   export interface ResetJudgeClientKeyRequestDto {
     id: number;
   }
@@ -830,7 +832,7 @@ declare namespace ApiTypes {
   }
   namespace Responses {
     export type $200 = string;
-    export type $201 = ApiTypes.SetDiscussionPermissionsResponseDto;
+    export type $201 = ApiTypes.QueryUserMigrationInfoResponseDto;
   }
   export interface RevokeUserSessionRequestDto {
     userId: number;

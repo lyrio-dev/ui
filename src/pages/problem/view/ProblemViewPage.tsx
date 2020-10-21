@@ -112,6 +112,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     judgeInfo: true,
     judgeInfoToBePreprocessed: true,
     statistics: true,
+    discussionCount: true,
     permissionOfCurrentUser: ["Modify", "ManagePermission", "ManagePublicness", "Delete"],
     lastSubmissionAndLastAcceptedSubmission: true
   });
@@ -665,8 +666,6 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 />
               )}
               <Menu.Item
-                name={_(".action.discussion")}
-                icon="comment alternate"
                 as={Link}
                 href={{
                   pathname: "/discussions",
@@ -674,7 +673,18 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                     problemId: props.problem.meta.id
                   }
                 }}
-              />
+              >
+                <Icon name="comment alternate" />
+                {_(".action.discussion")}
+                {props.problem.discussionCount ? (
+                  <Label
+                    className={style.discussionCount}
+                    circular
+                    content={props.problem.discussionCount}
+                    size="tiny"
+                  />
+                ) : null}
+              </Menu.Item>
               <Menu.Item
                 name={_(".action.files")}
                 icon="folder open"
