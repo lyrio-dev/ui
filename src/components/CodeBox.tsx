@@ -148,8 +148,9 @@ export const OmittableCodeBox: React.FC<OmittableCodeBoxProps> = React.forwardRe
   HTMLPreElement,
   OmittableCodeBoxProps
 >((props, ref) => {
-  const content = typeof props.content === "string" ? props.content : props.content.data;
-  const omittedLength = typeof props.content === "string" ? 0 : props.content.omittedLength;
+  const omittableContent = props.content || "";
+  const content = typeof omittableContent === "string" ? omittableContent : omittableContent.data;
+  const omittedLength = typeof omittableContent === "string" ? 0 : omittableContent.omittedLength;
   return (
     <CodeBox className={style.mainCodeBox} title={props.title} content={content} ref={ref}>
       {omittedLength ? <OmittedLabel omittedLength={omittedLength} /> : null}
@@ -165,9 +166,10 @@ interface OmittableAnsiCodeBoxProps {
 
 export const OmittableAnsiCodeBox = React.forwardRef<HTMLPreElement, OmittableAnsiCodeBoxProps>((props, ref) => {
   const [html, omittedLength] = useMemo(() => {
+    const omittableContent = props.ansiMessage || "";
     const converter = new AnsiToHtmlConverter({ escapeXML: true });
-    const text = typeof props.ansiMessage === "string" ? props.ansiMessage : props.ansiMessage.data;
-    const omittedLength = typeof props.ansiMessage === "string" ? 0 : props.ansiMessage.omittedLength;
+    const text = typeof omittableContent === "string" ? omittableContent : omittableContent.data;
+    const omittedLength = typeof omittableContent === "string" ? 0 : omittableContent.omittedLength;
     return [converter.toHtml(text), omittedLength];
   }, [props.ansiMessage]);
 
