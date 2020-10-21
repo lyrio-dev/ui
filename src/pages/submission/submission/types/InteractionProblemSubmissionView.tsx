@@ -4,7 +4,7 @@ import style from "../SubmissionPage.module.less";
 
 import { useIntlMessage } from "@/utils/hooks";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
-import { CodeBox } from "@/components/CodeBox";
+import { OmittableAnsiCodeBox, OmittableString } from "@/components/CodeBox";
 import { ProblemTypeSubmissionViewProps, ProblemTypeSubmissionViewHelper } from "../common/interface";
 import FormattableCodeBox from "../common/FormattableCodeBox";
 
@@ -19,12 +19,10 @@ interface SubmissionTestcaseResultInteraction {
   score: number;
   time?: number;
   memory?: number;
-  input?: string;
-  output?: string;
-  userOutput?: string;
-  userError?: string;
-  interactorMessage?: string;
-  systemMessage?: string;
+  input?: OmittableString;
+  userError?: OmittableString;
+  interactorMessage?: OmittableString;
+  systemMessage?: OmittableString;
 }
 
 interface SubmissionContentInteraction {
@@ -51,7 +49,10 @@ const InteractionProblemSubmissionView: React.FC<InteractionProblemSubmissionVie
       {props.getCompilationMessage()}
       {props.getSystemMessage()}
       {props.getSubtasksView(testcaseResult => (
-        <CodeBox title={_(".testcase.interactor_message")} content={testcaseResult.interactorMessage} />
+        <OmittableAnsiCodeBox
+          title={_(".testcase.interactor_message")}
+          ansiMessage={testcaseResult.interactorMessage}
+        />
       ))}
     </>
   );

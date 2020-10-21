@@ -4,6 +4,14 @@ import AnsiToHtmlConverter from "ansi-to-html";
 
 import style from "./CodeBox.module.less";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
+import { useIntlMessage } from "@/utils/hooks";
+
+export type OmittableString =
+  | string
+  | {
+      data: string;
+      omittedLength: number;
+    };
 
 interface CodeBoxProps {
   children?: React.ReactNode;
@@ -114,17 +122,58 @@ export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCo
   );
 });
 
-interface AnsiCodeBoxProps {
-  className?: string;
-  title?: React.ReactNode;
-  ansiMessage: string;
+interface OmittedLabelProps {
+  omittedLength: number;
 }
 
-export const AnsiCodeBox = React.forwardRef<HTMLPreElement, AnsiCodeBoxProps>((props, ref) => {
-  const html = useMemo(() => {
+const OmittedLabel: React.FC<OmittedLabelProps> = props => {
+  const _ = useIntlMessage("components.code_box");
+
+  return (
+    <div className={style.omittedLabel + " monospace"}>
+      {props.omittedLength === 1
+        ? _(".omitted", { count: props.omittedLength })
+        : _(".omitted_s", { count: props.omittedLength })}
+    </div>
+  );
+};
+
+interface OmittableCodeBoxProps {
+  className?: string;
+  title?: React.ReactNode;
+  content: OmittableString;
+}
+
+export const OmittableCodeBox: React.FC<OmittableCodeBoxProps> = React.forwardRef<
+  HTMLPreElement,
+  OmittableCodeBoxProps
+>((props, ref) => {
+  const content = typeof props.content === "string" ? props.content : props.content.data;
+  const omittedLength = typeof props.content === "string" ? 0 : props.content.omittedLength;
+  return (
+    <CodeBox className={style.mainCodeBox} title={props.title} content={content} ref={ref}>
+      {omittedLength ? <OmittedLabel omittedLength={omittedLength} /> : null}
+    </CodeBox>
+  );
+});
+
+interface OmittableAnsiCodeBoxProps {
+  className?: string;
+  title?: React.ReactNode;
+  ansiMessage: OmittableString;
+}
+
+export const OmittableAnsiCodeBox = React.forwardRef<HTMLPreElement, OmittableAnsiCodeBoxProps>((props, ref) => {
+  const [html, omittedLength] = useMemo(() => {
     const converter = new AnsiToHtmlConverter({ escapeXML: true });
-    return converter.toHtml(props.ansiMessage);
+    const text = typeof props.ansiMessage === "string" ? props.ansiMessage : props.ansiMessage.data;
+    const omittedLength = typeof props.ansiMessage === "string" ? 0 : props.ansiMessage.omittedLength;
+    return [converter.toHtml(text), omittedLength];
   }, [props.ansiMessage]);
 
-  return <CodeBox className={style.mainCodeBox} title={props.title} html={html} ref={ref} />;
+  return (
+    <CodeBox className={style.mainCodeBox} title={props.title} html={html} ref={ref}>
+      {omittedLength ? <OmittedLabel omittedLength={omittedLength} /> : null}
+    </CodeBox>
+  );
 });

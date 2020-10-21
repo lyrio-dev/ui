@@ -19,7 +19,7 @@ import downloadFile from "@/utils/downloadFile";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import * as CodeFormatter from "@/utils/CodeFormatter";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
-import { CodeBox, AnsiCodeBox } from "@/components/CodeBox";
+import { CodeBox, OmittableAnsiCodeBox, OmittableCodeBox, OmittableString } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
@@ -61,10 +61,10 @@ export interface SubmissionProgress<TestcaseResult extends TestcaseResultCommon 
   compile?: {
     compileTaskHash: string;
     success: boolean;
-    message: string;
+    message: OmittableString;
   };
 
-  systemMessage?: string;
+  systemMessage?: OmittableString;
 
   // testcaseHash
   // ->
@@ -486,7 +486,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         content: !testcaseResult ? null : (
           <Accordion.Content className={style.accordionContent}>
             {testcaseResult.input && (
-              <CodeBox
+              <OmittableCodeBox
                 title={
                   <>
                     <strong>{_(".testcase.input")}</strong>
@@ -505,7 +505,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
               />
             )}
             {testcaseResult.output && (
-              <CodeBox
+              <OmittableCodeBox
                 title={
                   <>
                     <strong>{_(".testcase.output")}</strong>
@@ -523,10 +523,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                 content={testcaseResult.output}
               />
             )}
-            <CodeBox title={_(".testcase.user_output")} content={testcaseResult.userOutput} />
-            <CodeBox title={_(".testcase.user_error")} content={testcaseResult.userError} />
+            <OmittableCodeBox title={_(".testcase.user_output")} content={testcaseResult.userOutput} />
+            <OmittableCodeBox title={_(".testcase.user_error")} content={testcaseResult.userError} />
             {getAdditionalSections(testcaseResult)}
-            <CodeBox title={_(".testcase.system_message")} content={testcaseResult.systemMessage} />
+            <OmittableCodeBox title={_(".testcase.system_message")} content={testcaseResult.systemMessage} />
           </Accordion.Content>
         )
       };
@@ -963,11 +963,13 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         content={props.content}
         getCompilationMessage={() =>
           progress?.compile?.message && (
-            <AnsiCodeBox title={_(".compilation_message")} ansiMessage={progress.compile.message} />
+            <OmittableAnsiCodeBox title={_(".compilation_message")} ansiMessage={progress.compile.message} />
           )
         }
         getSystemMessage={() =>
-          progress?.systemMessage && <AnsiCodeBox title={_(".system_message")} ansiMessage={progress.systemMessage} />
+          progress?.systemMessage && (
+            <OmittableAnsiCodeBox title={_(".system_message")} ansiMessage={progress.systemMessage} />
+          )
         }
         getSubtasksView={getSubtasksView}
         refDefaultCopyCodeBox={refDefaultCopyCodeBox}

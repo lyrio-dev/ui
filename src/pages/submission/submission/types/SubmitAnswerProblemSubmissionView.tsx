@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useIntlMessage } from "@/utils/hooks";
-import { CodeBox } from "@/components/CodeBox";
+import { OmittableAnsiCodeBox, OmittableString } from "@/components/CodeBox";
 import { ProblemTypeSubmissionViewProps, ProblemTypeSubmissionViewHelper } from "../common/interface";
 
 interface SubmissionTestcaseResultSubmitAnswer {
@@ -12,12 +12,12 @@ interface SubmissionTestcaseResultSubmitAnswer {
   };
   status: string;
   score: number;
-  input?: string;
-  output?: string;
-  userOutput?: string;
+  input?: OmittableString;
+  output?: OmittableString;
+  userOutput?: OmittableString;
   userOutputLength?: number;
-  checkerMessage?: string;
-  systemMessage?: string;
+  checkerMessage?: OmittableString;
+  systemMessage?: OmittableString;
 }
 
 interface SubmissionContentSubmitAnswer {}
@@ -35,7 +35,7 @@ const SubmitAnswerProblemSubmissionView: React.FC<SubmitAnswerProblemSubmissionV
       {props.getCompilationMessage()}
       {props.getSystemMessage()}
       {props.getSubtasksView(testcaseResult => (
-        <CodeBox title={_(".testcase.checker_message")} content={testcaseResult.checkerMessage} />
+        <OmittableAnsiCodeBox title={_(".testcase.checker_message")} ansiMessage={testcaseResult.checkerMessage} />
       ))}
     </>
   );

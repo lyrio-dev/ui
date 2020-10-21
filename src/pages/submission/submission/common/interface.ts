@@ -1,6 +1,8 @@
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
-import { SubmissionProgress, SubmissionProgressMeta } from "../SubmissionPage";
 import { useIntlMessage } from "@/utils/hooks";
+import { OmittableString } from "@/components/CodeBox";
+
+import { SubmissionProgress, SubmissionProgressMeta } from "../SubmissionPage";
 
 type IntlMessageFormatter = ReturnType<typeof useIntlMessage>;
 
@@ -15,11 +17,11 @@ export interface TestcaseResultCommon {
   score: number;
   time?: number;
   memory?: number;
-  input?: string;
-  output?: string;
-  userOutput?: string;
-  userError?: string;
-  systemMessage?: string;
+  input?: OmittableString;
+  output?: OmittableString;
+  userOutput?: OmittableString;
+  userError?: OmittableString;
+  systemMessage?: OmittableString;
 }
 
 export type GetAdditionalSectionsCallback<TestcaseResult extends TestcaseResultCommon = TestcaseResultCommon> = (
