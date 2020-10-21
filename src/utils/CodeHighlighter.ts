@@ -23,6 +23,10 @@ try {
   console.error(`Failed to load web-tree-sitter:`, e);
 }
 
+function normalizeCode(code: string) {
+  return code.split("\r").join("");
+}
+
 export enum CodeHighlighterTheme {
   Tomorrow
 }
@@ -127,6 +131,8 @@ export function setTheme(theme: CodeHighlighterTheme) {
 }
 
 export function highlight(code: string, language: string, alwaysFallback?: boolean) {
+  code = normalizeCode(code);
+
   if (language) {
     try {
       if (!alwaysFallback) {
