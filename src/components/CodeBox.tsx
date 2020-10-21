@@ -66,26 +66,24 @@ export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, re
     props.fontLigaturesOverride
   ]);
 
-  return (
-    (props.html || content) && (
-      <div className={style.codeBox + (props.className ? " " + props.className : "")}>
-        {props.title && <p>{typeof props.title === "string" ? <strong>{props.title}</strong> : props.title}</p>}
-        <Segment
-          className={style.codeBoxSegment + (props.segmentClassName ? " " + props.segmentClassName : "")}
-          {...props.segment}
+  return props.html || content ? (
+    <div className={style.codeBox + (props.className ? " " + props.className : "")}>
+      {props.title && <p>{typeof props.title === "string" ? <strong>{props.title}</strong> : props.title}</p>}
+      <Segment
+        className={style.codeBoxSegment + (props.segmentClassName ? " " + props.segmentClassName : "")}
+        {...props.segment}
+      >
+        {props.children}
+        <pre
+          ref={refPre}
+          className={style.codeBoxContent}
+          dangerouslySetInnerHTML={props.html ? { __html: props.html } : undefined}
         >
-          {props.children}
-          <pre
-            ref={refPre}
-            className={style.codeBoxContent}
-            dangerouslySetInnerHTML={props.html && { __html: props.html }}
-          >
-            {content}
-          </pre>
-        </Segment>
-      </div>
-    )
-  );
+          {content}
+        </pre>
+      </Segment>
+    </div>
+  ) : null;
 });
 
 interface HighlightedCodeBoxProps {

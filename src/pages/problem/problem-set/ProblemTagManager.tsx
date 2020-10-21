@@ -46,9 +46,12 @@ const Tag: React.FC<TagProps> = props => {
     <Popup
       open={editPromptOpened}
       onClose={() => setEditPromptOpened(false)}
-      popperModifiers={{
-        preventOverflow: { enabled: false }
-      }}
+      popperModifiers={[
+        {
+          name: "preventOverflow",
+          options: { enabled: false }
+        }
+      ]}
       trigger={
         <Label
           as="a"
@@ -58,9 +61,12 @@ const Tag: React.FC<TagProps> = props => {
           removeIcon={
             <Popup
               className={style.deleteTagPopup}
-              popperModifiers={{
-                preventOverflow: { enabled: false }
-              }}
+              popperModifiers={[
+                {
+                  name: "preventOverflow",
+                  options: { enabled: false }
+                }
+              ]}
               trigger={
                 <Icon
                   name="delete"
