@@ -68,7 +68,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const [defaultCodeLanguage, setDefaultCodeLanguage] = useState(
     Object.values(CodeLanguage).includes(props.preference.code?.defaultLanguage as CodeLanguage)
       ? (props.preference.code?.defaultLanguage as CodeLanguage)
-      : CodeLanguage.CPP
+      : CodeLanguage.Cpp
   );
   const [defaultCompileAndRunOptions, setDefaultCompileAndRunOptions] = useState(
     filterValidCompileAndRunOptions(defaultCodeLanguage, props.preference.code?.defaultCompileAndRunOptions)
@@ -156,7 +156,7 @@ int main(int argc,char**argv)
 
   const [formatPreviewSuccess, formattedPreviewCode] = CodeFormatter.format(
     formatPreviewCode,
-    CodeLanguage.CPP,
+    CodeLanguage.Cpp,
     codeFormatterOptions || CodeFormatter.defaultOptions
   );
 

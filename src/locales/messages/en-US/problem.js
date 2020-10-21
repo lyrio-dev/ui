@@ -12,9 +12,9 @@ module.exports = {
   show_tags: "Show Tags",
   hide_tags: "Hide Tags",
   type: {
-    TRADITIONAL: "Traditional",
-    INTERACTION: "Interaction",
-    SUBMIT_ANSWER: "Submit Answer"
+    Traditional: "Traditional",
+    Interaction: "Interaction",
+    SubmitAnswer: "Submit Answer"
   },
   statistic: {
     submissions: "Subs.",

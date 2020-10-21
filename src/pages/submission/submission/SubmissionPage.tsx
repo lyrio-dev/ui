@@ -986,11 +986,11 @@ export default defineRoute(async request => {
   const ProblemTypeSubmissionView: ProblemTypeSubmissionView = (
     await (() => {
       switch (queryResult.meta.problem.type) {
-        case "TRADITIONAL":
+        case "Traditional":
           return import("./types/TraditionalProblemSubmissionView");
-        case "INTERACTION":
+        case "Interaction":
           return import("./types/InteractionProblemSubmissionView");
-        case "SUBMIT_ANSWER":
+        case "SubmitAnswer":
           return import("./types/SubmitAnswerProblemSubmissionView");
       }
     })()

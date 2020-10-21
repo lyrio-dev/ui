@@ -146,7 +146,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
     [idType]: id,
     testData: true,
     additionalFiles: true,
-    permissionOfCurrentUser: ["MODIFY"]
+    permissionOfCurrentUser: ["Modify"]
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
@@ -846,7 +846,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         />
       </Header>
       <FileTable
-        hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
+        hasPermission={props.problem.permissionOfCurrentUser.Modify}
         color="green"
         files={fileListTestData}
         onDownloadFile={filename => downloadProblemFile(props.problem.meta.id, "TestData", filename, _)}
@@ -866,7 +866,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         <strong>{_(".header_additional_files")}</strong>
       </Header>
       <FileTable
-        hasPermission={props.problem.permissionOfCurrentUser.MODIFY}
+        hasPermission={props.problem.permissionOfCurrentUser.Modify}
         color="pink"
         files={fileListAdditionalFiles}
         onDownloadFile={filename => downloadProblemFile(props.problem.meta.id, "AdditionalFile", filename, _)}

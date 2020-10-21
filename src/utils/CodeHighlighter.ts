@@ -60,14 +60,14 @@ const loadedTreeSitterLanguages: Map<
 
 function importGrammarJson(language: CodeLanguage): Promise<any> {
   switch (language) {
-    case CodeLanguage.CPP:
+    case CodeLanguage.Cpp:
       return import("monaco-tree-sitter/grammars/cpp.json");
   }
 }
 
 function importTreeSitterLanguageLib(language: CodeLanguage): string {
   switch (language) {
-    case CodeLanguage.CPP:
+    case CodeLanguage.Cpp:
       return require("tree-sitter-wasm-prebuilt/lib/tree-sitter-cpp.wasm").default;
   }
 }

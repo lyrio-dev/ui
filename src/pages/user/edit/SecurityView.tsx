@@ -45,7 +45,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
   }, [appState.locale]);
 
-  const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
+  const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("ManageUser");
 
   // Start change password
   const [oldPassword, setOldPassword] = useState("");

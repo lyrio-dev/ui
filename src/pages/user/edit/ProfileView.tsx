@@ -158,7 +158,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     }
   });
 
-  const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("MANAGE_USER");
+  const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("ManageUser");
   const allowUserChangeUsername = appState.serverPreference.security.allowUserChangeUsername;
 
   return (

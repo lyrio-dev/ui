@@ -75,7 +75,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     }
   }
 
-  const hasPrivilege = appState.currentUserHasPrivilege("MANAGE_USER_GROUP");
+  const hasPrivilege = appState.currentUserHasPrivilege("ManageUserGroup");
 
   const [pending, setPending] = useState(false);
   async function onSetGroupAdmin(userId: number, isGroupAdmin: boolean) {
@@ -323,7 +323,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
     appState.enterNewPage(_(".title"), "members");
   }, [appState.locale]);
 
-  const hasPrivilege = appState.currentUserHasPrivilege("MANAGE_USER_GROUP");
+  const hasPrivilege = appState.currentUserHasPrivilege("ManageUserGroup");
 
   const [groups, setGroups] = useState(props.response.groups);
   const [groupsWithAdminPermission, setGroupsWithAdminPermission] = useState(props.response.groupsWithAdminPermission);

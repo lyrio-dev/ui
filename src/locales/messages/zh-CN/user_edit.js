@@ -154,23 +154,23 @@ module.exports = {
     title: "特权",
     header: "特权",
     privileges: {
-      MANAGE_USER: {
+      ManageUser: {
         name: "管理用户",
         notes: "可以修改其他用户的个人资料、偏好设置以及安全设置。"
       },
-      MANAGE_USER_GROUP: {
+      ManageUserGroup: {
         name: "管理用户组",
         notes: "可以创建、编辑或删除用户组，管理用户组的成员。"
       },
-      MANAGE_PROBLEM: {
+      ManageProblem: {
         name: "管理题目",
         notes: "可以浏览、编辑所有题目与提交记录，设置题目是否公开以及删除题目。"
       },
-      MANAGE_CONTEST: {
+      ManageContest: {
         name: "管理比赛",
         notes: "等做好了比赛功能我再想想这里该写啥。"
       },
-      MANAGE_DISCUSSION: {
+      ManageDiscussion: {
         name: "管理讨论",
         notes: "等做好了讨论功能我再想想这里该写啥。"
       }

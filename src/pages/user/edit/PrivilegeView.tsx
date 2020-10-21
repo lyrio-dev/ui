@@ -20,11 +20,11 @@ export async function fetchData(userId: number) {
 }
 
 enum Privilege {
-  MANAGE_USER = "MANAGE_USER",
-  MANAGE_USER_GROUP = "MANAGE_USER_GROUP",
-  MANAGE_PROBLEM = "MANAGE_PROBLEM",
-  MANAGE_CONTEST = "MANAGE_CONTEST",
-  MANAGE_DISCUSSION = "MANAGE_DISCUSSION"
+  ManageUser = "ManageUser",
+  ManageUserGroup = "ManageUserGroup",
+  ManageProblem = "ManageProblem",
+  ManageContest = "ManageContest",
+  ManageDiscussion = "ManageDiscussion"
 }
 
 interface PrevilegeViewProps {

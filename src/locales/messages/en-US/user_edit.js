@@ -157,23 +157,23 @@ module.exports = {
     title: "Privileges",
     header: "Privileges",
     privileges: {
-      MANAGE_USER: {
+      ManageUser: {
         name: "Manage user",
         notes: "Modify other user's profile, preference and security settings."
       },
-      MANAGE_USER_GROUP: {
+      ManageUserGroup: {
         name: "Manage user group",
         notes: "Create, edit and delete user groups. Manage user groups' members."
       },
-      MANAGE_PROBLEM: {
+      ManageProblem: {
         name: "Manage problem",
         notes: "View, edit all problems and submissions, set problem public or not and delete problems."
       },
-      MANAGE_CONTEST: {
+      ManageContest: {
         name: "Manage contest",
         notes: "Placeholder."
       },
-      MANAGE_DISCUSSION: {
+      ManageDiscussion: {
         name: "Manage discussion",
         notes: "Placeholder."
       }

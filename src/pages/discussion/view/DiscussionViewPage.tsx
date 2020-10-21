@@ -267,7 +267,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
   const refActionsMenuIcon = useRef<HTMLElement>();
 
   const actions = [
-    props.permission.includes("MODIFY") &&
+    props.permission.includes("Modify") &&
       (typeof props.onEnterEdit === "string" ? (
         <Dropdown.Item icon="edit" text={_(".actions.edit")} as={Link} href={props.onEnterEdit} />
       ) : (
@@ -276,10 +276,10 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
     props.type === "Reply" && appState.currentUser && (
       <Dropdown.Item icon="quote left" text={_(".actions.quote")} onClick={props.onQuote} />
     ),
-    props.permission.includes("MANAGE_PERMISSION") && (
+    props.permission.includes("ManagePermission") && (
       <Dropdown.Item icon="key" text={_(".actions.permission_manage")} onClick={props.onManagePermission} />
     ),
-    props.permission.includes("MANAGE_PUBLICNESS") && (
+    props.permission.includes("ManagePublicness") && (
       <Popup
         trigger={
           <Dropdown.Item
@@ -305,7 +305,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
         position="top center"
       />
     ),
-    props.permission.includes("DELETE") && (
+    props.permission.includes("Delete") && (
       <Popup
         trigger={
           <Dropdown.Item

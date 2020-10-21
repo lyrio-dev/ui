@@ -1,7 +1,7 @@
 import { appState } from "@/appState";
 
 export enum CodeLanguage {
-  CPP = "cpp"
+  Cpp = "cpp"
 }
 
 // For UI
@@ -20,7 +20,7 @@ export interface CodeLanguageOption {
 }
 
 const codeLanguageExtensions: Record<CodeLanguage, string[]> = {
-  [CodeLanguage.CPP]: [".cpp", ".cc"]
+  [CodeLanguage.Cpp]: [".cpp", ".cc"]
 };
 
 export function checkCodeFileExtension(language: CodeLanguage, filename: string): boolean {
@@ -28,7 +28,7 @@ export function checkCodeFileExtension(language: CodeLanguage, filename: string)
 }
 
 export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = {
-  [CodeLanguage.CPP]: [
+  [CodeLanguage.Cpp]: [
     {
       name: "compiler",
       type: CodeLanguageOptionType.Select,

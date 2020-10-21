@@ -77,7 +77,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   async function onSearchUser(input: string) {
     const { requestError, response } = await UserApi.searchUser({
       query: input,
-      wildcard: "END"
+      wildcard: "End"
     });
 
     if (requestError) toast.error(requestError);
@@ -165,7 +165,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   async function onSearchGroup(input: string) {
     const { requestError, response } = await GroupApi.searchGroup({
       query: input,
-      wildcard: "END"
+      wildcard: "End"
     });
 
     if (requestError) toast.error(requestError);

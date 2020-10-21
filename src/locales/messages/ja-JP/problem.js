@@ -12,9 +12,9 @@ module.exports = {
   show_tags: "タグを表示",
   hide_tags: "タグを隠す",
   type: {
-    TRADITIONAL: "Batch",
-    INTERACTION: "[TBT] Interaction",
-    SUBMIT_ANSWER: "[TBT] Submit Answer"
+    Traditional: "Batch",
+    Interaction: "[TBT] Interaction",
+    SubmitAnswer: "[TBT] Submit Answer"
   },
   statistic: {
     submissions: "提出",

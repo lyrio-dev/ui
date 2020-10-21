@@ -25,7 +25,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
     [idType]: id,
     judgeInfo: true,
     testData: true,
-    permissionOfCurrentUser: ["MODIFY"]
+    permissionOfCurrentUser: ["Modify"]
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
@@ -207,8 +207,8 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   className={style.submitButton}
                   primary
                   loading={pending}
-                  disabled={!props.problem.permissionOfCurrentUser.MODIFY}
-                  content={props.problem.permissionOfCurrentUser.MODIFY ? _(".submit") : _(".no_submit_permission")}
+                  disabled={!props.problem.permissionOfCurrentUser.Modify}
+                  content={props.problem.permissionOfCurrentUser.Modify ? _(".submit") : _(".no_submit_permission")}
                   onClick={onSubmit}
                 />
               </div>
@@ -284,11 +284,11 @@ async function getProblemTypeEditorComponent(type: ProblemType): Promise<Problem
   return (
     await (() => {
       switch (type) {
-        case ProblemType.TRADITIONAL:
+        case ProblemType.Traditional:
           return import("./types/TraditionalProblemEditor");
-        case ProblemType.INTERACTION:
+        case ProblemType.Interaction:
           return import("./types/InteractionProblemEditor");
-        case ProblemType.SUBMIT_ANSWER:
+        case ProblemType.SubmitAnswer:
           return import("./types/SubmitAnswerProblemEditor");
       }
     })()

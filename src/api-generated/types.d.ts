@@ -40,7 +40,7 @@ declare namespace ApiTypes {
   }
   export interface ChangeProblemTypeRequestDto {
     problemId: number;
-    type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
+    type: "Traditional" | "Interaction" | "SubmitAnswer";
   }
   export interface ChangeProblemTypeResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "PROBLEM_HAS_SUBMISSION";
@@ -76,7 +76,7 @@ declare namespace ApiTypes {
     groupId?: number;
   }
   export interface CreateProblemRequestDto {
-    type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
+    type: "Traditional" | "Interaction" | "SubmitAnswer";
     statement: ApiTypes.ProblemStatementDto;
   }
   export interface CreateProblemResponseDto {
@@ -139,7 +139,7 @@ declare namespace ApiTypes {
     problem?: ApiTypes.GetDiscussionAndRepliesResponseProblemDto;
     publisher: ApiTypes.UserMetaDto;
     reactions: ApiTypes.DiscussionOrReplyReactionsDto;
-    permissions: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
+    permissions: ("View" | "Modify" | "ManagePermission" | "ManagePublicness" | "Delete")[];
   }
   export interface DiscussionGroupPermissionDto {
     group: ApiTypes.GroupMetaDto;
@@ -173,9 +173,9 @@ declare namespace ApiTypes {
     publisher: ApiTypes.UserMetaDto;
     reactions: ApiTypes.DiscussionOrReplyReactionsDto;
     /**
-     * MANAGE_PERMISSION is not valid for replies.
+     * ManagePermission is not valid for replies.
      */
-    permissions: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
+    permissions: ("View" | "Modify" | "ManagePermission" | "ManagePublicness" | "Delete")[];
   }
   export interface DiscussionUserPermissionDto {
     user: ApiTypes.UserMetaDto;
@@ -312,7 +312,7 @@ declare namespace ApiTypes {
     testData?: boolean;
     additionalFiles?: boolean;
     statistics?: boolean;
-    permissionOfCurrentUser?: ("VIEW" | "MODIFY" | "MANAGE_PERMISSION" | "MANAGE_PUBLICNESS" | "DELETE")[];
+    permissionOfCurrentUser?: ("View" | "Modify" | "ManagePermission" | "ManagePublicness" | "Delete")[];
     permissions?: boolean;
     lastSubmissionAndLastAcceptedSubmission?: boolean;
   }
@@ -343,13 +343,7 @@ declare namespace ApiTypes {
   export interface GetSessionInfoResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
     joinedGroupsCount?: number;
-    userPrivileges?: (
-      | "MANAGE_USER"
-      | "MANAGE_USER_GROUP"
-      | "MANAGE_PROBLEM"
-      | "MANAGE_CONTEST"
-      | "MANAGE_DISCUSSION"
-    )[];
+    userPrivileges?: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
     userPreference?: ApiTypes.UserPreferenceDto;
     serverPreference?: ApiTypes.PreferenceConfig;
   }
@@ -400,7 +394,7 @@ declare namespace ApiTypes {
   export interface GetUserMetaResponseDto {
     error?: "NO_SUCH_USER";
     meta?: ApiTypes.UserMetaDto;
-    privileges?: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
+    privileges?: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
   }
   export interface GetUserPreferenceRequestDto {
     userId: number;
@@ -493,7 +487,7 @@ declare namespace ApiTypes {
     export type Query = string;
     export type Token = string;
     export type Username = string;
-    export type Wildcard = "START" | "END" | "BOTH";
+    export type Wildcard = "Start" | "End" | "Both";
   }
   export interface PreferenceConfig {
     siteName: string;
@@ -531,7 +525,7 @@ declare namespace ApiTypes {
   }
   export interface ProblemContentSectionDto {
     sectionTitle: string;
-    type: "TEXT" | "SAMPLE";
+    type: "Text" | "Sample";
     sampleId?: number;
     text?: string;
   }
@@ -561,7 +555,7 @@ declare namespace ApiTypes {
   export interface ProblemMetaDto {
     id: number;
     displayId?: number;
-    type: "TRADITIONAL" | "INTERACTION" | "SUBMIT_ANSWER";
+    type: "Traditional" | "Interaction" | "SubmitAnswer";
     isPublic: boolean;
     publicTime: string; // date-time
     ownerId: number;
@@ -570,11 +564,11 @@ declare namespace ApiTypes {
     acceptedSubmissionCount?: number;
   }
   export interface ProblemPermissionOfCurrentUserDto {
-    VIEW?: boolean;
-    MODIFY?: boolean;
-    MANAGE_PERMISSION?: boolean;
-    MANAGE_PUBLICNESS?: boolean;
-    DELETE?: boolean;
+    View?: boolean;
+    Modify?: boolean;
+    ManagePermission?: boolean;
+    ManagePublicness?: boolean;
+    Delete?: boolean;
   }
   export interface ProblemPermissionsDto {
     userPermissions: ApiTypes.ProblemUserPermissionDto[];
@@ -949,7 +943,7 @@ declare namespace ApiTypes {
   }
   export interface SetUserPrivilegesRequestDto {
     userId: number;
-    privileges: ("MANAGE_USER" | "MANAGE_USER_GROUP" | "MANAGE_PROBLEM" | "MANAGE_CONTEST" | "MANAGE_DISCUSSION")[];
+    privileges: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
   }
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";

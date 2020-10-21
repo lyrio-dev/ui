@@ -30,7 +30,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
 
         const { requestError, response } = await UserApi.searchUser({
           query: input,
-          wildcard: wildcardStart ? "BOTH" : "END"
+          wildcard: wildcardStart ? "Both" : "End"
         });
 
         if (requestError) toast.error(requestError);

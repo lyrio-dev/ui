@@ -112,7 +112,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     judgeInfo: true,
     judgeInfoToBePreprocessed: true,
     statistics: true,
-    permissionOfCurrentUser: ["MODIFY", "MANAGE_PERMISSION", "MANAGE_PUBLICNESS", "DELETE"],
+    permissionOfCurrentUser: ["Modify", "ManagePermission", "ManagePublicness", "Delete"],
     lastSubmissionAndLastAcceptedSubmission: true
   });
 
@@ -236,7 +236,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         owner: response.owner,
         userPermissions: response.permissions.userPermissions,
         groupPermissions: response.permissions.groupPermissions,
-        haveSubmitPermission: props.problem.permissionOfCurrentUser.MANAGE_PERMISSION
+        haveSubmitPermission: props.problem.permissionOfCurrentUser.ManagePermission
       };
     }
     return null;
@@ -532,7 +532,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
           {props.problem.localizedContentsOfLocale.contentSections.map((section, i) => (
             <React.Fragment key={i}>
               <Header size="large">{section.sectionTitle}</Header>
-              {section.type === "TEXT" ? (
+              {section.type === "Text" ? (
                 <>
                   <MarkdownContent content={section.text} patcher={problemViewMarkdownContentPatcher} />
                 </>
@@ -683,7 +683,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               />
             </Menu>
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
-              {props.problem.permissionOfCurrentUser.MODIFY && (
+              {props.problem.permissionOfCurrentUser.Modify && (
                 <Menu.Item
                   name={_(".action.edit")}
                   icon="edit"
@@ -698,7 +698,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   }}
                 />
               )}
-              {props.problem.permissionOfCurrentUser.MODIFY && (
+              {props.problem.permissionOfCurrentUser.Modify && (
                 <Menu.Item
                   name={_(".action.judge_settings")}
                   icon="cog"
@@ -709,7 +709,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               {
                 // Normal users won't interested in permissions
                 // Only show permission manage button when the user have write permission
-                props.problem.permissionOfCurrentUser.MODIFY && (
+                props.problem.permissionOfCurrentUser.Modify && (
                   <Menu.Item onClick={onClickPermissionManage}>
                     <Icon name="key" />
                     {_(".action.permission_manage")}
@@ -717,7 +717,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   </Menu.Item>
                 )
               }
-              {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
+              {props.problem.permissionOfCurrentUser.ManagePublicness && (
                 <Popup
                   trigger={<Menu.Item name={_(".action.set_display_id")} icon="hashtag" />}
                   content={
@@ -739,7 +739,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permissionOfCurrentUser.MANAGE_PUBLICNESS && (
+              {props.problem.permissionOfCurrentUser.ManagePublicness && (
                 <Popup
                   trigger={
                     <Menu.Item
@@ -763,7 +763,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permissionOfCurrentUser.DELETE && (
+              {props.problem.permissionOfCurrentUser.Delete && (
                 <Menu.Item
                   className={style.menuItemDangerous}
                   name={_(".action.delete")}
@@ -785,11 +785,11 @@ async function getProblemTypeView(type: ProblemType): Promise<ProblemTypeView<an
   return (
     await (() => {
       switch (type) {
-        case ProblemType.TRADITIONAL:
+        case ProblemType.Traditional:
           return import("./types/TraditionalProblemView");
-        case ProblemType.INTERACTION:
+        case ProblemType.Interaction:
           return import("./types/InteractionProblemView");
-        case ProblemType.SUBMIT_ANSWER:
+        case ProblemType.SubmitAnswer:
           return import("./types/SubmitAnswerProblemView");
       }
     })()

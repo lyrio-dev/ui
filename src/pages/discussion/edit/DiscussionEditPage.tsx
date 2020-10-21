@@ -71,7 +71,7 @@ const DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
         onChangeContent={setContent}
         onCancel={() => navigation.navigate(`/discussion/${props.discussion.meta.id}`)}
         onSubmit={onSubmit}
-        noSubmitPermission={props.discussion && !props.discussion.permissions.includes("MODIFY")}
+        noSubmitPermission={props.discussion && !props.discussion.permissions.includes("Modify")}
       />
     </>
   );
@@ -82,7 +82,7 @@ export default {
     if (
       !(
         (appState.currentUser && appState.serverPreference.security.allowEveryoneCreateDiscussion) ||
-        appState.currentUserHasPrivilege("MANAGE_DISCUSSION")
+        appState.currentUserHasPrivilege("ManageDiscussion")
       )
     ) {
       throw new RouteError(<FormattedMessage id={`discussion_edit.errors.PERMISSION_DENIED`} />);

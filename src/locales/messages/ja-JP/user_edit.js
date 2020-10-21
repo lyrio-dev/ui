@@ -159,23 +159,23 @@ module.exports = {
     title: "[TBT] Privileges",
     header: "[TBT] Privileges",
     privileges: {
-      MANAGE_USER: {
+      ManageUser: {
         name: "[TBT] Manage user",
         notes: "[TBT] Modify other user's profile, preference and security settings."
       },
-      MANAGE_USER_GROUP: {
+      ManageUserGroup: {
         name: "[TBT] Manage user group",
         notes: "[TBT] Create, edit and delete user groups. Manage user groups' members."
       },
-      MANAGE_PROBLEM: {
+      ManageProblem: {
         name: "[TBT] Manage problem",
         notes: "[TBT] View, edit all problems and submissions, set problem public or not and delete problems."
       },
-      MANAGE_CONTEST: {
+      ManageContest: {
         name: "[TBT] Manage contest",
         notes: "[TBT] Placeholder."
       },
-      MANAGE_DISCUSSION: {
+      ManageDiscussion: {
         name: "[TBT] Manage discussion",
         notes: "[TBT] Placeholder."
       }

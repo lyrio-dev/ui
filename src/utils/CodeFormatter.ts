@@ -37,7 +37,7 @@ export const defaultOptions = [
 ].join(" ");
 
 const languageToModeMap = {
-  [CodeLanguage.CPP]: "c"
+  [CodeLanguage.Cpp]: "c"
 };
 
 export function isLanguageSupported(language: CodeLanguage) {

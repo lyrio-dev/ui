@@ -47,7 +47,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
     localizedContentsOfAllLocales: true,
     tagsOfLocale: appState.locale,
     samples: true,
-    permissionOfCurrentUser: ["MODIFY"]
+    permissionOfCurrentUser: ["Modify"]
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
@@ -69,7 +69,7 @@ async function fetchDataAllProblemTags(): Promise<ApiTypes.LocalizedProblemTagDt
 interface LocalizedContentSection {
   uuid: string;
   sectionTitle: string;
-  type: "TEXT" | "SAMPLE";
+  type: "Text" | "Sample";
   sampleId?: number;
   text?: string;
 }
@@ -96,7 +96,7 @@ interface LocalizedContentEditorSectionProps {
   isLast: boolean;
 
   onChangeSectionValue: (type: "sectionTitle" | "text", newValue: string) => void;
-  onChangeSectionType: (newType: "TEXT" | "SAMPLE") => void;
+  onChangeSectionType: (newType: "Text" | "Sample") => void;
   onChangeSectionSampleId: (newSampleId: number) => void;
   onChangeSampleData: (sampleId: number, type: "inputData" | "outputData", newData: string) => void;
   onAddSectionBefore: () => void;
@@ -138,7 +138,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               onChange={(e, { checked }) => setPreview(checked)}
             />
           </Menu.Item>
-          {props.section.type === "SAMPLE" && (
+          {props.section.type === "Sample" && (
             <Dropdown
               item
               value={props.section.sampleId}
@@ -169,26 +169,26 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
             value={props.section.type}
             options={[
               {
-                key: "TEXT",
+                key: "Text",
                 text: (
                   <>
                     <Icon name="sticky note" />
                     {_(".content_editor.section_type.text")}
                   </>
                 ),
-                value: "TEXT",
-                onClick: () => props.section.type === "TEXT" || props.onChangeSectionType("TEXT")
+                value: "Text",
+                onClick: () => props.section.type === "Text" || props.onChangeSectionType("Text")
               },
               {
-                key: "SAMPLE",
+                key: "Sample",
                 text: (
                   <>
                     <Icon name="sticky note outline" />
                     {_(".content_editor.section_type.sample")}
                   </>
                 ),
-                value: "SAMPLE",
-                onClick: () => props.section.type === "SAMPLE" || props.onChangeSectionType("SAMPLE")
+                value: "Sample",
+                onClick: () => props.section.type === "Sample" || props.onChangeSectionType("Sample")
               }
             ]}
           />
@@ -250,7 +250,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
         </Menu.Menu>
       </Menu>
       <Segment attached="bottom" className={style.sectionSegment} data-type={props.section.type}>
-        {props.section.type === "SAMPLE" ? (
+        {props.section.type === "Sample" ? (
           <Grid columns="equal" className={style.sampleEditorGrid}>
             <Grid.Row>
               <Grid.Column>
@@ -335,7 +335,7 @@ interface LocalizedContentEditorProps {
   onChangeTitle: (newTitle: string) => void;
 
   onChangeSectionValue: (index: number, type: "sectionTitle" | "text", newValue: string) => void;
-  onChangeSectionType: (index: number, newType: "TEXT" | "SAMPLE") => void;
+  onChangeSectionType: (index: number, newType: "Text" | "Sample") => void;
   onChangeSectionSampleId: (index: number, newSampleId: number) => void;
   onChangeSampleData: (sampleId: number, type: "inputData" | "outputData", newData: string) => void;
   onAddSection: (index: number) => void;
@@ -349,7 +349,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
   const [preview, setPreview] = useState(false);
 
   const safeToApplyTemplate = props.localizedContent.contentSections.every(
-    section => !section.sectionTitle && section.type === "TEXT" && !section.text
+    section => !section.sectionTitle && section.type === "Text" && !section.text
   );
   const [applyTemplatePopupOpen, setApplyTemplatePopupOpen] = useState(false);
 
@@ -596,32 +596,32 @@ const sectionsTemplate: Record<Locale, LocalizedContentSection[]> = {
     {
       uuid: uuid(),
       sectionTitle: "题目描述",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "输入格式",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "输出格式",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "样例",
-      type: "SAMPLE",
+      type: "Sample",
       sampleId: 0,
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "数据范围与提示",
-      type: "TEXT",
+      type: "Text",
       text: ""
     }
   ],
@@ -629,32 +629,32 @@ const sectionsTemplate: Record<Locale, LocalizedContentSection[]> = {
     {
       uuid: uuid(),
       sectionTitle: "Description",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "Input",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "Output",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "Sample",
-      type: "SAMPLE",
+      type: "Sample",
       sampleId: 0,
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "Limits And Hints",
-      type: "TEXT",
+      type: "Text",
       text: ""
     }
   ],
@@ -662,32 +662,32 @@ const sectionsTemplate: Record<Locale, LocalizedContentSection[]> = {
     {
       uuid: uuid(),
       sectionTitle: "問題文",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "入力",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "出力",
-      type: "TEXT",
+      type: "Text",
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "例",
-      type: "SAMPLE",
+      type: "Sample",
       sampleId: 0,
       text: ""
     },
     {
       uuid: uuid(),
       sectionTitle: "制約",
-      type: "TEXT",
+      type: "Text",
       text: ""
     }
   ]
@@ -732,7 +732,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
             {
               uuid: uuid(),
               sectionTitle: "",
-              type: "TEXT",
+              type: "Text",
               text: ""
             }
           ]
@@ -742,7 +742,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     })()
   );
 
-  const [newProblemType, setNewProblemType] = useState(ProblemType.TRADITIONAL);
+  const [newProblemType, setNewProblemType] = useState(ProblemType.Traditional);
 
   const [modified, setModified] = useState(false);
   const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
@@ -758,15 +758,15 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
           locale: locale,
           title: localizedContents[locale].title,
           contentSections: localizedContents[locale].contentSections.map(section =>
-            section.type === "TEXT"
+            section.type === "Text"
               ? {
                   sectionTitle: section.sectionTitle,
-                  type: "TEXT",
+                  type: "Text",
                   text: section.text
                 }
               : {
                   sectionTitle: section.sectionTitle,
-                  type: "SAMPLE",
+                  type: "Sample",
                   sampleId: section.sampleId,
                   text: section.text
                 }
@@ -888,7 +888,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
               {
                 uuid: uuid(),
                 sectionTitle: "",
-                type: "TEXT",
+                type: "Text",
                 text: ""
               }
             ]
@@ -932,7 +932,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 {
                   uuid: uuid(),
                   sectionTitle: "",
-                  type: "TEXT",
+                  type: "Text",
                   text: ""
                 }
               ]
@@ -1010,19 +1010,19 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     );
   }
 
-  function onChangeSectionType(locale: Locale, index: number, newType: "TEXT" | "SAMPLE") {
+  function onChangeSectionType(locale: Locale, index: number, newType: "Text" | "Sample") {
     if (pendingSubmit) return;
     setModified(true);
 
-    if (newType === "SAMPLE" && !samples.length) onAddSample();
+    if (newType === "Sample" && !samples.length) onAddSample();
     setLocalizedContents(
       update(localizedContents, {
         [locale]: {
           contentSections: {
             [index]: {
               type: { $set: newType },
-              sampleId: newType === "SAMPLE" ? { $set: 0 } : {},
-              $unset: newType === "TEXT" ? ["sampleId"] : []
+              sampleId: newType === "Sample" ? { $set: 0 } : {},
+              $unset: newType === "Text" ? ["sampleId"] : []
             }
           }
         }
@@ -1071,7 +1071,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     Object.keys(localizedContents).forEach((locale: Locale) => {
       spec[locale] = {
         contentSections: localizedContents[locale].contentSections.map(section => {
-          if (section.type !== "SAMPLE") return {};
+          if (section.type !== "Sample") return {};
           const newSampleId = callback(section.sampleId);
 
           // Not modified
@@ -1081,7 +1081,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
           if (newSampleId == null)
             return {
               $unset: ["sampleId"],
-              type: { $set: "TEXT" }
+              type: { $set: "Text" }
             };
 
           // Modified
@@ -1191,7 +1191,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     props.new ? appState.locale : (props.problem.meta.locales[0] as Locale)
   );
 
-  const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.MODIFY;
+  const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.Modify;
 
   useConfirmUnload(() => modified);
 
@@ -1353,7 +1353,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                   warningMessage={Object.keys(localizedContents)
                     .map((locale: Locale) => {
                       const referenceCount = localizedContents[locale].contentSections.filter(
-                        section => section.type === "SAMPLE" && section.sampleId === sampleId
+                        section => section.type === "Sample" && section.sampleId === sampleId
                       ).length;
 
                       if (referenceCount === 1) return null;
