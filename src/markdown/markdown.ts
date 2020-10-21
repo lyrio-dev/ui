@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 
 import MarkdownItMath from "markdown-it-math-loose";
 import MarkdownItMergeCells from "markdown-it-merge-cells";
+import MarkdownItMentions from "markdown-it-mentions";
 
 export interface MarkdownHighlightPlaceholder {
   id: string;
@@ -82,6 +83,9 @@ export function renderMarkdown(
     blockRenderer: (code: string) => addMathPlaceholder(code, true)
   });
   renderer.use(MarkdownItMergeCells);
+  renderer.use(MarkdownItMentions, {
+    parseURL: (username: string) => `/u/${username}`
+  });
 
   if (onPatchRenderer) onPatchRenderer(renderer);
 
