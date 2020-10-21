@@ -4,7 +4,7 @@ import AnsiToHtmlConverter from "ansi-to-html";
 
 import style from "./CodeBox.module.less";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 
 export type OmittableString =
   | string
@@ -127,7 +127,7 @@ interface OmittedLabelProps {
 }
 
 const OmittedLabel: React.FC<OmittedLabelProps> = props => {
-  const _ = useIntlMessage("components.code_box");
+  const _ = useLocalizer("components.code_box");
 
   return (
     <div className={style.omittedLabel + " monospace"}>

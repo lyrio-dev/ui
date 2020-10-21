@@ -20,14 +20,13 @@ import { WritableStream } from "web-streams-polyfill/ponyfill/es6";
 import * as streamsaver from "streamsaver";
 import pAll from "p-all";
 import { useDebounce } from "use-debounce";
-import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemFilesPage.module.less";
 
 import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
@@ -41,6 +40,7 @@ import { createZipStream } from "@/utils/zip";
 import { getProblemIdString, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { isValidFilename } from "@/utils/validators";
+import { Localizer, makeToBeLocalizedText } from "@/locales";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -49,7 +49,7 @@ export async function downloadProblemFile(
   problemId: number,
   type: "TestData" | "AdditionalFile",
   filename: string,
-  _: (messageId: string, parameters?: Record<string, string>) => string
+  _: Localizer
 ) {
   if (!filename) return toast.error(_("problem_files.error.NO_SUCH_FILE"));
 
@@ -58,7 +58,7 @@ export async function downloadProblemFile(
     type,
     filenameList: [filename]
   });
-  if (requestError) return toast.error(requestError);
+  if (requestError) return toast.error(requestError(_));
   else if (response.downloadInfo.length === 0) return toast.error(_("problem_files.error.NO_SUCH_FILE"));
 
   downloadFile(response.downloadInfo[0].downloadUrl);
@@ -69,14 +69,14 @@ export async function downloadProblemFilesAsArchive(
   filename: string,
   type: "TestData" | "AdditionalFile",
   filenames: string[],
-  _: (messageId: string, parameters?: Record<string, string>) => string
+  _: Localizer
 ) {
   const { requestError, response } = await ProblemApi.downloadProblemFiles({
     problemId,
     type,
     filenameList: filenames
   });
-  if (requestError) return toast.error(requestError);
+  if (requestError) return toast.error(requestError(_));
   if (response.error) return toast.error(_(`problem_files.error.${response.error}`));
 
   const { downloadInfo } = response;
@@ -150,7 +150,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`problem_files.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`problem_files.error.${response.error}`));
 
   return response;
 }
@@ -182,7 +182,7 @@ interface FileTableRowProps {
 }
 
 let FileTableRow: React.FC<FileTableRowProps> = props => {
-  const _ = useIntlMessage("problem_files");
+  const _ = useLocalizer("problem_files");
 
   const [renameOpen, setRenameOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -380,7 +380,7 @@ interface FileTableProps {
 }
 
 let FileTable: React.FC<FileTableProps> = props => {
-  const _ = useIntlMessage("problem_files");
+  const _ = useLocalizer("problem_files");
 
   const [selectedFiles, setSelectedFiles] = useState(new Set<string>());
 
@@ -650,7 +650,7 @@ interface ProblemFilesPageProps {
 }
 
 let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
-  const _ = useIntlMessage("problem_files");
+  const _ = useLocalizer("problem_files");
 
   const idString = getProblemIdString(props.problem.meta);
 
@@ -694,7 +694,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
       newFilename
     });
     if (requestError) {
-      toast.error(requestError);
+      toast.error(requestError(_));
       return;
     }
 
@@ -727,7 +727,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
       filenames: filenames
     });
     if (requestError) {
-      toast.error(requestError);
+      toast.error(requestError(_));
       return;
     }
 
@@ -815,7 +815,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         } else if (requestError) {
           updateFileUploadInfo(item.uuid, {
             progressType: "Error",
-            error: requestError
+            error: requestError(_)
           });
         } else if (response.error) {
           updateFileUploadInfo(item.uuid, {

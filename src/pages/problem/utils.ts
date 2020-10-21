@@ -1,3 +1,5 @@
+import { Localizer } from "@/locales";
+
 export function getProblemUrl(
   meta: ApiTypes.ProblemMetaDto,
   options?: { subRoute?: string; use?: "id" | "displayId" }
@@ -46,21 +48,21 @@ export function getProblemIdString(
 export function getProblemDisplayName(
   meta: ApiTypes.ProblemMetaDto,
   title: string,
-  _: (id: string) => string,
+  _: Localizer,
   returnType: "tuple"
 ): [string, string, string];
 
 export function getProblemDisplayName(
   meta: ApiTypes.ProblemMetaDto,
   title: string,
-  _: (id: string) => string,
+  _: Localizer,
   returnType?: "all" | "titleOnly"
 ): string;
 
 export function getProblemDisplayName(
   meta: ApiTypes.ProblemMetaDto,
   title: string,
-  _: (id: string) => string,
+  _: Localizer,
   returnType?: "all" | "tuple" | "titleOnly"
 ): string | [string, string, string] {
   const idString = meta && (meta.displayId ? `#${meta.displayId}` : `P${meta.id}`);

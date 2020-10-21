@@ -3,18 +3,18 @@ import { Grid, Header, Button, List, Icon, Segment, Popup, Divider } from "seman
 import { observer } from "mobx-react";
 import { Link } from "react-navi";
 import dayjs from "dayjs";
-import { FormattedMessage } from "react-intl";
 
 import style from "./UserPage.module.less";
 
 import { appState } from "@/appState";
 import { UserApi } from "@/api";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { isValidUsername } from "@/utils/validators";
+import { makeToBeLocalizedText } from "@/locales";
 
 function getTimeZone() {
   try {
@@ -33,7 +33,7 @@ async function fetchData(query: { userId?: number; username?: string }): Promise
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`user.error.${response.error}`));
 
   return [now, response as Required<typeof response>];
 }
@@ -45,7 +45,7 @@ interface SubwayGraphProps {
 }
 
 const SubwayGraph: React.FC<SubwayGraphProps> = props => {
-  const _ = useIntlMessage("user");
+  const _ = useLocalizer("user");
 
   const now = dayjs(props.now).startOf("day");
 
@@ -161,7 +161,7 @@ type UserPageProps = ApiTypes.GetUserDetailResponseDto & {
 };
 
 let UserPage: React.FC<UserPageProps> = props => {
-  const _ = useIntlMessage("user");
+  const _ = useLocalizer("user");
 
   useEffect(() => {
     appState.enterNewPage(`${props.meta.username}`, "members");
@@ -383,7 +383,7 @@ export default {
   }),
   byUsername: defineRoute(async request => {
     const username = request.params.username;
-    if (!isValidUsername(username)) throw new RouteError(<FormattedMessage id={"user.error.NO_SUCH_USER"} />);
+    if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText("user.error.NO_SUCH_USER"));
     const [now, response] = await fetchData({ username });
 
     return <UserPage now={now} {...response} />;

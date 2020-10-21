@@ -2,7 +2,7 @@ import React from "react";
 
 import style from "../SubmissionPage.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { OmittableAnsiCodeBox, OmittableString } from "@/components/CodeBox";
 import { ProblemTypeSubmissionViewProps, ProblemTypeSubmissionViewHelper } from "../common/interface";
@@ -37,7 +37,7 @@ type InteractionProblemSubmissionViewProps = ProblemTypeSubmissionViewProps<
 >;
 
 const InteractionProblemSubmissionView: React.FC<InteractionProblemSubmissionViewProps> = props => {
-  const _ = useIntlMessage("submission");
+  const _ = useLocalizer("submission");
 
   return (
     <>

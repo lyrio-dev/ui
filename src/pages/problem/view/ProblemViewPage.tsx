@@ -19,7 +19,6 @@ import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 import update from "immutability-helper";
 import objectPath from "object-path";
-import { FormattedMessage } from "react-intl";
 import { v4 as uuid } from "uuid";
 
 import style from "./ProblemViewPage.module.less";
@@ -28,7 +27,7 @@ import { ProblemApi, SubmissionApi } from "@/api";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useIntlMessage, useLoginOrRegisterNavigation, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useLoginOrRegisterNavigation, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
@@ -44,9 +43,10 @@ import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { getProblemDisplayName, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { downloadProblemFile, downloadProblemFilesAsArchive } from "../files/ProblemFilesPage";
+import { makeToBeLocalizedText } from "@/locales";
 
 export function useProblemViewMarkdownContentPatcher(problemId: number): MarkdownContentPatcher {
-  const _ = useIntlMessage();
+  const _ = useLocalizer();
 
   const FILE_DOWNLOAD_LINK_PREFIX = "file:";
   const FILE_DOWNLOAD_LINK_ALL_PREFIX = "allfiles:";
@@ -117,7 +117,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`problem.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`problem.error.${response.error}`));
 
   sortTags(response.tagsOfLocale);
   return response;
@@ -131,7 +131,7 @@ interface ProblemViewPageProps {
 }
 
 let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
   const navigation = useNavigation();
 
   const isMobile = useScreenWidthWithin(0, 768);
@@ -179,7 +179,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         displayId: Number(setDisplayIdInputValue)
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) {
         toast.error(
           _(`.error.${response.error}`, {
@@ -209,7 +209,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       isPublic
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
     } else return navigation.refresh();
@@ -229,7 +229,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       owner: true,
       permissions: true
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       return {
@@ -251,7 +251,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       userPermissions: userPermissions as any,
       groupPermissions: groupPermissions as any
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error === "NO_SUCH_PROBLEM") toast.error(_(".error.NO_SUCH_PROBLEM"));
     else if (response.error) return response;
     return true;
@@ -287,7 +287,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     const { requestError, response } = await ProblemApi.deleteProblem({
       problemId: props.problem.meta.id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".action.delete_success"));
@@ -372,7 +372,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     );
 
     if (uploadError) toast.error(_(".upload_error", { error: String(uploadError) }));
-    else if (requestError) toast.error(requestError);
+    else if (requestError) toast.error(requestError(_));
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
     } else navigation.navigate(`/submission/${response.submissionId}`);

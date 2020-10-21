@@ -16,7 +16,7 @@ import {
   compileAndRunOptions,
   CodeLanguageOptionType
 } from "@/interfaces/CodeLanguage";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { Segment, Form, Header, Menu, Input } from "semantic-ui-react";
 import TestDataFileSelector from "../common/TestDataFileSelector";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
@@ -88,7 +88,7 @@ function parseInteractorConfig(
 }
 
 let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const interactorInterfaces: InteractorInterface[] = ["stdio", "shm"];
   const interactor = props.judgeInfo.interactor;

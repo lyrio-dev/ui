@@ -7,10 +7,9 @@ import style from "./ProblemSetPage.module.less";
 
 import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
-import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { sortTags, sortTagColors } from "../problemTag";
-import { FormattedMessage } from "react-intl";
 
 import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
@@ -20,6 +19,7 @@ import { StatusIcon } from "@/components/StatusText";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import ProblemSearch from "@/components/ProblemSearch";
 import { getProblemDisplayName, getProblemIdString, getProblemUrl } from "../utils";
+import { makeToBeLocalizedText } from "@/locales";
 
 // Parsed from querystring, without pagination
 interface ProblemSetPageSearchQuery {
@@ -55,7 +55,7 @@ async function fetchData(
   );
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`problem_set.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`problem_set.error.${response.error}`));
 
   return response;
 }
@@ -92,7 +92,7 @@ interface ProblemSetPageProps {
 }
 
 let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
-  const _ = useIntlMessage("problem_set");
+  const _ = useLocalizer("problem_set");
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "problem_set");
@@ -122,7 +122,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     const { requestError, response } = await ProblemApi.getAllProblemTags({
       locale: appState.locale
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else setTags(Object.fromEntries(response.tags.map(tag => [tag.id, tag])));
   }
 

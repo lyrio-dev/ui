@@ -17,7 +17,7 @@ import { observer } from "mobx-react";
 
 import style from "./ProblemTagManager.module.less";
 
-import { useDialog, useIntlMessage, useConfirmUnload } from "@/utils/hooks";
+import { useDialog, useLocalizer, useConfirmUnload } from "@/utils/hooks";
 import { ProblemApi } from "@/api-generated";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
@@ -36,7 +36,7 @@ interface TagProps {
 }
 
 const Tag: React.FC<TagProps> = props => {
-  const _ = useIntlMessage("problem_tag_manager");
+  const _ = useLocalizer("problem_tag_manager");
 
   // Prevent the clicks on delete icon or delete icon's popup trigger an click event on the label
   const refClickDisabled = useRef(false);
@@ -120,7 +120,7 @@ interface ProblemTagManagerProps {
 }
 
 let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
-  const _ = useIntlMessage("problem_tag_manager");
+  const _ = useLocalizer("problem_tag_manager");
 
   const [modified, setModified] = useState(false);
   useConfirmUnload(() => modified);
@@ -161,7 +161,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
     const { requestError, response } = await ProblemApi.deleteProblemTag({
       id: tagId
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(`.error.${response.error}`);
     else {
       const newTags = Object.assign({}, tags);
@@ -202,7 +202,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         color: editingTagColor,
         localizedNames: localizedNames
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(`.error.${response.error}`);
       else {
         setTags(
@@ -224,7 +224,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         color: editingTagColor,
         localizedNames: localizedNames
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(`.error.${response.error}`);
       else {
         setTags(
@@ -522,7 +522,8 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
     setPendingOpen(true);
 
     const { requestError, response } = await ProblemApi.getAllProblemTagsOfAllLocales();
-    if (requestError || response.error) toast.error(requestError || _(`.error.${response.error}`));
+    if (requestError) toast.error(requestError(_));
+    else if (response.error) toast.error(_(`.error.${response.error}`));
 
     setPendingOpen(false);
 

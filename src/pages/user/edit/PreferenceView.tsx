@@ -3,14 +3,13 @@ import { Form, Header, Checkbox, TextArea, Button, Select, Flag, Icon, Input } f
 import { observer } from "mobx-react";
 import { set as setMobX } from "mobx";
 import { useNavigation } from "react-navi";
-import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
 import { UserApi } from "@/api";
 import { appState, browserDefaultLocale } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
@@ -19,11 +18,12 @@ import { HighlightedCodeBox } from "@/components/CodeBox";
 import { RouteError } from "@/AppRouter";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 import { availableCodeFonts } from "@/webfonts";
+import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserPreference({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
   await CodeFormatter.ready;
 
@@ -44,7 +44,7 @@ interface PreferenceViewProps {
 }
 
 const PreferenceView: React.FC<PreferenceViewProps> = props => {
-  const _ = useIntlMessage("user_edit.preference");
+  const _ = useLocalizer("user_edit.preference");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -104,7 +104,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
       preference
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.${response.error}`));
     else {
       toast.success(_(".success"));

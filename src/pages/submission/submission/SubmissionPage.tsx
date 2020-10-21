@@ -4,14 +4,13 @@ import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
 import { patch } from "jsondiffpatch";
 import { useNavigation } from "react-navi";
-import { FormattedMessage } from "react-intl";
 
 import style from "./SubmissionPage.module.less";
 
 import { appState } from "@/appState";
 import { SubmissionApi, ProblemApi } from "@/api-generated";
 import toast from "@/utils/toast";
-import { useIntlMessage, useSocket } from "@/utils/hooks";
+import { useLocalizer, useSocket } from "@/utils/hooks";
 import { SubmissionHeader, SubmissionItem, SubmissionItemExtraRows } from "../componments/SubmissionItem";
 import StatusText from "@/components/StatusText";
 import formatFileSize from "@/utils/formatFileSize";
@@ -24,6 +23,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
+import { makeToBeLocalizedText } from "@/locales";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -32,7 +32,7 @@ async function fetchData(submissionId: number) {
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`submission.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`submission.error.${response.error}`));
 
   type RemoveOptional<T> = {
     [K in keyof T]-?: T[K];
@@ -195,7 +195,7 @@ interface SubmissionPageProps {
 }
 
 let SubmissionPage: React.FC<SubmissionPageProps> = props => {
-  const _ = useIntlMessage("submission");
+  const _ = useLocalizer("submission");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -283,7 +283,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       type: "TestData",
       filenameList: [filename]
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else downloadFile(response.downloadInfo[0].downloadUrl);
   }
@@ -714,7 +714,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         filename: props.ProblemTypeSubmissionView.getDownloadAnswerFilename(props.meta)
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(`.errors.${response.error}`);
       else downloadFile(response.url);
     });
@@ -728,7 +728,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     const { requestError, response } = await SubmissionApi.cancelSubmission({
       submissionId: meta.id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".success_cancel"));
@@ -745,7 +745,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     const { requestError, response } = await SubmissionApi.rejudgeSubmission({
       submissionId: meta.id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".success_rejudge"));
@@ -764,7 +764,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       submissionId: meta.id,
       isPublic: !meta.isPublic
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(meta.isPublic ? ".success_set_non_public" : ".success_set_public"));
@@ -782,7 +782,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     const { requestError, response } = await SubmissionApi.deleteSubmission({
       submissionId: meta.id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".success_delete"));

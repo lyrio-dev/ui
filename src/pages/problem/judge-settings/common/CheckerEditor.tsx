@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import style from "./CheckerEditor.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import {
   CodeLanguage,
   filterValidCompileAndRunOptions,
@@ -103,7 +103,7 @@ export interface JudgeInfoWithChecker {
 type CheckerEditorProps = EditorComponentProps<JudgeInfoWithChecker>;
 
 let CheckerEditor: React.FC<CheckerEditorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const checker = props.judgeInfo.checker;
 

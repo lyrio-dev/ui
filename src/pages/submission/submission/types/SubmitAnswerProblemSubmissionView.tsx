@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { OmittableAnsiCodeBox, OmittableString } from "@/components/CodeBox";
 import { ProblemTypeSubmissionViewProps, ProblemTypeSubmissionViewHelper } from "../common/interface";
 
@@ -28,7 +28,7 @@ type SubmitAnswerProblemSubmissionViewProps = ProblemTypeSubmissionViewProps<
 >;
 
 const SubmitAnswerProblemSubmissionView: React.FC<SubmitAnswerProblemSubmissionViewProps> = props => {
-  const _ = useIntlMessage("submission");
+  const _ = useLocalizer("submission");
 
   return (
     <>

@@ -8,11 +8,11 @@ import AppLayout from "./layouts/AppLayout";
 import ErrorPage, { ErrorPageProps } from "./pages/error/ErrorPage";
 import getRoute from "./utils/getRoute";
 import { appState } from "./appState";
-import { loadLocaleData } from "./locales";
+import { loadLocaleData, ToBeLocalizedText } from "./locales";
 
 export class RouteError implements ErrorPageProps {
   constructor(
-    public message: React.ReactNode,
+    public message: React.ReactNode | ToBeLocalizedText,
     public options: {
       showRefresh?: true;
       showBack?: true;

@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import style from "./MetaEditor.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
 
 export interface JudgeInfoWithMeta {
@@ -27,7 +27,7 @@ interface MetaEditorOptions {
 type MetaEditorProps = EditorComponentProps<JudgeInfoWithMeta, MetaEditorOptions>;
 
 let MetaEditor: React.FC<MetaEditorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const judgeInfo = props.judgeInfo;
 

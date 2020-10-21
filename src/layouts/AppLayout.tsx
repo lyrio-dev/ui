@@ -15,7 +15,7 @@ import GlobalProgressBar from "@/components/GlobalProgressBar";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { AuthApi } from "@/api";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
@@ -25,7 +25,7 @@ export type NavButtonName = "home" | "problem_set" | "submissions" | "members" |
 let AppLayout: React.FC = props => {
   const navigation = useNavigation();
   const loadingRoute = useLoadingRoute();
-  const _ = useIntlMessage("common");
+  const _ = useLocalizer("common");
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -51,7 +51,7 @@ let AppLayout: React.FC = props => {
   async function onLogoutClick() {
     const { requestError, response } = await AuthApi.logout();
     if (requestError) {
-      toast.error(requestError);
+      toast.error(requestError(_));
     } else {
       appState.token = appState.currentUser = null;
       appState.currentUserPrivileges = [];

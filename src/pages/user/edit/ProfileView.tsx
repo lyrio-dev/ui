@@ -3,22 +3,22 @@ import { Icon, Form, Header, Input, Checkbox, TextArea, Button, List, Radio } fr
 import { observer } from "mobx-react";
 import { isURL } from "class-validator";
 import md5 from "blueimp-md5";
-import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
 import { UserApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
 import UserAvatar from "@/components/UserAvatar";
 import { RouteError } from "@/AppRouter";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserProfile({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
   return response;
 }
@@ -38,7 +38,7 @@ interface ProfileViewProps {
 }
 
 const ProfileView: React.FC<ProfileViewProps> = props => {
-  const _ = useIntlMessage("user_edit.profile");
+  const _ = useLocalizer("user_edit.profile");
 
   const [titleUsername, setTitleUsername] = useState(props.meta.username);
 
@@ -141,7 +141,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
         }
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
       else {
         toast.success(_("user_edit.preference.success"));

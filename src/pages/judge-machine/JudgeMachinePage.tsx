@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import style from "./JudgeMachinePage.module.less";
 
-import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import { JudgeClientApi } from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
@@ -41,7 +41,7 @@ interface JudgeMachinePageProps {
 }
 
 let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
-  const _ = useIntlMessage("judge_machine");
+  const _ = useLocalizer("judge_machine");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -117,7 +117,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
     const { requestError, response } = await JudgeClientApi.resetJudgeClientKey({
       id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".reset_key_success"));
@@ -131,7 +131,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
     const { requestError, response } = await JudgeClientApi.deleteJudgeClient({
       id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".delete_success"));
@@ -150,7 +150,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
       name: addNewName,
       allowedHosts: []
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".add_success"));

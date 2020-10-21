@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "semantic-ui-react";
 import { useNavigation } from "react-navi";
-import { FormattedMessage } from "react-intl";
 
 import style from "./DiscussionEditPage.module.less";
 
 import { defineRoute, RouteError } from "@/AppRouter";
 import { DiscussionApi, ProblemApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { DiscussionEditor } from "../view/DiscussionViewPage";
 import { getBreadcrumb } from "../discussions/DiscussionsPage";
 import toast from "@/utils/toast";
+import { makeToBeLocalizedText } from "@/locales";
 
 interface DiscussionEditPageProps {
   problem?: {
@@ -22,7 +22,7 @@ interface DiscussionEditPageProps {
 }
 
 const DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
-  const _ = useIntlMessage("discussion_edit");
+  const _ = useLocalizer("discussion_edit");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
           content
         });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       const newId = props.discussion
@@ -85,7 +85,7 @@ export default {
         appState.currentUserHasPrivilege("ManageDiscussion")
       )
     ) {
-      throw new RouteError(<FormattedMessage id={`discussion_edit.errors.PERMISSION_DENIED`} />);
+      throw new RouteError(makeToBeLocalizedText(`discussion_edit.errors.PERMISSION_DENIED`));
     }
 
     const problem = await (async (): Promise<DiscussionEditPageProps["problem"]> => {
@@ -99,8 +99,7 @@ export default {
       });
 
       if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-      else if (response.error)
-        throw new RouteError(<FormattedMessage id={`discussion_edit.errors.${response.error}`} />);
+      else if (response.error) throw new RouteError(makeToBeLocalizedText(`discussion_edit.errors.${response.error}`));
 
       return {
         meta: response.meta,
@@ -118,7 +117,7 @@ export default {
     });
 
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-    else if (response.error) throw new RouteError(<FormattedMessage id={`discussion_edit.errors.${response.error}`} />);
+    else if (response.error) throw new RouteError(makeToBeLocalizedText(`discussion_edit.errors.${response.error}`));
 
     return <DiscussionEditPage discussion={response.discussion} />;
   })

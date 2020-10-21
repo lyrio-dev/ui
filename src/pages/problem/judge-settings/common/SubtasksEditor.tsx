@@ -6,7 +6,7 @@ import update, { Spec } from "immutability-helper";
 
 import style from "./SubtasksEditor.module.less";
 
-import { useIntlMessage, useDialog } from "@/utils/hooks";
+import { useLocalizer, useDialog } from "@/utils/hooks";
 import TestDataFileSelector from "./TestDataFileSelector";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
@@ -83,7 +83,7 @@ interface SubtaskEditorTastcaseItemProps {
 }
 
 let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const refOptionsButton = useRef(null);
 
@@ -287,7 +287,7 @@ interface SubtaskEditorProps {
 }
 
 let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const [testcasesExpanded, setTestcasesExpanded] = useState(props.subtaskCount === 1);
 
@@ -854,7 +854,7 @@ SubtaskEditor = observer(SubtaskEditor);
 type SubtasksEditorProps = EditorComponentProps<JudgeInfoWithSubtasks, SubtasksEditorOptions>;
 
 let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const judgeInfo = props.judgeInfo;
 

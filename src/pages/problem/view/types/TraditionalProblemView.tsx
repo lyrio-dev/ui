@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import style from "./TraditionalProblemView.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import CodeEditor from "@/components/LazyCodeEditor";
 
@@ -17,7 +17,7 @@ import { getLimit } from "../common";
 type TraditionalProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoTraditional>;
 
 const TraditionalProblemLabels: React.FC<TraditionalProblemLabelsProps> = React.memo(props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   const timeLimit = getLimit(props.judgeInfo, "timeLimit");
   const memoryLimit = getLimit(props.judgeInfo, "memoryLimit");

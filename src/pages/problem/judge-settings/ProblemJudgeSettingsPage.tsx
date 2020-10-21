@@ -5,13 +5,12 @@ import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import { v4 as uuid } from "uuid";
 import lodashClonedeep from "lodash.clonedeep";
-import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemJudgeSettingsPage.module.less";
 
 import { ProblemApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage, useDialog, useConfirmUnload } from "@/utils/hooks";
+import { useLocalizer, useDialog, useConfirmUnload } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
@@ -19,6 +18,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeEditorComponent } from "./common/interface";
 import { getProblemIdString, getProblemUrl } from "../utils";
+import { makeToBeLocalizedText } from "@/locales";
 
 async function fetchData(idType: "id" | "displayId", id: number) {
   const { requestError, response } = await ProblemApi.getProblem({
@@ -30,7 +30,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error)
-    throw new RouteError(<FormattedMessage id={`problem_judge_settings.error.${response.error}`} />);
+    throw new RouteError(makeToBeLocalizedText(`problem_judge_settings.error.${response.error}`));
 
   return response;
 }
@@ -42,7 +42,7 @@ interface ProblemJudgeSettingsPageProps {
 }
 
 let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
   const navigation = useNavigation();
 
   const idString = getProblemIdString(props.problem.meta);
@@ -93,7 +93,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     });
 
     if (requestError) {
-      toast.error(requestError);
+      toast.error(requestError(_));
     } else if (response.error) {
       if (response.error === "INVALID_JUDGE_INFO") {
         toast.error(_(`.error.INVALID_JUDGE_INFO.${response.judgeInfoError[0]}`, response.judgeInfoError));
@@ -168,7 +168,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     });
     setSwitchProblemPopupOpen(false);
     if (requestError) {
-      toast.error(requestError);
+      toast.error(requestError(_));
     } else if (response.error) {
       toast.error(_(`.error.${response.error}`));
     } else {

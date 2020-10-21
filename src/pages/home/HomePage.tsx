@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { observer } from "mobx-react";
 
 import { appState } from "@/appState";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { defineRoute } from "@/AppRouter";
 
 let HomePage: React.FC = () => {
-  const _ = useIntlMessage("home");
+  const _ = useLocalizer("home");
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "home");

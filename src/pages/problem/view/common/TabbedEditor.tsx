@@ -5,7 +5,7 @@ import * as Monaco from "monaco-editor";
 
 import style from "./TabbedEditor.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import CodeEditor from "@/components/LazyCodeEditor";
 import HorizontalScroll from "@/components/HorizontalScroll";
 
@@ -23,7 +23,7 @@ interface TabbedEditorProps {
 }
 
 let TabbedEditor: React.FC<TabbedEditorProps> = props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   // Without a ref wrapper, props.onChange() will call the outdated old callback function
   // which is binded with the outdated states of the parent component

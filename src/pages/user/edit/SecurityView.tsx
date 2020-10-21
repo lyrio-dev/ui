@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Header, Button, Input, Segment, Icon, SegmentGroup, Label, Popup } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { isEmail } from "class-validator";
-import { FormattedMessage } from "react-intl";
 import { UAParser } from "ua-parser-js";
 import * as timeago from "timeago.js";
 
@@ -11,11 +10,12 @@ import style from "./UserEdit.module.less";
 import { UserApi, AuthApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
 import { isValidPassword } from "@/utils/validators";
 import { RouteError } from "@/AppRouter";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import formatDateTime from "@/utils/formatDateTime";
+import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
   const result = {};
@@ -25,7 +25,7 @@ export async function fetchData(userId: number) {
     AuthApi.listUserSessions({ userId })
   ])) {
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-    else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+    else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
     Object.assign(result, response);
   }
 
@@ -39,7 +39,7 @@ interface SecurityViewProps {
 }
 
 const SecurityView: React.FC<SecurityViewProps> = props => {
-  const _ = useIntlMessage("user_edit.security");
+  const _ = useLocalizer("user_edit.security");
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
@@ -86,7 +86,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         oldPassword: oldPassword || null,
         password: newPassword
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error === "WRONG_OLD_PASSWORD") {
         setWrongOldPassword(true);
       } else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
@@ -123,7 +123,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         type: "ChangeEmail",
         locale: appState.locale
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error === "DUPLICATE_EMAIL") setDuplicateEmail(true);
       else if (response.error)
         toast.error(_(`user_edit.errors.${response.error}`, { errorMessage: response.errorMessage }));
@@ -160,7 +160,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
         email: email,
         emailVerificationCode: emailVerificationCode
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error === "DUPLICATE_EMAIL") setDuplicateEmail(true);
       else if (response.error === "INVALID_EMAIL_VERIFICATION_CODE") setEmailVerificationCodeError(true);
       else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
@@ -194,7 +194,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
       userId: props.meta.id,
       sessionId
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
     else {
       if (!sessionId) {

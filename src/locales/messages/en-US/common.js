@@ -33,5 +33,13 @@ module.exports = {
   },
   footer: {
     judge_machine: "Judge Machine"
+  },
+  request_error: {
+    400: "Invalid request.",
+    500: "Server error. Please try again later.",
+    502: "Couldn't connect to the server. Please try again later.",
+    503: "Couldn't connect to the server. Please try again later.",
+    504: "Timeout connecting to the server. Please try again later.",
+    unknown: "Request error: {text}"
   }
 };

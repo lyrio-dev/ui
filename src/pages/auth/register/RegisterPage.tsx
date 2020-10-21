@@ -10,7 +10,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import { AuthApi } from "@/api";
-import { useIntlMessage, useFieldCheck, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useLocalizer, useFieldCheck, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
@@ -18,7 +18,7 @@ import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
 
 let RegisterPage: React.FC = () => {
-  const _ = useIntlMessage("register");
+  const _ = useLocalizer("register");
   const currentRoute = useCurrentRoute();
 
   const navigation = useNavigation();
@@ -67,7 +67,7 @@ let RegisterPage: React.FC = () => {
       const { requestError, response } = await AuthApi.checkAvailability({ username: value });
 
       if (requestError) {
-        toast.error(requestError);
+        toast.error(requestError(_));
         return "";
       }
 
@@ -90,7 +90,7 @@ let RegisterPage: React.FC = () => {
       const { requestError, response } = await AuthApi.checkAvailability({ email: value });
 
       if (requestError) {
-        toast.error(requestError);
+        toast.error(requestError(_));
         return "";
       }
 
@@ -153,7 +153,7 @@ let RegisterPage: React.FC = () => {
         password: password
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) {
         switch (response.error) {
           case "ALREADY_LOGGEDIN":
@@ -229,7 +229,7 @@ let RegisterPage: React.FC = () => {
         type: "Register",
         locale: appState.locale
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(_(`.errors.${response.error}`, { errorMessage: response.errorMessage }));
       else {
         toast.success(_(".email_verification_code_sent"));

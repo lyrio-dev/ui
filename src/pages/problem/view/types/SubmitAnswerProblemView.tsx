@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { observer } from "mobx-react";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import getFileIcon from "@/utils/getFileIcon";
 
@@ -18,7 +18,7 @@ type SubmitAnswerProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoSubmitAnsw
 const ARCHIVE_FILE_EXTENSIONS = [".zip"];
 
 const SubmitAnswerProblemLabels: React.FC<SubmitAnswerProblemLabelsProps> = React.memo(props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   return <></>;
 });
@@ -33,7 +33,7 @@ interface SubmissionContent {
 type SubmitAnswerProblemSubmitViewProps = ProblemTypeSubmitViewProps<JudgeInfoSubmitAnswer, SubmissionContent>;
 
 let SubmitAnswerProblemSubmitView: React.FC<SubmitAnswerProblemSubmitViewProps> = props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   const wantedFiles = props.judgeInfo.subtasks
     .map(subtask => subtask.testcases.map(testcase => testcase.userOutputFilename || testcase.outputFile))

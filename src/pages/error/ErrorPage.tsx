@@ -5,12 +5,13 @@ import { useNavigation } from "react-navi";
 
 import style from "./ErrorPage.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { appState } from "@/appState";
+import { isToBeLocalizedText, ToBeLocalizedText } from "@/locales";
 
 export interface ErrorPageProps {
   uncaughtError?: Error;
-  message: React.ReactNode;
+  message: React.ReactNode | ToBeLocalizedText;
   options: {
     showRefresh?: true;
     showBack?: true;
@@ -18,7 +19,7 @@ export interface ErrorPageProps {
 }
 
 let ErrorPage: React.FC<ErrorPageProps> = props => {
-  const _ = useIntlMessage("error");
+  const _ = useLocalizer("error");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -43,7 +44,7 @@ let ErrorPage: React.FC<ErrorPageProps> = props => {
           </>
         ) : (
           <>
-            <p>{props.message}</p>
+            <p>{isToBeLocalizedText(props.message) ? props.message(_) : props.message}</p>
             <p>
               {props.options.showBack && <a onClick={() => navigation.goBack()}>{_(".back")}</a>}
               {props.options.showRefresh && <a onClick={() => navigation.refresh()}>{_(".refresh")}</a>}

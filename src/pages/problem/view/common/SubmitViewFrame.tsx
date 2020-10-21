@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import style from "./SubmitViewFrame.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import StatusText from "@/components/StatusText";
 import ScoreText from "@/components/ScoreText";
 
@@ -26,7 +26,7 @@ interface SubmitViewFrameProps {
 }
 
 let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   return (
     <div className={style.submitView} style={{ display: props.inSubmitView ? null : "none" }}>

@@ -3,7 +3,7 @@ import { Form } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import objectPath from "object-path";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { CodeLanguage, getPreferredCodeLanguage, getPreferredCompileAndRunOptions } from "@/interfaces/CodeLanguage";
 import CodeLanguageAndOptionsComponent from "@/components/CodeLanguageAndOptions";
 
@@ -15,7 +15,7 @@ interface CodeLanguageAndOptionsProps {
 }
 
 let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   const submissionContent = objectPath.get(props.submissionContent, props.objectPath) as {
     language: CodeLanguage;

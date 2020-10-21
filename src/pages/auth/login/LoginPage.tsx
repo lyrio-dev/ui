@@ -10,7 +10,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import { AuthApi } from "@/api";
-import { useIntlMessage, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
@@ -18,7 +18,7 @@ import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
 
 let LoginPage: React.FC = () => {
-  const _ = useIntlMessage("login");
+  const _ = useLocalizer("login");
   const currentRoute = useCurrentRoute();
 
   const navigation = useNavigation();
@@ -68,7 +68,7 @@ let LoginPage: React.FC = () => {
       // Send login request
       const { requestError, response } = await AuthApi.login({ username, password });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) {
         switch (response.error) {
           case "ALREADY_LOGGEDIN":

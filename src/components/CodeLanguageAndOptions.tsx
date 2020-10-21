@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { Form } from "semantic-ui-react";
 import { observer } from "mobx-react";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import {
   compileAndRunOptions,
   CodeLanguageOptionType,
@@ -23,7 +23,7 @@ interface CodeLanguageAndOptionsProps {
 }
 
 let CodeLanguageAndOptions: React.FC<CodeLanguageAndOptionsProps> = props => {
-  const _ = useIntlMessage("code_language");
+  const _ = useLocalizer("code_language");
 
   const compileAndRunOptionsBackup = useRef(new Map<CodeLanguage, Record<string, unknown>>()).current;
   function onSwitchLanguage(newLanguage: CodeLanguage) {

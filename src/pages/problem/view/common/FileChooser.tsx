@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import style from "./FileChooser.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import openUploadDialog from "@/utils/openUploadDialog";
 
 interface FileChooserProps {
@@ -16,7 +16,7 @@ interface FileChooserProps {
 }
 
 let FileChooser: React.FC<FileChooserProps> = props => {
-  const _ = useIntlMessage("problem");
+  const _ = useLocalizer("problem");
 
   return (
     <Form>

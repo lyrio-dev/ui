@@ -10,14 +10,14 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import { AuthApi } from "@/api";
-import { useIntlMessage, useFieldCheck } from "@/utils/hooks";
+import { useLocalizer, useFieldCheck } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
 import { onEnterPress } from "@/utils/onEnterPress";
 
 let ForgetPage: React.FC = () => {
-  const _ = useIntlMessage("forgot");
+  const _ = useLocalizer("forgot");
   const currentRoute = useCurrentRoute();
 
   const navigation = useNavigation();
@@ -110,7 +110,7 @@ let ForgetPage: React.FC = () => {
         newPassword: password
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) {
         switch (response.error) {
           case "NO_SUCH_USER":
@@ -175,7 +175,7 @@ let ForgetPage: React.FC = () => {
         type: "ResetPassword",
         locale: appState.locale
       });
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(_(`.errors.${response.error}`, { errorMessage: response.errorMessage }));
       else {
         toast.success(_(".email_verification_code_sent"));

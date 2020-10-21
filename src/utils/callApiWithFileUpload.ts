@@ -4,7 +4,7 @@ import Axios from "axios";
 export interface ApiResponseWithUploadResult<T extends { error?: string }> {
   uploadCancelled?: boolean;
   uploadError?: any;
-  requestError?: string;
+  requestError?: ApiResponse<T>["requestError"];
   response?: Omit<T, "signedUploadRequest">;
 }
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Header, Icon, Label, Menu, Segment, Table } from "semantic-ui-react";
 import { Link, useNavigation } from "react-navi";
 import { URLDescriptor } from "navi";
-import { FormattedMessage } from "react-intl";
 import { observer } from "mobx-react";
 
 import style from "./DiscussionsPage.module.less";
@@ -10,7 +9,7 @@ import style from "./DiscussionsPage.module.less";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
 import { DiscussionApi } from "@/api";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import UserSearch from "@/components/UserSearch";
 import Pagination from "@/components/Pagination";
@@ -20,6 +19,7 @@ import toast from "@/utils/toast";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import UserLink from "@/components/UserLink";
 import formatDateTime from "@/utils/formatDateTime";
+import { Localizer, makeToBeLocalizedText } from "@/locales";
 
 export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
   return {
@@ -32,7 +32,7 @@ export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
 
 export function getBreadcrumb(
   problem: { meta: ApiTypes.ProblemMetaDto; title: string },
-  _: (id: string) => string,
+  _: Localizer,
   allProblems?: boolean
 ) {
   return (
@@ -109,7 +109,7 @@ async function fetchData(
   );
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`discussions.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`discussions.error.${response.error}`));
 
   return response;
 }
@@ -149,7 +149,7 @@ interface DiscussionSearchProps {
 const SEARCH_DISCUSSION_PREVIEW_LIST_LENGTH = appState.serverPreference.pagination.searchDiscussionsPreview;
 
 let DiscussionSearch: React.FC<DiscussionSearchProps> = props => {
-  const _ = useIntlMessage("discussions.search_discussion");
+  const _ = useLocalizer("discussions.search_discussion");
 
   return (
     <PreviewSearch
@@ -169,7 +169,7 @@ let DiscussionSearch: React.FC<DiscussionSearchProps> = props => {
           })
         );
 
-        if (requestError) toast.error(requestError);
+        if (requestError) toast.error(requestError(_));
         else return response.discussions;
 
         return [];
@@ -188,7 +188,7 @@ interface DiscussionsPageProps {
 }
 
 let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
-  const _ = useIntlMessage("discussions");
+  const _ = useLocalizer("discussions");
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "discussion");

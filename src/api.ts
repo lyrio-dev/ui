@@ -1,9 +1,10 @@
 import axios from "axios";
 
 import { appState } from "./appState";
+import { makeToBeLocalizedText, ToBeLocalizedText } from "./locales";
 
 export interface ApiResponse<T> {
-  requestError?: string;
+  requestError?: ToBeLocalizedText;
   response?: T;
 }
 
@@ -17,21 +18,32 @@ async function request<T>(path: string, method: "get" | "post", params?: any, bo
       headers: {
         "Content-Type": "application/json",
         Authorization: appState.token && `Bearer ${appState.token}`
-      }
+      },
+      validateStatus: () => true
     });
   } catch (e) {
+    console.error(e);
     return {
-      requestError: e.message
+      requestError: makeToBeLocalizedText("common.request_error.unknown", { text: e.message })
     };
   }
 
   if (![200, 201].includes(response.status)) {
-    // TODO: Handle unexpected errors
     try {
-      console.log(response.data);
-    } catch (e) {}
+      console.log("response.data:", response.data);
+    } catch (e) {
+      console.log("response:", response);
+    }
+
+    if ([400, 500, 502, 503, 504].includes(response.status))
+      return {
+        requestError: makeToBeLocalizedText(`common.request_error.${response.status}`)
+      };
+
     return {
-      requestError: `${response.status} ${response.statusText}`
+      requestError: makeToBeLocalizedText("common.request_error.unknown", {
+        text: `${response.status} ${response.statusText}`
+      })
     };
   }
 

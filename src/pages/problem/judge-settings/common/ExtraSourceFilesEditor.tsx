@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 import style from "./ExtraSourceFilesEditor.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import TestDataFileSelector from "./TestDataFileSelector";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
@@ -19,7 +19,7 @@ export interface JudgeInfoWithExtraSourceFiles {
 type ExtraSourceFilesEditorProps = EditorComponentProps<JudgeInfoWithExtraSourceFiles>;
 
 let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   // To support inserting empty items, use a local copy for editing
   // XXX: If the judge info's extraSourceFiles is modified outside this componment, it won't get synced

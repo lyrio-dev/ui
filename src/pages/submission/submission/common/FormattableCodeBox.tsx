@@ -4,7 +4,7 @@ import { Button } from "semantic-ui-react";
 import style from "./FormattableCodeBox.module.less";
 
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { appState } from "@/appState";
 import * as CodeFormatter from "@/utils/CodeFormatter";
 import toast from "@/utils/toast";
@@ -18,7 +18,7 @@ interface FormattableCodeBoxProps {
 }
 
 const FormattableCodeBox = React.forwardRef<HTMLPreElement, FormattableCodeBoxProps>((props, ref) => {
-  const _ = useIntlMessage("submission");
+  const _ = useLocalizer("submission");
 
   const defaultFormatted = !appState.userPreference.codeFormatter?.disableByDefault;
   const options = appState.userPreference.codeFormatter?.options || CodeFormatter.defaultOptions;

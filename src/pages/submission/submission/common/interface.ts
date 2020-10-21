@@ -1,10 +1,10 @@
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { OmittableString } from "@/components/CodeBox";
 
 import { SubmissionProgress, SubmissionProgressMeta } from "../SubmissionPage";
 
-type IntlMessageFormatter = ReturnType<typeof useIntlMessage>;
+type IntlMessageFormatter = ReturnType<typeof useLocalizer>;
 
 export interface TestcaseResultCommon {
   testcaseInfo?: {

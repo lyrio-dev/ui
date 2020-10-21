@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Header, Checkbox, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { FormattedMessage } from "react-intl";
 
 import style from "./UserEdit.module.less";
 
 import { UserApi } from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
+import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await UserApi.getUserMeta({ userId, getPrivileges: true });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
   return response;
 }
@@ -33,7 +33,7 @@ interface PrevilegeViewProps {
 }
 
 const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
-  const _ = useIntlMessage("user_edit.privilege");
+  const _ = useLocalizer("user_edit.privilege");
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
@@ -44,7 +44,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
       userId: props.meta.id,
       privileges: [...privileges]
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
     else {
       toast.success(_(".success"));

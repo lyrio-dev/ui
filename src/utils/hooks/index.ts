@@ -1,4 +1,4 @@
-export * from "./useIntlMessage";
+export * from "./useLocalizer";
 export * from "./useFieldCheck";
 export * from "./useFieldCheckSimple";
 export * from "./useDialog";

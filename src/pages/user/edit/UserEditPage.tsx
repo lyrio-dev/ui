@@ -6,11 +6,11 @@ import { Link, useCurrentRoute, useNavigation } from "react-navi";
 import style from "./UserEdit.module.less";
 
 import { appState } from "@/appState";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { UserApi } from "@/api-generated";
 import { isValidUsername } from "@/utils/validators";
-import { FormattedMessage } from "react-intl";
+import { makeToBeLocalizedText } from "@/locales";
 
 enum EditType {
   Profile = "profile",
@@ -29,7 +29,7 @@ interface UserEditPageProps {
 }
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
-  const _ = useIntlMessage("user_edit");
+  const _ = useLocalizer("user_edit");
   const currentRoute = useCurrentRoute();
   const navigation = useNavigation();
 
@@ -122,13 +122,13 @@ export default {
   ),
   byUsername: defineRoute(async request => {
     const username = request.params.username;
-    if (!isValidUsername(username)) throw new RouteError(<FormattedMessage id={`user_edit.errors.NO_SUCH_USER`} />);
+    if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.NO_SUCH_USER`));
 
     const { requestError, response } = await UserApi.getUserMeta({
       username
     });
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-    else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+    else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
     return await getView(response.meta.id, request.params.type as EditType, request.query, true);
   })

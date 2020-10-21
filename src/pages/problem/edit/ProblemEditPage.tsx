@@ -22,7 +22,6 @@ import TextAreaAutoSize from "react-textarea-autosize";
 import { useNavigation } from "react-navi";
 import { v4 as uuid } from "uuid";
 import update from "immutability-helper";
-import { FormattedMessage } from "react-intl";
 
 import style from "./ProblemEditPage.module.less";
 
@@ -31,13 +30,14 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useIntlMessage, useConfirmUnload, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useConfirmUnload, useAsyncCallbackPending } from "@/utils/hooks";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
 import MarkdownContent from "@/markdown/MarkdownContent";
 import { getProblemIdString, getProblemUrl } from "../utils";
 import { useProblemViewMarkdownContentPatcher } from "../view/ProblemViewPage";
+import { makeToBeLocalizedText } from "@/locales";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -51,7 +51,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`problem_edit.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`problem_edit.error.${response.error}`));
 
   return response;
 }
@@ -107,7 +107,7 @@ interface LocalizedContentEditorSectionProps {
 }
 
 const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps> = props => {
-  const _ = useIntlMessage("problem_edit");
+  const _ = useLocalizer("problem_edit");
 
   const [preview, setPreview] = useState(false);
 
@@ -344,7 +344,7 @@ interface LocalizedContentEditorProps {
 }
 
 const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
-  const _ = useIntlMessage("problem_edit");
+  const _ = useLocalizer("problem_edit");
 
   const [preview, setPreview] = useState(false);
 
@@ -469,7 +469,7 @@ interface SampleEditorProps {
 }
 
 const SampleEditor: React.FC<SampleEditorProps> = props => {
-  const _ = useIntlMessage("problem_edit");
+  const _ = useLocalizer("problem_edit");
 
   const refOptionsButton = useRef(null);
 
@@ -702,7 +702,7 @@ interface ProblemEditPageProps {
 }
 
 let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
-  const _ = useIntlMessage("problem_edit");
+  const _ = useLocalizer("problem_edit");
   const navigation = useNavigation();
 
   const idString = !props.new && getProblemIdString(props.problem.meta);
@@ -789,7 +789,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         }
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) {
         toast.error(_(`.error.${response.error}`));
       } else {
@@ -803,7 +803,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         problemTagIds: tagIds
       });
 
-      if (requestError) toast.error(requestError);
+      if (requestError) toast.error(requestError(_));
       else if (response.error) {
         toast.error(_(`.error.${response.error}`));
       } else {

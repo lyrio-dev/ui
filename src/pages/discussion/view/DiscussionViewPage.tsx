@@ -14,7 +14,6 @@ import {
   TextArea
 } from "semantic-ui-react";
 import { Link, useNavigation } from "react-navi";
-import { FormattedMessage } from "react-intl";
 import { observer } from "mobx-react";
 import * as timeago from "timeago.js";
 import twemoji from "twemoji";
@@ -26,7 +25,7 @@ import LoadMoreBackground from "./LoadMoreBackground.svg";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
 import { DiscussionApi } from "@/api";
-import { useAsyncCallbackPending, useIntlMessage, useDialog, useFocusWithin, useConfirmUnload } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer, useDialog, useFocusWithin, useConfirmUnload } from "@/utils/hooks";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { getDiscussionDisplayTitle } from "../utils";
 import toast from "@/utils/toast";
@@ -39,6 +38,7 @@ import svgToDataUrl from "@/utils/svgToUrl";
 import { onEnterPress } from "@/utils/onEnterPress";
 import PermissionManager from "@/components/LazyPermissionManager";
 import { getBreadcrumb, getNewDiscussionUrl } from "../discussions/DiscussionsPage";
+import { makeToBeLocalizedText } from "@/locales";
 
 const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
@@ -54,7 +54,7 @@ async function fetchData(discussionId: number) {
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`discussion.errors.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`discussion.errors.${response.error}`));
 
   return response;
 }
@@ -128,7 +128,7 @@ interface ReactionEmojiPickerProps {
 }
 
 const ReactionEmojiPicker: React.FC<ReactionEmojiPickerProps> = props => {
-  const _ = useIntlMessage("discussion");
+  const _ = useLocalizer("discussion");
 
   const custom = appState.serverPreference.misc.discussionReactionAllowCustomEmojis;
   const emojis = appState.serverPreference.misc.discussionReactionEmojis;
@@ -193,7 +193,7 @@ interface DiscussionItemProps {
 }
 
 const DiscussionItem: React.FC<DiscussionItemProps> = props => {
-  const _ = useIntlMessage("discussion.item");
+  const _ = useLocalizer("discussion.item");
 
   const isMobile = useScreenWidthWithin(0, 768);
 
@@ -479,7 +479,7 @@ interface DiscussionEditorProps {
 }
 
 export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
-  const _ = useIntlMessage("discussion.edit");
+  const _ = useLocalizer("discussion.edit");
 
   const isMobile = useScreenWidthWithin(0, 768);
   const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => await props.onSubmit(props.content));
@@ -624,7 +624,7 @@ interface DiscussionViewPageProps {
 }
 
 let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
-  const _ = useIntlMessage("discussion");
+  const _ = useLocalizer("discussion");
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -713,7 +713,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       idRangeTakeCount: Math.min(item.loadMore.count, appState.serverPreference.pagination.discussionRepliesMore)
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       const [items, setItems] = refStateItems.current;
@@ -803,7 +803,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       reaction
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       function processReactions(reactions: ApiTypes.DiscussionOrReplyReactionsDto) {
@@ -837,7 +837,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       isPublic
     } as any);
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       if (type === "Discussion") {
@@ -859,7 +859,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       [type === "Discussion" ? "discussionId" : "discussionReplyId"]: id
     } as any);
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       if (type === "Discussion") {
@@ -885,7 +885,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       content: content
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       const [items, setItems] = refStateItems.current;
@@ -923,7 +923,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       content
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       mergeItem(id, item => ({
@@ -973,7 +973,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         const { requestError, response } = await DiscussionApi.getDiscussionPermissions({
           id: discussion.meta.id
         });
-        if (requestError) toast.error(requestError);
+        if (requestError) toast.error(requestError(_));
         else if (response.error) toast.error(_(`.error.${response.error}`));
         else {
           return {
@@ -991,7 +991,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
           userPermissions: userPermissions as any,
           groupPermissions: groupPermissions as any
         });
-        if (requestError) toast.error(requestError);
+        if (requestError) toast.error(requestError(_));
         else if (response.error === "NO_SUCH_DISCUSSION") toast.error(_(".errors.NO_SUCH_DISCUSSION"));
         else if (response.error) return response;
         return true;

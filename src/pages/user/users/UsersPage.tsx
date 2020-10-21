@@ -2,18 +2,18 @@ import React, { useEffect } from "react";
 import { Table, Icon, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { useNavigation, Link } from "react-navi";
-import { FormattedMessage } from "react-intl";
 
 import style from "./UsersPage.module.less";
 
 import { UserApi } from "@/api";
 import { UserMeta } from "@/interfaces/UserMeta";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { appState } from "@/appState";
 import Pagination from "@/components/Pagination";
 import UserLink from "@/components/UserLink";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
+import { makeToBeLocalizedText } from "@/locales";
 
 const USERS_PER_PAGE = appState.serverPreference.pagination.userList;
 
@@ -30,7 +30,7 @@ async function fetchData(sortBy: SortBy, currentPage: number): Promise<[UserMeta
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error) throw new RouteError(<FormattedMessage id={`users.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`users.error.${response.error}`));
 
   return [response.userMetas, response.count];
 }
@@ -43,7 +43,7 @@ interface UsersPageProps {
 }
 
 let UsersPage: React.FC<UsersPageProps> = props => {
-  const _ = useIntlMessage("users");
+  const _ = useLocalizer("users");
   const navigation = useNavigation();
 
   useEffect(() => {

@@ -16,22 +16,22 @@ import {
 } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Link } from "react-navi";
-import { FormattedMessage } from "react-intl";
 
 import style from "./GroupsPage.module.less";
 
 import { appState } from "@/appState";
 import { GroupApi } from "@/api";
-import { useAsyncCallbackPending, useIntlMessage } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
 import toast from "@/utils/toast";
 import UserLink from "@/components/UserLink";
 import UserAvatar from "@/components/UserAvatar";
 import UserSearch from "@/components/UserSearch";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { makeToBeLocalizedText } from "@/locales";
 
 async function fetchData(): Promise<ApiTypes.GetGroupListResponseDto> {
-  if (!appState.currentUser) throw new RouteError(<FormattedMessage id="groups.not_logged_in" />);
+  if (!appState.currentUser) throw new RouteError(makeToBeLocalizedText("groups.not_logged_in"));
   const { requestError, response } = await GroupApi.getGroupList();
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   return response;
@@ -44,7 +44,7 @@ interface GroupItemProps {
 }
 
 let GroupItem: React.FC<GroupItemProps> = props => {
-  const _ = useIntlMessage("groups");
+  const _ = useLocalizer("groups");
 
   const [memberListLoading, setMemberListLoading] = useState(false);
   const [memberList, setMemberList] = useState<ApiTypes.GetGroupMemberListResponseItem[]>(null);
@@ -66,7 +66,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       groupId: props.meta.id
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(response.memberList);
@@ -87,7 +87,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       userId,
       isGroupAdmin
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(
@@ -121,7 +121,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       groupId: props.meta.id,
       name: renameInputValue
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setName(renameInputValue);
@@ -139,7 +139,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       groupId: props.meta.id,
       userId: userMeta.id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList([
@@ -161,7 +161,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     const { requestError, response } = await GroupApi.deleteGroup({
       groupId: props.meta.id
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       props.onDelete();
@@ -178,7 +178,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       groupId: props.meta.id,
       userId: userId
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(memberList.filter(member => member.userMeta.id !== userId));
@@ -317,7 +317,7 @@ interface GroupsPageProps {
 }
 
 let GroupsPage: React.FC<GroupsPageProps> = props => {
-  const _ = useIntlMessage("groups");
+  const _ = useLocalizer("groups");
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "members");
@@ -334,7 +334,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
     const { requestError, response } = await GroupApi.createGroup({
       groupName: createGroupName
     });
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setGroups([

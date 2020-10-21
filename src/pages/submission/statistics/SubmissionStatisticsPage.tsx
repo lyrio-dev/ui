@@ -3,18 +3,18 @@ import { Table, Icon, Button, Segment, Header, Dropdown, Menu } from "semantic-u
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import { Bar, Line } from "react-chartjs-2";
-import { FormattedMessage } from "react-intl";
 
 import style from "./SubmissionStatisticsPage.module.less";
 
 import { SubmissionApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
 import Pagination from "@/components/Pagination";
 import { getScoreColor } from "@/components/ScoreText";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { getProblemIdString } from "@/pages/problem/utils";
+import { makeToBeLocalizedText } from "@/locales";
 
 const SUBMISSIONS_PER_PAGE = appState.serverPreference.pagination.submissionStatistics;
 
@@ -43,8 +43,7 @@ async function fetchData(id: number, idType: "id" | "displayId", type: Submissio
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-  else if (response.error)
-    throw new RouteError(<FormattedMessage id={`submission_statistics.error.${response.error}`} />);
+  else if (response.error) throw new RouteError(makeToBeLocalizedText(`submission_statistics.error.${response.error}`));
 
   return response;
 }
@@ -58,7 +57,7 @@ interface SubmissionStatisticsPageProps {
 }
 
 let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props => {
-  const _ = useIntlMessage("submission_statistics");
+  const _ = useLocalizer("submission_statistics");
   const navigation = useNavigation();
 
   const idString = getProblemIdString(props.id, { use: props.idType });

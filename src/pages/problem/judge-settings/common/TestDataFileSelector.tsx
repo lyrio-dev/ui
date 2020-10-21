@@ -3,7 +3,7 @@ import { Dropdown, Form, Icon, FormSelectProps, DropdownProps, SemanticICONS, Po
 
 import style from "./TestDataFileSelector.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 
@@ -20,7 +20,7 @@ interface TestDataFileSelectorProps {
 }
 
 const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
-  const _ = useIntlMessage("problem_judge_settings");
+  const _ = useLocalizer("problem_judge_settings");
 
   const uiProps: FormSelectProps | DropdownProps = {
     className:

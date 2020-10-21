@@ -4,7 +4,7 @@ import { Table, Icon, Popup, Ref } from "semantic-ui-react";
 
 import style from "./SubmissionItem.module.less";
 
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import formatFileSize from "@/utils/formatFileSize";
 import formatDateTime from "@/utils/formatDateTime";
 import UserLink from "@/components/UserLink";
@@ -34,7 +34,7 @@ interface SubmissionHeaderProps {
 }
 
 export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
-  const _ = useIntlMessage("submission_item");
+  const _ = useLocalizer("submission_item");
 
   return (
     <Table.Row
@@ -84,7 +84,7 @@ interface SubmissionItemProps {
 }
 
 export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
-  const _ = useIntlMessage("submission_item");
+  const _ = useLocalizer("submission_item");
 
   const { submission, submissionLink, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
 
@@ -167,7 +167,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
 };
 
 export const SubmissionHeaderMobile: React.FC<{}> = () => {
-  const _ = useIntlMessage("submission_item");
+  const _ = useLocalizer("submission_item");
 
   return (
     <Table.Row className={style.submissionItemMobile}>
@@ -204,7 +204,7 @@ interface SubmissionItemMobileProps {
 // For mobile view of submissions page only
 // Not for submission page and statistics page
 export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props => {
-  const _ = useIntlMessage("submission_item");
+  const _ = useLocalizer("submission_item");
 
   const { submission, submissionLink, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
 
@@ -267,7 +267,7 @@ interface SubmissionItemExtraRowsProps {
 }
 
 export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = props => {
-  const _ = useIntlMessage("submission_item");
+  const _ = useLocalizer("submission_item");
 
   const { submission, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
 

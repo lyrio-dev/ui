@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Header, Button, Form, Segment, Icon, Comment, Accordion, Divider, Label } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { FormattedMessage } from "react-intl";
 import { useNavigation, Link } from "react-navi";
 import replace from "string-replace-to-array";
 
@@ -9,7 +8,7 @@ import style from "./UserEdit.module.less";
 
 import { UserApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
 import UserAvatar from "@/components/UserAvatar";
 import UserLink from "@/components/UserLink";
@@ -23,6 +22,7 @@ import { URLDescriptor } from "navi";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import { getDiscussionDisplayTitle, getDiscussionUrl } from "@/pages/discussion/utils";
+import { makeToBeLocalizedText } from "@/locales";
 
 const AUDIT_LOGS_PER_PAGE = appState.serverPreference.pagination.userAuditLogs;
 
@@ -68,7 +68,7 @@ export async function fetchData(userId: number, rawQuery: Record<string, string>
     })
   ])) {
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-    else if (response.error) throw new RouteError(<FormattedMessage id={`user_edit.errors.${response.error}`} />);
+    else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
     Object.assign(result.response, response);
   }
 
@@ -81,7 +81,7 @@ interface AuditViewProps {
 }
 
 const AuditView: React.FC<AuditViewProps> = props => {
-  const _ = useIntlMessage("user_edit.audit");
+  const _ = useLocalizer("user_edit.audit");
   const navigation = useNavigation();
 
   useEffect(() => {

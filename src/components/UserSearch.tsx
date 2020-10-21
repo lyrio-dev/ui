@@ -3,7 +3,7 @@ import React from "react";
 import style from "./UserSearch.module.less";
 
 import { UserApi } from "@/api";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import UserAvatar from "./UserAvatar";
 import PreviewSearch from "./PreviewSearch";
@@ -15,7 +15,7 @@ interface UserSearchProps {
 }
 
 let UserSearch: React.FC<UserSearchProps> = props => {
-  const _ = useIntlMessage("components.user_search");
+  const _ = useLocalizer("components.user_search");
 
   return (
     <PreviewSearch
@@ -33,7 +33,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
           wildcard: wildcardStart ? "Both" : "End"
         });
 
-        if (requestError) toast.error(requestError);
+        if (requestError) toast.error(requestError(_));
         else return response.userMetas;
 
         return [];

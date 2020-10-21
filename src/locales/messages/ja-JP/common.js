@@ -33,5 +33,13 @@ module.exports = {
   },
   footer: {
     judge_machine: "ジャッジサーバーの状態"
+  },
+  request_error: {
+    400: "[TBT] Invalid request.",
+    500: "[TBT] Server error. Please try again later.",
+    502: "[TBT] Couldn't connect to the server. Please try again later.",
+    503: "[TBT] Couldn't connect to the server. Please try again later.",
+    504: "[TBT] Timeout connecting to the server. Please try again later.",
+    unknown: "[TBT] Request error: {text}"
   }
 };

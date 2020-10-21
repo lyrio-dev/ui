@@ -5,7 +5,7 @@ import update from "immutability-helper";
 
 import style from "./PermissionManager.module.less";
 
-import { useIntlMessage, useConfirmUnload, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useConfirmUnload, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { GroupMeta } from "@/interfaces/GroupMeta";
 import { UserApi, GroupApi } from "@/api";
@@ -61,7 +61,7 @@ export interface PermissionManagerProps {
 }
 
 let PermissionManager: React.FC<PermissionManagerProps> = props => {
-  const _ = useIntlMessage("components.permission_manager");
+  const _ = useLocalizer("components.permission_manager");
 
   const defaultPermissionLevel = Number(Object.keys(props.permissionsLevelDetails)[0]);
 
@@ -80,7 +80,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
       wildcard: "End"
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else
       return response.userMetas.map(user => ({
         key: user.id,
@@ -168,7 +168,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
       wildcard: "End"
     });
 
-    if (requestError) toast.error(requestError);
+    if (requestError) toast.error(requestError(_));
     else
       return response.groupMetas.map(group => ({
         key: group.id,

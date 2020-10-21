@@ -9,7 +9,7 @@ import style from "./SubmissionsPage.module.less";
 
 import { SubmissionApi } from "@/api";
 import { appState } from "@/appState";
-import { useIntlMessage, useFieldCheckSimple, useSocket } from "@/utils/hooks";
+import { useLocalizer, useFieldCheckSimple, useSocket } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { CodeLanguage, compileAndRunOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
@@ -72,7 +72,7 @@ interface SubmissionsPageProps {
 }
 
 let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
-  const _ = useIntlMessage("submissions");
+  const _ = useLocalizer("submissions");
   const navigation = useNavigation();
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import React from "react";
 // import style from "./ProblemSearch.module.less";
 
 import { ProblemApi } from "@/api";
-import { useIntlMessage } from "@/utils/hooks";
+import { useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import PreviewSearch from "./PreviewSearch";
 import { getProblemDisplayName } from "@/pages/problem/utils";
@@ -20,7 +20,7 @@ interface ProblemSearchProps {
 const SEARCH_PROBLEM_PREVIEW_LIST_LENGTH = appState.serverPreference.pagination.searchProblemsPreview;
 
 let ProblemSearch: React.FC<ProblemSearchProps> = props => {
-  const _ = useIntlMessage("components.problem_search");
+  const _ = useLocalizer("components.problem_search");
 
   return (
     <PreviewSearch
@@ -42,7 +42,7 @@ let ProblemSearch: React.FC<ProblemSearchProps> = props => {
           })
         );
 
-        if (requestError) toast.error(requestError);
+        if (requestError) toast.error(requestError(_));
         else return response.result;
 
         return [];
