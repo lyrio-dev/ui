@@ -18,7 +18,7 @@ import downloadFile from "@/utils/downloadFile";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
 import * as CodeFormatter from "@/utils/CodeFormatter";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
-import { CodeBox, OmittableAnsiCodeBox, OmittableCodeBox, OmittableString } from "@/components/CodeBox";
+import { OmittableAnsiCodeBox, OmittableString } from "@/components/CodeBox";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsCallback } from "./common/interface";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
@@ -486,7 +486,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
         content: !testcaseResult ? null : (
           <Accordion.Content className={style.accordionContent}>
             {testcaseResult.input && (
-              <OmittableCodeBox
+              <OmittableAnsiCodeBox
                 title={
                   <>
                     <strong>{_(".testcase.input")}</strong>
@@ -501,11 +501,11 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                     )}
                   </>
                 }
-                content={testcaseResult.input}
+                ansiMessage={testcaseResult.input}
               />
             )}
             {testcaseResult.output && (
-              <OmittableCodeBox
+              <OmittableAnsiCodeBox
                 title={
                   <>
                     <strong>{_(".testcase.output")}</strong>
@@ -520,13 +520,13 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                     )}
                   </>
                 }
-                content={testcaseResult.output}
+                ansiMessage={testcaseResult.output}
               />
             )}
-            <OmittableCodeBox title={_(".testcase.user_output")} content={testcaseResult.userOutput} />
-            <OmittableCodeBox title={_(".testcase.user_error")} content={testcaseResult.userError} />
+            <OmittableAnsiCodeBox title={_(".testcase.user_output")} ansiMessage={testcaseResult.userOutput} />
+            <OmittableAnsiCodeBox title={_(".testcase.user_error")} ansiMessage={testcaseResult.userError} />
             {getAdditionalSections(testcaseResult)}
-            <OmittableCodeBox title={_(".testcase.system_message")} content={testcaseResult.systemMessage} />
+            <OmittableAnsiCodeBox title={_(".testcase.system_message")} ansiMessage={testcaseResult.systemMessage} />
           </Accordion.Content>
         )
       };
