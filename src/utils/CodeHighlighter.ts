@@ -72,15 +72,15 @@ function importTreeSitterLanguageLib(language: CodeLanguage): string {
   }
 }
 
-export function tryLoadTreeSitterLanguage(language: CodeLanguage): Promise<MonacoTreeSitter.Language> {
+export async function tryLoadTreeSitterLanguage(language: CodeLanguage): Promise<MonacoTreeSitter.Language> {
   const promiseOrResult = loadedTreeSitterLanguages.get(language);
-  if (promiseOrResult) return Promise.resolve(promiseOrResult);
+  if (promiseOrResult) return await promiseOrResult;
 
   // Check if supported
   const promiseGrammarJson = importGrammarJson(language);
-  if (!promiseGrammarJson) return Promise.resolve(null);
+  if (!promiseGrammarJson) return null;
 
-  const promise = new Promise<MonacoTreeSitter.Language>(async resolve => {
+  const promise = (async () => {
     try {
       // Load grammar json and language lib in parallel
       const [grammarJson, languageLib] = await Promise.all([
@@ -93,15 +93,14 @@ export function tryLoadTreeSitterLanguage(language: CodeLanguage): Promise<Monac
 
       const lang = new MonacoTreeSitter.Language(grammarJson, parser);
       loadedTreeSitterLanguages.set(language, lang);
-      resolve(lang);
+      return lang;
     } catch (e) {
       console.error(`Failed to load tree-sitter language ${language}`, e);
-      resolve(null);
     }
-  });
+  })();
 
   loadedTreeSitterLanguages.set(language, promise);
-  return Promise.resolve(promise);
+  return await promise;
 }
 
 function importMonacoTreeSitterTheme(theme: CodeHighlighterTheme): Promise<MonacoTreeSitter.ThemeConfig> {

@@ -981,8 +981,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
 SubmissionPage = observer(SubmissionPage);
 
 export default defineRoute(async request => {
-  const promises: Promise<unknown>[] = [CodeFormatter.ready];
-
   const queryResult = await fetchData(parseInt(request.params.id) || 0);
 
   const ProblemTypeSubmissionView: ProblemTypeSubmissionView = (
@@ -1000,11 +998,17 @@ export default defineRoute(async request => {
 
   // Load highlight
   const highlightLanguageList =
-    ProblemTypeSubmissionView.getHighlightLanguageList &&
-    ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content);
-  promises.concat((highlightLanguageList || []).map(CodeHighlighter.tryLoadTreeSitterLanguage));
+    (ProblemTypeSubmissionView.getHighlightLanguageList &&
+      ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content)) ||
+    [];
 
-  await Promise.all(promises);
+  if (highlightLanguageList.length > 0) {
+    // If no language is returned, don't load the code formatter either.
+    await Promise.all<unknown>([
+      CodeFormatter.ready,
+      ...highlightLanguageList.map(CodeHighlighter.tryLoadTreeSitterLanguage)
+    ]);
+  }
 
   return (
     <SubmissionPage key={uuid()} {...(queryResult as any)} ProblemTypeSubmissionView={ProblemTypeSubmissionView} />
