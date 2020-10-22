@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MarkdownIt from "markdown-it";
 import { useNavigation } from "react-navi";
+import twemoji from "twemoji";
 
 import style from "./MarkdownContent.module.less";
 
@@ -8,6 +9,7 @@ import { renderMarkdown } from "./markdown";
 import { renderMath } from "./mathjax";
 import { sanitize } from "./sanitize";
 import { highlight } from "@/utils/CodeHighlighter";
+import { getTwemojiOptions } from "@/components/EmojiRenderer";
 
 export interface MarkdownContentPatcher {
   onPatchRenderer?: (renderer: MarkdownIt) => void;
@@ -84,6 +86,9 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
       const element = findPlaceholderElement(wrapper, item.id);
       element.parentNode.replaceChild(renderMath(item.code, item.display), element);
     });
+
+    // Render emojis
+    twemoji.parse(wrapper, getTwemojiOptions(true));
 
     patchStyles(wrapper);
 

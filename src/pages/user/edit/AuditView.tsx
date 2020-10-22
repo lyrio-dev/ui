@@ -23,6 +23,7 @@ import copyToClipboard from "@/utils/copyToClipboard";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import { getDiscussionDisplayTitle, getDiscussionUrl } from "@/pages/discussion/utils";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 const AUDIT_LOGS_PER_PAGE = appState.serverPreference.pagination.userAuditLogs;
 
@@ -136,26 +137,28 @@ const AuditView: React.FC<AuditViewProps> = props => {
     object: unknown
   ) {
     const wrap = (element: React.ReactNode) => (
-      <div
-        style={{ display: "inline-block" }}
-        onClick={e => {
-          e.stopPropagation();
-          if (e.ctrlKey) {
-            e.preventDefault();
-            onFilter(
-              whichObject === 1
-                ? {
-                    firstObjectId: objectId
-                  }
-                : {
-                    secondObjectId: objectId
-                  }
-            );
-          }
-        }}
-      >
-        {element}
-      </div>
+      <EmojiRenderer>
+        <div
+          style={{ display: "inline-block" }}
+          onClick={e => {
+            e.stopPropagation();
+            if (e.ctrlKey) {
+              e.preventDefault();
+              onFilter(
+                whichObject === 1
+                  ? {
+                      firstObjectId: objectId
+                    }
+                  : {
+                      secondObjectId: objectId
+                    }
+              );
+            }
+          }}
+        >
+          {element}
+        </div>
+      </EmojiRenderer>
     );
 
     if (!objectType) return null;

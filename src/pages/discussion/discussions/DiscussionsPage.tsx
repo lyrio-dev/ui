@@ -20,6 +20,7 @@ import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import UserLink from "@/components/UserLink";
 import formatDateTime from "@/utils/formatDateTime";
 import { Localizer, makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
   return {
@@ -60,9 +61,11 @@ export function getBreadcrumb(
             {_("discussions.breadcrumb.problem")}
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="right angle" />
-          <Breadcrumb.Section active as={Link} href={getProblemUrl(problem.meta)}>
-            {getProblemDisplayName(problem.meta, problem.title, _, "all")}
-          </Breadcrumb.Section>
+          <EmojiRenderer>
+            <Breadcrumb.Section active as={Link} href={getProblemUrl(problem.meta)}>
+              {getProblemDisplayName(problem.meta, problem.title, _, "all")}
+            </Breadcrumb.Section>
+          </EmojiRenderer>
         </>
       ) : (
         <>
@@ -174,7 +177,11 @@ let DiscussionSearch: React.FC<DiscussionSearchProps> = props => {
 
         return [];
       }}
-      onRenderResult={result => <div className="title">{getDiscussionDisplayTitle(result.meta.title, _)}</div>}
+      onRenderResult={result => (
+        <EmojiRenderer>
+          <div className="title">{getDiscussionDisplayTitle(result.meta.title, _)}</div>
+        </EmojiRenderer>
+      )}
       onResultSelect={props.onResultSelect}
       onEnterPress={props.onEnterPress}
     />
@@ -470,9 +477,11 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
                 {(() => {
                   const columnTitle = (
                     <>
-                      <Link href={getDiscussionUrl(discussion.meta)}>
-                        {getDiscussionDisplayTitle(discussion.meta.title, _)}
-                      </Link>
+                      <EmojiRenderer>
+                        <Link href={getDiscussionUrl(discussion.meta)}>
+                          {getDiscussionDisplayTitle(discussion.meta.title, _)}
+                        </Link>
+                      </EmojiRenderer>
                       {!discussion.meta.isPublic && (
                         <Label
                           className={style.labelNonPublic}
@@ -492,9 +501,11 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
                   const columnProblem = !hideProblemColumn && (
                     <>
                       {discussion.problem && (
-                        <Link href={getProblemUrl(discussion.problem.meta)}>
-                          {getProblemDisplayName(discussion.problem.meta, discussion.problem.title, _, "all")}
-                        </Link>
+                        <EmojiRenderer>
+                          <Link href={getProblemUrl(discussion.problem.meta)}>
+                            {getProblemDisplayName(discussion.problem.meta, discussion.problem.title, _, "all")}
+                          </Link>
+                        </EmojiRenderer>
                       )}
                     </>
                   );

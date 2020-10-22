@@ -24,6 +24,7 @@ import { TestcaseResultCommon, ProblemTypeSubmissionView, GetAdditionalSectionsC
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 async function fetchData(submissionId: number) {
   const { requestError, response } = await SubmissionApi.getSubmissionDetail({
@@ -485,7 +486,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                         className={"monospace " + style.fileNameWrapper}
                         onClick={() => onDownload(testcaseResult.testcaseInfo.inputFile)}
                       >
-                        <span className={style.fileName}>{testcaseResult.testcaseInfo.inputFile}</span>
+                        <EmojiRenderer>
+                          <span className={style.fileName}>{testcaseResult.testcaseInfo.inputFile}</span>
+                        </EmojiRenderer>
                         <Icon name="download" />
                       </span>
                     )}
@@ -504,7 +507,9 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
                         className={"monospace " + style.fileNameWrapper}
                         onClick={() => onDownload(testcaseResult.testcaseInfo.outputFile)}
                       >
-                        <span className={style.fileName}>{testcaseResult.testcaseInfo.outputFile}</span>
+                        <EmojiRenderer>
+                          <span className={style.fileName}>{testcaseResult.testcaseInfo.outputFile}</span>
+                        </EmojiRenderer>
                         <Icon name="download" />
                       </span>
                     )}

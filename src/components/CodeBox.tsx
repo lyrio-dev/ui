@@ -5,6 +5,7 @@ import AnsiToHtmlConverter from "ansi-to-html";
 import style from "./CodeBox.module.less";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
 import { useLocalizer } from "@/utils/hooks";
+import { EmojiRenderer } from "./EmojiRenderer";
 
 export type OmittableString =
   | string
@@ -74,13 +75,15 @@ export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, re
         {...props.segment}
       >
         {props.children}
-        <pre
-          ref={refPre}
-          className={style.codeBoxContent}
-          dangerouslySetInnerHTML={props.html ? { __html: props.html } : undefined}
-        >
-          {content}
-        </pre>
+        <EmojiRenderer>
+          <pre
+            ref={refPre}
+            className={style.codeBoxContent}
+            dangerouslySetInnerHTML={props.html ? { __html: props.html } : undefined}
+          >
+            {content}
+          </pre>
+        </EmojiRenderer>
       </Segment>
     </div>
   ) : null;

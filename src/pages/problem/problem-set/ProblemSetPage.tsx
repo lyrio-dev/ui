@@ -20,6 +20,7 @@ import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import ProblemSearch from "@/components/ProblemSearch";
 import { getProblemDisplayName, getProblemIdString, getProblemUrl } from "../utils";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 // Parsed from querystring, without pagination
 interface ProblemSetPageSearchQuery {
@@ -259,17 +260,18 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     );
 
   const getTagLabel = (tag: ApiTypes.LocalizedProblemTagDto, type: "add" | "del" = "add") => (
-    <Label
-      as={type === "add" ? "a" : undefined}
-      key={tag.id}
-      className={style.tag}
-      size="small"
-      content={tag.name}
-      color={tag.color as any}
-      removeIcon={type === "del" ? <Icon name="delete" /> : undefined}
-      onClick={type === "add" ? () => onAddFilterTag(tag.id) : undefined}
-      onRemove={type === "del" ? () => onDelFilterTag(tag.id) : undefined}
-    />
+    <EmojiRenderer key={tag.id}>
+      <Label
+        as={type === "add" ? "a" : undefined}
+        className={style.tag}
+        size="small"
+        content={tag.name}
+        color={tag.color as any}
+        removeIcon={type === "del" ? <Icon name="delete" /> : undefined}
+        onClick={type === "add" ? () => onAddFilterTag(tag.id) : undefined}
+        onRemove={type === "del" ? () => onDelFilterTag(tag.id) : undefined}
+      />
+    </EmojiRenderer>
   );
 
   /**
@@ -355,11 +357,13 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     <>
       <strong>{_(".search_filters")}</strong>
       {props.searchQuery.keyword && (
-        <Label size="small" color="grey">
-          <Icon name="file alternate" />
-          {props.searchQuery.keyword}
-          <Icon name="delete" onClick={() => onDelFilterKeyword()} />
-        </Label>
+        <EmojiRenderer>
+          <Label size="small" color="grey">
+            <Icon name="file alternate" />
+            {props.searchQuery.keyword}
+            <Icon name="delete" onClick={() => onDelFilterKeyword()} />
+          </Label>
+        </EmojiRenderer>
       )}
       {props.response.filterOwner && (
         <Label size="small" color="pink">
@@ -498,7 +502,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                   <b>{getProblemIdString(problem.meta, { hideHashTagOnDisplayId: true })}</b>
                 </Table.Cell>
                 <Table.Cell textAlign="left" className={style.problemTitleCell}>
-                  <Link href={getProblemUrl(problem.meta)}>{getProblemDisplayName(null, problem.title, _)}</Link>
+                  <EmojiRenderer>
+                    <Link href={getProblemUrl(problem.meta)}>{getProblemDisplayName(null, problem.title, _)}</Link>
+                  </EmojiRenderer>
                   {!problem.meta.isPublic && (
                     <Label
                       className={style.labelNonPublic}

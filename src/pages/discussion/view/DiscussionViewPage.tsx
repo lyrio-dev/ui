@@ -39,6 +39,7 @@ import { onEnterPress } from "@/utils/onEnterPress";
 import PermissionManager from "@/components/LazyPermissionManager";
 import { getBreadcrumb, getNewDiscussionUrl } from "../discussions/DiscussionsPage";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer, getTwemojiOptions } from "@/components/EmojiRenderer";
 
 const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
@@ -108,16 +109,11 @@ interface EmojiProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Emoji: React.FC<EmojiProps> = React.memo(props => (
-  // TODO: use twemoji for all UGC
   <div
     {...props}
     className={style.emoji + (props.className ? " " + props.className : "")}
     dangerouslySetInnerHTML={{
-      __html: twemoji.parse(props.emoji, {
-        base: "https://cdn.jsdelivr.net/npm/@discordapp/twemoji@13.0.1/dist/",
-        size: "svg",
-        ext: ".svg"
-      })
+      __html: twemoji.parse(props.emoji, getTwemojiOptions(false))
     }}
   />
 ));
@@ -152,7 +148,7 @@ const ReactionEmojiPicker: React.FC<ReactionEmojiPickerProps> = props => {
             {emojiRow.map(emoji => (
               <Emoji
                 key={emoji}
-                className={style.emoji + (props.currentUserReactions.includes(emoji) ? " " + style.selected : "")}
+                className={props.currentUserReactions.includes(emoji) && style.selected}
                 emoji={emoji}
                 onClick={() => props.onSelectEmoji(emoji)}
               />
@@ -448,7 +444,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
                   key={emoji}
                   onClick={() => onSelectEmoji(emoji)}
                 >
-                  <Emoji className={style.emoji} emoji={emoji} />
+                  <Emoji emoji={emoji} />
                   <PseudoLink className={style.link}>{count}</PseudoLink>
                 </div>
               ))}
@@ -1004,7 +1000,9 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       {getBreadcrumb(discussion.problem, _)}
       <div className={style.titleAndActions}>
         <div className={style.title}>
-          <Header size="large" content={getDiscussionDisplayTitle(discussion.meta.title, _)} />
+          <EmojiRenderer>
+            <Header size="large" content={getDiscussionDisplayTitle(discussion.meta.title, _)} />
+          </EmojiRenderer>
           <span className={style.replyCount}>
             {_(
               discussion.meta.replyCount === 0

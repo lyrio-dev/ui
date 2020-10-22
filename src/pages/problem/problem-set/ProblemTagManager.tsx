@@ -24,6 +24,7 @@ import { appState } from "@/appState";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { tagColors, sortTagColors } from "../problemTag";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 interface TagProps {
   disabled: boolean;
@@ -53,55 +54,57 @@ const Tag: React.FC<TagProps> = props => {
         }
       ]}
       trigger={
-        <Label
-          as="a"
-          className={style.tag}
-          content={props.name}
-          color={props.color as any}
-          removeIcon={
-            <Popup
-              className={style.deleteTagPopup}
-              popperModifiers={[
-                {
-                  name: "preventOverflow",
-                  options: { enabled: false }
+        <EmojiRenderer>
+          <Label
+            as="a"
+            className={style.tag}
+            content={props.name}
+            color={props.color as any}
+            removeIcon={
+              <Popup
+                className={style.deleteTagPopup}
+                popperModifiers={[
+                  {
+                    name: "preventOverflow",
+                    options: { enabled: false }
+                  }
+                ]}
+                trigger={
+                  <Icon
+                    name="delete"
+                    disabled={props.disabled}
+                    onClick={() => {
+                      refClickDisabled.current = true;
+                      setTimeout(() => (refClickDisabled.current = false), 0);
+                    }}
+                  />
                 }
-              ]}
-              trigger={
-                <Icon
-                  name="delete"
-                  disabled={props.disabled}
-                  onClick={() => {
-                    refClickDisabled.current = true;
-                    setTimeout(() => (refClickDisabled.current = false), 0);
-                  }}
-                />
-              }
-              disabled={props.disabled}
-              content={
-                <Button
-                  negative
-                  content={_(".confirm_delete_tag")}
-                  loading={props.disabled}
-                  onClick={() => {
-                    refClickDisabled.current = true;
-                    setTimeout(() => (refClickDisabled.current = false), 0);
-                    props.onDelete();
-                  }}
-                />
-              }
-              position="right center"
-              on="click"
-            />
-          }
-          onClick={() => {
-            if (refClickDisabled.current) return;
-            if (props.editing) return;
-            if (props.promptEdit) setEditPromptOpened(true);
-            else props.onEdit();
-          }}
-          onRemove={() => undefined}
-        />
+                disabled={props.disabled}
+                content={
+                  <Button
+                    negative
+                    content={_(".confirm_delete_tag")}
+                    loading={props.disabled}
+                    onClick={() => {
+                      refClickDisabled.current = true;
+                      setTimeout(() => (refClickDisabled.current = false), 0);
+                      props.onDelete();
+                    }}
+                  />
+                }
+                position="right center"
+                on="click"
+              />
+            }
+            onClick={() => {
+              if (refClickDisabled.current) return;
+              if (props.editing) return;
+              if (props.promptEdit) setEditPromptOpened(true);
+              else props.onEdit();
+            }}
+            onRemove={() => undefined}
+          />
+        </EmojiRenderer>
       }
       disabled={!props.promptEdit}
       content={

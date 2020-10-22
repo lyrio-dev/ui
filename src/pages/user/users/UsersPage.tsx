@@ -14,6 +14,7 @@ import UserLink from "@/components/UserLink";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 const USERS_PER_PAGE = appState.serverPreference.pagination.userList;
 
@@ -124,7 +125,9 @@ let UsersPage: React.FC<UsersPageProps> = props => {
                 <UserLink user={user} />
               </Table.Cell>
               <Table.Cell className={style.columnBio}>
-                <div>{user.bio}</div>
+                <EmojiRenderer>
+                  <div>{user.bio}</div>
+                </EmojiRenderer>
               </Table.Cell>
               <Table.Cell>{user.acceptedProblemCount}</Table.Cell>
               <Table.Cell>{user.rating}</Table.Cell>

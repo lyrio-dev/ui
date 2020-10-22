@@ -44,6 +44,7 @@ import { getProblemDisplayName, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { downloadProblemFile, downloadProblemFilesAsArchive } from "../files/ProblemFilesPage";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 export function useProblemViewMarkdownContentPatcher(problemId: number): MarkdownContentPatcher {
   const _ = useLocalizer();
@@ -414,8 +415,11 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 <StatusIcon status="Accepted" />
               </Link>
             )}
-            <strong>{idString}</strong>.&nbsp;
-            {title}
+            <EmojiRenderer>
+              <span>
+                {idString}.&nbsp;{title}
+              </span>
+            </EmojiRenderer>
             {props.problem.meta.locales.length > 1 && (
               <Dropdown icon="globe" className={style.languageSelectIcon}>
                 <Dropdown.Menu>
@@ -472,19 +476,20 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 {showTags && (
                   <>
                     {props.problem.tagsOfLocale.map(tag => (
-                      <Label
-                        size={isMobile ? "small" : null}
-                        key={tag.id}
-                        content={tag.name}
-                        color={tag.color as any}
-                        as={Link}
-                        href={{
-                          pathname: "/problems",
-                          query: {
-                            tagIds: tag.id.toString()
-                          }
-                        }}
-                      />
+                      <EmojiRenderer key={tag.id}>
+                        <Label
+                          size={isMobile ? "small" : null}
+                          content={tag.name}
+                          color={tag.color as any}
+                          as={Link}
+                          href={{
+                            pathname: "/problems",
+                            query: {
+                              tagIds: tag.id.toString()
+                            }
+                          }}
+                        />
+                      </EmojiRenderer>
                     ))}
                   </>
                 )}
@@ -532,7 +537,9 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
           })()}
           {props.problem.localizedContentsOfLocale.contentSections.map((section, i) => (
             <React.Fragment key={i}>
-              <Header size="large">{section.sectionTitle}</Header>
+              <EmojiRenderer>
+                <Header size="large">{section.sectionTitle}</Header>
+              </EmojiRenderer>
               {section.type === "Text" ? (
                 <>
                   <MarkdownContent content={section.text} patcher={problemViewMarkdownContentPatcher} />
@@ -563,9 +570,11 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                           </Label>
                         </Header>
                         <Segment className={style.sampleDataSegment}>
-                          <pre className={style.sampleDataPre}>
-                            <code>{props.problem.samples[section.sampleId].inputData}</code>
-                          </pre>
+                          <EmojiRenderer>
+                            <pre className={style.sampleDataPre}>
+                              <code>{props.problem.samples[section.sampleId].inputData}</code>
+                            </pre>
+                          </EmojiRenderer>
                         </Segment>
                       </Grid.Column>
                       <Grid.Column
@@ -597,9 +606,11 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                           </Label>
                         </Header>
                         <Segment className={style.sampleDataSegment}>
-                          <pre className={style.sampleDataPre}>
-                            <code>{props.problem.samples[section.sampleId].outputData}</code>
-                          </pre>
+                          <EmojiRenderer>
+                            <pre className={style.sampleDataPre}>
+                              <code>{props.problem.samples[section.sampleId].outputData}</code>
+                            </pre>
+                          </EmojiRenderer>
                         </Segment>
                       </Grid.Column>
                     </Grid.Row>

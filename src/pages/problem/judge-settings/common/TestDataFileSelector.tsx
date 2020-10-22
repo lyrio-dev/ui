@@ -6,6 +6,7 @@ import style from "./TestDataFileSelector.module.less";
 import { useLocalizer } from "@/utils/hooks";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 interface TestDataFileSelectorProps {
   type: "FormSelect" | "ItemSearchDropdown";
@@ -39,7 +40,9 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
                 content={_(".file_selector.file_not_found_warning")}
                 position="top center"
               />
-              {props.value}
+              <EmojiRenderer>
+                <span>{props.value}</span>
+              </EmojiRenderer>
             </>
           ) as any)
         : undefined,
@@ -70,7 +73,9 @@ const TestDataFileSelector: React.FC<TestDataFileSelectorProps> = props => {
           <>
             {props.iconInputOrOutput && <Icon className={style.iconInputOrOutput} name={props.iconInputOrOutput} />}
             <Icon name={getFileIcon(file.filename)} className={style.iconFile} />
-            <div className={style.filename}>{"\u200E" + file.filename}</div>
+            <EmojiRenderer>
+              <div className={style.filename}>{"\u200E" + file.filename}</div>
+            </EmojiRenderer>
             <div className={style.fileSize}>{formatFileSize(file.size, 1)}</div>
           </>
         )

@@ -8,6 +8,7 @@ import toast from "@/utils/toast";
 import PreviewSearch from "./PreviewSearch";
 import { getProblemDisplayName } from "@/pages/problem/utils";
 import { appState } from "@/appState";
+import { EmojiRenderer } from "./EmojiRenderer";
 
 interface ProblemSearchProps {
   className?: string;
@@ -47,7 +48,11 @@ let ProblemSearch: React.FC<ProblemSearchProps> = props => {
 
         return [];
       }}
-      onRenderResult={result => <div className="title">{getProblemDisplayName(result.meta, result.title, _)}</div>}
+      onRenderResult={result => (
+        <EmojiRenderer>
+          <div className="title">{getProblemDisplayName(result.meta, result.title, _)}</div>
+        </EmojiRenderer>
+      )}
       onResultSelect={props.onResultSelect}
       onEnterPress={props.onEnterPress}
     />

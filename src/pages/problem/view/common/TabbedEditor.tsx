@@ -8,6 +8,7 @@ import style from "./TabbedEditor.module.less";
 import { useLocalizer } from "@/utils/hooks";
 import CodeEditor from "@/components/LazyCodeEditor";
 import HorizontalScroll from "@/components/HorizontalScroll";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 interface TabbedEditorTab {
   title: string;
@@ -74,13 +75,14 @@ let TabbedEditor: React.FC<TabbedEditorProps> = props => {
       <HorizontalScroll className={style.tabMenuContainer}>
         <Menu secondary className={style.tabMenu}>
           {props.tabs.map((tab, i) => (
-            <Menu.Item
-              key={i}
-              active={currentTabIndex === i}
-              icon={tab.icon}
-              content={tab.title}
-              onClick={() => onChangeTab(i)}
-            />
+            <EmojiRenderer key={i}>
+              <Menu.Item
+                active={currentTabIndex === i}
+                icon={tab.icon}
+                content={tab.title}
+                onClick={() => onChangeTab(i)}
+              />
+            </EmojiRenderer>
           ))}
         </Menu>
       </HorizontalScroll>

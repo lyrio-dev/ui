@@ -41,6 +41,7 @@ import { getProblemIdString, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { isValidFilename } from "@/utils/validators";
 import { Localizer, makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 // Firefox have no WritableStream
 if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
@@ -297,16 +298,18 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
           {props.file.upload && props.file.upload.progress != null && (
             <Progress percent={debouncedUploadProgress} indicating />
           )}
-          <div className={style.filename}>
-            <Checkbox
-              className={style.fileTableCheckbox}
-              checked={props.selected}
-              disabled={!!props.file.upload}
-              onChange={(e, { checked }) => props.onSelect(checked)}
-            />
-            <Icon name={getFileIcon(props.file.filename)} />
-            {"\u200E" + props.file.filename}
-          </div>
+          <EmojiRenderer>
+            <div className={style.filename}>
+              <Checkbox
+                className={style.fileTableCheckbox}
+                checked={props.selected}
+                disabled={!!props.file.upload}
+                onChange={(e, { checked }) => props.onSelect(checked)}
+              />
+              <Icon name={getFileIcon(props.file.filename)} />
+              {"\u200E" + props.file.filename}
+            </div>
+          </EmojiRenderer>
         </Table.Cell>
         {!isMobile && <Table.Cell textAlign="center">{formatFileSize(props.file.size, 1)}</Table.Cell>}
         <Table.Cell className={style.fileTableColumnOperations} textAlign="center">
@@ -616,7 +619,9 @@ let FileTable: React.FC<FileTableProps> = props => {
                         </p>
                         <List>
                           {overridingFiles.map(filename => (
-                            <List.Item key={filename} icon={getFileIcon(filename)} content={filename} />
+                            <EmojiRenderer key={filename}>
+                              <List.Item icon={getFileIcon(filename)} content={filename} />
+                            </EmojiRenderer>
                           ))}
                         </List>
                         <Button

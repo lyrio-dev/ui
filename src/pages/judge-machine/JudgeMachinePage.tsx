@@ -11,6 +11,7 @@ import toast from "@/utils/toast";
 import { appState } from "@/appState";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 interface JudgeClientSystemInfo {
   os: string;
@@ -223,7 +224,9 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
                   <Label className={style.onlineStatus} circular color={judgeClient.online ? "green" : "red"} empty />
                   {judgeClient.online ? _(".online") : _(".offline")}
                 </Table.Cell>
-                <Table.Cell>{judgeClient.name}</Table.Cell>
+                <EmojiRenderer>
+                  <Table.Cell>{judgeClient.name}</Table.Cell>
+                </EmojiRenderer>
                 <Table.Cell>{getCpu(judgeClient)}</Table.Cell>
                 <Table.Cell>{getMemory(judgeClient)}</Table.Cell>
                 <Table.Cell>{getKernel(judgeClient)}</Table.Cell>

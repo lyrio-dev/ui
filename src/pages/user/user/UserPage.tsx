@@ -15,6 +15,7 @@ import { defineRoute, RouteError } from "@/AppRouter";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { isValidUsername } from "@/utils/validators";
 import { makeToBeLocalizedText } from "@/locales";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 function getTimeZone() {
   try {
@@ -179,7 +180,11 @@ let UserPage: React.FC<UserPageProps> = props => {
   const meta = (
     <>
       <Header as="h1" className={style.username} content={props.meta.username} />
-      {props.meta.bio && <p className={style.bio}>{props.meta.bio}</p>}
+      {props.meta.bio && (
+        <EmojiRenderer>
+          <p className={style.bio}>{props.meta.bio}</p>
+        </EmojiRenderer>
+      )}
     </>
   );
 
