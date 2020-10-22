@@ -210,15 +210,8 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     "id" | "problem" | "isPublic" | "codeLanguage" | "answerSize" | "submitTime" | "problemTitle" | "submitter"
   > = props.meta;
 
-  const stateProgress = useState(props.progress);
-  const [progress, setProgress] = stateProgress;
-  const refStateProgress = useRef<typeof stateProgress>();
-  refStateProgress.current = stateProgress;
-
-  const stateProgressMeta = useState(parseProgress(props.progress, props.meta));
-  const [progressMeta, setProgressMeta] = stateProgressMeta;
-  const refStateProgressMeta = useRef<typeof stateProgressMeta>();
-  refStateProgressMeta.current = stateProgressMeta;
+  const [progress, setProgress] = useState(props.progress);
+  const [progressMeta, setProgressMeta] = useState(parseProgress(props.progress, props.meta));
 
   // Subscribe to submission progress with the key
   const subscriptionKey = props.progressSubscriptionKey;
@@ -233,9 +226,6 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       socket.on("message", (submissionId: number, messageDelta: any) => {
         messageRef.current = patch(messageRef.current, messageDelta);
         const message = messageRef.current;
-
-        const [progress, setProgress] = refStateProgress.current;
-        const [progressMeta, setProgressMeta] = refStateProgressMeta.current;
 
         setProgress(message.progressDetail);
         setProgressMeta(parseProgress(message.progressDetail, message.progressMeta?.resultMeta));

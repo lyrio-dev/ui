@@ -143,20 +143,12 @@ let ForgetPage: React.FC = () => {
     setResetPasswordPending(false);
   }
 
-  const stateVerificationCodeTimeout = useState(0);
-  const [sendEmailVerificationCodeTimeout, setSendEmailVerificationCodeTimeout] = stateVerificationCodeTimeout;
-  const refStateVerificationCodeTimeout = useRef<typeof stateVerificationCodeTimeout>();
-  refStateVerificationCodeTimeout.current = stateVerificationCodeTimeout;
-
+  const [sendEmailVerificationCodeTimeout, setSendEmailVerificationCodeTimeout] = useState(0);
   const [sendEmailVerificationCodePending, setSendEmailVerificationCodePending] = useState(false);
 
   useEffect(() => {
     const id = setInterval(() => {
-      const [
-        sendEmailVerificationCodeTimeout,
-        setSendEmailVerificationCodeTimeout
-      ] = refStateVerificationCodeTimeout.current;
-      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(sendEmailVerificationCodeTimeout - 1);
+      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(timeout => timeout - 1);
     }, 1000);
     return () => clearInterval(id);
   }, []);

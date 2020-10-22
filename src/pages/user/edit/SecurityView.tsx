@@ -109,10 +109,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   const [checkEmail, emailInvalid] = useFieldCheckSimple(email, value => isEmail(value));
 
   const [emailVerificationCode, setEmailVerificationCode] = useState("");
-  const stateVerificationCodeTimeout = useState(0);
-  const [sendEmailVerificationCodeTimeout, setSendEmailVerificationCodeTimeout] = stateVerificationCodeTimeout;
-  const refStateVerificationCodeTimeout = useRef<typeof stateVerificationCodeTimeout>();
-  refStateVerificationCodeTimeout.current = stateVerificationCodeTimeout;
+  const [sendEmailVerificationCodeTimeout, setSendEmailVerificationCodeTimeout] = useState(0);
 
   const [emailVerificationCodeError, setEmailVerificationCodeError] = useState(false);
   const [sendEmailVerificationCodePending, onSendEmailVerificationCode] = useAsyncCallbackPending(async () => {
@@ -136,11 +133,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
 
   useEffect(() => {
     const id = setInterval(() => {
-      const [
-        sendEmailVerificationCodeTimeout,
-        setSendEmailVerificationCodeTimeout
-      ] = refStateVerificationCodeTimeout.current;
-      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(sendEmailVerificationCodeTimeout - 1);
+      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(timeout => timeout - 1);
     }, 1000);
     return () => clearInterval(id);
   }, []);

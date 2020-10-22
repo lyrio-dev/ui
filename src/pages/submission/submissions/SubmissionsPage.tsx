@@ -124,11 +124,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
     });
   }
 
-  const stateSubmissions = useState(props.queryResult.submissions ? props.queryResult.submissions : []);
-  const [submissions, setSubmissions] = stateSubmissions;
-
-  const refStateSubmissions = useRef<typeof stateSubmissions>();
-  refStateSubmissions.current = stateSubmissions;
+  const [submissions, setSubmissions] = useState(props.queryResult.submissions ? props.queryResult.submissions : []);
 
   // Subscribe to submission progress with the key
   const subscriptionKey = props.queryResult.progressSubscriptionKey;
@@ -146,29 +142,30 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
         message = patch(message, messageDelta);
         messageMap.set(submissionId, message);
 
-        const [submissions, setSubmissions] = refStateSubmissions.current;
-        const newSubmissions = [...submissions];
-        for (const i in newSubmissions) {
-          if (submissionId === newSubmissions[i].id) {
-            if (!message.progressMeta.resultMeta) {
-              // Not finished
-              newSubmissions[i] = {
-                ...newSubmissions[i],
-                progressType: message.progressMeta.progressType
-              };
-            } else {
-              // Finished
-              delete newSubmissions[i].progressType;
-              newSubmissions[i] = {
-                ...newSubmissions[i],
-                ...message.progressMeta.resultMeta
-              };
-            }
+        setSubmissions(submissions => {
+          const newSubmissions = [...submissions];
+          for (const i in newSubmissions) {
+            if (submissionId === newSubmissions[i].id) {
+              if (!message.progressMeta.resultMeta) {
+                // Not finished
+                newSubmissions[i] = {
+                  ...newSubmissions[i],
+                  progressType: message.progressMeta.progressType
+                };
+              } else {
+                // Finished
+                delete newSubmissions[i].progressType;
+                newSubmissions[i] = {
+                  ...newSubmissions[i],
+                  ...message.progressMeta.resultMeta
+                };
+              }
 
-            break;
+              break;
+            }
           }
-        }
-        setSubmissions(newSubmissions);
+          return newSubmissions;
+        });
       });
     },
     () => {

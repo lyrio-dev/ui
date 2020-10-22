@@ -666,19 +666,14 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     }));
   }
 
-  const stateListTestData = useState(transformResponseToFileTableItems(props.problem.testData));
-  const refStateListTestData = useRef(stateListTestData);
-  refStateListTestData.current = stateListTestData;
-  const fileListTestData = stateListTestData[0];
-
-  const stateListAdditionalFiles = useState(transformResponseToFileTableItems(props.problem.additionalFiles));
-  const refStateListAdditionalFiles = useRef(stateListAdditionalFiles);
-  refStateListAdditionalFiles.current = stateListAdditionalFiles;
-  const fileListAdditionalFiles = stateListAdditionalFiles[0];
+  const [fileListTestData, setFileListTestData] = useState(transformResponseToFileTableItems(props.problem.testData));
+  const [fileListAdditionalFiles, setFileListAdditionalFiles] = useState(
+    transformResponseToFileTableItems(props.problem.additionalFiles)
+  );
 
   async function onRenameFile(
     type: "TestData" | "AdditionalFile",
-    stateFileList: typeof stateListTestData,
+    setFileList: typeof setFileListTestData,
     filename: string,
     newFilename: string
   ) {
@@ -704,8 +699,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     }
 
     // Unpack state object later to prevent from using a dirty value
-    const [fileList, setFileList] = stateFileList;
-    setFileList(
+    setFileList(fileList =>
       fileList.map(file =>
         file.filename !== filename
           ? file
@@ -718,7 +712,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 
   async function onDeleteFiles(
     type: "TestData" | "AdditionalFile",
-    stateFileList: typeof stateListTestData,
+    setFileList: typeof setFileListTestData,
     filenames: string[]
   ) {
     const { requestError, response } = await ProblemApi.removeProblemFiles({
@@ -737,17 +731,15 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     }
 
     // Unpack state object later to prevent from using a dirty value
-    const [fileList, setFileList] = stateFileList;
-    setFileList(fileList.filter(file => !filenames.includes(file.filename)));
+    setFileList(fileList => fileList.filter(file => !filenames.includes(file.filename)));
   }
 
   async function onUploadFiles(
     type: "TestData" | "AdditionalFile",
-    refStateFileList: typeof refStateListTestData,
+    fileList: typeof fileListTestData,
+    setFileList: typeof setFileListTestData,
     files: File[]
   ) {
-    const [fileList, setFileList] = refStateFileList.current;
-
     const uploadingFilenames = files.map(file => file.name);
     const uploadingFileList: FileTableItem[] = [];
     for (const file of files) {
@@ -762,21 +754,21 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
       });
     }
     const newFileList = fileList.filter(file => !uploadingFilenames.includes(file.filename)).concat(uploadingFileList);
-
     setFileList(newFileList);
 
     function updateFileUploadInfo(fileUuid: string, uploadInfo: Partial<FileUploadInfo>) {
-      const [fileList, setFileList] = refStateFileList.current;
-      const newFileList = Array.from(fileList);
-      for (const i in newFileList) {
-        if (newFileList[i].uuid === fileUuid) {
-          newFileList[i] = Object.assign({}, fileList[i], {
-            upload: uploadInfo ? Object.assign({}, fileList[i].upload, uploadInfo) : null
-          });
-          setFileList(newFileList);
-          break;
+      setFileList(fileList => {
+        const newFileList = Array.from(fileList);
+        for (const i in newFileList) {
+          if (newFileList[i].uuid === fileUuid) {
+            newFileList[i] = Object.assign({}, fileList[i], {
+              upload: uploadInfo ? Object.assign({}, fileList[i].upload, uploadInfo) : null
+            });
+            return newFileList;
+          }
         }
-      }
+        return fileList;
+      });
     }
 
     const uploadTasks: Array<() => Promise<void>> = [];
@@ -853,9 +845,9 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
         onDownloadFilesAsArchive={filenames =>
           downloadProblemFilesAsArchive(props.problem.meta.id, `TestData_${idString}.zip`, "TestData", filenames, _)
         }
-        onRenameFile={(filename, newFilename) => onRenameFile("TestData", stateListTestData, filename, newFilename)}
-        onDeleteFiles={filenames => onDeleteFiles("TestData", stateListTestData, filenames)}
-        onUploadFiles={files => onUploadFiles("TestData", refStateListTestData, files)}
+        onRenameFile={(filename, newFilename) => onRenameFile("TestData", setFileListTestData, filename, newFilename)}
+        onDeleteFiles={filenames => onDeleteFiles("TestData", setFileListTestData, filenames)}
+        onUploadFiles={files => onUploadFiles("TestData", fileListTestData, setFileListTestData, files)}
       />
     </>
   );
@@ -880,10 +872,12 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
           )
         }
         onRenameFile={(filename, newFilename) =>
-          onRenameFile("AdditionalFile", stateListAdditionalFiles, filename, newFilename)
+          onRenameFile("AdditionalFile", setFileListAdditionalFiles, filename, newFilename)
         }
-        onDeleteFiles={filenames => onDeleteFiles("AdditionalFile", stateListAdditionalFiles, filenames)}
-        onUploadFiles={files => onUploadFiles("AdditionalFile", refStateListAdditionalFiles, files)}
+        onDeleteFiles={filenames => onDeleteFiles("AdditionalFile", setFileListAdditionalFiles, filenames)}
+        onUploadFiles={files =>
+          onUploadFiles("AdditionalFile", fileListAdditionalFiles, setFileListAdditionalFiles, files)
+        }
       />
     </>
   );

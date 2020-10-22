@@ -209,17 +209,13 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
       return emojiToKey(emoji1) < emojiToKey(emoji2) ? -1 : 1;
     });
 
-  const statePendingEmojis = useState<string[]>([]);
-  const [pendingEmojis, setPendingEmojis] = statePendingEmojis;
-  const refStatePendingEmojis = useRef<typeof statePendingEmojis>();
-  refStatePendingEmojis.current = statePendingEmojis;
+  const [pendingEmojis, setPendingEmojis] = useState<string[]>([]);
   function onSelectEmoji(emoji: string) {
     if (pendingEmojis.includes(emoji)) return;
 
     setPendingEmojis(pendingEmojis.concat(emoji));
     props.onReaction(emoji, !props.reactions.currentUserReactions.includes(emoji)).then(() => {
-      const [pendingEmojis, setPendingEmojis] = refStatePendingEmojis.current;
-      setPendingEmojis(pendingEmojis.filter(s => s !== emoji));
+      setPendingEmojis(pendingEmojis => pendingEmojis.filter(s => s !== emoji));
     });
   }
 
@@ -642,7 +638,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     return () => document.head.removeChild(styleElement);
   });
 
-  const stateItems = useState<ReplyOrLoadMore[]>(
+  const [items, setItems] = useState<ReplyOrLoadMore[]>(
     (() => {
       const head = props.response.repliesHead.map<ReplyOrLoadMore>(reply => ({
         type: "Reply",
@@ -674,9 +670,6 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       ];
     })()
   );
-  const [items, setItems] = stateItems;
-  const refStateItems = useRef<typeof stateItems>();
-  refStateItems.current = stateItems;
 
   function mergeLoadMoreItem(
     afterId: number,
@@ -684,8 +677,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       | Partial<ReplyOrLoadMore["loadMore"]>
       | ((item: ReplyOrLoadMore["loadMore"]) => Partial<ReplyOrLoadMore["loadMore"]>)
   ) {
-    const [items, setItems] = refStateItems.current;
-    setItems(
+    setItems(items =>
       items.map(item =>
         item.loadMore?.afterId === afterId
           ? Object.assign({}, item, {
@@ -716,35 +708,36 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
-      const [items, setItems] = refStateItems.current;
-      const newItems: ReplyOrLoadMore[] = [];
-      for (const i of items.keys()) {
-        if (items[i].loadMore?.afterId !== item.loadMore.afterId) {
-          newItems.push(items[i]);
-          continue;
+      setItems(items => {
+        const newItems: ReplyOrLoadMore[] = [];
+        for (const i of items.keys()) {
+          if (items[i].loadMore?.afterId !== item.loadMore.afterId) {
+            newItems.push(items[i]);
+            continue;
+          }
+
+          if (response.repliesCountInRange === 0) continue;
+
+          for (const reply of response.repliesInRange)
+            newItems.push({
+              type: "Reply",
+              reply
+            });
+
+          const loadedCount = response.repliesInRange.length;
+          if (response.repliesCountInRange > loadedCount) {
+            newItems.push({
+              type: "LoadMore",
+              loadMore: {
+                afterId: response.repliesInRange[loadedCount - 1].id,
+                beforeId: item.loadMore.beforeId,
+                count: response.repliesCountInRange - loadedCount
+              }
+            });
+          }
         }
-
-        if (response.repliesCountInRange === 0) continue;
-
-        for (const reply of response.repliesInRange)
-          newItems.push({
-            type: "Reply",
-            reply
-          });
-
-        const loadedCount = response.repliesInRange.length;
-        if (response.repliesCountInRange > loadedCount) {
-          newItems.push({
-            type: "LoadMore",
-            loadMore: {
-              afterId: response.repliesInRange[loadedCount - 1].id,
-              beforeId: item.loadMore.beforeId,
-              count: response.repliesCountInRange - loadedCount
-            }
-          });
-        }
-      }
-      setItems(newItems);
+        return newItems;
+      });
 
       return;
     }
@@ -752,22 +745,17 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     mergeLoadMoreItem(item.loadMore.afterId, { loading: false });
   }
 
-  const stateDiscussion = useState(props.response.discussion);
-  const [discussion, setDiscussion] = stateDiscussion;
-  const refStateDiscussion = useRef<typeof stateDiscussion>();
-  refStateDiscussion.current = stateDiscussion;
+  const [discussion, setDiscussion] = useState(props.response.discussion);
 
   function mergeDiscussion(callback: (discussion: ApiTypes.DiscussionDto) => Partial<ApiTypes.DiscussionDto>) {
-    const [discussion, setDiscussion] = refStateDiscussion.current;
-    setDiscussion(Object.assign({}, discussion, callback(discussion)));
+    setDiscussion(discussion => Object.assign({}, discussion, callback(discussion)));
   }
 
   function mergeItem(
     id: number,
     callbackOrItem: Partial<ReplyOrLoadMore> | ((item: ReplyOrLoadMore) => Partial<ReplyOrLoadMore>)
   ) {
-    const [items, setItems] = refStateItems.current;
-    setItems(
+    setItems(items =>
       items.map(item =>
         item.reply && item.reply.id === id
           ? Object.assign({}, item, typeof callbackOrItem === "function" ? callbackOrItem(item) : callbackOrItem)
@@ -872,8 +860,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
             : null
         });
       } else {
-        const [items, setItems] = refStateItems.current;
-        setItems(items.filter(item => item.reply?.id !== id));
+        setItems(items => items.filter(item => item.reply?.id !== id));
       }
     }
   }
@@ -888,8 +875,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
-      const [items, setItems] = refStateItems.current;
-      setItems([
+      setItems(items => [
         ...items,
         {
           type: "Reply",
