@@ -14,6 +14,7 @@ import {
   Dropdown
 } from "semantic-ui-react";
 import { observer } from "mobx-react";
+import { useNavigation } from "react-navi";
 
 import style from "./ProblemTagManager.module.less";
 
@@ -130,6 +131,7 @@ interface ProblemTagManagerProps {
 
 let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
   const _ = useLocalizer("problem_tag_manager");
+  const navigation = useNavigation();
 
   const [modified, setModified] = useState(false);
   useConfirmUnload(() => modified);
@@ -189,6 +191,8 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
   });
   const [editingTagDefaultLocale, setEditingTagDefaultLocale] = useState(appState.locale);
 
+  const [modifyDone, setModifyDone] = useState(false);
+
   async function onSubmit() {
     if (pending) return;
     setPendingSubmit(true);
@@ -247,6 +251,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         );
         toast.success(_(".success_update"));
         setModified(false);
+        setModifyDone(true);
       }
     }
 
@@ -499,6 +504,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
               if (pending) return;
               if (!modified) {
                 setOpened(false);
+                if (modifyDone) navigation.refresh();
                 dialog.close();
               }
             }}
@@ -513,6 +519,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
               if (pending) return;
               setModified(false);
               setOpened(false);
+              if (modifyDone) navigation.refresh();
               dialog.close();
             }}
           />
