@@ -84,7 +84,7 @@ export interface SubmissionProgressMeta {
   // e.g. "Running"
   status: string;
   // e.g. "Running 3/10"
-  statusText: string;
+  statusText?: string;
   score: number;
   timeUsed: number;
   memoryUsed: number;
@@ -99,7 +99,6 @@ function parseProgress<T extends TestcaseResultCommon>(
       return {
         pending: false,
         status: "Canceled",
-        statusText: "Canceled",
         score: 0,
         timeUsed: 0,
         memoryUsed: 0
@@ -108,7 +107,6 @@ function parseProgress<T extends TestcaseResultCommon>(
       return {
         pending: true,
         status: "Waiting",
-        statusText: "Waiting",
         score: 0,
         timeUsed: 0,
         memoryUsed: 0
@@ -133,16 +131,17 @@ function parseProgress<T extends TestcaseResultCommon>(
       break;
   }
 
-  let statusText = status,
-    score = 0;
+  let statusText = null;
+  let score = 0;
 
   if (progress.progressType === SubmissionProgressType.Finished) {
     // If finished, use the score from result meta
     score = resultMeta.score;
   } else if (progress.progressType === SubmissionProgressType.Running) {
     // If NOT finished, calculate score and append progress to the status text
-    let totalCount = 0,
-      finishedCount = 0;
+    let totalCount = 0;
+    let finishedCount = 0;
+    statusText = status;
     if (Array.isArray(progress.subtasks)) {
       for (const subtask of progress.subtasks) {
         score += subtask.score;
@@ -155,8 +154,8 @@ function parseProgress<T extends TestcaseResultCommon>(
     }
   }
 
-  let timeUsed = 0,
-    memoryUsed = 0;
+  let timeUsed = 0;
+  let memoryUsed = 0;
   if (progress.progressType === SubmissionProgressType.Finished) {
     // If finished, use the time/memory usage from result meta
     timeUsed = resultMeta.timeUsed;
@@ -288,7 +287,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const samplesFinishedCount = samples.filter(sample => !sample.running && !sample.waiting).length;
   const samplesDisplayInfo = {
     status: samplesFinishedCount < samples.length ? (samplesRunning ? "Running" : "Waiting") : null,
-    statusText: ""
+    statusText: null
   };
   if (samplesDisplayInfo.status == null) {
     // Samples finished
