@@ -1,5 +1,6 @@
 const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin, disableEsLint } = require("customize-cra");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const getGitRepoInfo = require("git-repo-info");
 
 const addWebWorkerLoader = loaderOptions => config => {
   const mergedLoaderOptions = Object.assign({}, loaderOptions);
@@ -51,6 +52,8 @@ const patchHtmlWebpackPluginConfig = () => config => {
 
   // Disable built-in CSS/JS injection since we insert the tags dynamicly
   pluginOptions.inject = false;
+
+  pluginOptions.gitRepoInfo = getGitRepoInfo();
 
   return config;
 };

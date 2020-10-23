@@ -32,7 +32,9 @@ module.exports = {
     requested_unavailable: "This content is not available in selected language, here is the {display_locale} version."
   },
   footer: {
-    judge_machine: "Judge Machine"
+    judge_machine: "Judge Machine",
+    locale: "Language",
+    github: "Open source"
   },
   request_error: {
     400: "Invalid request.",

@@ -18,6 +18,10 @@ declare module "*.wasm" {
 interface Window {
   publicPath: string;
   apiEndpoint: string;
+  appVersion: {
+    hash?: string;
+    date?: string;
+  };
 
   fatalError(messages: string[], stack?: string): void;
 

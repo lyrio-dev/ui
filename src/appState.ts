@@ -81,6 +81,9 @@ export class AppState {
 
   @observable
   serverPreference: ApiTypes.PreferenceConfig = null;
+
+  @observable
+  serverVersion: ApiTypes.ServerVersionDto = null;
 }
 
 const hydrate = create({

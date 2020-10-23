@@ -18,6 +18,7 @@ async function waitForSessionInitialization() {
   appState.currentUserPrivileges = sessionInfo.userPrivileges || [];
   appState.userPreference = sessionInfo.userPreference || {};
   appState.serverPreference = sessionInfo.serverPreference;
+  appState.serverVersion = sessionInfo.serverVersion;
 }
 
 export default async function initApp() {

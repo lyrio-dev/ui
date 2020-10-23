@@ -27,6 +27,8 @@
 function safeStringify(object) {
   return JSON.stringify(object).split("<").join("\\u003C");
 }
+
+const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 %>
 <!DOCTYPE html>
 <html>
@@ -37,6 +39,11 @@ function safeStringify(object) {
   <meta name="theme-color" content="#FFFFFF" />
 
   <script>
+    window.appVersion = <%= safeStringify({
+      hash: gitRepoInfo.abbreviatedSha,
+      date: gitRepoInfo.committerDate
+    }) %>;
+
     var addLinkTag = (function () {
       function normalizePath(path) {
         while (path.endsWith("/")) path = path.slice(0, -1);
@@ -160,6 +167,7 @@ function safeStringify(object) {
 
     #error h1 {
       font-weight: normal;
+      font-size: 28px;
       margin: 0;
     }
 
@@ -175,6 +183,7 @@ function safeStringify(object) {
       margin: 25px 0 0 0;
       background: #f3f3f3;
       padding: 13px;
+      font-size: 13px;
       flex-shrink: 1;
     }
 
@@ -182,6 +191,8 @@ function safeStringify(object) {
       font-size: 13px;
       color: rgba(0, 0, 0, 0.4);
       margin: 25px 0 25px 0;
+      text-align: center;
+      line-height: 1.4;
     }
 
     #error a {
@@ -191,6 +202,10 @@ function safeStringify(object) {
 
     #error a:hover {
       color: #1e70bf;
+    }
+
+    #error code, #error pre {
+      font-family: "Fira Code", "Roboto Mono", "DM Mono", "Menlo", "Consolas", "Ubuntu Mono";
     }
 
     /* Show the top menu's border and shadow as a preview */
@@ -296,10 +311,13 @@ function safeStringify(object) {
   <div id="error" style="display: none; ">
     <div id="error-title">
       <div id="error-icon"></div>
-      <h1>Error</h1>
+      <h1><code>Error</code></h1>
     </div>
     <div id="error-footer">
-      Powered by <a href="https://github.com/syzoj" target="_blank">SYZOJ</a>
+      <code>
+        Powered by <a href="https://github.com/syzoj" target="_blank">SYZOJ</a><br>
+        (version <%= gitRepoInfo.abbreviatedSha %>)
+      </code>
     </div>
   </div>
 

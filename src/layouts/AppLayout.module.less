@@ -182,22 +182,28 @@ body {
   }
 }
 
-.footerLinks {
-  margin-top: 2px;
-
-  > a {
-    color: #999 !important;
-  }
+#footerVersion {
+  font-size: 12px !important;
+  opacity: 0.65;
+  margin: 4px 0 4px;
 }
 
-.languageSwitchContainer {
+.footerIcons {
+  a {
+    color: inherit !important;
+  }
+
   :global(.icon) {
-    font-size: 1.3em !important;
-    margin-top: 2px;
+    font-size: 1.15em !important;
+    margin-top: 0px;
+  }
+
+  > :not(:first-child) {
+    margin-left: 8px;
   }
 }
 
 .languageSwitchMenu {
   left: 50% !important;
-  transform: translateX(-50%);
+  transform: translate(-50%, -6px);
 }

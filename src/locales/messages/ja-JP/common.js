@@ -32,7 +32,9 @@ module.exports = {
     requested_unavailable: "選択された言語では表示できないため，{display_locale}で表示します。"
   },
   footer: {
-    judge_machine: "ジャッジサーバーの状態"
+    judge_machine: "ジャッジサーバーの状態",
+    locale: "[TBT] Language",
+    github: "[TBT] Open source"
   },
   request_error: {
     400: "[TBT] Invalid request.",

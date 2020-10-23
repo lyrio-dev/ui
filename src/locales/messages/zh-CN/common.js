@@ -32,7 +32,9 @@ module.exports = {
     requested_unavailable: "该内容没有所选择的语言版本，已为您显示{display_locale}版本。"
   },
   footer: {
-    judge_machine: "评测机状态"
+    judge_machine: "评测机状态",
+    locale: "语言",
+    github: "开源项目"
   },
   request_error: {
     400: "无效的请求。",

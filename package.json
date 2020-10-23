@@ -42,6 +42,7 @@
     "fontsource-dm-mono": "^3.0.5",
     "fontsource-jetbrains-mono": "^3.0.5",
     "fs-extra": "^9.0.1",
+    "git-repo-info": "^2.1.1",
     "gravatar": "^1.8.1",
     "hack-font": "source-foundry/Hack#1eddf94",
     "immutability-helper": "^3.1.1",

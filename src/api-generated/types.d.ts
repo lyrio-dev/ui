@@ -347,7 +347,8 @@ declare namespace ApiTypes {
     joinedGroupsCount?: number;
     userPrivileges?: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
     userPreference?: ApiTypes.UserPreferenceDto;
-    serverPreference?: ApiTypes.PreferenceConfig;
+    serverPreference: ApiTypes.PreferenceConfig;
+    serverVersion: ApiTypes.ServerVersionDto;
   }
   export interface GetSubmissionDetailRequestDto {
     submissionId: string;
@@ -866,6 +867,10 @@ declare namespace ApiTypes {
       | "FAILED_TO_SEND"
       | "RATE_LIMITED";
     errorMessage?: string;
+  }
+  export interface ServerVersionDto {
+    hash: string;
+    date: string;
   }
   export interface SetDiscussionPermissionsRequestDto {
     discussionId: number;

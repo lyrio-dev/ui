@@ -19,6 +19,7 @@ import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import api from "@/api";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import formatDateTime from "@/utils/formatDateTime";
 
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
 
@@ -180,15 +181,24 @@ let AppLayout: React.FC = props => {
         <Container textAlign="center">
           <div>
             {appState.serverPreference.siteName} Powered by{" "}
-            <a href="https://github.com/syzoj" target="_blank">
+            <a href="https://syzoj.org" target="_blank">
               SYZOJ
             </a>
           </div>
-          <div className={style.footerLinks}>
-            <Link href="/judge-machine">{_(".footer.judge_machine")}</Link>
+          <div id={style.footerVersion} className="monospace">
+            <span>
+              F: <span title={formatDateTime(window.appVersion.date)[1]}>{window.appVersion.hash}</span>
+            </span>
+            &nbsp;/&nbsp;
+            <span>
+              B: <span title={formatDateTime(appState.serverVersion.date)[1]}>{appState.serverVersion.hash}</span>
+            </span>
           </div>
-          <div className={style.languageSwitchContainer}>
-            <Dropdown icon="language">
+          <div className={style.footerIcons}>
+            <Link href="/judge-machine" title={_(".footer.judge_machine")}>
+              <Icon name="server" />
+            </Link>
+            <Dropdown icon="language" title={_(".footer.locale")}>
               <Dropdown.Menu className={style.languageSwitchMenu}>
                 {Object.keys(localeMeta).map((locale: Locale) => (
                   <Dropdown.Item
@@ -205,6 +215,9 @@ let AppLayout: React.FC = props => {
                 ))}
               </Dropdown.Menu>
             </Dropdown>
+            <Link href="https://github.com/syzoj" title="GitHub" target="_blank">
+              <Icon name="github" />
+            </Link>
           </div>
         </Container>
       </Segment>
