@@ -83,7 +83,7 @@ module.exports = override(
     languages: ["yaml", "cpp"]
   })),
   addBabelPlugin(["prismjs", {
-    "languages": ["yaml", "cpp", "json"]
+    "languages": Object.keys(require("prismjs/components.js").languages).filter(name => name !== "meta")
   }]),
   patchHtmlWebpackPluginConfig()
 );
