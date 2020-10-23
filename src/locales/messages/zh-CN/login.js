@@ -13,8 +13,22 @@ module.exports = {
   invalid_username: "无效的用户名",
   empty_password: "请输入密码",
   invalid_password: "无效的密码（密码长度必须在 6 到 32 之间）",
-  already_loggedin: "你已经登陆过。",
   no_such_user: "用户不存在",
   wrong_password: "密码错误",
-  welcome: "欢迎回来，{username}！"
+  welcome: "欢迎回来，{username}！",
+  errors: {
+    NO_SUCH_USER: "无此用户。",
+    ALREADY_LOGGEDIN: "你已经登陆过。",
+    ALREADY_MIGRATED: "系统错误，请重试。",
+    DUPLICATE_USERNAME: "用户名已被使用。"
+  },
+  migration: {
+    title: "重命名用户",
+    message: "非常抱歉，您的用户名在新版系统中无效。您必须修改用户名以登录到新系统。",
+    message_username: "用户名需要仅包含大小写字母、数字和「<code>-_.#$</code>」，且长度在 3 到 24 之间。",
+    invalid_username: "无效的用户名。",
+    placeholder: "新用户名",
+    confirm: "修改用户名",
+    cancel: "取消"
+  }
 };

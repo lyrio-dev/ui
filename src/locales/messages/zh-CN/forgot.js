@@ -14,7 +14,8 @@ module.exports = {
     NO_SUCH_USER: "无此用户。",
     INVALID_EMAIL_VERIFICATION_CODE: "邮箱验证码无效。",
     FAILED_TO_SEND: "发送邮件失败：{errorMessage}",
-    RATE_LIMITED: "您的操作过于频繁，请稍后再试。"
+    RATE_LIMITED: "您的操作过于频繁，请稍后再试。",
+    USER_NOT_MIGRATED: "您的账户尚未迁移到新版系统，请联系管理员。"
   },
   empty_email: "邮箱不能为空",
   invalid_email: "邮箱无效",

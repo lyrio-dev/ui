@@ -14,7 +14,8 @@ module.exports = {
     NO_SUCH_USER: "No such user.",
     INVALID_EMAIL_VERIFICATION_CODE: "Invalid email verification code.",
     FAILED_TO_SEND: "Failed to send mail: {errorMessage}",
-    RATE_LIMITED: "Your operations are too frequent. Please try again later."
+    RATE_LIMITED: "Your operations are too frequent. Please try again later.",
+    USER_NOT_MIGRATED: "Your user has not been migrated to the new system. Please contact the administrator."
   },
   empty_email: "Please enter your email address",
   invalid_email: "Invalid email address",

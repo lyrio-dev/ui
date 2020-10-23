@@ -10,7 +10,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import api from "@/api";
-import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useAsyncCallbackPending, useDialog, useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
@@ -52,13 +52,133 @@ let LoginPage: React.FC = () => {
   const refUsernameInput = useRef<HTMLInputElement>();
   const refPasswordInput = useRef<HTMLInputElement>();
 
+  // These states are only for migration with dialog
+  const [migrationNewUsername, setMigrationNewUsername] = useState("");
+  const refNewUsername = useRef<string>();
+  const [migrationPending, doDialogMigration] = useAsyncCallbackPending(async () => {
+    if (!isValidUsername(migrationNewUsername)) {
+      toast.error(_(".migration.invalid_username"));
+      return;
+    }
+
+    const { requestError, response } = await api.migration.migrateUser({
+      oldUsername: username,
+      oldPassword: password,
+      newUsername: migrationNewUsername,
+      newPassword: password
+    });
+
+    if (requestError) toast.error(requestError(_));
+    else if (response.error) handleCommonError(response.error);
+    else {
+      refNewUsername.current = migrationNewUsername;
+      setUsername(migrationNewUsername);
+      refOnMigrationDialogFinish.current(response.token);
+    }
+  });
+
+  const migrationDialog = useDialog(
+    {
+      size: "small"
+    },
+    <Header icon="key" content={_(".migration.title")} />,
+    <>
+      <p>{_(".migration.message")}</p>
+      <p dangerouslySetInnerHTML={{ __html: _(".migration.message_username") }} />
+      <Input
+        icon="user"
+        iconPosition="left"
+        placeholder={_(".migration.placeholder")}
+        value={migrationNewUsername}
+        readOnly={migrationPending}
+        onChange={(e, { value }) => setMigrationNewUsername(value)}
+      />
+    </>,
+    () => (
+      <>
+        <Button
+          disabled={migrationPending}
+          content={_(".migration.cancel")}
+          onClick={() => {
+            setMigrationNewUsername("");
+            refOnMigrationDialogFinish.current();
+          }}
+        />
+        <Button
+          primary
+          loading={migrationPending}
+          content={_(".migration.confirm")}
+          onClick={() => doDialogMigration()}
+        />
+      </>
+    )
+  );
+
+  function handleCommonError(error: string) {
+    switch (error) {
+      case "NO_SUCH_USER":
+        setError("username", _(".no_such_user"));
+        refUsernameInput.current.focus();
+        refUsernameInput.current.select();
+        break;
+      case "WRONG_PASSWORD":
+        setError("password", _(".wrong_password"));
+        refPasswordInput.current.focus();
+        refPasswordInput.current.select();
+        break;
+      default:
+        toast.error(_(`.errors.${error}`));
+    }
+  }
+
+  let refOnMigrationDialogFinish = useRef<(token?: string) => void>();
+  async function promptAndMigrate() {
+    migrationDialog.open();
+    const result = await new Promise<string>(resolve => (refOnMigrationDialogFinish.current = resolve));
+    migrationDialog.close();
+    return result;
+  }
+
+  async function tryMigrate() {
+    const { requestError, response } = await api.migration.queryUserMigrationInfo({
+      oldUsername: username
+    });
+
+    if (requestError) toast.error(requestError(_));
+    else if (response.error) handleCommonError(response.error);
+    else {
+      if (response.migrated) {
+        toast.error(_(".system_error"));
+        return;
+      }
+
+      if (response.usernameMustChange) {
+        return await promptAndMigrate();
+      }
+
+      {
+        const { requestError, response } = await api.migration.migrateUser({
+          oldUsername: username,
+          oldPassword: password,
+          newUsername: username,
+          newPassword: password
+        });
+
+        if (requestError) toast.error(requestError(_));
+        else if (response.error) handleCommonError(response.error);
+        else return response.token;
+      }
+    }
+  }
+
   async function onSubmit() {
     if (pending) return;
     setPending(true);
 
     if (username.length === 0) {
       setError("username", _(".empty_username"));
-    } else if (!isValidUsername(username)) {
+    } else if (username.length > 80) {
+      // A SYZOJ 2 username is allowed to check if a user is not migrated.
       setError("username", _(".invalid_username"));
     } else if (password.length === 0) {
       setError("password", _(".empty_password"));
@@ -69,36 +189,29 @@ let LoginPage: React.FC = () => {
       const { requestError, response } = await api.auth.login({ username, password });
 
       if (requestError) toast.error(requestError(_));
-      else if (response.error) {
-        switch (response.error) {
-          case "ALREADY_LOGGEDIN":
-            toast.error(_(".already_loggedin"));
-            break;
-          case "NO_SUCH_USER":
-            setError("username", _(".no_such_user"));
-            refUsernameInput.current.focus();
-            refUsernameInput.current.select();
-            break;
-          case "WRONG_PASSWORD":
-            setError("password", _(".wrong_password"));
-            refPasswordInput.current.focus();
-            refPasswordInput.current.select();
-            break;
+      else if (response.error && response.error !== "USER_NOT_MIGRATED") handleCommonError(response.error);
+      else {
+        setError(null, null);
+
+        let token = "";
+        if (!response.error) token = response.token;
+        if (response.error === "USER_NOT_MIGRATED") token = await tryMigrate();
+
+        if (token) {
+          // Login success
+          appState.token = token;
+
+          {
+            setSuccess(_(".welcome", { username: refNewUsername.current || username }));
+
+            setTimeout(async () => {
+              await refreshSession();
+              redirect();
+            }, 1000);
+          }
+
+          return;
         }
-      } else {
-        // Login success
-        appState.token = response.token;
-
-        {
-          setSuccess(_(".welcome", { username: username }));
-
-          setTimeout(async () => {
-            await refreshSession();
-            redirect();
-          }, 1000);
-        }
-
-        return;
       }
     }
 
@@ -107,6 +220,7 @@ let LoginPage: React.FC = () => {
 
   return (
     <>
+      {migrationDialog.element}
       <div className={style.wrapper}>
         <Header as="h2" className={style.header} textAlign="center">
           <Image as={AppLogo} className={style.logo} />
@@ -129,6 +243,7 @@ let LoginPage: React.FC = () => {
                 placeholder={_(".username")}
                 value={username}
                 autoComplete="username"
+                readOnly={pending}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
                 onKeyPress={onEnterPress(() => refPasswordInput.current.focus())}
               />
@@ -152,6 +267,7 @@ let LoginPage: React.FC = () => {
                 value={password}
                 type="password"
                 autoComplete="current-password"
+                readOnly={pending}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               />
             </Ref>

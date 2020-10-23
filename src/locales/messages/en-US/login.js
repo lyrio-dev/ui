@@ -13,8 +13,23 @@ module.exports = {
   invalid_username: "Invalid username",
   empty_password: "Please enter your password",
   invalid_password: "Invalid password (password must be 6 to 32 characters long)",
-  already_loggedin: "You have already logged in.",
   no_such_user: "No such user",
   wrong_password: "Wrong password",
-  welcome: "Welcome back, {username}!"
+  welcome: "Welcome back, {username}!",
+  errors: {
+    NO_SUCH_USER: "No such user.",
+    ALREADY_LOGGEDIN: "You have already logged in.",
+    ALREADY_MIGRATED: "System error. Please try again later.",
+    DUPLICATE_USERNAME: "Username already taken."
+  },
+  migration: {
+    title: "Choose a new username",
+    message: "We are sorry but your username is invalid in our new system. You must choose a new username to continue.",
+    message_username:
+      'Username should contains only A-Z, a-z, 0-9 and <code>"-_.#$"</code> and be in the length of 3 to 24.',
+    invalid_username: "Invalid username.",
+    placeholder: "New username",
+    confirm: "Rename",
+    cancel: "Cancel"
+  }
 };
