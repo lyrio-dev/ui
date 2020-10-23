@@ -335,7 +335,7 @@ int main(int argc,char**argv)
       </Form>
       <div className={style.notes}>
         {_(".code_formatter.notes_before")}
-        <a href="http://astyle.sourceforge.net/astyle.html" target="_blank">
+        <a href="http://astyle.sourceforge.net/astyle.html" target="_blank" rel="noreferrer noopener">
           &nbsp;{_(".code_formatter.notes_link")}&nbsp;
         </a>
         {_(".code_formatter.notes_after")}

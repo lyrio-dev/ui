@@ -181,7 +181,7 @@ let AppLayout: React.FC = props => {
         <Container textAlign="center">
           <div>
             {appState.serverPreference.siteName} Powered by{" "}
-            <a href="https://syzoj.org" target="_blank">
+            <a href="https://syzoj.org" target="_blank" rel="noreferrer noopener">
               SYZOJ
             </a>
           </div>
@@ -215,7 +215,7 @@ let AppLayout: React.FC = props => {
                 ))}
               </Dropdown.Menu>
             </Dropdown>
-            <Link href="https://github.com/syzoj" title="GitHub" target="_blank">
+            <Link href="https://github.com/syzoj" title="GitHub" target="_blank" rel="noreferrer noopener">
               <Icon name="github" />
             </Link>
           </div>

@@ -65,6 +65,18 @@ function patchStyles(wrapper: HTMLDivElement) {
   });
 }
 
+function parseUrlIfSameOrigin(href: string) {
+  // `new URL` may throw an exception
+  try {
+    const url = new URL(href, document.location.href);
+    // Check internal links
+    if (url.origin === document.location.origin) {
+      return url;
+    }
+  } catch (e) {}
+  return null;
+}
+
 const MarkdownContent: React.FC<MarkdownContentProps> = props => {
   const html = useMemo(() => {
     const [markdownResult, highlightPlaceholders, mathPlaceholders, findPlaceholderElement] = renderMarkdown(
@@ -90,6 +102,12 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
     // Render emojis
     twemoji.parse(wrapper, getTwemojiOptions(true));
 
+    // Patch <a> tags for security reason
+    Array.from(wrapper.getElementsByTagName("a")).forEach(a => {
+      a.relList.add("noreferrer", "noreferrer");
+      if (!parseUrlIfSameOrigin(a.href)) a.target = "_blank";
+    });
+
     patchStyles(wrapper);
 
     return wrapper.innerHTML;
@@ -109,15 +127,11 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
         const a = targetElement as HTMLAnchorElement;
         if (!["", "_self"].includes(a.target.toLowerCase())) return;
 
-        // `new URL` may throw an exception
-        try {
-          const url = new URL(a.href, document.location.href);
-          // Check internal links
-          if (url.origin === document.location.origin) {
-            e.preventDefault();
-            navigation.navigate(url.pathname + url.search + url.hash);
-          }
-        } catch (e) {}
+        const url = parseUrlIfSameOrigin(a.href);
+        if (url) {
+          e.preventDefault();
+          navigation.navigate(url.pathname + url.search + url.hash);
+        }
       }
     }
 

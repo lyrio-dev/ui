@@ -227,7 +227,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           <div className={style.notes}>
             <Icon name="qq" />
             {_(".qq_notes")}
-            <a href={`https://wpa.qq.com/msgrd?V=3&Uin=${qq}`} target="_blank">
+            <a href={`https://wpa.qq.com/msgrd?V=3&Uin=${qq}`} target="_blank" rel="noreferrer noopener">
               https://wpa.qq.com/msgrd?V=3&Uin={qq}
             </a>
           </div>
@@ -243,7 +243,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           <div className={style.notes}>
             <Icon name="telegram" />
             {_(".telegram_notes")}
-            <a href={`https://t.me/${telegram}`} target="_blank">
+            <a href={`https://t.me/${telegram}`} target="_blank" rel="noreferrer noopener">
               https://t.me/{telegram}
             </a>
           </div>
@@ -259,7 +259,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           <div className={style.notes}>
             <Icon name="github" />
             {_(".github_notes")}
-            <a href={`https://github.com/${github}`} target="_blank">
+            <a href={`https://github.com/${github}`} target="_blank" rel="noreferrer noopener">
               https://github.com/{github}
             </a>
           </div>
