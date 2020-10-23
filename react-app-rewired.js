@@ -80,7 +80,7 @@ module.exports = override(
     ["semantic-ui-css"]: "fomantic-ui-css"
   }),
   addWebpackPlugin(new MonacoWebpackPlugin({
-    languages: ["cpp"]
+    languages: ["yaml", "cpp"]
   })),
   addBabelPlugin(["prismjs", {
     "languages": ["yaml", "cpp", "json"]
