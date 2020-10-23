@@ -105,11 +105,22 @@ html.sidebarOpen {
 body {
   @marginTop: 49px;
 
-  display: block;
   margin: @marginTop 0 0 0;
   padding-top: 28px;
   min-height: calc(100vh - @marginTop);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+:global(#root) {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#mainUiContainer {
+  flex-grow: 1;
 }
 
 @media only screen and (max-width: 1127px) {
