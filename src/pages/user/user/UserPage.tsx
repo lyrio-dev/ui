@@ -16,6 +16,7 @@ import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { isValidUsername } from "@/utils/validators";
 import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
+import MarkdownContent from "@/markdown/MarkdownContent";
 
 function getTimeZone() {
   try {
@@ -182,7 +183,13 @@ let UserPage: React.FC<UserPageProps> = props => {
       <Header as="h1" className={style.username} content={props.meta.username} />
       {props.meta.bio && (
         <EmojiRenderer>
-          <p className={style.bio}>{props.meta.bio}</p>
+          <p className={style.bio}>
+            {appState.serverPreference.misc.renderMarkdownInUserBio ? (
+              <MarkdownContent content={props.meta.bio} />
+            ) : (
+              props.meta.bio
+            )}
+          </p>
         </EmojiRenderer>
       )}
     </>

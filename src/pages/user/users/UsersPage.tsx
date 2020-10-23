@@ -15,6 +15,7 @@ import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
+import MarkdownContent from "@/markdown/MarkdownContent";
 
 const USERS_PER_PAGE = appState.serverPreference.pagination.userList;
 
@@ -126,7 +127,11 @@ let UsersPage: React.FC<UsersPageProps> = props => {
               </Table.Cell>
               <Table.Cell className={style.columnBio}>
                 <EmojiRenderer>
-                  <div>{user.bio}</div>
+                  {appState.serverPreference.misc.renderMarkdownInUserBio ? (
+                    <MarkdownContent content={user.bio} />
+                  ) : (
+                    <div>{user.bio}</div>
+                  )}
                 </EmojiRenderer>
               </Table.Cell>
               <Table.Cell>{user.acceptedProblemCount}</Table.Cell>

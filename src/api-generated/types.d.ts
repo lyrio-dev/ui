@@ -500,6 +500,7 @@ declare namespace ApiTypes {
   export interface PreferenceConfigMisc {
     discussionReactionEmojis: string[];
     discussionReactionAllowCustomEmojis: boolean;
+    renderMarkdownInUserBio: boolean;
   }
   export interface PreferenceConfigPagination {
     problemSet: number;
