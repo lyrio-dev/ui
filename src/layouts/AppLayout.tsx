@@ -224,13 +224,17 @@ let AppLayout: React.FC = props => {
     </>
   );
 
-  const userDropdown = (icon: boolean = true) => (
+  const userDropdown = (icon = true) => (
     <Menu.Menu position="right">
-      <div className="ui simple dropdown item">
-        {appState.currentUser.username}
-        {icon && <i className="dropdown icon"></i>}
+      <Dropdown
+        simple
+        item
+        open={false}
+        icon={icon && <i className="dropdown icon"></i>}
+        text={appState.currentUser.username}
+      >
         {userMenu()}
-      </div>
+      </Dropdown>
     </Menu.Menu>
   );
 
