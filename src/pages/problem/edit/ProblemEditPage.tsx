@@ -16,7 +16,8 @@ import {
   Checkbox,
   Radio,
   Dimmer,
-  List
+  List,
+  Ref
 } from "semantic-ui-react";
 import TextAreaAutoSize from "react-textarea-autosize";
 import { useNavigation } from "react-navi";
@@ -206,47 +207,43 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               />
             </Dropdown.Menu>
           </Dropdown>
-          <Dropdown
-            item
-            icon="bars"
-            className={`icon ${style.toolbarMenuIconItem}`}
-            // Semantic UI doesn't forward ref
-            ref={ref => (refOptionsButton.current = ref && (ref as any).ref.current)}
-          >
-            <Dropdown.Menu>
-              <Dropdown.Item
-                disabled={props.isFirst}
-                icon="angle double up"
-                text={_(".content_editor.section_options.move_up")}
-                onClick={() => props.onMoveSectionUp()}
-              />
-              <Dropdown.Item
-                disabled={props.isLast}
-                icon="angle double down"
-                text={_(".content_editor.section_options.move_down")}
-                onClick={() => props.onMoveSectionDown()}
-              />
-              <Popup
-                trigger={
-                  <Dropdown.Item
-                    disabled={props.isFirst && props.isLast}
-                    icon="delete"
-                    text={_(".content_editor.section_options.delete")}
-                  />
-                }
-                context={refOptionsButton}
-                content={
-                  <Button
-                    color="red"
-                    content={_(".content_editor.section_options.confirm_delete")}
-                    onClick={() => props.onDeleteSection()}
-                  />
-                }
-                on="click"
-                position="top right"
-              />
-            </Dropdown.Menu>
-          </Dropdown>
+          <Ref innerRef={refOptionsButton}>
+            <Dropdown item icon="bars" className={`icon ${style.toolbarMenuIconItem}`}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  disabled={props.isFirst}
+                  icon="angle double up"
+                  text={_(".content_editor.section_options.move_up")}
+                  onClick={() => props.onMoveSectionUp()}
+                />
+                <Dropdown.Item
+                  disabled={props.isLast}
+                  icon="angle double down"
+                  text={_(".content_editor.section_options.move_down")}
+                  onClick={() => props.onMoveSectionDown()}
+                />
+                <Popup
+                  trigger={
+                    <Dropdown.Item
+                      disabled={props.isFirst && props.isLast}
+                      icon="delete"
+                      text={_(".content_editor.section_options.delete")}
+                    />
+                  }
+                  context={refOptionsButton}
+                  content={
+                    <Button
+                      color="red"
+                      content={_(".content_editor.section_options.confirm_delete")}
+                      onClick={() => props.onDeleteSection()}
+                    />
+                  }
+                  on="click"
+                  position="top right"
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          </Ref>
         </Menu.Menu>
       </Menu>
       <Segment attached="bottom" className={style.sectionSegment} data-type={props.section.type}>
@@ -523,41 +520,37 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
               />
             </Dropdown.Menu>
           </Dropdown>
-          <Dropdown
-            item
-            icon="bars"
-            className={`icon ${style.toolbarMenuIconItem}`}
-            // Semantic UI doesn't forward ref
-            ref={ref => (refOptionsButton.current = ref && (ref as any).ref.current)}
-          >
-            <Dropdown.Menu>
-              <Dropdown.Item
-                disabled={props.isFirst}
-                icon="angle double up"
-                text={_(".sample_editor.options.move_up")}
-                onClick={() => props.onMoveSampleUp()}
-              />
-              <Dropdown.Item
-                disabled={props.isLast}
-                icon="angle double down"
-                text={_(".sample_editor.options.move_down")}
-                onClick={() => props.onMoveSampleDown()}
-              />
-              <Popup
-                trigger={<Dropdown.Item icon="delete" text={_(".sample_editor.options.delete")} />}
-                context={refOptionsButton}
-                content={
-                  <Button
-                    color="red"
-                    content={_(".sample_editor.options.confirm_delete")}
-                    onClick={() => props.onDeleteSample()}
-                  />
-                }
-                on="click"
-                position="top right"
-              />
-            </Dropdown.Menu>
-          </Dropdown>
+          <Ref innerRef={refOptionsButton}>
+            <Dropdown item icon="bars" className={`icon ${style.toolbarMenuIconItem}`}>
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  disabled={props.isFirst}
+                  icon="angle double up"
+                  text={_(".sample_editor.options.move_up")}
+                  onClick={() => props.onMoveSampleUp()}
+                />
+                <Dropdown.Item
+                  disabled={props.isLast}
+                  icon="angle double down"
+                  text={_(".sample_editor.options.move_down")}
+                  onClick={() => props.onMoveSampleDown()}
+                />
+                <Popup
+                  trigger={<Dropdown.Item icon="delete" text={_(".sample_editor.options.delete")} />}
+                  context={refOptionsButton}
+                  content={
+                    <Button
+                      color="red"
+                      content={_(".sample_editor.options.confirm_delete")}
+                      onClick={() => props.onDeleteSample()}
+                    />
+                  }
+                  on="click"
+                  position="top right"
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          </Ref>
         </Menu.Menu>
       </Menu>
       <Segment attached="bottom" className={style.sectionSegment}>

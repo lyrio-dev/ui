@@ -11,7 +11,8 @@ import {
   List,
   Table,
   SemanticCOLORS,
-  Progress
+  Progress,
+  Ref
 } from "semantic-ui-react";
 import { Link } from "react-navi";
 import { v4 as uuid } from "uuid";
@@ -535,45 +536,47 @@ let FileTable: React.FC<FileTableProps> = props => {
               <div className={style.fileTableFooterInfo}>
                 <div className={style.tableFooterText}>
                   {selectedFilesArray.length > 0 ? (
-                    <Dropdown
-                      // Semantic UI doesn't forward ref
-                      ref={ref => (refSelectedInfoDropdown.current = ref && (ref as any).ref.current)}
-                      open={selectedInfoDropdownOpen}
-                      onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
-                      onClose={() => setSelectedInfoDropdownOpen(false)}
-                      pointing
-                      text={_(isMobile ? ".selected_files_count_and_size_narrow" : ".selected_files_count_and_size", {
-                        count: selectedFilesArray.length.toString(),
-                        totalSize: formatFileSize(
-                          selectedFilesArray.reduce((sum, file) => sum + file.size, 0),
-                          1
-                        )
-                      })}
-                    >
-                      <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
-                        <Dropdown.Item
-                          icon="download"
-                          text={_(".download_as_archive")}
-                          onClick={() => props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))}
-                        />
-                        {props.hasPermission && (
-                          <Popup
-                            trigger={<Dropdown.Item icon="delete" text={_(".delete")} />}
-                            open={popupDeleteSelectedOpen}
-                            onOpen={() => setPopupDeleteSelectedOpen(true)}
-                            onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
-                            context={refSelectedInfoDropdown}
-                            content={
-                              <Button negative loading={deleteSelectedPending} onClick={onDeleteSelected}>
-                                {_(".confirm_delete")}
-                              </Button>
+                    <Ref innerRef={refSelectedInfoDropdown.current}>
+                      <Dropdown
+                        open={selectedInfoDropdownOpen}
+                        onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}
+                        onClose={() => setSelectedInfoDropdownOpen(false)}
+                        pointing
+                        text={_(isMobile ? ".selected_files_count_and_size_narrow" : ".selected_files_count_and_size", {
+                          count: selectedFilesArray.length.toString(),
+                          totalSize: formatFileSize(
+                            selectedFilesArray.reduce((sum, file) => sum + file.size, 0),
+                            1
+                          )
+                        })}
+                      >
+                        <Dropdown.Menu className={style.fileTableSelectedFilesDropdownMenu}>
+                          <Dropdown.Item
+                            icon="download"
+                            text={_(".download_as_archive")}
+                            onClick={() =>
+                              props.onDownloadFilesAsArchive(selectedFilesArray.map(file => file.filename))
                             }
-                            on="click"
-                            position="top center"
                           />
-                        )}
-                      </Dropdown.Menu>
-                    </Dropdown>
+                          {props.hasPermission && (
+                            <Popup
+                              trigger={<Dropdown.Item icon="delete" text={_(".delete")} />}
+                              open={popupDeleteSelectedOpen}
+                              onOpen={() => setPopupDeleteSelectedOpen(true)}
+                              onClose={() => !deleteSelectedPending && setPopupDeleteSelectedOpen(false)}
+                              context={refSelectedInfoDropdown}
+                              content={
+                                <Button negative loading={deleteSelectedPending} onClick={onDeleteSelected}>
+                                  {_(".confirm_delete")}
+                                </Button>
+                              }
+                              on="click"
+                              position="top center"
+                            />
+                          )}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Ref>
                   ) : uploadingCount ? (
                     _(
                       isMobile ? ".files_count_and_size_with_uploading_narrow" : ".files_count_and_size_with_uploading",
