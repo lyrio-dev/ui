@@ -6,7 +6,7 @@ import { observer } from "mobx-react";
 import style from "./JudgeMachinePage.module.less";
 
 import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
-import { JudgeClientApi } from "@/api";
+import api from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
 import { defineRoute, RouteError } from "@/AppRouter";
@@ -31,7 +31,7 @@ interface JudgeClientSystemInfo {
 }
 
 async function fetchData(): Promise<JudgeMachinePageProps> {
-  const { requestError, response } = await JudgeClientApi.listJudgeClients();
+  const { requestError, response } = await api.judgeClient.listJudgeClients();
   if (requestError) throw new RouteError(requestError);
   else return response;
 }
@@ -115,7 +115,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
 
   const [resetPopupOpened, setResetPopupOpened] = useState<number>(null);
   async function onResetKey(id: number) {
-    const { requestError, response } = await JudgeClientApi.resetJudgeClientKey({
+    const { requestError, response } = await api.judgeClient.resetJudgeClientKey({
       id
     });
     if (requestError) toast.error(requestError(_));
@@ -129,7 +129,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
 
   const [deletePopupOpened, setDeletePopupOpened] = useState<number>(null);
   async function onDelete(id: number) {
-    const { requestError, response } = await JudgeClientApi.deleteJudgeClient({
+    const { requestError, response } = await api.judgeClient.deleteJudgeClient({
       id
     });
     if (requestError) toast.error(requestError(_));
@@ -147,7 +147,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
   const [addPending, onAddJudgeClient] = useAsyncCallbackPending(async () => {
     if (addPending) return;
 
-    const { requestError, response } = await JudgeClientApi.addJudgeClient({
+    const { requestError, response } = await api.judgeClient.addJudgeClient({
       name: addNewName,
       allowedHosts: []
     });

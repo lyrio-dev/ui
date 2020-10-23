@@ -5,7 +5,7 @@ import { useNavigation } from "react-navi";
 import style from "./DiscussionEditPage.module.less";
 
 import { defineRoute, RouteError } from "@/AppRouter";
-import { DiscussionApi, ProblemApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import { useLocalizer } from "@/utils/hooks";
 import { DiscussionEditor } from "../view/DiscussionViewPage";
@@ -34,12 +34,12 @@ const DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
 
   async function onSubmit() {
     const { requestError, response } = props.discussion
-      ? await DiscussionApi.updateDiscussion({
+      ? await api.discussion.updateDiscussion({
           discussionId: props.discussion.meta.id,
           title,
           content
         })
-      : await DiscussionApi.createDiscussion({
+      : await api.discussion.createDiscussion({
           problemId: props.problem?.meta?.id,
           title,
           content
@@ -92,7 +92,7 @@ export default {
       const problemId = request.params.problemId;
       if (problemId == null) return null;
 
-      const { requestError, response } = await ProblemApi.getProblem({
+      const { requestError, response } = await api.problem.getProblem({
         id: Number(problemId) || 0,
         localizedContentsOfLocale: appState.locale,
         localizedContentsTitleOnly: true
@@ -110,7 +110,7 @@ export default {
     return <DiscussionEditPage problem={problem} />;
   }),
   edit: defineRoute(async request => {
-    const { requestError, response } = await DiscussionApi.getDiscussionAndReplies({
+    const { requestError, response } = await api.discussion.getDiscussionAndReplies({
       locale: appState.locale,
       discussionId: Number(request.params.id) || 0,
       getDiscussion: true

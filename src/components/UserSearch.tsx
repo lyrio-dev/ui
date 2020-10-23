@@ -2,7 +2,7 @@ import React from "react";
 
 import style from "./UserSearch.module.less";
 
-import { UserApi } from "@/api";
+import api from "@/api";
 import { useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import UserAvatar from "./UserAvatar";
@@ -28,7 +28,7 @@ let UserSearch: React.FC<UserSearchProps> = props => {
         if (wildcardStart) input = input.substr(1);
         if (!input) return [];
 
-        const { requestError, response } = await UserApi.searchUser({
+        const { requestError, response } = await api.user.searchUser({
           query: input,
           wildcard: wildcardStart ? "Both" : "End"
         });

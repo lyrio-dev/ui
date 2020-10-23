@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import style from "./UserPage.module.less";
 
 import { appState } from "@/appState";
-import { UserApi } from "@/api";
+import api from "@/api";
 import { useLocalizer } from "@/utils/hooks";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
@@ -27,7 +27,7 @@ function getTimeZone() {
 
 async function fetchData(query: { userId?: number; username?: string }): Promise<[Date, Required<typeof response>]> {
   const now = new Date();
-  const { requestError, response } = await UserApi.getUserDetail({
+  const { requestError, response } = await api.user.getUserDetail({
     ...query,
     timezone: getTimeZone(),
     now: now.toISOString()

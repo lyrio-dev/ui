@@ -2,7 +2,7 @@ import React from "react";
 
 // import style from "./ProblemSearch.module.less";
 
-import { ProblemApi } from "@/api";
+import api from "@/api";
 import { useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import PreviewSearch from "./PreviewSearch";
@@ -34,7 +34,7 @@ let ProblemSearch: React.FC<ProblemSearchProps> = props => {
         if (wildcardStart) input = input.substr(1);
         if (!input) return [];
 
-        const { requestError, response } = await ProblemApi.queryProblemSet(
+        const { requestError, response } = await api.problem.queryProblemSet(
           Object.assign({}, props.queryParameters, {
             keyword: input,
             titleOnly: true,

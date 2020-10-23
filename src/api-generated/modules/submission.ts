@@ -4,49 +4,35 @@
 
 import { createGetApi, createPostApi } from "@/api";
 
-export type SubmitRequestDto = ApiTypes.SubmitRequestDto;
-export type SubmitResponseDto = ApiTypes.SubmitResponseDto;
-export type QuerySubmissionRequestDto = ApiTypes.QuerySubmissionRequestDto;
-export type QuerySubmissionResponseDto = ApiTypes.QuerySubmissionResponseDto;
-export type GetSubmissionDetailRequestDto = ApiTypes.GetSubmissionDetailRequestDto;
-export type GetSubmissionDetailResponseDto = ApiTypes.GetSubmissionDetailResponseDto;
-export type DownloadSubmissionFileRequestDto = ApiTypes.DownloadSubmissionFileRequestDto;
-export type DownloadSubmissionFileResponseDto = ApiTypes.DownloadSubmissionFileResponseDto;
-export type QuerySubmissionStatisticsRequestDto = ApiTypes.QuerySubmissionStatisticsRequestDto;
-export type QuerySubmissionStatisticsResponseDto = ApiTypes.QuerySubmissionStatisticsResponseDto;
-export type RejudgeSubmissionRequestDto = ApiTypes.RejudgeSubmissionRequestDto;
-export type RejudgeSubmissionResponseDto = ApiTypes.RejudgeSubmissionResponseDto;
-export type CancelSubmissionRequestDto = ApiTypes.CancelSubmissionRequestDto;
-export type CancelSubmissionResponseDto = ApiTypes.CancelSubmissionResponseDto;
-export type SetSubmissionPublicRequestDto = ApiTypes.SetSubmissionPublicRequestDto;
-export type SetSubmissionPublicResponseDto = ApiTypes.SetSubmissionPublicResponseDto;
-export type DeleteSubmissionRequestDto = ApiTypes.DeleteSubmissionRequestDto;
-export type DeleteSubmissionResponseDto = ApiTypes.DeleteSubmissionResponseDto;
-
-export const submit = createPostApi<SubmitRequestDto, SubmitResponseDto>("submission/submit");
-export const querySubmission = createPostApi<QuerySubmissionRequestDto, QuerySubmissionResponseDto>(
+export const submit = createPostApi<ApiTypes.SubmitRequestDto, ApiTypes.SubmitResponseDto>("submission/submit");
+export const querySubmission = createPostApi<ApiTypes.QuerySubmissionRequestDto, ApiTypes.QuerySubmissionResponseDto>(
   "submission/querySubmission"
 );
-export const getSubmissionDetail = createPostApi<GetSubmissionDetailRequestDto, GetSubmissionDetailResponseDto>(
-  "submission/getSubmissionDetail"
-);
+export const getSubmissionDetail = createPostApi<
+  ApiTypes.GetSubmissionDetailRequestDto,
+  ApiTypes.GetSubmissionDetailResponseDto
+>("submission/getSubmissionDetail");
 export const downloadSubmissionFile = createPostApi<
-  DownloadSubmissionFileRequestDto,
-  DownloadSubmissionFileResponseDto
+  ApiTypes.DownloadSubmissionFileRequestDto,
+  ApiTypes.DownloadSubmissionFileResponseDto
 >("submission/downloadSubmissionFile");
 export const querySubmissionStatistics = createPostApi<
-  QuerySubmissionStatisticsRequestDto,
-  QuerySubmissionStatisticsResponseDto
+  ApiTypes.QuerySubmissionStatisticsRequestDto,
+  ApiTypes.QuerySubmissionStatisticsResponseDto
 >("submission/querySubmissionStatistics");
-export const rejudgeSubmission = createPostApi<RejudgeSubmissionRequestDto, RejudgeSubmissionResponseDto>(
-  "submission/rejudgeSubmission"
-);
-export const cancelSubmission = createPostApi<CancelSubmissionRequestDto, CancelSubmissionResponseDto>(
-  "submission/cancelSubmission"
-);
-export const setSubmissionPublic = createPostApi<SetSubmissionPublicRequestDto, SetSubmissionPublicResponseDto>(
-  "submission/setSubmissionPublic"
-);
-export const deleteSubmission = createPostApi<DeleteSubmissionRequestDto, DeleteSubmissionResponseDto>(
-  "submission/deleteSubmission"
-);
+export const rejudgeSubmission = createPostApi<
+  ApiTypes.RejudgeSubmissionRequestDto,
+  ApiTypes.RejudgeSubmissionResponseDto
+>("submission/rejudgeSubmission");
+export const cancelSubmission = createPostApi<
+  ApiTypes.CancelSubmissionRequestDto,
+  ApiTypes.CancelSubmissionResponseDto
+>("submission/cancelSubmission");
+export const setSubmissionPublic = createPostApi<
+  ApiTypes.SetSubmissionPublicRequestDto,
+  ApiTypes.SetSubmissionPublicResponseDto
+>("submission/setSubmissionPublic");
+export const deleteSubmission = createPostApi<
+  ApiTypes.DeleteSubmissionRequestDto,
+  ApiTypes.DeleteSubmissionResponseDto
+>("submission/deleteSubmission");

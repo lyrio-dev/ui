@@ -23,7 +23,7 @@ import { useDebounce } from "use-debounce";
 
 import style from "./ProblemFilesPage.module.less";
 
-import { ProblemApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
@@ -54,7 +54,7 @@ export async function downloadProblemFile(
 ) {
   if (!filename) return toast.error(_("problem_files.error.NO_SUCH_FILE"));
 
-  const { requestError, response } = await ProblemApi.downloadProblemFiles({
+  const { requestError, response } = await api.problem.downloadProblemFiles({
     problemId,
     type,
     filenameList: [filename]
@@ -72,7 +72,7 @@ export async function downloadProblemFilesAsArchive(
   filenames: string[],
   _: Localizer
 ) {
-  const { requestError, response } = await ProblemApi.downloadProblemFiles({
+  const { requestError, response } = await api.problem.downloadProblemFiles({
     problemId,
     type,
     filenameList: filenames
@@ -143,7 +143,7 @@ export async function downloadProblemFilesAsArchive(
 const MAX_UPLOAD_CONCURRENCY = 5;
 
 async function fetchData(idType: "id" | "displayId", id: number) {
-  const { requestError, response } = await ProblemApi.getProblem({
+  const { requestError, response } = await api.problem.getProblem({
     [idType]: id,
     testData: true,
     additionalFiles: true,
@@ -687,7 +687,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
       return;
     }
 
-    const { requestError, response } = await ProblemApi.renameProblemFile({
+    const { requestError, response } = await api.problem.renameProblemFile({
       problemId: props.problem.meta.id,
       type,
       filename,
@@ -720,7 +720,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     setFileList: typeof setFileListTestData,
     filenames: string[]
   ) {
-    const { requestError, response } = await ProblemApi.removeProblemFiles({
+    const { requestError, response } = await api.problem.removeProblemFiles({
       problemId: props.problem.meta.id,
       type,
       filenames: filenames
@@ -780,7 +780,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     for (const item of uploadingFileList) {
       uploadTasks.push(async () => {
         const { uploadCancelled, uploadError, requestError, response } = await callApiWithFileUpload(
-          ProblemApi.addProblemFile,
+          api.problem.addProblemFile,
           {
             problemId: props.problem.meta.id,
             type,

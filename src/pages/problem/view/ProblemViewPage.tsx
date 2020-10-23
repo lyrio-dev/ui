@@ -23,7 +23,7 @@ import { v4 as uuid } from "uuid";
 
 import style from "./ProblemViewPage.module.less";
 
-import { ProblemApi, SubmissionApi } from "@/api";
+import api from "@/api";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
@@ -105,7 +105,7 @@ export function useProblemViewMarkdownContentPatcher(problemId: number): Markdow
 }
 
 async function fetchData(idType: "id" | "displayId", id: number, locale: Locale) {
-  const { requestError, response } = await ProblemApi.getProblem({
+  const { requestError, response } = await api.problem.getProblem({
     [idType]: id,
     localizedContentsOfLocale: locale,
     tagsOfLocale: locale,
@@ -176,7 +176,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     if (!isValidDisplayId(setDisplayIdInputValue)) {
       toast.error(_(".error.INVALID_DISPLAY_ID"));
     } else {
-      const { requestError, response } = await ProblemApi.setProblemDisplayId({
+      const { requestError, response } = await api.problem.setProblemDisplayId({
         problemId: props.problem.meta.id,
         displayId: Number(setDisplayIdInputValue)
       });
@@ -206,7 +206,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   // Begin set public
   const [setPublicPending, onSetPublic] = useAsyncCallbackPending(async (isPublic: boolean) => {
-    const { requestError, response } = await ProblemApi.setProblemPublic({
+    const { requestError, response } = await api.problem.setProblemPublic({
       problemId: props.problem.meta.id,
       isPublic
     });
@@ -226,7 +226,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const refOpenPermissionManager = useRef<() => Promise<boolean>>();
   const [permissionManagerLoading, setPermissionManagerLoading] = useState(false);
   async function onGetInitialPermissions() {
-    const { requestError, response } = await ProblemApi.getProblem({
+    const { requestError, response } = await api.problem.getProblem({
       id: props.problem.meta.id,
       owner: true,
       permissions: true
@@ -248,7 +248,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     userPermissions: { userId: number; permissionLevel: number }[],
     groupPermissions: { groupId: number; permissionLevel: number }[]
   ) {
-    const { requestError, response } = await ProblemApi.setProblemPermissions({
+    const { requestError, response } = await api.problem.setProblemPermissions({
       problemId: props.problem.meta.id,
       userPermissions: userPermissions as any,
       groupPermissions: groupPermissions as any
@@ -286,7 +286,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   // Begin delete
   const [deletePending, onDelete] = useAsyncCallbackPending(async () => {
-    const { requestError, response } = await ProblemApi.deleteProblem({
+    const { requestError, response } = await api.problem.deleteProblem({
       problemId: props.problem.meta.id
     });
     if (requestError) toast.error(requestError(_));
@@ -365,7 +365,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     setSubmitPending(true);
 
     const { uploadError, requestError, response } = await callApiWithFileUpload(
-      SubmissionApi.submit,
+      api.submission.submit,
       {
         problemId: props.problem.meta.id,
         content: submissionContent

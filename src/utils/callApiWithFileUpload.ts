@@ -1,5 +1,6 @@
-import { ApiResponse } from "@/api";
 import Axios from "axios";
+
+import { ApiResponse } from "@/api";
 
 export interface ApiResponseWithUploadResult<T extends { error?: string }> {
   uploadCancelled?: boolean;

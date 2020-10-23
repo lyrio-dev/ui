@@ -8,7 +8,7 @@ import { useNavigation } from "react-navi";
 import style from "./SubmissionPage.module.less";
 
 import { appState } from "@/appState";
-import { SubmissionApi, ProblemApi } from "@/api-generated";
+import api from "@/api";
 import toast from "@/utils/toast";
 import { useLocalizer, useSocket } from "@/utils/hooks";
 import { SubmissionHeader, SubmissionItem, SubmissionItemExtraRows } from "../componments/SubmissionItem";
@@ -27,7 +27,7 @@ import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 async function fetchData(submissionId: number) {
-  const { requestError, response } = await SubmissionApi.getSubmissionDetail({
+  const { requestError, response } = await api.submission.getSubmissionDetail({
     submissionId: submissionId.toString(),
     locale: appState.locale
   });
@@ -269,7 +269,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   }, []);
 
   async function onDownload(filename: string) {
-    const { requestError, response } = await ProblemApi.downloadProblemFiles({
+    const { requestError, response } = await api.problem.downloadProblemFiles({
       problemId: meta.problem.id,
       type: "TestData",
       filenameList: [filename]
@@ -704,7 +704,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const onDownloadAnswer =
     props.ProblemTypeSubmissionView?.getDownloadAnswerFilename &&
     (async () => {
-      const { requestError, response } = await SubmissionApi.downloadSubmissionFile({
+      const { requestError, response } = await api.submission.downloadSubmissionFile({
         submissionId: props.meta.id,
         filename: props.ProblemTypeSubmissionView.getDownloadAnswerFilename(props.meta)
       });
@@ -720,7 +720,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     if (operationPending) return;
     setOperationPending(true);
 
-    const { requestError, response } = await SubmissionApi.cancelSubmission({
+    const { requestError, response } = await api.submission.cancelSubmission({
       submissionId: meta.id
     });
     if (requestError) toast.error(requestError(_));
@@ -737,7 +737,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     if (operationPending) return;
     setOperationPending(true);
 
-    const { requestError, response } = await SubmissionApi.rejudgeSubmission({
+    const { requestError, response } = await api.submission.rejudgeSubmission({
       submissionId: meta.id
     });
     if (requestError) toast.error(requestError(_));
@@ -755,7 +755,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     if (operationPending) return;
     setOperationPending(true);
 
-    const { requestError, response } = await SubmissionApi.setSubmissionPublic({
+    const { requestError, response } = await api.submission.setSubmissionPublic({
       submissionId: meta.id,
       isPublic: !meta.isPublic
     });
@@ -774,7 +774,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     if (operationPending) return;
     setOperationPending(true);
 
-    const { requestError, response } = await SubmissionApi.deleteSubmission({
+    const { requestError, response } = await api.submission.deleteSubmission({
       submissionId: meta.id
     });
     if (requestError) toast.error(requestError(_));

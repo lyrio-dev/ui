@@ -6,7 +6,7 @@ import { Bar, Line } from "react-chartjs-2";
 
 import style from "./SubmissionStatisticsPage.module.less";
 
-import { SubmissionApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import { useLocalizer } from "@/utils/hooks";
 import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
@@ -34,7 +34,7 @@ function getType(type: string): SubmissionStatisticsType {
 }
 
 async function fetchData(id: number, idType: "id" | "displayId", type: SubmissionStatisticsType, page: number) {
-  const { requestError, response } = await SubmissionApi.querySubmissionStatistics({
+  const { requestError, response } = await api.submission.querySubmissionStatistics({
     [idType === "id" ? "problemId" : "problemDisplayId"]: id,
     statisticsType: type,
     locale: appState.locale,

@@ -6,7 +6,7 @@ import { useNavigation } from "react-navi";
 
 import style from "./UserEdit.module.less";
 
-import { UserApi } from "@/api";
+import api from "@/api";
 import { appState, browserDefaultLocale } from "@/appState";
 import toast from "@/utils/toast";
 import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
@@ -21,7 +21,7 @@ import { availableCodeFonts } from "@/webfonts";
 import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
-  const { requestError, response } = await UserApi.getUserPreference({ userId });
+  const { requestError, response } = await api.user.getUserPreference({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
@@ -99,7 +99,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
       }
     };
 
-    const { requestError, response } = await UserApi.updateUserPreference({
+    const { requestError, response } = await api.user.updateUserPreference({
       userId: props.meta.id,
       preference
     });

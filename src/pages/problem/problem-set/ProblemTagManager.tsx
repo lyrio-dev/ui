@@ -19,7 +19,7 @@ import { useNavigation } from "react-navi";
 import style from "./ProblemTagManager.module.less";
 
 import { useDialog, useLocalizer, useConfirmUnload } from "@/utils/hooks";
-import { ProblemApi } from "@/api-generated";
+import api from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
 import { Locale } from "@/interfaces/Locale";
@@ -169,7 +169,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
     if (pending) return;
     setPendingDelete(true);
 
-    const { requestError, response } = await ProblemApi.deleteProblemTag({
+    const { requestError, response } = await api.problem.deleteProblemTag({
       id: tagId
     });
     if (requestError) toast.error(requestError(_));
@@ -211,7 +211,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
     }
 
     if (editingTagId == null) {
-      const { requestError, response } = await ProblemApi.createProblemTag({
+      const { requestError, response } = await api.problem.createProblemTag({
         color: editingTagColor,
         localizedNames: localizedNames
       });
@@ -232,7 +232,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         initNewTag();
       }
     } else {
-      const { requestError, response } = await ProblemApi.updateProblemTag({
+      const { requestError, response } = await api.problem.updateProblemTag({
         id: editingTagId,
         color: editingTagColor,
         localizedNames: localizedNames
@@ -537,7 +537,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
 
     setPendingOpen(true);
 
-    const { requestError, response } = await ProblemApi.getAllProblemTagsOfAllLocales();
+    const { requestError, response } = await api.problem.getAllProblemTagsOfAllLocales();
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.error.${response.error}`));
 

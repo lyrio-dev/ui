@@ -8,7 +8,7 @@ import lodashClonedeep from "lodash.clonedeep";
 
 import style from "./ProblemJudgeSettingsPage.module.less";
 
-import { ProblemApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import { useLocalizer, useDialog, useConfirmUnload } from "@/utils/hooks";
 import toast from "@/utils/toast";
@@ -21,7 +21,7 @@ import { getProblemIdString, getProblemUrl } from "../utils";
 import { makeToBeLocalizedText } from "@/locales";
 
 async function fetchData(idType: "id" | "displayId", id: number) {
-  const { requestError, response } = await ProblemApi.getProblem({
+  const { requestError, response } = await api.problem.getProblem({
     [idType]: id,
     judgeInfo: true,
     testData: true,
@@ -87,7 +87,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 
     setPending(true);
 
-    const { requestError, response } = await ProblemApi.updateProblemJudgeInfo({
+    const { requestError, response } = await api.problem.updateProblemJudgeInfo({
       problemId: props.problem.meta.id,
       judgeInfo: normalizeJudgeInfo(judgeInfo)
     });
@@ -162,7 +162,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 
     if (newType === props.problem.meta.type) return;
 
-    const { requestError, response } = await ProblemApi.changeProblemType({
+    const { requestError, response } = await api.problem.changeProblemType({
       problemId: props.problem.meta.id,
       type: newType
     });

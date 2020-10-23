@@ -9,7 +9,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 
 import { appState } from "@/appState";
 
-import { AuthApi } from "@/api";
+import api from "@/api";
 import { useLocalizer, useFieldCheck, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
@@ -64,7 +64,7 @@ let RegisterPage: React.FC = () => {
       return true;
     },
     async value => {
-      const { requestError, response } = await AuthApi.checkAvailability({ username: value });
+      const { requestError, response } = await api.auth.checkAvailability({ username: value });
 
       if (requestError) {
         toast.error(requestError(_));
@@ -87,7 +87,7 @@ let RegisterPage: React.FC = () => {
       return true;
     },
     async value => {
-      const { requestError, response } = await AuthApi.checkAvailability({ email: value });
+      const { requestError, response } = await api.auth.checkAvailability({ email: value });
 
       if (requestError) {
         toast.error(requestError(_));
@@ -146,7 +146,7 @@ let RegisterPage: React.FC = () => {
       refRetypePasswordInput.current.focus();
       refRetypePasswordInput.current.select();
     } else {
-      const { requestError, response } = await AuthApi.register({
+      const { requestError, response } = await api.auth.register({
         username: username,
         email: email,
         emailVerificationCode: emailVerificationCode,
@@ -216,7 +216,7 @@ let RegisterPage: React.FC = () => {
       refEmailInput.current.focus();
       refEmailInput.current.select();
     } else {
-      const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
+      const { requestError, response } = await api.auth.sendEmailVerifactionCode({
         email: email,
         type: "Register",
         locale: appState.locale

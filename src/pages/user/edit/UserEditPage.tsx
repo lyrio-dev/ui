@@ -8,7 +8,7 @@ import style from "./UserEdit.module.less";
 import { appState } from "@/appState";
 import { useLocalizer } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
-import { UserApi } from "@/api-generated";
+import api from "@/api";
 import { isValidUsername } from "@/utils/validators";
 import { makeToBeLocalizedText } from "@/locales";
 
@@ -124,7 +124,7 @@ export default {
     const username = request.params.username;
     if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.NO_SUCH_USER`));
 
-    const { requestError, response } = await UserApi.getUserMeta({
+    const { requestError, response } = await api.user.getUserMeta({
       username
     });
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });

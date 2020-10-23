@@ -52,7 +52,8 @@ async function request<T>(path: string, method: "get" | "post", params?: any, bo
   };
 }
 
-export * from "./api-generated";
+import * as api from "./api-generated";
+export default api;
 
 export function createPostApi<BodyType, ResponseType>(path: string) {
   return async (requestBody: BodyType): Promise<ApiResponse<ResponseType>> => {

@@ -95,19 +95,14 @@ function normalizeModuleName(moduleName, forFilename) {
 
     code += 'import { createGetApi, createPostApi } from "@/api";\n\n';
 
-    for (const type of types) {
-      code += `export type ${type} = ${namespaceName}.${type};\n`
-    }
-    code += "\n";
-
     for (const operationName in tags[moduleName].operations) {
       const operation = tags[moduleName].operations[operationName];
       const path = operation.path.replace("/api/", "");
       const functionName = operationName.split("_").pop();
 
       if (operation.type === "post") {
-        const bodyType = operation.body || "void",
-              responseType = operation.response || "void";
+        const bodyType = operation.body ? `ApiTypes.${operation.body}` : "void",
+              responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
         code += `export const ${functionName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)});\n`;
       } else {
         const parameterTypes = operation.parameters
@@ -115,7 +110,7 @@ function normalizeModuleName(moduleName, forFilename) {
                                  ({ name, required }) => `${name}${required ? "" : "?"}: string`
                                ).join(", "),
               parameterType = parameterTypes ? `{ ${parameterTypes} }` : "void",
-              responseType = operation.response || "void";
+              responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
         code += `export const ${functionName} = createGetApi<${parameterType}, ${responseType}>(${JSON.stringify(path)});\n`;
       }
     }
@@ -132,7 +127,9 @@ function normalizeModuleName(moduleName, forFilename) {
   }
   code += "\n";
   for (const moduleName in tags) {
-    code += `export const ${normalizeModuleName(moduleName)}Api = Imported${normalizeModuleName(moduleName)}Api;\n`;
+    const importedModule = normalizeModuleName(moduleName);
+    const exportModule = importedModule.charAt(0).toLowerCase() + importedModule.slice(1);
+    code += `export const ${exportModule} = Imported${importedModule}Api;\n`;
   }
 
   await fs.writeFile(__dirname + `/../src/api-generated/index.ts`, code);

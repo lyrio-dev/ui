@@ -24,7 +24,7 @@ import LoadMoreBackground from "./LoadMoreBackground.svg";
 
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
-import { DiscussionApi } from "@/api";
+import api from "@/api";
 import { useAsyncCallbackPending, useLocalizer, useDialog, useFocusWithin, useConfirmUnload } from "@/utils/hooks";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { getDiscussionDisplayTitle } from "../utils";
@@ -45,7 +45,7 @@ const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
 async function fetchData(discussionId: number) {
   const pagination = appState.serverPreference.pagination;
-  const { requestError, response } = await DiscussionApi.getDiscussionAndReplies({
+  const { requestError, response } = await api.discussion.getDiscussionAndReplies({
     locale: appState.locale,
     queryRepliesType: "HeadTail",
     discussionId,
@@ -692,7 +692,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     if (item.loadMore.loading) return;
     mergeLoadMoreItem(item.loadMore.afterId, { loading: true });
 
-    const { requestError, response } = await DiscussionApi.getDiscussionAndReplies({
+    const { requestError, response } = await api.discussion.getDiscussionAndReplies({
       locale: appState.locale,
       queryRepliesType: "IdRange",
       discussionId: discussion.meta.id,
@@ -780,7 +780,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
   async function onReaction(type: "Discussion" | "DiscussionReply", id: number, emoji: string, reaction: boolean) {
     if (!appState.currentUser) return;
 
-    const { requestError, response } = await DiscussionApi.toggleReaction({
+    const { requestError, response } = await api.discussion.toggleReaction({
       type,
       id,
       emoji,
@@ -815,8 +815,8 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
 
   async function onSetPublic(type: "Discussion" | "DiscussionReply", id: number, isPublic: boolean) {
     const { requestError, response } = await (type === "Discussion"
-      ? DiscussionApi.setDiscussionPublic
-      : DiscussionApi.setDiscussionReplyPublic)({
+      ? api.discussion.setDiscussionPublic
+      : api.discussion.setDiscussionReplyPublic)({
       [type === "Discussion" ? "discussionId" : "discussionReplyId"]: id,
       isPublic
     } as any);
@@ -838,8 +838,8 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
 
   async function onDelete(type: "Discussion" | "DiscussionReply", id: number) {
     const { requestError, response } = await (type === "Discussion"
-      ? DiscussionApi.deleteDiscussion
-      : DiscussionApi.deleteDiscussionReply)({
+      ? api.discussion.deleteDiscussion
+      : api.discussion.deleteDiscussionReply)({
       [type === "Discussion" ? "discussionId" : "discussionReplyId"]: id
     } as any);
 
@@ -863,7 +863,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
 
   const [newReplyContent, setNewReplyContent] = useState("");
   async function onAddNewReply(content: string) {
-    const { requestError, response } = await DiscussionApi.createDiscussionReply({
+    const { requestError, response } = await api.discussion.createDiscussionReply({
       discussionId: discussion.meta.id,
       content: content
     });
@@ -900,7 +900,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
   }
 
   async function onUpdateReply(id: number, content: string) {
-    const { requestError, response } = await DiscussionApi.updateDiscussionReply({
+    const { requestError, response } = await api.discussion.updateDiscussionReply({
       discussionReplyId: id,
       content
     });
@@ -952,7 +952,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       }}
       refOpen={refOpenPermissionManager}
       onGetInitialPermissions={async () => {
-        const { requestError, response } = await DiscussionApi.getDiscussionPermissions({
+        const { requestError, response } = await api.discussion.getDiscussionPermissions({
           id: discussion.meta.id
         });
         if (requestError) toast.error(requestError(_));
@@ -968,7 +968,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         return null;
       }}
       onSubmitPermissions={async (userPermissions, groupPermissions) => {
-        const { requestError, response } = await DiscussionApi.setDiscussionPermissions({
+        const { requestError, response } = await api.discussion.setDiscussionPermissions({
           discussionId: discussion.meta.id,
           userPermissions: userPermissions as any,
           groupPermissions: groupPermissions as any

@@ -6,7 +6,7 @@ import md5 from "blueimp-md5";
 
 import style from "./UserEdit.module.less";
 
-import { UserApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
@@ -16,7 +16,7 @@ import { onEnterPress } from "@/utils/onEnterPress";
 import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
-  const { requestError, response } = await UserApi.getUserProfile({ userId });
+  const { requestError, response } = await api.user.getUserProfile({ userId });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
@@ -124,7 +124,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     if (urlInvalid) {
       toast.error(_(".error_invalid_url"));
     } else {
-      const { requestError, response } = await UserApi.updateUserProfile({
+      const { requestError, response } = await api.user.updateUserProfile({
         userId: props.meta.id,
         username,
         email,

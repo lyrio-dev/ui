@@ -6,7 +6,7 @@ import replace from "string-replace-to-array";
 
 import style from "./UserEdit.module.less";
 
-import { UserApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import { useLocalizer } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
@@ -56,8 +56,8 @@ export async function fetchData(userId: number, rawQuery: Record<string, string>
   };
 
   for (const { requestError, response } of await Promise.all([
-    UserApi.getUserMeta({ userId }),
-    UserApi.queryAuditLogs({
+    api.user.getUserMeta({ userId }),
+    api.user.queryAuditLogs({
       userId: userId,
       actionQuery: query.actionQuery,
       ip: query.ip,

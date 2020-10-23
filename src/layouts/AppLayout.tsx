@@ -17,7 +17,7 @@ import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import toast from "@/utils/toast";
-import { AuthApi } from "@/api";
+import api from "@/api";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
@@ -49,7 +49,7 @@ let AppLayout: React.FC = props => {
   });
 
   async function onLogoutClick() {
-    const { requestError, response } = await AuthApi.logout();
+    const { requestError, response } = await api.auth.logout();
     if (requestError) {
       toast.error(requestError(_));
     } else {

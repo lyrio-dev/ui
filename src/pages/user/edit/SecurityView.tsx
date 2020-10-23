@@ -7,7 +7,7 @@ import * as timeago from "timeago.js";
 
 import style from "./UserEdit.module.less";
 
-import { UserApi, AuthApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
@@ -21,8 +21,8 @@ export async function fetchData(userId: number) {
   const result = {};
 
   for (const { requestError, response } of await Promise.all([
-    UserApi.getUserSecuritySettings({ userId }),
-    AuthApi.listUserSessions({ userId })
+    api.user.getUserSecuritySettings({ userId }),
+    api.auth.listUserSessions({ userId })
   ])) {
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
     else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
@@ -81,7 +81,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
     } else if (!newPassword) setEmptyNewPassword(true);
     else if (!retypePassword) setEmptyRetypePassword(true);
     else {
-      const { requestError, response } = await UserApi.updateUserPassword({
+      const { requestError, response } = await api.user.updateUserPassword({
         userId: props.meta.id,
         oldPassword: oldPassword || null,
         password: newPassword
@@ -115,7 +115,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   const [sendEmailVerificationCodePending, onSendEmailVerificationCode] = useAsyncCallbackPending(async () => {
     if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
-      const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
+      const { requestError, response } = await api.auth.sendEmailVerifactionCode({
         email: email,
         type: "ChangeEmail",
         locale: appState.locale
@@ -149,7 +149,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   const [pendingChangeEmail, onSubmitChangeEmail] = useAsyncCallbackPending(async () => {
     if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
-      const { requestError, response } = await UserApi.updateUserSelfEmail({
+      const { requestError, response } = await api.user.updateUserSelfEmail({
         email: email,
         emailVerificationCode: emailVerificationCode
       });
@@ -183,7 +183,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   const [sessions, setSessions] = useState(props.sessions);
   const [revokeAllPopupOpen, setRevokeAllPopupOpen] = useState(false);
   const [, onRevokeSession] = useAsyncCallbackPending(async (sessionId?: number) => {
-    const { requestError, response } = await AuthApi.revokeUserSession({
+    const { requestError, response } = await api.auth.revokeUserSession({
       userId: props.meta.id,
       sessionId
     });

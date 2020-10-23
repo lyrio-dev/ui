@@ -8,7 +8,7 @@ import style from "./DiscussionsPage.module.less";
 
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
-import { DiscussionApi } from "@/api";
+import api from "@/api";
 import { useLocalizer } from "@/utils/hooks";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import UserSearch from "@/components/UserSearch";
@@ -107,7 +107,7 @@ async function fetchData(
   searchQuery: DiscussionsPageSearchQuery,
   currentPage: number
 ): Promise<ApiTypes.QueryDiscussionsResponseDto> {
-  const { requestError, response } = await DiscussionApi.queryDiscussions(
+  const { requestError, response } = await api.discussion.queryDiscussions(
     generateRequestFromSearchQuery(searchQuery, currentPage)
   );
 
@@ -163,7 +163,7 @@ let DiscussionSearch: React.FC<DiscussionSearchProps> = props => {
       onSearch={async input => {
         if (!input) return [];
 
-        const { requestError, response } = await DiscussionApi.queryDiscussions(
+        const { requestError, response } = await api.discussion.queryDiscussions(
           Object.assign({}, props.queryParameters, {
             keyword: input,
             titleOnly: true,

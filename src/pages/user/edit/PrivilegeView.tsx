@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 
 import style from "./UserEdit.module.less";
 
-import { UserApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
@@ -12,7 +12,7 @@ import { RouteError } from "@/AppRouter";
 import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
-  const { requestError, response } = await UserApi.getUserMeta({ userId, getPrivileges: true });
+  const { requestError, response } = await api.user.getUserMeta({ userId, getPrivileges: true });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 
@@ -40,7 +40,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
   }, [appState.locale]);
 
   const [pending, onSubmit] = useAsyncCallbackPending(async () => {
-    const { requestError, response } = await UserApi.setUserPrivileges({
+    const { requestError, response } = await api.user.setUserPrivileges({
       userId: props.meta.id,
       privileges: [...privileges]
     });

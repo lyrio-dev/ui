@@ -20,7 +20,7 @@ import { Link } from "react-navi";
 import style from "./GroupsPage.module.less";
 
 import { appState } from "@/appState";
-import { GroupApi } from "@/api";
+import api from "@/api";
 import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
 import toast from "@/utils/toast";
@@ -32,7 +32,7 @@ import { makeToBeLocalizedText } from "@/locales";
 
 async function fetchData(): Promise<ApiTypes.GetGroupListResponseDto> {
   if (!appState.currentUser) throw new RouteError(makeToBeLocalizedText("groups.not_logged_in"));
-  const { requestError, response } = await GroupApi.getGroupList();
+  const { requestError, response } = await api.group.getGroupList();
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   return response;
 }
@@ -62,7 +62,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
 
     setMemberListLoading(true);
 
-    const { requestError, response } = await GroupApi.getGroupMemberList({
+    const { requestError, response } = await api.group.getGroupMemberList({
       groupId: props.meta.id
     });
 
@@ -70,9 +70,10 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     else if (response.error) toast.error(_(`.errors.${response.error}`));
     else {
       setMemberList(response.memberList);
-      setMemberListLoading(false);
       setMemberListOpened(true);
     }
+
+    setMemberListLoading(false);
   }
 
   const hasPrivilege = appState.currentUserHasPrivilege("ManageUserGroup");
@@ -82,7 +83,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     if (pending) return;
     setPending(true);
 
-    const { requestError, response } = await GroupApi.setGroupAdmin({
+    const { requestError, response } = await api.group.setGroupAdmin({
       groupId: props.meta.id,
       userId,
       isGroupAdmin
@@ -117,7 +118,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     if (pending) return;
     setPending(true);
 
-    const { requestError, response } = await GroupApi.renameGroup({
+    const { requestError, response } = await api.group.renameGroup({
       groupId: props.meta.id,
       name: renameInputValue
     });
@@ -135,7 +136,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     if (pending) return;
     setPending(true);
 
-    const { requestError, response } = await GroupApi.addMember({
+    const { requestError, response } = await api.group.addMember({
       groupId: props.meta.id,
       userId: userMeta.id
     });
@@ -158,7 +159,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     if (pending) return;
     setPending(true);
 
-    const { requestError, response } = await GroupApi.deleteGroup({
+    const { requestError, response } = await api.group.deleteGroup({
       groupId: props.meta.id
     });
     if (requestError) toast.error(requestError(_));
@@ -174,7 +175,7 @@ let GroupItem: React.FC<GroupItemProps> = props => {
     if (pending) return;
     setPending(true);
 
-    const { requestError, response } = await GroupApi.removeMember({
+    const { requestError, response } = await api.group.removeMember({
       groupId: props.meta.id,
       userId: userId
     });
@@ -331,7 +332,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
   const [createGroupName, setCreateGroupName] = useState("");
   const [createGroupPopupOpen, setCreateGroupPopupOpen] = useState(false);
   const [pendingCreateGroup, onCreateGroup] = useAsyncCallbackPending(async () => {
-    const { requestError, response } = await GroupApi.createGroup({
+    const { requestError, response } = await api.group.createGroup({
       groupName: createGroupName
     });
     if (requestError) toast.error(requestError(_));

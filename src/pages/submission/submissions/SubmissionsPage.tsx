@@ -7,7 +7,7 @@ import { patch } from "jsondiffpatch";
 
 import style from "./SubmissionsPage.module.less";
 
-import { SubmissionApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import { useLocalizer, useFieldCheckSimple, useSocket } from "@/utils/hooks";
 import toast from "@/utils/toast";
@@ -55,7 +55,7 @@ function normalizeQuery(query: Record<string, string>): SubmissionsQuery {
 }
 
 async function fetchData(query: SubmissionsQuery) {
-  const { requestError, response } = await SubmissionApi.querySubmission({
+  const { requestError, response } = await api.submission.querySubmission({
     ...query,
     locale: appState.locale,
     takeCount: SUBMISSIONS_PER_PAGE

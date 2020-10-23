@@ -8,7 +8,7 @@ import style from "./PermissionManager.module.less";
 import { useLocalizer, useConfirmUnload, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { GroupMeta } from "@/interfaces/GroupMeta";
-import { UserApi, GroupApi } from "@/api";
+import api from "@/api";
 import toast from "@/utils/toast";
 import TableCellSearchDropdown from "./TableCellSearchDropdown";
 import UserAvatar from "./UserAvatar";
@@ -75,7 +75,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   const isMobile = useScreenWidthWithin(0, 768);
 
   async function onSearchUser(input: string) {
-    const { requestError, response } = await UserApi.searchUser({
+    const { requestError, response } = await api.user.searchUser({
       query: input,
       wildcard: "End"
     });
@@ -163,7 +163,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   }
 
   async function onSearchGroup(input: string) {
-    const { requestError, response } = await GroupApi.searchGroup({
+    const { requestError, response } = await api.group.searchGroup({
       query: input,
       wildcard: "End"
     });

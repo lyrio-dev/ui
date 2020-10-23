@@ -25,7 +25,7 @@ import update from "immutability-helper";
 
 import style from "./ProblemEditPage.module.less";
 
-import { ProblemApi } from "@/api";
+import api from "@/api";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
@@ -42,7 +42,7 @@ import { makeToBeLocalizedText } from "@/locales";
 type Problem = ApiTypes.GetProblemResponseDto;
 
 async function fetchData(idType: "id" | "displayId", id: number): Promise<Problem> {
-  const { requestError, response } = await ProblemApi.getProblem({
+  const { requestError, response } = await api.problem.getProblem({
     [idType]: id,
     localizedContentsOfAllLocales: true,
     tagsOfLocale: appState.locale,
@@ -57,7 +57,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
 }
 
 async function fetchDataAllProblemTags(): Promise<ApiTypes.LocalizedProblemTagDto[]> {
-  const { requestError, response } = await ProblemApi.getAllProblemTags({
+  const { requestError, response } = await api.problem.getAllProblemTags({
     locale: appState.locale
   });
 
@@ -780,7 +780,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     }));
 
     if (props.new) {
-      const { requestError, response } = await ProblemApi.createProblem({
+      const { requestError, response } = await api.problem.createProblem({
         type: newProblemType,
         statement: {
           localizedContents: localizedContentsPayload,
@@ -796,7 +796,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         navigation.navigate(getProblemUrl(response.id));
       }
     } else {
-      const { requestError, response } = await ProblemApi.updateStatement({
+      const { requestError, response } = await api.problem.updateStatement({
         problemId: props.problem.meta.id,
         localizedContents: localizedContentsPayload,
         samples: samplesPayload,

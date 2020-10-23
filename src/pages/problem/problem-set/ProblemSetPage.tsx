@@ -5,7 +5,7 @@ import { observer } from "mobx-react";
 
 import style from "./ProblemSetPage.module.less";
 
-import { ProblemApi } from "@/api";
+import api from "@/api";
 import { appState } from "@/appState";
 import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
@@ -51,7 +51,7 @@ async function fetchData(
   searchQuery: ProblemSetPageSearchQuery,
   currentPage: number
 ): Promise<ApiTypes.QueryProblemSetResponseDto> {
-  const { requestError, response } = await ProblemApi.queryProblemSet(
+  const { requestError, response } = await api.problem.queryProblemSet(
     generateRequestFromSearchQuery(searchQuery, currentPage)
   );
 
@@ -120,7 +120,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   async function getTags() {
     if (tags) return;
 
-    const { requestError, response } = await ProblemApi.getAllProblemTags({
+    const { requestError, response } = await api.problem.getAllProblemTags({
       locale: appState.locale
     });
     if (requestError) toast.error(requestError(_));

@@ -5,7 +5,7 @@ import { useNavigation, Link } from "react-navi";
 
 import style from "./UsersPage.module.less";
 
-import { UserApi } from "@/api";
+import api from "@/api";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { useLocalizer } from "@/utils/hooks";
 import { appState } from "@/appState";
@@ -24,7 +24,7 @@ enum SortBy {
 }
 
 async function fetchData(sortBy: SortBy, currentPage: number): Promise<[UserMeta[], number]> {
-  const { requestError, response } = await UserApi.getUserList({
+  const { requestError, response } = await api.user.getUserList({
     sortBy,
     skipCount: USERS_PER_PAGE * (currentPage - 1),
     takeCount: USERS_PER_PAGE

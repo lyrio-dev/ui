@@ -4,21 +4,17 @@
 
 import { createGetApi, createPostApi } from "@/api";
 
-export type AddJudgeClientRequestDto = ApiTypes.AddJudgeClientRequestDto;
-export type AddJudgeClientResponseDto = ApiTypes.AddJudgeClientResponseDto;
-export type DeleteJudgeClientRequestDto = ApiTypes.DeleteJudgeClientRequestDto;
-export type DeleteJudgeClientResponseDto = ApiTypes.DeleteJudgeClientResponseDto;
-export type ResetJudgeClientKeyRequestDto = ApiTypes.ResetJudgeClientKeyRequestDto;
-export type ResetJudgeClientKeyResponseDto = ApiTypes.ResetJudgeClientKeyResponseDto;
-export type ListJudgeClientsResponseDto = ApiTypes.ListJudgeClientsResponseDto;
-
-export const addJudgeClient = createPostApi<AddJudgeClientRequestDto, AddJudgeClientResponseDto>(
+export const addJudgeClient = createPostApi<ApiTypes.AddJudgeClientRequestDto, ApiTypes.AddJudgeClientResponseDto>(
   "judgeClient/addJudgeClient"
 );
-export const deleteJudgeClient = createPostApi<DeleteJudgeClientRequestDto, DeleteJudgeClientResponseDto>(
-  "judgeClient/deleteJudgeClient"
+export const deleteJudgeClient = createPostApi<
+  ApiTypes.DeleteJudgeClientRequestDto,
+  ApiTypes.DeleteJudgeClientResponseDto
+>("judgeClient/deleteJudgeClient");
+export const resetJudgeClientKey = createPostApi<
+  ApiTypes.ResetJudgeClientKeyRequestDto,
+  ApiTypes.ResetJudgeClientKeyResponseDto
+>("judgeClient/resetJudgeClientKey");
+export const listJudgeClients = createGetApi<void, ApiTypes.ListJudgeClientsResponseDto>(
+  "judgeClient/listJudgeClients"
 );
-export const resetJudgeClientKey = createPostApi<ResetJudgeClientKeyRequestDto, ResetJudgeClientKeyResponseDto>(
-  "judgeClient/resetJudgeClientKey"
-);
-export const listJudgeClients = createGetApi<void, ListJudgeClientsResponseDto>("judgeClient/listJudgeClients");

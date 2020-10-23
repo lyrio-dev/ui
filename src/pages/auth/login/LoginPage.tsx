@@ -9,7 +9,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 
 import { appState } from "@/appState";
 
-import { AuthApi } from "@/api";
+import api from "@/api";
 import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
 import { isValidUsername, isValidPassword } from "@/utils/validators";
 import toast from "@/utils/toast";
@@ -66,7 +66,7 @@ let LoginPage: React.FC = () => {
       setError("password", _(".invalid_password"));
     } else {
       // Send login request
-      const { requestError, response } = await AuthApi.login({ username, password });
+      const { requestError, response } = await api.auth.login({ username, password });
 
       if (requestError) toast.error(requestError(_));
       else if (response.error) {

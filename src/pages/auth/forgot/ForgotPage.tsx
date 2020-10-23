@@ -9,7 +9,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 
 import { appState } from "@/appState";
 
-import { AuthApi } from "@/api";
+import api from "@/api";
 import { useLocalizer, useFieldCheck } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidEmail, isValidPassword } from "@/utils/validators";
@@ -104,7 +104,7 @@ let ForgetPage: React.FC = () => {
       refRetypePasswordInput.current.focus();
       refRetypePasswordInput.current.select();
     } else {
-      const { requestError, response } = await AuthApi.resetPassword({
+      const { requestError, response } = await api.auth.resetPassword({
         email: email,
         emailVerificationCode: emailVerificationCode,
         newPassword: password
@@ -162,7 +162,7 @@ let ForgetPage: React.FC = () => {
       refEmailInput.current.focus();
       refEmailInput.current.select();
     } else {
-      const { requestError, response } = await AuthApi.sendEmailVerifactionCode({
+      const { requestError, response } = await api.auth.sendEmailVerifactionCode({
         email: email,
         type: "ResetPassword",
         locale: appState.locale
