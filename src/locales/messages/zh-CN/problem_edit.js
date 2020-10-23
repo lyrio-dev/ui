@@ -8,6 +8,7 @@ module.exports = {
   submit: "提交",
   no_submit_permission: "无提交权限",
   submit_success: "提交成功。",
+  something_empty: "请填写所有标题与内容。",
   error: {
     FAILED: "未知错误。",
     NO_SUCH_PROBLEM: "无此题目。",

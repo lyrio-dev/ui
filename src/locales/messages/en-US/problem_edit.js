@@ -8,6 +8,7 @@ module.exports = {
   submit: "Submit",
   no_submit_permission: "No Permission",
   submit_success: "Successfully submitted.",
+  something_empty: "Please fill all titles and section contents.",
   error: {
     FAILED: "Unknown error.",
     NO_SUCH_PROBLEM: "No such problem.",

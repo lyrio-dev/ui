@@ -767,6 +767,18 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         })
       );
 
+    const hasEmpty = localizedContentsPayload.some(
+      locaizedContents =>
+        !locaizedContents.title ||
+        locaizedContents.contentSections.some(
+          section => !section.sectionTitle || (section.type === "Text" && !section.text)
+        )
+    );
+    if (hasEmpty) {
+      toast.error(_(".something_empty"));
+      return;
+    }
+
     const samplesPayload = samples.map(sample => ({
       inputData: sample.inputData,
       outputData: sample.outputData

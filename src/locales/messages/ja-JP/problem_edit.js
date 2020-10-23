@@ -8,6 +8,7 @@ module.exports = {
   submit: "保存",
   no_submit_permission: "権限がありません",
   submit_success: "保存に成功しました。",
+  something_empty: "[TBT] Please fill all titles and section contents.",
   error: {
     FAILED: "失敗しました。",
     NO_SUCH_PROBLEM: "問題がありません。",
