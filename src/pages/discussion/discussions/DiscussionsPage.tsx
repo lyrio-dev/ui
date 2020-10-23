@@ -35,7 +35,8 @@ export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
 export function getBreadcrumb(
   problem: { meta: ApiTypes.ProblemMetaDto; title: string },
   _: Localizer,
-  allProblems?: boolean
+  allProblems?: boolean,
+  extra?: React.ReactNode
 ) {
   return (
     <Breadcrumb className={style.breadcrumb}>
@@ -75,6 +76,7 @@ export function getBreadcrumb(
           </Breadcrumb.Section>
         </>
       )}
+      {extra}
     </Breadcrumb>
   );
 }

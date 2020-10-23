@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Header } from "semantic-ui-react";
+import { Breadcrumb, Header } from "semantic-ui-react";
 import { useNavigation } from "react-navi";
 import { v4 as uuid } from "uuid";
 import { observer } from "mobx-react";
@@ -62,9 +62,19 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
 
   return (
     <>
-      {getBreadcrumb(props.problem, _)}
-      <Header className={style.header} size="large" content={_(props.discussion ? ".header.update" : ".header.add")} />
+      {getBreadcrumb(
+        props.discussion ? props.discussion.problem : props.problem,
+        _,
+        false,
+        <>
+          <Breadcrumb.Divider icon="right angle" />
+          <Breadcrumb.Section>
+            {props.discussion ? `${_(".header.update")} #${props.discussion.meta.id}` : _(".header.add")}
+          </Breadcrumb.Section>
+        </>
+      )}
       <DiscussionEditor
+        className={style.editor}
         type={props.discussion ? "UpdateDiscussion" : "NewDiscussion"}
         publisher={props.discussion?.publisher || appState.currentUser}
         title={title}

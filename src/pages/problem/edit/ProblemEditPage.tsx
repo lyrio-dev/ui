@@ -1205,7 +1205,8 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       <Grid>
         <Grid.Row>
           <Grid.Column width={11}>
-            <Header as="h1" className={style.headerContainer}>
+            <Header as="h1" className={style.headerContainer + " withIcon"}>
+              <Icon name="edit" className={style.icon} />
               {props.new ? `${_(".header_new")}` : `${_(".header_edit", { idString })}`}
               {props.new && (
                 <Menu compact className={style.typeDropdown}>
@@ -1242,9 +1243,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
             </Header>
           </Grid.Column>
           <Grid.Column width={5}>
-            <Header as="h1">
-              <strong>{_(".header_samples")}</strong>
-            </Header>
+            <Header icon="sticky note outline" className="withIcon" as="h1" content={_(".header_samples")} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
@@ -1376,9 +1375,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 />
               ))
             )}
-            <Header as="h1">
-              <strong>{_(".header_tags")}</strong>
-            </Header>
+            <Header icon="tag" className="withIcon" as="h1" content={_(".header_tags")} />
             <Dropdown
               search={searchTags}
               fluid

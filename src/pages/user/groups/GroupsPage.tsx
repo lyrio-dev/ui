@@ -356,7 +356,7 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
   return (
     <>
       <div className={style.header}>
-        <Header as="h1">{_(".header")}</Header>
+        <Header className="withIcon" icon="users" as="h1" content={_(".header")} />
         {hasPrivilege && (
           <Popup
             trigger={<Button className={style.createGroup} primary content={_(".create_group")} />}

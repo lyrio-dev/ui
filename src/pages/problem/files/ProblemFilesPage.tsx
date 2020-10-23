@@ -835,16 +835,23 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 
   const fileTableTestdata = (
     <>
-      <Header as="h2">
-        <strong>{_(".header_testdata")}</strong>
-        <Button
-          className={style.back_to_problem}
-          primary
-          as={Link}
-          href={getProblemUrl(props.problem.meta)}
-          content={_(".back_to_problem")}
-        />
-      </Header>
+      <Header
+        className={style.header + " withIcon"}
+        icon="file alternative"
+        as="h2"
+        content={
+          <>
+            {_(".header_testdata")}
+            <Button
+              className={style.backToProblem}
+              primary
+              as={Link}
+              href={getProblemUrl(props.problem.meta)}
+              content={_(".back_to_problem")}
+            />
+          </>
+        }
+      />
       <FileTable
         hasPermission={props.problem.permissionOfCurrentUser.Modify}
         color="green"
@@ -862,9 +869,12 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 
   const fileTableAdditionalFile = (
     <>
-      <Header as="h2">
-        <strong>{_(".header_additional_files")}</strong>
-      </Header>
+      <Header
+        className={style.header + " withIcon"}
+        icon="file alternative outline"
+        as="h2"
+        content={_(".header_additional_files")}
+      />
       <FileTable
         hasPermission={props.problem.permissionOfCurrentUser.Modify}
         color="pink"

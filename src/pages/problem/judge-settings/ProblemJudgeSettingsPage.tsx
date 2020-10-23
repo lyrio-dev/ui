@@ -187,7 +187,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           <Grid.Column width={7}>
             <div className={style.leftContainer}>
               <div className={style.header}>
-                <Header as="h1" content={_(".header") + " " + idString} />
+                <Header className="withIcon" icon="setting" as="h1" content={_(".header") + " " + idString} />
                 <Popup
                   trigger={
                     <Button

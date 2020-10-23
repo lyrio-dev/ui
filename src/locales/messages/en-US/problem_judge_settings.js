@@ -1,6 +1,6 @@
 module.exports = {
   title: "Judge Settings",
-  header: "Judge Settings",
+  header: "Settings",
   back_to_problem: "Back",
   confirm_back_to_problem: "Discard Changes and Back",
   submit: "Submit",

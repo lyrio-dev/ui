@@ -464,6 +464,8 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
 DiscussionItem = observer(DiscussionItem);
 
 interface DiscussionEditorProps {
+  className?: string;
+
   publisher: ApiTypes.UserMetaDto;
   content: string;
   type: "UpdateReply" | "NewReply" | "UpdateDiscussion" | "NewDiscussion";
@@ -501,7 +503,8 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
         style.edit +
         (props.publisher.id === appState.currentUser?.id ? " " + style.currentUser : "") +
         (!isUpdate ? " " + style.new : "") +
-        (isDiscussion ? " " + style.discussion : "")
+        (isDiscussion ? " " + style.discussion : "") +
+        (props.className ? " " + props.className : "")
       }
     >
       {!isMobile && (

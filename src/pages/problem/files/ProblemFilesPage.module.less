@@ -1,6 +1,16 @@
-.back_to_problem {
-  float: right;
-  margin-right: 0 !important;
+.header {
+  display: flex;
+  align-items: center;
+
+  :global(.content) {
+    flex-grow: 1;
+    display: flex !important;
+    align-items: center;
+  }
+}
+
+.backToProblem {
+  margin-left: auto !important;
 }
 
 @columnWidthSize: 85px;
