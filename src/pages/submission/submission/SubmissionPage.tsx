@@ -201,7 +201,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} #${props.meta.id}`, "submissions");
-  }, [appState.locale]);
+  }, [appState.locale, props.meta]);
 
   // The meta only provides fields not changing with progress
   // score, status, time, memory are in the full info

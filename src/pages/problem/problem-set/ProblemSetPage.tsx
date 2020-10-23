@@ -548,12 +548,5 @@ export default defineRoute(async request => {
   const searchQuery = parseSearchQuery(request.query);
   const response = await fetchData(searchQuery, page);
 
-  return (
-    <ProblemSetPage
-      // No key={uuid()}, so the search states are preserved
-      searchQuery={searchQuery}
-      currentPage={page}
-      response={response}
-    />
-  );
+  return <ProblemSetPage searchQuery={searchQuery} currentPage={page} response={response} />;
 });

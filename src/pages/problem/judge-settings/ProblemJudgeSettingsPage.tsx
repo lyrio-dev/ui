@@ -49,7 +49,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set", false);
-  }, [appState.locale]);
+  }, [appState.locale, props.problem]);
 
   const ProblemTypeEditorComponent = props.ProblemTypeEditorComponent;
 
@@ -302,7 +302,7 @@ export default {
 
     return (
       <ProblemJudgeSettingsPage
-        key={Math.random()}
+        key={uuid()}
         idType="id"
         problem={problem}
         ProblemTypeEditorComponent={await getProblemTypeEditorComponent(problem.meta.type as ProblemType)}
@@ -315,7 +315,7 @@ export default {
 
     return (
       <ProblemJudgeSettingsPage
-        key={Math.random()}
+        key={uuid()}
         idType="displayId"
         problem={problem}
         ProblemTypeEditorComponent={await getProblemTypeEditorComponent(problem.meta.type as ProblemType)}

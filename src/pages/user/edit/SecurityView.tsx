@@ -43,7 +43,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
-  }, [appState.locale]);
+  }, [appState.locale, props.meta]);
 
   const hasPrivilege = appState.currentUser.isAdmin || appState.currentUserPrivileges.includes("ManageUser");
 

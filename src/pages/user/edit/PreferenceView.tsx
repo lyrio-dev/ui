@@ -49,7 +49,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
-  }, [appState.locale]);
+  }, [appState.locale, props.meta]);
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.locale?.system || null) as Locale);
   const [contentLocale, setContentLocale] = useState<Locale>((props.preference.locale?.content || null) as Locale);

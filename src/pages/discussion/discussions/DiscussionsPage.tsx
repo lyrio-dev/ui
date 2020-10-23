@@ -3,6 +3,7 @@ import { Breadcrumb, Button, Header, Icon, Label, Menu, Segment, Table } from "s
 import { Link, useNavigation } from "react-navi";
 import { URLDescriptor } from "navi";
 import { observer } from "mobx-react";
+import { v4 as uuid } from "uuid";
 
 import style from "./DiscussionsPage.module.less";
 
@@ -558,5 +559,5 @@ export default defineRoute(async request => {
   const searchQuery = parseSearchQuery(request.query);
   const response = await fetchData(searchQuery, page);
 
-  return <DiscussionsPage searchQuery={searchQuery} currentPage={page} response={response} />;
+  return <DiscussionsPage key={uuid()} searchQuery={searchQuery} currentPage={page} response={response} />;
 });

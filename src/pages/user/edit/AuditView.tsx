@@ -87,7 +87,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.response.meta.username}`, null, false);
-  }, [appState.locale]);
+  }, [appState.locale, props.response]);
 
   const [actionQuery, setActionQuery] = useState(props.query.actionQuery);
   const [ip, setIp] = useState(props.query.ip);

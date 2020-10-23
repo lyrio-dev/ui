@@ -3,6 +3,7 @@ import { Table, Icon, Button, Segment, Header, Dropdown, Menu } from "semantic-u
 import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import { Bar, Line } from "react-chartjs-2";
+import { v4 as uuid } from "uuid";
 
 import style from "./SubmissionStatisticsPage.module.less";
 
@@ -64,7 +65,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");
-  }, [appState.locale]);
+  }, [appState.locale, props.id, props.idType]);
 
   function onPageChange(page: number) {
     navigation.navigate({
@@ -387,6 +388,7 @@ export default {
 
     return (
       <SubmissionStatisticsPage
+        key={uuid()}
         id={displayId}
         idType="displayId"
         type={type}

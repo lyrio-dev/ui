@@ -37,7 +37,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
-  }, [appState.locale]);
+  }, [appState.locale, props.meta]);
 
   const [pending, onSubmit] = useAsyncCallbackPending(async () => {
     const { requestError, response } = await api.user.setUserPrivileges({

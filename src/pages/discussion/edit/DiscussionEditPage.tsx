@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Header } from "semantic-ui-react";
 import { useNavigation } from "react-navi";
+import { v4 as uuid } from "uuid";
+import { observer } from "mobx-react";
 
 import style from "./DiscussionEditPage.module.less";
 
@@ -21,13 +23,13 @@ interface DiscussionEditPageProps {
   discussion?: ApiTypes.DiscussionDto;
 }
 
-const DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
+let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
   const _ = useLocalizer("discussion_edit");
   const navigation = useNavigation();
 
   useEffect(() => {
     appState.enterNewPage(props.discussion ? `${_(".title_update")} #${props.discussion.meta.id}` : _(".title_new"));
-  });
+  }, [appState.locale, props.discussion]);
 
   const [title, setTitle] = useState(props.discussion ? props.discussion.meta.title : "");
   const [content, setContent] = useState(props.discussion ? props.discussion.content : "");
@@ -77,6 +79,8 @@ const DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
   );
 };
 
+DiscussionEditPage = observer(DiscussionEditPage);
+
 export default {
   new: defineRoute(async request => {
     if (
@@ -107,7 +111,7 @@ export default {
       };
     })();
 
-    return <DiscussionEditPage problem={problem} />;
+    return <DiscussionEditPage key={uuid()} problem={problem} />;
   }),
   edit: defineRoute(async request => {
     const { requestError, response } = await api.discussion.getDiscussionAndReplies({
@@ -119,6 +123,6 @@ export default {
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
     else if (response.error) throw new RouteError(makeToBeLocalizedText(`discussion_edit.errors.${response.error}`));
 
-    return <DiscussionEditPage discussion={response.discussion} />;
+    return <DiscussionEditPage key={uuid()} discussion={response.discussion} />;
   })
 };

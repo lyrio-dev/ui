@@ -147,7 +147,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${all} - ${_(".title")}`, "problem_set");
-  }, [appState.locale]);
+  }, [appState.locale, props.problem]);
 
   // Begin toggle tags
   const [showTags, setShowTags] = useState(appState.showTagsInProblemSet);

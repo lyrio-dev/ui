@@ -661,7 +661,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");
-  }, [appState.locale]);
+  }, [appState.locale, props.problem]);
 
   function transformResponseToFileTableItems(fileList: ApiTypes.ProblemFileDto[]): FileTableItem[] {
     return fileList.map(file => ({
@@ -919,12 +919,12 @@ export default {
     const id = parseInt(request.params["id"]);
     const problem = await fetchData("id", id);
 
-    return <ProblemFilesPage key={Math.random()} idType="id" problem={problem} />;
+    return <ProblemFilesPage key={uuid()} idType="id" problem={problem} />;
   }),
   byDisplayId: defineRoute(async request => {
     const displayId = parseInt(request.params["displayId"]);
     const problem = await fetchData("displayId", displayId);
 
-    return <ProblemFilesPage key={Math.random()} idType="displayId" problem={problem} />;
+    return <ProblemFilesPage key={uuid()} idType="displayId" problem={problem} />;
   })
 };

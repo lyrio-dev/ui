@@ -96,7 +96,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
     return false;
   });
 
-  const [querySubmitter, setQuerySubmitter] = useState(props.query.submitter);
+  const [querySubmitter, setQuerySubmitter] = useState(props.query.submitter || "");
   const [checkQuerySubmitter, querySubmitterError] = useFieldCheckSimple(
     querySubmitter,
     value => !value || isValidUsername(value)
@@ -124,7 +124,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
     });
   }
 
-  const [submissions, setSubmissions] = useState(props.queryResult.submissions ? props.queryResult.submissions : []);
+  const [submissions, setSubmissions] = useState(props.queryResult.submissions || []);
 
   // Subscribe to submission progress with the key
   const subscriptionKey = props.queryResult.progressSubscriptionKey;

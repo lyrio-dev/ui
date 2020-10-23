@@ -167,7 +167,7 @@ let UserPage: React.FC<UserPageProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(`${props.meta.username}`, "members");
-  }, []);
+  }, [appState.locale, props.meta]);
 
   const isMobile = useScreenWidthWithin(0, 768);
 

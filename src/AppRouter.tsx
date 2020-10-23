@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { mount, lazy, withView, route, Resolvable } from "navi";
 import { Router, View } from "react-navi";
 import { IntlProvider } from "react-intl";
-import { v4 as uuid } from "uuid";
+import { observer } from "mobx-react";
 
 import AppLayout from "./layouts/AppLayout";
 import ErrorPage, { ErrorPageProps } from "./pages/error/ErrorPage";
@@ -47,7 +47,14 @@ class ErrorBoundary extends React.Component<{}, { hasError: boolean; error?: Err
 
   render() {
     if (this.state.hasError) {
-      return <ErrorPage uncaughtError={this.state.error} message={null} options={null} />;
+      return (
+        <ErrorPage
+          uncaughtError={this.state.error}
+          message={null}
+          options={null}
+          onRecover={() => this.setState({ hasError: false })}
+        />
+      );
     }
 
     return this.props.children;
@@ -61,10 +68,7 @@ const routes = withView(
     return (
       <IntlProvider locale={localeHyphen} messages={localeData}>
         <AppLayout key={localeHyphen}>
-          <ErrorBoundary
-            // Will be unmounted after router refresh
-            key={uuid()}
-          >
+          <ErrorBoundary>
             <View />
           </ErrorBoundary>
         </AppLayout>
@@ -100,4 +104,4 @@ const AppRouter: React.FC = () => {
   );
 };
 
-export default AppRouter;
+export default observer(AppRouter);

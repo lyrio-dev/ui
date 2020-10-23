@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { v4 as uuid } from "uuid";
 
 import style from "./UserEdit.module.less";
 
@@ -112,7 +113,7 @@ async function getView(userId: number, type: EditType, query: Record<string, str
 
   const response = await fetchData(userId, query);
 
-  return <UserEditPage userId={userId} type={type} data={response} view={View} byUsername={byUsername} />;
+  return <UserEditPage key={uuid()} userId={userId} type={type} data={response} view={View} byUsername={byUsername} />;
 }
 
 export default {

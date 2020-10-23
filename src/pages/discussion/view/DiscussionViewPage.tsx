@@ -18,6 +18,7 @@ import { observer } from "mobx-react";
 import * as timeago from "timeago.js";
 import twemoji from "twemoji";
 import TextAreaAutoSize from "react-textarea-autosize";
+import { v4 as uuid } from "uuid";
 
 import style from "./DiscussionViewPage.module.less";
 import LoadMoreBackground from "./LoadMoreBackground.svg";
@@ -64,7 +65,7 @@ interface AutoTimeAgoLabelProps {
   time: Date;
 }
 
-const AutoTimeAgoLabel: React.FC<AutoTimeAgoLabelProps> = React.memo(props => {
+let AutoTimeAgoLabel: React.FC<AutoTimeAgoLabelProps> = props => {
   // Update per 30s
   const UPDATE_INTERVAL = 30 * 1000;
 
@@ -102,7 +103,9 @@ const AutoTimeAgoLabel: React.FC<AutoTimeAgoLabelProps> = React.memo(props => {
       )}
     </>
   );
-});
+};
+
+AutoTimeAgoLabel = observer(AutoTimeAgoLabel);
 
 interface EmojiProps extends React.HTMLAttributes<HTMLDivElement> {
   emoji: string;
@@ -123,7 +126,7 @@ interface ReactionEmojiPickerProps {
   onSelectEmoji: (emoji: string) => void;
 }
 
-const ReactionEmojiPicker: React.FC<ReactionEmojiPickerProps> = props => {
+let ReactionEmojiPicker: React.FC<ReactionEmojiPickerProps> = props => {
   const _ = useLocalizer("discussion");
 
   const custom = appState.serverPreference.misc.discussionReactionAllowCustomEmojis;
@@ -168,6 +171,8 @@ const ReactionEmojiPicker: React.FC<ReactionEmojiPickerProps> = props => {
   );
 };
 
+ReactionEmojiPicker = observer(ReactionEmojiPicker);
+
 interface DiscussionItemProps {
   type: "Discussion" | "Reply";
   discussion: ApiTypes.DiscussionDto;
@@ -188,7 +193,7 @@ interface DiscussionItemProps {
   onDelete: () => Promise<void>;
 }
 
-const DiscussionItem: React.FC<DiscussionItemProps> = props => {
+let DiscussionItem: React.FC<DiscussionItemProps> = props => {
   const _ = useLocalizer("discussion.item");
 
   const isMobile = useScreenWidthWithin(0, 768);
@@ -456,6 +461,8 @@ const DiscussionItem: React.FC<DiscussionItemProps> = props => {
   );
 };
 
+DiscussionItem = observer(DiscussionItem);
+
 interface DiscussionEditorProps {
   publisher: ApiTypes.UserMetaDto;
   content: string;
@@ -470,7 +477,7 @@ interface DiscussionEditorProps {
   noSubmitPermission?: boolean;
 }
 
-export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
+export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
   const _ = useLocalizer("discussion.edit");
 
   const isMobile = useScreenWidthWithin(0, 768);
@@ -599,6 +606,8 @@ export const DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
   );
 };
 
+DiscussionEditor = observer(DiscussionEditor);
+
 interface ReplyOrLoadMore {
   type: "Reply" | "LoadMore" | "EditReply";
   loadMore?: {
@@ -624,7 +633,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       `${getDiscussionDisplayTitle(props.response.discussion.meta.title, _)} - ${_(".title")}`,
       "discussion"
     );
-  }, [appState.locale]);
+  }, [appState.locale, props.response]);
 
   // Load LoadMore's background
   useEffect(() => {
@@ -1101,5 +1110,5 @@ DiscussionViewPage = observer(DiscussionViewPage);
 export default defineRoute(async request => {
   const discussionId = Number(request.params.id) || 0;
   const response = await fetchData(discussionId);
-  return <DiscussionViewPage response={response} />;
+  return <DiscussionViewPage key={uuid()} response={response} />;
 });

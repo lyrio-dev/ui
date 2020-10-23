@@ -709,7 +709,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   useEffect(() => {
     appState.enterNewPage(props.new ? `${_(".title_new")}` : `${_(".title_edit")} ${idString}`, "problem_set", false);
-  }, [appState.locale]);
+  }, [appState.locale, props.new, props.problem]);
 
   const [localizedContents, setLocalizedContents] = useState(
     (() => {
@@ -1407,7 +1407,7 @@ export default {
   new: defineRoute(async request => {
     const allProblemTags = await fetchDataAllProblemTags();
 
-    return <ProblemEditPage key={Math.random()} new={true} allProblemTags={allProblemTags} />;
+    return <ProblemEditPage key={uuid()} new={true} allProblemTags={allProblemTags} />;
   }),
   byId: defineRoute(async request => {
     const id = parseInt(request.params["id"]);
@@ -1416,7 +1416,7 @@ export default {
 
     return (
       <ProblemEditPage
-        key={Math.random()}
+        key={uuid()}
         idType="id"
         problem={problem}
         allProblemTags={allProblemTags}
@@ -1431,7 +1431,7 @@ export default {
 
     return (
       <ProblemEditPage
-        key={Math.random()}
+        key={uuid()}
         idType="displayId"
         problem={problem}
         allProblemTags={allProblemTags}

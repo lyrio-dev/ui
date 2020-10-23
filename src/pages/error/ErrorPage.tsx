@@ -17,6 +17,7 @@ export interface ErrorPageProps {
     showRefresh?: true;
     showBack?: true;
   };
+  onRecover?: () => void;
 }
 
 let ErrorPage: React.FC<ErrorPageProps> = props => {
@@ -41,6 +42,7 @@ let ErrorPage: React.FC<ErrorPageProps> = props => {
                 <pre>{props.uncaughtError.stack}</pre>
               </p>
               <p>
+                {/* These errors could not be recovered. The page must be reloaded. */}
                 <a onClick={() => location.reload()}>{_(".refresh")}</a>
               </p>
             </>
@@ -48,8 +50,26 @@ let ErrorPage: React.FC<ErrorPageProps> = props => {
             <>
               <p>{isToBeLocalizedText(props.message) ? props.message(_) : props.message}</p>
               <p>
-                {props.options.showBack && <a onClick={() => navigation.goBack()}>{_(".back")}</a>}
-                {props.options.showRefresh && <a onClick={() => navigation.refresh()}>{_(".refresh")}</a>}
+                {props.options.showBack && (
+                  <a
+                    onClick={() => {
+                      if (props.onRecover) props.onRecover();
+                      navigation.goBack();
+                    }}
+                  >
+                    {_(".back")}
+                  </a>
+                )}
+                {props.options.showRefresh && (
+                  <a
+                    onClick={() => {
+                      if (props.onRecover) props.onRecover();
+                      navigation.refresh();
+                    }}
+                  >
+                    {_(".refresh")}
+                  </a>
+                )}
               </p>
             </>
           )}
