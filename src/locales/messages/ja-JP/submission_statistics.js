@@ -10,7 +10,7 @@ module.exports = {
     Fastest: "実行時間順",
     MinMemory: "使用メモリ順",
     MinAnswerSize: "コード長順",
-    Earlist: "提出日時順"
+    Earliest: "提出日時順"
   },
   empty: "提出はありません",
   empty_goback: "戻る",

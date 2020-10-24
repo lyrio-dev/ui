@@ -749,7 +749,7 @@ declare namespace ApiTypes {
     locale: "en_US" | "zh_CN" | "ja_JP";
     problemId?: number;
     problemDisplayId?: number;
-    statisticsType: "Fastest" | "MinMemory" | "MinAnswerSize" | "Earlist";
+    statisticsType: "Fastest" | "MinMemory" | "MinAnswerSize" | "Earliest";
     skipCount: number;
     takeCount: number;
   }

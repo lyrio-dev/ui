@@ -10,7 +10,7 @@ module.exports = {
     Fastest: "最快",
     MinMemory: "最小内存",
     MinAnswerSize: "最短",
-    Earlist: "最早"
+    Earliest: "最早"
   },
   empty: "暂无提交",
   empty_goback: "返回",

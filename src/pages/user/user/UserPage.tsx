@@ -59,7 +59,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
   // If the last column is NOT a full week, the later at most 6 days' blocks will be omitted
   const omittedBlockCount = (((7 - (now.day() - weekStart + 1)) % 7) + 7) % 7;
 
-  // The earlist x days' data is discarded
+  // The earliest x days' data is discarded
   const data = props.data.slice(props.data.length - (weeks * 7 - omittedBlockCount));
 
   const dataOfWeek = [...new Array(weeks).keys()].map(i => data.slice(i * 7, (i + 1) * 7));

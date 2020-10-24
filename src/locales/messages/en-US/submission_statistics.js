@@ -11,7 +11,7 @@ module.exports = {
     Fastest: "Fastest",
     MinMemory: "Min Memory",
     MinAnswerSize: "Shortest",
-    Earlist: "Earlist"
+    Earliest: "Earliest"
   },
   empty: "No submissions",
   empty_goback: "Go back",

@@ -23,7 +23,7 @@ export enum SubmissionStatisticsType {
   Fastest = "Fastest",
   MinMemory = "MinMemory",
   MinAnswerSize = "MinAnswerSize",
-  Earlist = "Earlist"
+  Earliest = "Earliest"
 }
 
 // We use lower case type in URLs
@@ -88,7 +88,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
     [SubmissionStatisticsType.Fastest]: "Time",
     [SubmissionStatisticsType.MinMemory]: "Memory",
     [SubmissionStatisticsType.MinAnswerSize]: "AnswerSize",
-    [SubmissionStatisticsType.Earlist]: "SubmitTime"
+    [SubmissionStatisticsType.Earliest]: "SubmitTime"
   }[props.type];
 
   return (
