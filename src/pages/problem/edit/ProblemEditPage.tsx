@@ -48,7 +48,7 @@ async function fetchData(idType: "id" | "displayId", id: number): Promise<Proble
     localizedContentsOfAllLocales: true,
     tagsOfLocale: appState.locale,
     samples: true,
-    permissionOfCurrentUser: ["Modify"]
+    permissionOfCurrentUser: true
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
@@ -1196,7 +1196,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     props.new ? appState.locale : (props.problem.meta.locales[0] as Locale)
   );
 
-  const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.Modify;
+  const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.includes("Modify");
 
   useConfirmUnload(() => modified);
 

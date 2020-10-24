@@ -313,7 +313,7 @@ declare namespace ApiTypes {
     additionalFiles?: boolean;
     statistics?: boolean;
     discussionCount?: boolean;
-    permissionOfCurrentUser?: ("View" | "Modify" | "ManagePermission" | "ManagePublicness" | "Delete")[];
+    permissionOfCurrentUser?: boolean;
     permissions?: boolean;
     lastSubmissionAndLastAcceptedSubmission?: boolean;
   }
@@ -329,7 +329,7 @@ declare namespace ApiTypes {
     testData?: ApiTypes.ProblemFileDto[];
     additionalFiles?: ApiTypes.ProblemFileDto[];
     discussionCount?: number;
-    permissionOfCurrentUser?: ApiTypes.ProblemPermissionOfCurrentUserDto;
+    permissionOfCurrentUser?: ("View" | "Modify" | "ManagePermission" | "ManagePublicness" | "Delete")[];
     permissions?: ApiTypes.ProblemPermissionsDto;
     lastSubmission?: ApiTypes.ProblemLastSubmissionDto;
   }
@@ -524,7 +524,7 @@ declare namespace ApiTypes {
     requireEmailVerification: boolean;
     allowUserChangeUsername: boolean;
     allowEveryoneCreateProblem: boolean;
-    allowNonAdminEditPublicProblem: boolean;
+    allowNonPrivilegedUserEditPublicProblem: boolean;
     allowOwnerManageProblemPermission: boolean;
     allowOwnerDeleteProblem: boolean;
     discussionDefaultPublic: boolean;
@@ -570,13 +570,6 @@ declare namespace ApiTypes {
     locales: ("en_US" | "zh_CN" | "ja_JP")[];
     submissionCount?: number;
     acceptedSubmissionCount?: number;
-  }
-  export interface ProblemPermissionOfCurrentUserDto {
-    View?: boolean;
-    Modify?: boolean;
-    ManagePermission?: boolean;
-    ManagePublicness?: boolean;
-    Delete?: boolean;
   }
   export interface ProblemPermissionsDto {
     userPermissions: ApiTypes.ProblemUserPermissionDto[];

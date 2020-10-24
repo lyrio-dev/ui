@@ -114,7 +114,7 @@ async function fetchData(idType: "id" | "displayId", id: number, locale: Locale)
     judgeInfoToBePreprocessed: true,
     statistics: true,
     discussionCount: true,
-    permissionOfCurrentUser: ["Modify", "ManagePermission", "ManagePublicness", "Delete"],
+    permissionOfCurrentUser: true,
     lastSubmissionAndLastAcceptedSubmission: true
   });
 
@@ -238,7 +238,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         owner: response.owner,
         userPermissions: response.permissions.userPermissions,
         groupPermissions: response.permissions.groupPermissions,
-        haveSubmitPermission: props.problem.permissionOfCurrentUser.ManagePermission
+        haveSubmitPermission: props.problem.permissionOfCurrentUser.includes("ManagePermission")
       };
     }
     return null;
@@ -704,7 +704,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               />
             </Menu>
             <Menu pointing secondary vertical className={`${style.actionMenu} ${style.secondActionMenu}`}>
-              {props.problem.permissionOfCurrentUser.Modify && (
+              {props.problem.permissionOfCurrentUser.includes("Modify") && (
                 <Menu.Item
                   name={_(".action.edit")}
                   icon="edit"
@@ -719,7 +719,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   }}
                 />
               )}
-              {props.problem.permissionOfCurrentUser.Modify && (
+              {props.problem.permissionOfCurrentUser.includes("Modify") && (
                 <Menu.Item
                   name={_(".action.judge_settings")}
                   icon="cog"
@@ -730,7 +730,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
               {
                 // Normal users won't interested in permissions
                 // Only show permission manage button when the user have write permission
-                props.problem.permissionOfCurrentUser.Modify && (
+                props.problem.permissionOfCurrentUser.includes("Modify") && (
                   <Menu.Item onClick={onClickPermissionManage}>
                     <Icon name="key" />
                     {_(".action.permission_manage")}
@@ -738,7 +738,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   </Menu.Item>
                 )
               }
-              {props.problem.permissionOfCurrentUser.ManagePublicness && (
+              {props.problem.permissionOfCurrentUser.includes("ManagePublicness") && (
                 <Popup
                   trigger={<Menu.Item name={_(".action.set_display_id")} icon="hashtag" />}
                   content={
@@ -760,7 +760,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permissionOfCurrentUser.ManagePublicness && (
+              {props.problem.permissionOfCurrentUser.includes("ManagePublicness") && (
                 <Popup
                   trigger={
                     <Menu.Item
@@ -784,7 +784,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   position="top left"
                 />
               )}
-              {props.problem.permissionOfCurrentUser.Delete && (
+              {props.problem.permissionOfCurrentUser.includes("Delete") && (
                 <Menu.Item
                   className={style.menuItemDangerous}
                   name={_(".action.delete")}

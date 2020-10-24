@@ -25,7 +25,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
     [idType]: id,
     judgeInfo: true,
     testData: true,
-    permissionOfCurrentUser: ["Modify"]
+    permissionOfCurrentUser: true
   });
 
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
@@ -207,8 +207,10 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   className={style.submitButton}
                   primary
                   loading={pending}
-                  disabled={!props.problem.permissionOfCurrentUser.Modify}
-                  content={props.problem.permissionOfCurrentUser.Modify ? _(".submit") : _(".no_submit_permission")}
+                  disabled={!props.problem.permissionOfCurrentUser.includes("Modify")}
+                  content={
+                    props.problem.permissionOfCurrentUser.includes("Modify") ? _(".submit") : _(".no_submit_permission")
+                  }
                   onClick={onSubmit}
                 />
               </div>
