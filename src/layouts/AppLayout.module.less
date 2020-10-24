@@ -105,22 +105,10 @@ html.sidebarOpen {
 body {
   @marginTop: 49px;
 
+  display: block;
   margin: @marginTop 0 0 0;
   padding-top: 28px;
-  min-height: calc(100vh - @marginTop);
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-
-:global(#root) {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-#mainUiContainer {
-  flex-grow: 1;
 }
 
 @media only screen and (max-width: 1127px) {
@@ -169,16 +157,30 @@ body {
   }
 }
 
+html {
+  position: relative;
+}
+
 .footer {
-  margin: 2em 0em 0em !important;
-  padding: 1em 0em !important;
+  margin: 28px 0 14px 0 !important;
+  padding: 0 !important;
   border: none !important;
   color: #999;
+
+  &.placeholder {
+    visibility: hidden;
+  }
+
+  &.real {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+  }
 }
 
 @media only screen and (max-width: 767px) {
   .footer {
-    margin-top: 10px !important;
+    margin: 20px 0 10px 0 !important;
   }
 }
 

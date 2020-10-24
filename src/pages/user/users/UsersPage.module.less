@@ -1,5 +1,9 @@
 .header {
-  margin-bottom: 26px;
+  margin-bottom: 28px;
+  @media only screen and (max-width: 767px) {
+    margin-bottom: 16px;
+  }
+
   display: flex;
 
   .manageGroups {
@@ -62,6 +66,10 @@
 
 .pagination:not(:empty) {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 20px;
   margin-bottom: 18px;
+
+  @media only screen and (max-width: 1023px) {
+    margin-top: 14px;
+  }
 }

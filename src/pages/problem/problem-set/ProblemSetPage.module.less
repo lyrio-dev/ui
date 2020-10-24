@@ -84,10 +84,14 @@
   }
 }
 
-.pagination:not(:empty) {
+.pagination {
   text-align: center;
-  margin-top: 16px;
+  margin-top: 20px;
   margin-bottom: 18px;
+
+  @media only screen and (max-width: 767px) {
+    margin-top: 14px;
+  }
 }
 
 .topPagination:empty {
@@ -127,12 +131,13 @@
 }
 
 @media only screen and (min-width: 1024px) {
-  .headerButtons {
+  .headerButtons:not(.empty) {
     margin-left: 15px;
   }
 
-  .topPagination:not(:empty) {
-    margin-bottom: 27px;
+  .topPagination {
+    margin-top: 16px;
+    margin-bottom: 28px;
   }
 
   .search {

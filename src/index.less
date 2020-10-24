@@ -6,8 +6,11 @@ html, body, #root {
 }
 
 html {
-  overflow: overlay;
   overflow-x: hidden;
+  overflow-y: overlay;
+  @media only screen and (max-width: 1210px) {
+    overflow-y: auto;
+  }
 }
 
 body {

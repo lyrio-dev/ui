@@ -175,9 +175,9 @@ let AppLayout: React.FC = props => {
     </Menu.Item>
   );
 
-  const footer = (
+  const getFooter = (className: string) => (
     <>
-      <Segment vertical className={style.footer}>
+      <Segment vertical className={className}>
         <Container textAlign="center">
           <div>
             {appState.serverPreference.siteName} Powered by{" "}
@@ -270,7 +270,8 @@ let AppLayout: React.FC = props => {
         </Container>
       </Menu>
       <Container id={style.mainUiContainer}>{props.children}</Container>
-      {footer}
+      {getFooter(style.footer + " " + style.placeholder)}
+      {getFooter(style.footer + " " + style.real)}
       {!wide && (
         <>
           <div className={style.sidebarDimmer + sidebarOpenStatusClassName} onClick={() => setSidebarOpen(false)}></div>

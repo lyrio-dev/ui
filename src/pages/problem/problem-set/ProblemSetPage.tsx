@@ -249,14 +249,16 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     });
   }
 
-  const getPagination = () =>
+  const getPagination = (className: string) =>
     props.response.count <= PROBLEMS_PER_PAGE ? null : (
-      <Pagination
-        totalCount={props.response.count}
-        currentPage={props.currentPage}
-        itemsPerPage={PROBLEMS_PER_PAGE}
-        onPageChange={onPageChange}
-      />
+      <div className={className}>
+        <Pagination
+          totalCount={props.response.count}
+          currentPage={props.currentPage}
+          itemsPerPage={PROBLEMS_PER_PAGE}
+          onPageChange={onPageChange}
+        />
+      </div>
     );
 
   const getTagLabel = (tag: ApiTypes.LocalizedProblemTagDto, type: "add" | "del" = "add") => (
@@ -443,7 +445,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           {headerTagList}
         </>
       )}
-      <div className={style.topPagination + " " + style.pagination}>{getPagination()}</div>
+      {getPagination(style.topPagination + " " + style.pagination)}
       {problems.length === 0 ? (
         filtersApplied ? (
           <Segment placeholder>
@@ -536,7 +538,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           </Table.Body>
         </Table>
       )}
-      <div className={style.pagination}>{getPagination()}</div>
+      {getPagination(style.pagination)}
     </>
   );
 };
