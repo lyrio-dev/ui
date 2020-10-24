@@ -494,9 +494,13 @@ declare namespace ApiTypes {
   }
   export interface PreferenceConfig {
     siteName: string;
+    frontend: ApiTypes.PreferenceConfigFrontend;
     security: ApiTypes.PreferenceConfigSecurity;
     pagination: ApiTypes.PreferenceConfigPagination;
     misc: ApiTypes.PreferenceConfigMisc;
+  }
+  export interface PreferenceConfigFrontend {
+    redirectLegacyUrls: boolean;
   }
   export interface PreferenceConfigMisc {
     discussionReactionEmojis: string[];

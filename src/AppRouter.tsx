@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import { mount, lazy, withView, route, Resolvable } from "navi";
+import React, { Suspense, useMemo } from "react";
+import { mount, lazy, withView, route, Resolvable, redirect, Matcher, map } from "navi";
 import { Router, View } from "react-navi";
 import { IntlProvider } from "react-intl";
 import { observer } from "mobx-react";
@@ -61,40 +61,54 @@ class ErrorBoundary extends React.Component<{}, { hasError: boolean; error?: Err
   }
 }
 
-const routes = withView(
-  async () => {
-    const localeHyphen = appState.locale.replace("_", "-");
-    const localeData = await loadLocaleData(localeHyphen);
-    return (
-      <IntlProvider locale={localeHyphen} messages={localeData}>
-        <AppLayout key={localeHyphen}>
-          <ErrorBoundary>
-            <View />
-          </ErrorBoundary>
-        </AppLayout>
-      </IntlProvider>
-    );
-  },
-  mount({
-    "/": lazy(() => import("./pages/home")),
-    "/login": lazy(() => import("./pages/auth/login")),
-    "/register": lazy(() => import("./pages/auth/register")),
-    "/forgot": lazy(() => import("./pages/auth/forgot")),
-    "/problems": getRoute(() => import("./pages/problem"), "problems"),
-    "/problem": getRoute(() => import("./pages/problem"), "problem"),
-    "/submissions": getRoute(() => import("./pages/submission"), "submissions"),
-    "/submission": getRoute(() => import("./pages/submission"), "submission"),
-    "/users": getRoute(() => import("./pages/user"), "users"),
-    "/users/groups": getRoute(() => import("./pages/user"), "groups"),
-    "/user": getRoute(() => import("./pages/user"), "user"),
-    "/u": getRoute(() => import("./pages/user"), "u"),
-    "/discussions": getRoute(() => import("./pages/discussion"), "discussions"),
-    "/discussion": getRoute(() => import("./pages/discussion"), "discussion"),
-    "/judge-machine": lazy(() => import("./pages/judge-machine"))
-  })
-);
+export function legacyRoutes(paths: Record<string, Matcher<any, any>>): Record<string, Matcher<any, any>> {
+  return appState.serverPreference.frontend.redirectLegacyUrls ? paths : {};
+}
 
 const AppRouter: React.FC = () => {
+  const routes = useMemo(
+    () =>
+      withView(
+        async () => {
+          const localeHyphen = appState.locale.replace("_", "-");
+          const localeData = await loadLocaleData(localeHyphen);
+          return (
+            <IntlProvider locale={localeHyphen} messages={localeData}>
+              <AppLayout key={localeHyphen}>
+                <ErrorBoundary>
+                  <View />
+                </ErrorBoundary>
+              </AppLayout>
+            </IntlProvider>
+          );
+        },
+        mount({
+          "/": lazy(() => import("./pages/home")),
+          "/login": lazy(() => import("./pages/auth/login")),
+          "/register": lazy(() => import("./pages/auth/register")),
+          "/forgot": lazy(() => import("./pages/auth/forgot")),
+          "/problems": getRoute(() => import("./pages/problem"), "problems"),
+          "/problem": getRoute(() => import("./pages/problem"), "problem"),
+          "/submissions": getRoute(() => import("./pages/submission"), "submissions"),
+          "/submission": getRoute(() => import("./pages/submission"), "submission"),
+          "/users": getRoute(() => import("./pages/user"), "users"),
+          "/users/groups": getRoute(() => import("./pages/user"), "groups"),
+          "/user": getRoute(() => import("./pages/user"), "user"),
+          "/u": getRoute(() => import("./pages/user"), "u"),
+          "/discussions": getRoute(() => import("./pages/discussion"), "discussions"),
+          "/discussion": getRoute(() => import("./pages/discussion"), "discussion"),
+          "/judge-machine": lazy(() => import("./pages/judge-machine")),
+          ...legacyRoutes({
+            "/ranklist": redirect("/users"),
+            "/article/0/edit": redirect("/discussion/new"),
+            "/article/:id": redirect(request => `/discussion/${request.params.id}`),
+            "/article/:id/edit": redirect(request => `/discussion/${request.params.id}/edit`)
+          })
+        })
+      ),
+    []
+  );
+
   return (
     <Router routes={routes}>
       <Suspense fallback={null}>
