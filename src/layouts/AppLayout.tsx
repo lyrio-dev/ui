@@ -181,8 +181,8 @@ let AppLayout: React.FC = props => {
         <Container textAlign="center">
           <div>
             {appState.serverPreference.siteName} Powered by{" "}
-            <a href="https://syzoj.org" target="_blank" rel="noreferrer noopener">
-              SYZOJ
+            <a href="https://ng.syzoj.org" target="_blank" rel="noreferrer noopener">
+              SYZOJ NG
             </a>
           </div>
           <div id={style.footerVersion} className="monospace">
