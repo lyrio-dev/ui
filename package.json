@@ -65,7 +65,7 @@
     "monaco-ace-tokenizer": "^0.2.1",
     "monaco-editor": "^0.21.2",
     "monaco-editor-webpack-plugin": "^2.0.0",
-    "monaco-tree-sitter": "^0.0.4",
+    "monaco-tree-sitter": "^0.0.5",
     "navi": "^0.14.0",
     "noty": "^3.2.0-beta",
     "object-path": "^0.11.5",
