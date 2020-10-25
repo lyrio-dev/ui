@@ -355,7 +355,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   function updateSubmissionContent(path: string, value: any) {
     const spec = {};
     objectPath.set(spec, path + ".$set", value);
-    setSubmissionContent(update(submissionContent, spec));
+    setSubmissionContent(submissionContent => update(submissionContent, spec));
   }
 
   const [submitPending, setSubmitPending] = useState(false);

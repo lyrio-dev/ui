@@ -3068,12 +3068,10 @@ ansi-styles@^4.0.0, ansi-styles@^4.1.0:
     "@types/color-name" "^1.1.1"
     color-convert "^2.0.1"
 
-ansi-to-html@^0.6.14:
-  version "0.6.14"
-  resolved "https://registry.yarnpkg.com/ansi-to-html/-/ansi-to-html-0.6.14.tgz#65fe6d08bba5dd9db33f44a20aec331e0010dad8"
-  integrity sha512-7ZslfB1+EnFSDO5Ju+ue5Y6It19DRnZXWv8jrGHgIlPna5Mh4jz7BV5jCbQneXNFurQcKoolaaAjHtgSBfOIuA==
-  dependencies:
-    entities "^1.1.2"
+ansi_up@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/ansi_up/-/ansi_up-4.0.4.tgz#5b8c35f0b02e4476f3f18cf89c3bf48d15d054f6"
+  integrity sha512-vRxC8q6QY918MbehO869biJW4tiunJdjOhi5fpY6NLOliBQlZhOkKgABJKJqH+JZfb/WfjvjN1chLWI6tODerw==
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -5360,7 +5358,7 @@ enhanced-resolve@^4.1.0:
     memory-fs "^0.5.0"
     tapable "^1.0.0"
 
-entities@^1.1.1, entities@^1.1.2:
+entities@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/entities/-/entities-1.1.2.tgz#bdfa735299664dfafd34529ed4f8522a275fea56"
   integrity sha512-f2LZMYl1Fzu7YSBKg+RoROelpOaNrcGmE9AZubeDfrCEia483oW4MI4VyFd5VNHIgQ/7qm1I0wUHK1eJnn2y2w==
@@ -8857,6 +8855,11 @@ moment@^2.10.2:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.0.tgz#fcbef955844d91deb55438613ddcec56e86a3425"
   integrity sha512-z6IJ5HXYiuxvFTI6eiQ9dm77uE0gyy1yXNApVHqTcnIKfY9tIwEjlzsZ6u1LQXvVgKeTnv9Xm7NDvJ7lso3MtA==
 
+monaco-ace-tokenizer@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/monaco-ace-tokenizer/-/monaco-ace-tokenizer-0.2.1.tgz#87f286570b60b276640f0757d5d62e0bf3cc22f3"
+  integrity sha512-sR0mTmaZgSrYjx6PmD+FXq52R8TaUIbcmmJSpwn/t+6EpVLZvILA5oml8htYArMKtMDBier+/ljTgqus3pCetw==
+
 monaco-editor-webpack-plugin@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-2.0.0.tgz#196052f23678285deca7a7baf4d7aebe9d1ff9e1"
@@ -8869,10 +8872,10 @@ monaco-editor@*, monaco-editor@^0.21.2:
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.21.2.tgz#37054e63e480d51a2dd17d609dcfb192304d5605"
   integrity sha512-jS51RLuzMaoJpYbu7F6TPuWpnWTLD4kjRW0+AZzcryvbxrTwhNy1KC9yboyKpgMTahpUbDUsuQULoo0GV1EPqg==
 
-monaco-tree-sitter@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/monaco-tree-sitter/-/monaco-tree-sitter-0.0.3.tgz#be3a639124c9905935954770174267eceb90352a"
-  integrity sha512-L6OjenzJRysXJd0EbWgBvYKbJO4Lae+/r67BD+CvkQVjZlzH1zD1TFUlGbS7b84RWOWNC9dYcbLYrnpo6cI+LA==
+monaco-tree-sitter@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/monaco-tree-sitter/-/monaco-tree-sitter-0.0.4.tgz#104a223e97c98e8ba32225eb88b9730fcaff58e0"
+  integrity sha512-XfBhdDZWwkpUWPGYS/cKFKIrQx1tAJNHCflNN31NVjAhac86PnFqtOL1glJSrgzLHAHZMfZdxkZSoHxkMVcdDw==
   dependencies:
     lodash.debounce "^4.0.8"
     web-tree-sitter "^0.16.2"

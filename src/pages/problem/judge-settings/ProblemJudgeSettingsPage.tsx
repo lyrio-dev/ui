@@ -71,11 +71,13 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const [pending, setPending] = useState(false);
   const [modified, setModified] = useState(false);
 
-  function onUpdate(delta: unknown, isNotByUser?: boolean) {
+  function onUpdate(deltaOrReducer: unknown | ((judgeInfo: unknown) => Partial<unknown>), isNotByUser?: boolean) {
     if (pending) return;
     if (!isNotByUser) setModified(true);
 
-    setJudgeInfo(Object.assign({}, judgeInfo, delta));
+    setJudgeInfo(judgeInfo =>
+      Object.assign({}, judgeInfo, typeof deltaOrReducer === "function" ? deltaOrReducer(judgeInfo) : deltaOrReducer)
+    );
   }
 
   function onBackToProblem() {

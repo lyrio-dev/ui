@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import ReactMonacoEditor from "react-monaco-editor";
 import * as Monaco from "monaco-editor";
-import { MonacoTreeSitter, Language } from "monaco-tree-sitter";
+import { MonacoTreeSitter } from "monaco-tree-sitter";
+import { registerRulesForLanguage } from "monaco-ace-tokenizer";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
 import style from "./CodeEditor.module.less";
@@ -11,6 +12,12 @@ import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 import { appState } from "@/appState";
 import { availableCodeFonts } from "@/webfonts";
+
+function loadAceHighlights() {
+  Monaco.languages.register({ id: "haskell" });
+  registerRulesForLanguage("haskell", new (require("monaco-ace-tokenizer/es/ace/definitions/haskell").default)());
+}
+loadAceHighlights();
 
 export interface CodeEditorProps {
   editorDidMount?: (editor: Monaco.editor.IStandaloneCodeEditor) => void;
@@ -22,38 +29,41 @@ export interface CodeEditorProps {
 }
 
 let CodeEditor: React.FC<CodeEditorProps> = props => {
-  const editorRef = useRef<Monaco.editor.IStandaloneCodeEditor>();
+  const refEditor = useRef<Monaco.editor.IStandaloneCodeEditor>();
+  const refLoadMtsOnEditorLoaded = useRef<() => void>();
   function editorDidMount(editor: Monaco.editor.IStandaloneCodeEditor) {
     editor.getModel().setEOL(Monaco.editor.EndOfLineSequence.LF);
 
-    editorRef.current = editor;
+    refEditor.current = editor;
     console.log("Monaco Editor:", editor);
-    if (!mtsRef.current && languageObjectRef.current) initialize();
+    if (refLoadMtsOnEditorLoaded.current) refLoadMtsOnEditorLoaded.current();
 
     if (props.editorDidMount) props.editorDidMount(editor);
   }
 
-  const languageRef = useRef<CodeLanguage | string>();
-  const languageObjectRef = useRef<Language>();
-  if (languageRef.current !== props.language) {
-    languageRef.current = props.language;
-    tryLoadTreeSitterLanguage(languageRef.current as CodeLanguage).then(languageObject => {
-      if (!languageObject) {
-        // Failed to load, fallback to monaco's basic syntax highlighting
-        if (mtsRef.current) mtsRef.current.refresh();
-        return;
+  const refMts = useRef<MonacoTreeSitter>();
+  const refSetLanguageCount = useRef<number>(0);
+  useEffect(() => {
+    const i = ++refSetLanguageCount.current;
+    tryLoadTreeSitterLanguage(props.language as CodeLanguage).then(languageObject => {
+      if (i !== refSetLanguageCount.current) return;
+
+      function initialize() {
+        refMts.current = new MonacoTreeSitter(Monaco, refEditor.current, languageObject);
       }
 
-      languageObjectRef.current = languageObject;
-      if (!mtsRef.current && editorRef.current) initialize();
-      else if (mtsRef.current) mtsRef.current.changeLanguage(languageObject);
+      // Language loaded after editor loaded
+      if (refEditor.current) {
+        if (!refMts.current)
+          // MTS is not loaded or has been disposed
+          initialize();
+        // MTS presents
+        else refMts.current.changeLanguage(languageObject);
+      }
+      // Load it when on editor loaded
+      else refLoadMtsOnEditorLoaded.current = initialize;
     });
-  }
-
-  const mtsRef = useRef<MonacoTreeSitter>();
-  function initialize() {
-    mtsRef.current = new MonacoTreeSitter(Monaco, editorRef.current, languageObjectRef.current);
-  }
+  }, [props.language]);
 
   // The Monaco Editor's automaticLayout option doesn't work on a initially hidden editor
   // So use ResizeSensor instead
@@ -66,7 +76,7 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
       }
       if (div) {
         resizeSensorRef.current = new ResizeSensor(div, () => {
-          if (editorRef.current) editorRef.current.layout();
+          if (refEditor.current) refEditor.current.layout();
         });
       } else resizeSensorRef.current = null;
       containerRef.current = div;

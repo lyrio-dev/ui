@@ -59,11 +59,12 @@ const TraditionalProblemSubmissionView: React.FC<TraditionalProblemSubmissionVie
 
 const helper: ProblemTypeSubmissionViewHelper<SubmissionContentTraditional> = {
   getAnswerInfo(content, _) {
-    return (
+    const entires = Object.entries(content.compileAndRunOptions);
+    return entires.length ? (
       <>
         <table className={style.compileAndRunOptions}>
           <tbody>
-            {Object.entries(content.compileAndRunOptions).map(([name, value]) => (
+            {entires.map(([name, value]) => (
               <tr key={name}>
                 <td align="right" className={style.compileAndRunOptionsName}>
                   <strong>{_(`code_language.${content.language}.options.${name}.name`)}</strong>
@@ -74,7 +75,7 @@ const helper: ProblemTypeSubmissionViewHelper<SubmissionContentTraditional> = {
           </tbody>
         </table>
       </>
-    );
+    ) : null;
   },
   getHighlightLanguageList(content) {
     return [content.language];

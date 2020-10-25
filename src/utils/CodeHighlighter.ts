@@ -62,6 +62,14 @@ function importGrammarJson(language: CodeLanguage): Promise<any> {
   switch (language) {
     case CodeLanguage.Cpp:
       return import("monaco-tree-sitter/grammars/cpp.json");
+    case CodeLanguage.C:
+      return import("monaco-tree-sitter/grammars/c.json");
+    case CodeLanguage.Python:
+      return import("monaco-tree-sitter/grammars/python.json");
+    case CodeLanguage.Rust:
+      return import("monaco-tree-sitter/grammars/rust.json");
+    case CodeLanguage.Go:
+      return import("monaco-tree-sitter/grammars/go.json");
   }
 }
 
@@ -69,6 +77,14 @@ function importTreeSitterLanguageLib(language: CodeLanguage): string {
   switch (language) {
     case CodeLanguage.Cpp:
       return require("tree-sitter-wasm-prebuilt/lib/tree-sitter-cpp.wasm").default;
+    case CodeLanguage.C:
+      return require("tree-sitter-wasm-prebuilt/lib/tree-sitter-c.wasm").default;
+    case CodeLanguage.Python:
+      return require("tree-sitter-wasm-prebuilt/lib/tree-sitter-python.wasm").default;
+    case CodeLanguage.Rust:
+      return require("tree-sitter-wasm-prebuilt/lib/tree-sitter-rust.wasm").default;
+    case CodeLanguage.Go:
+      return require("tree-sitter-wasm-prebuilt/lib/tree-sitter-go.wasm").default;
   }
 }
 

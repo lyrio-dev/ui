@@ -108,9 +108,9 @@ let CheckerEditor: React.FC<CheckerEditorProps> = props => {
   const checker = props.judgeInfo.checker;
 
   function onUpdateChecker(delta: Partial<CheckerConfig>) {
-    props.onUpdateJudgeInfo({
+    props.onUpdateJudgeInfo(({ checker }) => ({
       checker: Object.assign({}, checker, delta)
-    });
+    }));
   }
 
   const checkerConfigBackup = useRef<Map<CheckerType, CheckerConfig>>(new Map()).current;

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Segment, SegmentProps } from "semantic-ui-react";
-import AnsiToHtmlConverter from "ansi-to-html";
+import AnsiUp from "ansi_up";
 
 import style from "./CodeBox.module.less";
 import * as CodeHighlighter from "@/utils/CodeHighlighter";
@@ -168,10 +168,10 @@ interface OmittableAnsiCodeBoxProps {
 export const OmittableAnsiCodeBox = React.forwardRef<HTMLPreElement, OmittableAnsiCodeBoxProps>((props, ref) => {
   const [html, omittedLength] = useMemo(() => {
     const omittableContent = props.ansiMessage || "";
-    const converter = new AnsiToHtmlConverter({ escapeXML: true });
     const text = typeof omittableContent === "string" ? omittableContent : omittableContent.data;
     const omittedLength = typeof omittableContent === "string" ? 0 : omittableContent.omittedLength;
-    return [converter.toHtml(text), omittedLength];
+    const converter = new AnsiUp();
+    return [converter.ansi_to_html(text), omittedLength];
   }, [props.ansiMessage]);
 
   return (

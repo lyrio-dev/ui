@@ -3,7 +3,10 @@ export interface EditorComponentProps<JudgeInfo, Options = never> {
   judgeInfo: JudgeInfo;
   pending: boolean;
   testData: ApiTypes.ProblemFileDto[];
-  onUpdateJudgeInfo: (delta: Partial<JudgeInfo>, isNotByUser?: boolean) => void;
+  onUpdateJudgeInfo: (
+    deltaOrReducer: Partial<JudgeInfo> | ((judgeInfo: JudgeInfo) => Partial<JudgeInfo>),
+    isNotByUser?: boolean
+  ) => void;
 }
 
 export interface JudgeInfoProcessor<JudgeInfo, Options = never> {
