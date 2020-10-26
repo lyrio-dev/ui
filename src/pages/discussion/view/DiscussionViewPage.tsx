@@ -444,7 +444,9 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
               {emojisAndCount.map(([emoji, count]) => (
                 <div
                   className={
-                    style.emojiItem + (props.reactions.currentUserReactions.includes(emoji) ? " " + style.selected : "")
+                    style.emojiItem +
+                    (props.reactions.currentUserReactions.includes(emoji) ? " " + style.selected : "") +
+                    (!appState.currentUser ? " " + style.disabled : "")
                   }
                   key={emoji}
                   onClick={() => onSelectEmoji(emoji)}
