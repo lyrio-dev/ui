@@ -1102,6 +1102,7 @@ declare namespace ApiTypes {
     email?: string;
     publicEmail: boolean;
     avatarInfo: string;
+    nickname: string;
     bio: string;
     information: ApiTypes.UserInformationDto;
   }
@@ -1131,6 +1132,7 @@ declare namespace ApiTypes {
     id: number;
     username: string;
     email: string;
+    nickname: string;
     bio: string;
     avatar: ApiTypes.UserAvatarDto;
     isAdmin: boolean;

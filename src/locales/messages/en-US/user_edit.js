@@ -42,6 +42,7 @@ module.exports = {
     public_email: "Make my Email public",
     email_notes: "Goto the Security pane for changing Email.",
     email_notes_admin: "You have the privilege to change the Email.",
+    nickname: "Nickname",
     bio: "Bio",
     bio_placeholder: "Write something about you or sentences you love.",
     organization: "Organization",
@@ -60,6 +61,8 @@ module.exports = {
     github_placeholder: "Not including '@'",
     github_notes: "Your GitHub link is: ",
     submit: "Submit",
+    error_invalid_username: "Invalid username.",
+    error_invalid_email: "Invalid email address.",
     error_invalid_url: "Invalid URL.",
     success: "Profile updated successfully."
   },

@@ -42,6 +42,7 @@ module.exports = {
     public_email: "公开邮箱地址",
     email_notes: "请在「安全」中修改邮箱地址。",
     email_notes_admin: "管理员可以修改任何用户的邮箱地址。",
+    nickname: "昵称",
     bio: "个性签名",
     bio_placeholder: "写一些描述你的，或者你喜欢的话。",
     organization: "组织",
@@ -60,6 +61,8 @@ module.exports = {
     github_placeholder: "不含 @ 符号",
     github_notes: "你的 GitHub 链接为：",
     submit: "提交",
+    error_invalid_username: "无效的用户名。",
+    error_invalid_email: "无效的邮箱地址。",
     error_invalid_url: "无效的网址。",
     success: "个人资料修改成功。"
   },

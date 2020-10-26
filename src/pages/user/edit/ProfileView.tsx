@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Icon, Form, Header, Input, Checkbox, TextArea, Button, List, Radio } from "semantic-ui-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Icon, Form, Header, Input, Checkbox, TextArea, Button, List, Radio, Ref } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { isURL } from "class-validator";
 import md5 from "blueimp-md5";
@@ -14,6 +14,7 @@ import UserAvatar from "@/components/UserAvatar";
 import { RouteError } from "@/AppRouter";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { makeToBeLocalizedText } from "@/locales";
+import { isValidEmail, isValidUsername } from "@/utils/validators";
 
 export async function fetchData(userId: number) {
   const { requestError, response } = await api.user.getUserProfile({ userId });
@@ -49,6 +50,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   const [username, setUsername] = useState(props.meta.username);
   const [email, setEmail] = useState(props.meta.email);
   const [publicEmail, setPublicEmail] = useState(props.publicEmail);
+  const [nickname, setNickname] = useState(props.meta.nickname);
   const [bio, setBio] = useState(props.meta.bio);
 
   const [organization, setOrganization] = useState(props.information.organization);
@@ -58,6 +60,9 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   const [qq, setQq] = useState(props.information.qq);
   const [github, setGithub] = useState(props.information.github);
 
+  const refUsername = useRef<HTMLInputElement>();
+  const refEmail = useRef<HTMLInputElement>();
+  const refUrl = useRef<HTMLInputElement>();
   const [checkUrl, urlInvalid] = useFieldCheckSimple(url, url => !url || isURL(url));
 
   const avatarTypeFromServer = props.avatarInfo.substr(0, props.avatarInfo.indexOf(":")) as AvatarType;
@@ -121,8 +126,15 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   const [avatarError, setAvatarError] = useState(false);
 
   const [pending, onSubmit] = useAsyncCallbackPending(async () => {
-    if (urlInvalid) {
+    if (!isValidUsername(username)) {
+      toast.error(_(".error_invalid_username"));
+      refUsername.current.focus();
+    } else if (!isValidEmail(email)) {
+      toast.error(_(".error_invalid_email"));
+      refEmail.current.focus();
+    } else if (urlInvalid) {
       toast.error(_(".error_invalid_url"));
+      refUrl.current.focus();
     } else {
       const { requestError, response } = await api.user.updateUserProfile({
         userId: props.meta.id,
@@ -130,6 +142,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
         email,
         publicEmail,
         avatarInfo: avatarType + ":" + avatarKeyValue,
+        nickname,
         bio,
         information: {
           organization,
@@ -165,17 +178,26 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     <div className={style.profileContainer}>
       <div className={style.profileMain}>
         <Header className={style.header} size="tiny" content={_(".username")} />
-        <Input
-          readOnly={!(hasPrivilege || allowUserChangeUsername)}
-          fluid
-          value={username}
-          onChange={(e, { value }) => !pending && setUsername(value)}
-        />
+        <Ref innerRef={refUsername}>
+          <Input
+            readOnly={!(hasPrivilege || allowUserChangeUsername)}
+            fluid
+            value={username}
+            onChange={(e, { value }) => !pending && value.length < 24 && setUsername(value)}
+          />
+        </Ref>
         {!(allowUserChangeUsername && props.meta.id === appState.currentUser.id) && (
           <div className={style.notes}>{_(!hasPrivilege ? ".username_notes" : ".username_notes_admin")}</div>
         )}
         <Header className={style.header} size="tiny" content={_(".email")} />
-        <Input readOnly={!hasPrivilege} fluid value={email} onChange={(e, { value }) => !pending && setEmail(value)} />
+        <Ref innerRef={refEmail}>
+          <Input
+            readOnly={!hasPrivilege}
+            fluid
+            value={email}
+            onChange={(e, { value }) => !pending && setEmail(value)}
+          />
+        </Ref>
         <Checkbox
           className={style.checkbox}
           checked={publicEmail}
@@ -183,6 +205,12 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           onChange={(e, { checked }) => !pending && setPublicEmail(checked)}
         />
         <div className={style.notes}>{_(!hasPrivilege ? ".email_notes" : ".email_notes_admin")}</div>
+        <Header className={style.header} size="tiny" content={_(".nickname")} />
+        <Input
+          fluid
+          value={nickname}
+          onChange={(e, { value }) => !pending && value.length < 24 && setNickname(value)}
+        />
         <Header className={style.header} size="tiny" content={_(".bio")} />
         <Form>
           <TextArea
@@ -208,14 +236,16 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           onChange={(e, { value }) => value.length < 80 && !pending && setLocation(value)}
         />
         <Header className={style.header} size="tiny" content={_(".url")} />
-        <Input
-          fluid
-          placeholder={_(".url_placeholder")}
-          value={url}
-          error={urlInvalid}
-          onBlur={checkUrl}
-          onChange={(e, { value }) => value.length < 80 && !pending && setUrl(value.trim())}
-        />
+        <Ref innerRef={refUrl}>
+          <Input
+            fluid
+            placeholder={_(".url_placeholder")}
+            value={url}
+            error={urlInvalid}
+            onBlur={checkUrl}
+            onChange={(e, { value }) => value.length < 80 && !pending && setUrl(value.trim())}
+          />
+        </Ref>
         <Header className={style.header} size="tiny" content={_(".qq")} />
         <Input
           fluid

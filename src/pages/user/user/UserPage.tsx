@@ -180,7 +180,12 @@ let UserPage: React.FC<UserPageProps> = props => {
   );
   const meta = (
     <>
-      <Header as="h1" className={style.username} content={props.meta.username} />
+      {props.meta.nickname ? (
+        <EmojiRenderer>
+          <Header as="h1" className={style.nickname} content={props.meta.nickname} />
+        </EmojiRenderer>
+      ) : null}
+      <div className={style.username}>{props.meta.username}</div>
       {props.meta.bio && (
         <EmojiRenderer>
           <p className={style.bio}>

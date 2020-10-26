@@ -42,6 +42,7 @@ module.exports = {
     public_email: "メールアドレスを公開する",
     email_notes: "セキュリティのページでメールアドレスを変更できます。",
     email_notes_admin: "管理者は全員のメールアドレスを変更できます",
+    nickname: "Nickname",
     bio: "自己紹介",
     bio_placeholder: "自己紹介、お気に入りの言葉など",
     organization: "所属",
@@ -60,6 +61,8 @@ module.exports = {
     github_placeholder: " @ を含めない",
     github_notes: "あなたの GitHub リンクは：",
     submit: "保存",
+    error_invalid_username: "[TBT] Invalid username.",
+    error_invalid_email: "[TBT] Invalid email address.",
     error_invalid_url: "無効な URL です。",
     success: "保存に成功しました。"
   },
