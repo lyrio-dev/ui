@@ -1,12 +1,13 @@
 /* Patches for Semantic UI */
 
-html, body, #root {
-  height: initial !important;
-  min-height: 100%;
-}
-
 html {
+  // Semantic UI sets <body> and <html> to 100% height by default
+  // But we use a fixed topbar, so a 100% height <html> will overflow the page even if there's no content
+  height: initial !important;
+
   overflow-x: hidden;
+
+  // Only enable Chrome's overlay scrollbar on wide enough screens
   overflow-y: overlay;
   @media only screen and (max-width: 1210px) {
     overflow-y: auto;

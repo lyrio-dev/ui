@@ -103,10 +103,11 @@ html.sidebarOpen {
 }
 
 body {
-  @marginTop: 49px;
+  @margin-top: 49px;
 
+  min-height: calc(100vh - @margin-top);
   display: block;
-  margin: @marginTop 0 0 0;
+  margin: @margin-top 0 0 0;
   padding-top: 28px;
   box-sizing: border-box;
 }
@@ -157,21 +158,27 @@ body {
   }
 }
 
-html {
+
+// Set "position: relative; " on <body> instead of <html> to make Popper.js work
+body {
   position: relative;
 }
 
 .footer {
-  margin: 28px 0 14px 0 !important;
+  @margin-top: 28px;
+  @margin-bottom: 14px;
+
   padding: 0 !important;
   border: none !important;
   color: #999;
 
   &.placeholder {
+    margin: calc(@margin-top + @margin-bottom) 0 0 0 !important;
     visibility: hidden;
   }
-
+  
   &.real {
+    margin: @margin-top 0 @margin-bottom 0 !important;
     position: absolute;
     width: 100%;
     bottom: 0;
