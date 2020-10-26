@@ -1203,7 +1203,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   return (
     <>
       <Grid>
-        <Grid.Row>
+        <Grid.Row className={style.row}>
           <Grid.Column width={11}>
             <Header as="h1" className={style.headerContainer + " withIcon"}>
               <Icon name="edit" className={style.icon} />
@@ -1246,7 +1246,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
             <Header icon="sticky note outline" className="withIcon" as="h1" content={_(".header_samples")} />
           </Grid.Column>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row className={style.row}>
           <Grid.Column width={11}>
             <Tab
               activeIndex={languageTabActiveIndex}
