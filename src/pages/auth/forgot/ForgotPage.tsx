@@ -148,7 +148,7 @@ let ForgetPage: React.FC = () => {
 
   useEffect(() => {
     const id = setInterval(() => {
-      if (sendEmailVerificationCodeTimeout) setSendEmailVerificationCodeTimeout(timeout => timeout - 1);
+      setSendEmailVerificationCodeTimeout(timeout => timeout && timeout - 1);
     }, 1000);
     return () => clearInterval(id);
   }, []);
