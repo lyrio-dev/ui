@@ -363,7 +363,14 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
               })}
             </Table.Body>
           </Table>
-          <SimplePagination hasPrevPage={hasPrevPage} hasNextPage={hasNextPage} onPageChange={onPageChange} />
+          {(hasPrevPage || hasNextPage) && (
+            <SimplePagination
+              className={style.pagination}
+              hasPrevPage={hasPrevPage}
+              hasNextPage={hasNextPage}
+              onPageChange={onPageChange}
+            />
+          )}
         </>
       )}
     </>

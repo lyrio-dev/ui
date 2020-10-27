@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 import style from "./SimplePagination.module.less";
 
 interface SimplePaginationProps {
+  className?: string;
   hasPrevPage: boolean;
   hasNextPage: boolean;
   onPageChange: (direction: -1 | 1) => void;
@@ -12,7 +13,7 @@ interface SimplePaginationProps {
 
 let SimplePagination: React.FC<SimplePaginationProps> = props => {
   return (
-    <div className={style.wrapper}>
+    <div className={style.wrapper + (props.className ? " " + props.className : "")}>
       <Pagination
         className={style.pagination}
         activePage={2}
