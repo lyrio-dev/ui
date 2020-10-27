@@ -170,6 +170,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
             transparent
             placeholder={props.defaultPercentagePoints}
             value={props.testcase.points == null ? "" : props.testcase.points}
+            disabled={props.testcaseCount === 1}
             icon="percent"
             onChange={(e, { value }) =>
               (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 100)) &&
@@ -709,18 +710,21 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
               <Menu.Item className={style.itemLabel}>MiB</Menu.Item>
             </>
           )}
-          <Menu.Item className={style.itemSubtaskScore}>
-            <Input
-              transparent
-              placeholder={props.defaultPercentagePoints}
-              value={props.subtask.points == null ? "" : props.subtask.points}
-              icon="percent"
-              onChange={(e, { value }) =>
-                (value === "" || (Number.isSafeInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 100)) &&
-                props.onUpdate({ points: value === "" ? null : Number(value) })
-              }
-            />
-          </Menu.Item>
+          {props.subtaskCount > 1 && (
+            <Menu.Item className={style.itemSubtaskScore}>
+              <Input
+                transparent
+                placeholder={props.defaultPercentagePoints}
+                value={props.subtask.points == null ? "" : props.subtask.points}
+                icon="percent"
+                onChange={(e, { value }) =>
+                  (value === "" ||
+                    (Number.isSafeInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 100)) &&
+                  props.onUpdate({ points: value === "" ? null : Number(value) })
+                }
+              />
+            </Menu.Item>
+          )}
           <Ref innerRef={refOptionsButton}>
             <Dropdown item icon="bars" className={`icon ${style.itemWithIcon}`}>
               <Dropdown.Menu>
@@ -1138,7 +1142,7 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
                 uuid: uuid(),
                 scoringType:
                   rawSubtask.scoringType in SubtaskScoringType ? rawSubtask.scoringType : SubtaskScoringType.Sum,
-                points: Number.isSafeInteger(rawSubtask.points) ? rawSubtask.points : null,
+                points: Number.isSafeInteger(rawSubtask.points) && raw.subtasks.length > 1 ? rawSubtask.points : null,
                 timeLimit:
                   options.enableTimeMemoryLimit && Number.isSafeInteger(rawSubtask.timeLimit)
                     ? rawSubtask.timeLimit
@@ -1169,7 +1173,10 @@ const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithSubtasks, SubtasksEdit
                           options.enableUserOutputFilename && typeof rawTestcase.userOutputFilename === "string"
                             ? rawTestcase.userOutputFilename
                             : "",
-                        points: Number.isSafeInteger(rawTestcase.points) ? rawTestcase.points : null,
+                        points:
+                          Number.isSafeInteger(rawTestcase.points) && rawSubtask.testcases.length > 0
+                            ? rawTestcase.points
+                            : null,
                         timeLimit:
                           options.enableTimeMemoryLimit && Number.isSafeInteger(rawTestcase.timeLimit)
                             ? rawTestcase.timeLimit
