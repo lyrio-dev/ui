@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import SocketIO from "socket.io-client";
+import SocketIOParser from "socket.io-msgpack-parser";
 
 export function useSocket(
   namespace: string,
@@ -15,7 +16,8 @@ export function useSocket(
       refSocket.current = SocketIO(window.apiEndpoint + namespace, {
         path: "/api/socket",
         transports: ["websocket"],
-        query: query
+        query: query,
+        ...{ parser: SocketIOParser }
       });
       refSocket.current.on("error", (err: any) => console.log("SocketIO error:", err));
       refSocket.current.on("disconnect", (reason: number) => console.log("SocketIO disconnect:", reason));
