@@ -90,6 +90,14 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.polyfillServiceUrl = normalizePath(polyfillServiceUrl);
 
+      // Specify the favicon URL in the same way.
+      var faviconUrl;
+      try {
+        faviconUrl = __favicon__;
+      } catch (e) {
+        faviconUrl = publicPath + "favicon.ico";
+      }
+
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");
         link.rel = rel;
@@ -98,7 +106,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         document.head.appendChild(link);
       }
 
-      addLinkTag("icon", publicPath + "favicon.ico");
+      addLinkTag("icon", faviconUrl);
 
       return addLinkTag;
     })();
