@@ -11,13 +11,26 @@
       white-space: nowrap;
       text-align: left;
 
-      @media only screen and (max-width: 767px) {
-        display: none;
-      }
-
       &:global(.left.pointing) {
         left: 444px;
       }
+    }
+
+    @media only screen and (max-width: 1279px) {
+      :global(.ui.label) {
+        position: static;
+        margin-left: 0;
+        margin-top: 10px;
+        padding: 0;
+        border: none !important;
+        font-weight: normal;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      margin-bottom: 10px;
     }
   }
 }
