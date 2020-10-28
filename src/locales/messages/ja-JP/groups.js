@@ -23,5 +23,6 @@ module.exports = {
   delete_group: "[TBT] Delete",
   confirm_delete_group: "[TBT] Confirm delete group",
   remove_member: "[TBT] Remove",
-  confirm_remove_member: "[TBT] Confirm remove member"
+  confirm_remove_member: "[TBT] Confirm remove member",
+  invalid_group_name: "[TBT] Invalid group name."
 };

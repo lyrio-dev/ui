@@ -23,5 +23,6 @@ module.exports = {
   delete_group: "删除",
   confirm_delete_group: "确认删除组",
   remove_member: "移出组",
-  confirm_remove_member: "确认移出组"
+  confirm_remove_member: "确认移出组",
+  invalid_group_name: "无效的组名。"
 };

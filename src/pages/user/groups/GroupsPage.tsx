@@ -29,6 +29,7 @@ import UserAvatar from "@/components/UserAvatar";
 import UserSearch from "@/components/UserSearch";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { makeToBeLocalizedText } from "@/locales";
+import { isValidGroupName } from "@/utils/validators";
 
 async function fetchData(): Promise<ApiTypes.GetGroupListResponseDto> {
   if (!appState.currentUser) throw new RouteError(makeToBeLocalizedText("groups.not_logged_in"));
@@ -114,6 +115,8 @@ let GroupItem: React.FC<GroupItemProps> = props => {
       setRenamePopupOpen(false);
       return;
     }
+
+    if (!isValidGroupName(name)) return toast.error(_(".invalid_group_name"));
 
     if (pending) return;
     setPending(true);
@@ -332,6 +335,8 @@ let GroupsPage: React.FC<GroupsPageProps> = props => {
   const [createGroupName, setCreateGroupName] = useState("");
   const [createGroupPopupOpen, setCreateGroupPopupOpen] = useState(false);
   const [pendingCreateGroup, onCreateGroup] = useAsyncCallbackPending(async () => {
+    if (!isValidGroupName(createGroupName)) return toast.error(_(".invalid_group_name"));
+
     const { requestError, response } = await api.group.createGroup({
       groupName: createGroupName
     });

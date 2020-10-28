@@ -5,6 +5,10 @@ export function isValidUsername(username: string): boolean {
   return /^[a-zA-Z0-9\-_.#$]{3,24}$/.test(username);
 }
 
+export function isValidGroupName(groupName: string): boolean {
+  return /^[a-zA-Z0-9 :@~\-_.#$/]{1,48}$/.test(groupName);
+}
+
 export function isValidPassword(password: string): boolean {
   return password.length >= 6 && password.length <= 32;
 }

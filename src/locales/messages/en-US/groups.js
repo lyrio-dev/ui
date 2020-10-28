@@ -23,5 +23,6 @@ module.exports = {
   delete_group: "Delete",
   confirm_delete_group: "Confirm delete group",
   remove_member: "Remove",
-  confirm_remove_member: "Confirm remove member"
+  confirm_remove_member: "Confirm remove member",
+  invalid_group_name: "Invalid group name."
 };
