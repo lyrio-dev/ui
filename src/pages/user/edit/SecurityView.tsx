@@ -54,7 +54,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
 
   const [checkOldPassword, oldPasswordInvalid] = useFieldCheckSimple(
     oldPassword,
-    value => isValidPassword(value) || (!value && !newPassword)
+    value => !!value || (!value && !newPassword)
   );
   const [checkNewPassword, newPasswordInvalid] = useFieldCheckSimple(
     newPassword,

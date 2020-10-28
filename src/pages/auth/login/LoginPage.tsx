@@ -182,8 +182,6 @@ let LoginPage: React.FC = () => {
       setError("username", _(".invalid_username"));
     } else if (password.length === 0) {
       setError("password", _(".empty_password"));
-    } else if (!isValidPassword(password)) {
-      setError("password", _(".invalid_password"));
     } else {
       // Send login request
       const { requestError, response } = await api.auth.login({ username, password });
