@@ -85,7 +85,27 @@ module.exports = override(
     ["semantic-ui-css"]: "fomantic-ui-css"
   }),
   addWebpackPlugin(new MonacoWebpackPlugin({
-    languages: ["yaml", "cpp"]
+    languages: ["yaml", "cpp", "java", "kotlin", "pascal", "python", "rust", "go", "csharp", "fsharp"],
+    features: [
+      "bracketMatching",
+      "caretOperations",
+      "clipboard",
+      "contextmenu",
+      "coreCommands",
+      "cursorUndo",
+      "find",
+      "folding",
+      "fontZoom",
+      "gotoLine",
+      "iPadShowKeyboard",
+      "inPlaceReplace",
+      "indentation",
+      "linesOperations",
+      "links",
+      "multicursor",
+      "smartSelect",
+      "unusualLineTerminators"
+    ]
   })),
   addBabelPlugin(["prismjs", {
     "languages": Object.keys(require("prismjs/components.js").languages).filter(name => name !== "meta")
