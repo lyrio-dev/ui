@@ -58,6 +58,11 @@ const patchHtmlWebpackPluginConfig = () => config => {
   return config;
 };
 
+const removeServiceWorker = () => config => {
+  config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== "GenerateSW");
+  return config;
+};
+
 module.exports = override(
   disableEsLint(),
   addLessLoader(),
@@ -85,5 +90,6 @@ module.exports = override(
   addBabelPlugin(["prismjs", {
     "languages": Object.keys(require("prismjs/components.js").languages).filter(name => name !== "meta")
   }]),
-  patchHtmlWebpackPluginConfig()
+  patchHtmlWebpackPluginConfig(),
+  removeServiceWorker()
 );
