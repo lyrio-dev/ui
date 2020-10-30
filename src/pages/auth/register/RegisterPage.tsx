@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
 import { route } from "navi";
-import { useNavigation, useCurrentRoute } from "react-navi";
+import { useCurrentRoute } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "../common.module.less";
@@ -10,7 +10,13 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import api from "@/api";
-import { useLocalizer, useFieldCheck, useLoginOrRegisterNavigation, useRecaptcha } from "@/utils/hooks";
+import {
+  useLocalizer,
+  useFieldCheck,
+  useLoginOrRegisterNavigation,
+  useRecaptcha,
+  useNavigationChecked
+} from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
@@ -21,7 +27,7 @@ let RegisterPage: React.FC = () => {
   const _ = useLocalizer("register");
   const currentRoute = useCurrentRoute();
 
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
   const redirect = () => {
     navigation.navigate(currentRoute.url.query.loginRedirectUrl || "/");
   };

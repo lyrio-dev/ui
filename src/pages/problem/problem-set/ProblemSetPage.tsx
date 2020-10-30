@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import { Search, Checkbox, Table, Label, Button, Header, Menu, Segment, Loader, Icon } from "semantic-ui-react";
-import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "./ProblemSetPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useAsyncCallbackPending, useLocalizer, useScreenWidthWithin } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer, useScreenWidthWithin, useNavigationChecked, Link } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { sortTags, sortTagColors } from "../problemTag";
 import Pagination from "@/components/Pagination";
@@ -97,7 +96,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
     appState.enterNewPage(_(".title"), "problem_set");
   }, [appState.locale]);
 
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const isMobileOrPad = useScreenWidthWithin(0, 1024);
   const isVeryNarrowScreen = useScreenWidthWithin(0, 640);

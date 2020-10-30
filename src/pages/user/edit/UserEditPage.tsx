@@ -1,13 +1,13 @@
 import React from "react";
 import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { Link, useCurrentRoute, useNavigation } from "react-navi";
+import { useCurrentRoute } from "react-navi";
 import { v4 as uuid } from "uuid";
 
 import style from "./UserEdit.module.less";
 
 import { appState } from "@/appState";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useNavigationChecked, Link } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
 import api from "@/api";
 import { isValidUsername } from "@/utils/validators";
@@ -32,7 +32,7 @@ interface UserEditPageProps {
 let UserEditPage: React.FC<UserEditPageProps> = props => {
   const _ = useLocalizer("user_edit");
   const currentRoute = useCurrentRoute();
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const View = props.view;
 

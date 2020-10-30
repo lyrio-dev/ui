@@ -1,11 +1,10 @@
 import React from "react";
 import { Header, Menu, Button, Checkbox } from "semantic-ui-react";
-import { Link } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "./SubmitViewFrame.module.less";
 
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, Link } from "@/utils/hooks";
 import StatusText from "@/components/StatusText";
 import ScoreText from "@/components/ScoreText";
 

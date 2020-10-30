@@ -1,14 +1,13 @@
 import React, { useEffect } from "react";
 import { Grid, Header, Button, List, Icon, Segment, Popup, Divider } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { Link } from "react-navi";
 import dayjs from "dayjs";
 
 import style from "./UserPage.module.less";
 
 import { appState } from "@/appState";
 import api from "@/api";
-import { useLocalizer, useScreenWidthWithin } from "@/utils/hooks";
+import { useLocalizer, useScreenWidthWithin, Link } from "@/utils/hooks";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
 import { defineRoute, RouteError } from "@/AppRouter";

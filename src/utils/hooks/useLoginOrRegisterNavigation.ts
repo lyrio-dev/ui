@@ -1,7 +1,8 @@
-import { useNavigation, useCurrentRoute } from "react-navi";
+import { useCurrentRoute } from "react-navi";
+import { useNavigationChecked } from "@/utils/hooks";
 
 export function useLoginOrRegisterNavigation(bindLoginOrRegister?: "login" | "register" | "forgot") {
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
   const currentRoute = useCurrentRoute();
 
   return (loginOrRegister?: "login" | "register" | "forgot") => {

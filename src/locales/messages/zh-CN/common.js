@@ -45,6 +45,7 @@ module.exports = {
     504: "连接服务器超时，请稍后重试。",
     unknown: "请求出错：{text}"
   },
+  confirm_navigation: "确定要离开当前页面吗？您的修改将不被保存。",
   recaptcha: {
     copyright:
       '本网站受 reCAPTCHA 和 Google 的保护，适用<a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">隐私政策</a>和<a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">服务条款</a>。'

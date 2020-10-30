@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { Message, Icon } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { useNavigation } from "react-navi";
 
 import style from "./ErrorPage.module.less";
 
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useNavigationChecked } from "@/utils/hooks";
 import { appState } from "@/appState";
 import { isToBeLocalizedText, ToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
@@ -22,7 +21,7 @@ export interface ErrorPageProps {
 
 let ErrorPage: React.FC<ErrorPageProps> = props => {
   const _ = useLocalizer("error");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(_(".title"));

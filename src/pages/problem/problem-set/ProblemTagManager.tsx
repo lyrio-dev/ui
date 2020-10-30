@@ -14,11 +14,10 @@ import {
   Dropdown
 } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { useNavigation } from "react-navi";
 
 import style from "./ProblemTagManager.module.less";
 
-import { useDialog, useLocalizer, useConfirmUnload } from "@/utils/hooks";
+import { useDialog, useLocalizer, useConfirmNavigation, useNavigationChecked } from "@/utils/hooks";
 import api from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
@@ -131,10 +130,10 @@ interface ProblemTagManagerProps {
 
 let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
   const _ = useLocalizer("problem_tag_manager");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const [modified, setModified] = useState(false);
-  useConfirmUnload(() => modified);
+  useConfirmNavigation(modified);
 
   const [tags, setTags] = useState<Record<number, ApiTypes.ProblemTagWithAllLocalesDto>>({});
   const tagsCount = Object.keys(tags).length;

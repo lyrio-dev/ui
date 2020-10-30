@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
-import { Link } from "react-navi";
 import { Table, Icon, Popup, Ref } from "semantic-ui-react";
 
 import style from "./SubmissionItem.module.less";
 
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, Link } from "@/utils/hooks";
 import formatFileSize from "@/utils/formatFileSize";
 import formatDateTime from "@/utils/formatDateTime";
 import UserLink from "@/components/UserLink";

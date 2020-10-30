@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, Grid, Header, Popup, Button, Form, Message } from "semantic-ui-react";
-import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import { v4 as uuid } from "uuid";
@@ -10,7 +9,7 @@ import style from "./ProblemJudgeSettingsPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer, useDialog, useConfirmUnload } from "@/utils/hooks";
+import { useLocalizer, useDialog, useConfirmNavigation, useNavigationChecked } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import CodeEditor from "@/components/LazyCodeEditor";
 import { HighlightedCodeBox } from "@/components/CodeBox";
@@ -43,7 +42,7 @@ interface ProblemJudgeSettingsPageProps {
 
 let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props => {
   const _ = useLocalizer("problem_judge_settings");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const idString = getProblemIdString(props.problem.meta);
 
@@ -81,7 +80,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   }
 
   function onBackToProblem() {
-    navigation.navigate(getProblemUrl(props.problem.meta, { use: props.idType }));
+    navigation.unconfirmed.navigate(getProblemUrl(props.problem.meta, { use: props.idType }));
   }
 
   async function onSubmit() {
@@ -154,7 +153,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     </>
   );
 
-  useConfirmUnload(() => modified);
+  useConfirmNavigation(modified);
 
   const [newType, setNewType] = useState(props.problem.meta.type as ProblemType);
   const [switchProblemPopupOpen, setSwitchProblemPopupOpen] = useState(false);

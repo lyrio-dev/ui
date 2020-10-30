@@ -7,7 +7,7 @@ import style from "./PermissionManager.module.less";
 
 import {
   useLocalizer,
-  useConfirmUnload,
+  useConfirmNavigation,
   useDialog,
   useAsyncCallbackPending,
   useScreenWidthWithin
@@ -71,7 +71,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   const defaultPermissionLevel = Number(Object.keys(props.permissionsLevelDetails)[0]);
 
   const [modified, setModified] = useState(false);
-  useConfirmUnload(() => modified);
+  useConfirmNavigation(modified);
 
   const [opened, setOpened] = useState(false);
 

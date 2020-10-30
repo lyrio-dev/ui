@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import MarkdownIt from "markdown-it";
-import { useNavigation } from "react-navi";
 import twemoji from "twemoji";
 
 import style from "./MarkdownContent.module.less";
@@ -8,6 +7,7 @@ import style from "./MarkdownContent.module.less";
 import { renderMarkdown } from "./markdown";
 import { renderMath } from "./mathjax";
 import { sanitize } from "./sanitize";
+import { useNavigationChecked } from "@/utils/hooks";
 import { highlight } from "@/utils/CodeHighlighter";
 import { getTwemojiOptions } from "@/components/EmojiRenderer";
 
@@ -113,7 +113,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
     return wrapper.innerHTML;
   }, [props.content, props.noSanitize, props.patcher]);
 
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
   const [wrapperElement, setWrapperElement] = useState<HTMLDivElement>();
   useEffect(() => {
     if (!wrapperElement) return;

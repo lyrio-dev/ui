@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
 import { route } from "navi";
-import { useNavigation, useCurrentRoute } from "react-navi";
+import { useCurrentRoute } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "../common.module.less";
@@ -15,7 +15,8 @@ import {
   useDialog,
   useLocalizer,
   useLoginOrRegisterNavigation,
-  useRecaptcha
+  useRecaptcha,
+  useNavigationChecked
 } from "@/utils/hooks";
 import { isValidUsername } from "@/utils/validators";
 import toast from "@/utils/toast";
@@ -27,7 +28,7 @@ let LoginPage: React.FC = () => {
   const _ = useLocalizer("login");
   const currentRoute = useCurrentRoute();
 
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
   const redirect = () => {
     navigation.navigate(currentRoute.url.query.loginRedirectUrl || "/");
   };

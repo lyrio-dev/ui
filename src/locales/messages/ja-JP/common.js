@@ -45,6 +45,7 @@ module.exports = {
     504: "[TBT] Timeout connecting to the server. Please try again later.",
     unknown: "[TBT] Request error: {text}"
   },
+  confirm_navigation: "[TBT] Be sure to leave this page? Your changes will not be saved.",
   recaptcha: {
     copyright:
       '[TBT] This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">Terms of Service</a> apply.'

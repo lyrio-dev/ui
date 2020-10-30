@@ -15,7 +15,6 @@ import {
   Message,
   Loader
 } from "semantic-ui-react";
-import { useNavigation, Link } from "react-navi";
 import { observer } from "mobx-react";
 import update from "immutability-helper";
 import objectPath from "object-path";
@@ -33,7 +32,10 @@ import {
   useDialog,
   useAsyncCallbackPending,
   useRecaptcha,
-  useScreenWidthWithin
+  useScreenWidthWithin,
+  useNavigationChecked,
+  Link,
+  useConfirmNavigation
 } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
@@ -140,7 +142,7 @@ interface ProblemViewPageProps {
 
 let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const _ = useLocalizer("problem");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const isMobile = useScreenWidthWithin(0, 768);
 
@@ -197,7 +199,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
           })
         );
       } else {
-        navigation.navigate({
+        navigation.unconfirmed.navigate({
           pathname: !Number(setDisplayIdInputValue)
             ? getProblemUrl(props.problem.meta.id, { use: "id" })
             : getProblemUrl(Number(setDisplayIdInputValue), { use: "displayId" }),
@@ -222,7 +224,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     if (requestError) toast.error(requestError(_));
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
-    } else return navigation.refresh();
+    } else return navigation.unconfirmed.refresh();
   });
   // End set public
 
@@ -301,7 +303,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".action.delete_success"));
-      navigation.navigate("/problems");
+      navigation.unconfirmed.navigate("/problems");
     }
   });
   const deleteDialog = useDialog(
@@ -360,7 +362,10 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     setInSubmitView(false);
   }
 
+  const [modified, setModified] = useState(false);
+  useConfirmNavigation(modified);
   function updateSubmissionContent(path: string, value: any) {
+    setModified(true);
     const spec = {};
     objectPath.set(spec, path + ".$set", value);
     setSubmissionContent(submissionContent => update(submissionContent, spec));
@@ -386,7 +391,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     else if (requestError) toast.error(requestError(_));
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
-    } else navigation.navigate(`/submission/${response.submissionId}`);
+    } else navigation.unconfirmed.navigate(`/submission/${response.submissionId}`);
 
     setSubmitPending(false);
   }

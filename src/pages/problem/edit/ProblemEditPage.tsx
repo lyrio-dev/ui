@@ -20,7 +20,6 @@ import {
   Ref
 } from "semantic-ui-react";
 import TextAreaAutoSize from "react-textarea-autosize";
-import { useNavigation } from "react-navi";
 import { v4 as uuid } from "uuid";
 import update from "immutability-helper";
 
@@ -31,7 +30,13 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useLocalizer, useConfirmUnload, useAsyncCallbackPending, useRecaptcha } from "@/utils/hooks";
+import {
+  useLocalizer,
+  useConfirmNavigation,
+  useAsyncCallbackPending,
+  useRecaptcha,
+  useNavigationChecked
+} from "@/utils/hooks";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
@@ -696,7 +701,7 @@ interface ProblemEditPageProps {
 
 let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   const _ = useLocalizer("problem_edit");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const idString = !props.new && getProblemIdString(props.problem.meta);
 
@@ -825,9 +830,9 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   function onBackToProblem() {
     if (props.new) {
-      navigation.navigate("/problems");
+      navigation.unconfirmed.navigate("/problems");
     } else {
-      navigation.navigate({
+      navigation.unconfirmed.navigate({
         pathname: getProblemUrl(props.problem.meta, { use: props.idType }),
         query: props.requestedLocale
           ? {
@@ -1203,7 +1208,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.includes("Modify");
 
-  useConfirmUnload(() => modified);
+  useConfirmNavigation(modified);
 
   return (
     <>

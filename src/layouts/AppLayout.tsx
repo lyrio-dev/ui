@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
-import { Link, useNavigation, useLoadingRoute } from "react-navi";
+import { useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
 
 import "semantic-ui-css/semantic.css";
@@ -15,7 +15,13 @@ import GlobalProgressBar from "@/components/GlobalProgressBar";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useLocalizer, useLoginOrRegisterNavigation, useScreenWidthWithin } from "@/utils/hooks";
+import {
+  useLocalizer,
+  useLoginOrRegisterNavigation,
+  useScreenWidthWithin,
+  useNavigationChecked,
+  Link
+} from "@/utils/hooks";
 import toast from "@/utils/toast";
 import api from "@/api";
 import formatDateTime from "@/utils/formatDateTime";
@@ -23,7 +29,7 @@ import formatDateTime from "@/utils/formatDateTime";
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
 
 let AppLayout: React.FC = props => {
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
   const loadingRoute = useLoadingRoute();
   const _ = useLocalizer("common");
 

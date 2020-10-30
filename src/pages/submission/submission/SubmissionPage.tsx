@@ -3,14 +3,13 @@ import { Table, Icon, Accordion, Grid, SemanticWIDTHS, Button, Popup, Ref, Menu 
 import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
 import { patch } from "jsondiffpatch";
-import { useNavigation } from "react-navi";
 
 import style from "./SubmissionPage.module.less";
 
 import { appState } from "@/appState";
 import api from "@/api";
 import toast from "@/utils/toast";
-import { useLocalizer, useSocket, useScreenWidthWithin } from "@/utils/hooks";
+import { useLocalizer, useSocket, useScreenWidthWithin, useNavigationChecked } from "@/utils/hooks";
 import { SubmissionHeader, SubmissionItem, SubmissionItemExtraRows } from "../componments/SubmissionItem";
 import StatusText from "@/components/StatusText";
 import formatFileSize from "@/utils/formatFileSize";
@@ -195,7 +194,7 @@ interface SubmissionPageProps {
 
 let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const _ = useLocalizer("submission");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} #${props.meta.id}`, "submissions");

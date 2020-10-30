@@ -14,7 +14,6 @@ import {
   Progress,
   Ref
 } from "semantic-ui-react";
-import { Link } from "react-navi";
 import { v4 as uuid } from "uuid";
 import lodashIsEqual from "lodash.isequal";
 import { WritableStream } from "web-streams-polyfill/ponyfill/es6";
@@ -27,7 +26,7 @@ import style from "./ProblemFilesPage.module.less";
 import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useLocalizer, useRecaptcha, useScreenWidthWithin } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer, useRecaptcha, useScreenWidthWithin, Link } from "@/utils/hooks";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";

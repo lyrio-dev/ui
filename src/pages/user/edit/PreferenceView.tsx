@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Form, Header, Checkbox, TextArea, Button, Select, Flag, Icon, Input } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { set as setMobX } from "mobx";
-import { useNavigation } from "react-navi";
 
 import style from "./UserEdit.module.less";
 
 import api from "@/api";
 import { appState, browserDefaultLocale } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
+import { useAsyncCallbackPending, useConfirmNavigation, useLocalizer, useNavigationChecked } from "@/utils/hooks";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
@@ -45,11 +44,14 @@ interface PreferenceViewProps {
 
 const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const _ = useLocalizer("user_edit.preference");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
   }, [appState.locale, props.meta]);
+
+  const [modified, setModified] = useState(false);
+  useConfirmNavigation(modified);
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.locale?.system || null) as Locale);
   const [contentLocale, setContentLocale] = useState<Locale>((props.preference.locale?.content || null) as Locale);
@@ -107,6 +109,8 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.${response.error}`));
     else {
+      setModified(false);
+
       toast.success(_(".success"));
 
       if (appState.currentUser.id === props.meta.id) {
@@ -168,7 +172,9 @@ int main(int argc,char**argv)
         className={style.notFullWidth + " " + style.localeSelect}
         fluid
         value={systemLocale || "DEFAULT"}
-        onChange={(e, { value }) => setSystemLocale((value === "DEFAULT" ? null : value) as Locale)}
+        onChange={(e, { value }) => (
+          setModified(true), setSystemLocale((value === "DEFAULT" ? null : value) as Locale)
+        )}
         options={[
           {
             key: "DEFAULT",
@@ -204,7 +210,9 @@ int main(int argc,char**argv)
         className={style.notFullWidth + " " + style.localeSelect}
         fluid
         value={contentLocale || "DEFAULT"}
-        onChange={(e, { value }) => setContentLocale((value === "DEFAULT" ? null : value) as Locale)}
+        onChange={(e, { value }) => (
+          setModified(true), setContentLocale((value === "DEFAULT" ? null : value) as Locale)
+        )}
         options={[
           {
             key: "DEFAULT",
@@ -247,7 +255,7 @@ int main(int argc,char**argv)
         className={style.notFullWidth + " " + style.fontSelect}
         fluid
         value={codeFontFace}
-        onChange={(e, { value }) => setCodeFontFace(value as string)}
+        onChange={(e, { value }) => (setModified(true), setCodeFontFace(value as string))}
         options={[
           {
             key: "monospace",
@@ -272,7 +280,7 @@ int main(int argc,char**argv)
         step={0.5}
         onChange={(e, { value }) => {
           const x = Number(value);
-          if (x >= 5 && x <= 20) setCodeFontSize(x);
+          if (x >= 5 && x <= 20) setModified(true), setCodeFontSize(x);
         }}
       />
       <Header className={style.header} size="tiny" content={_(".font.code_line_height")} />
@@ -286,14 +294,14 @@ int main(int argc,char**argv)
         step={0.05}
         onChange={(e, { value }) => {
           const x = Number(value);
-          if (x >= 1 && x <= 2) setCodeLineHeight(x);
+          if (x >= 1 && x <= 2) setModified(true), setCodeLineHeight(x);
         }}
       />
       <Checkbox
         className={style.checkbox + " " + style.largeMargin}
         checked={codeFontLigatures}
         label={_(".font.code_font_ligatures")}
-        onChange={(e, { checked }) => !pending && setCodeFontLigatures(checked)}
+        onChange={(e, { checked }) => !pending && (setModified(true), setCodeFontLigatures(checked))}
       />
       <div className={style.notes}>{_(".font.code_font_ligatures_notes")}</div>
       <Header className={style.header} size="tiny" content={_(".font.code_preview")} />
@@ -315,8 +323,8 @@ int main(int argc,char**argv)
           classNameForCompileAndRunOptions={style.halfWidthFieldContainer}
           language={defaultCodeLanguage}
           compileAndRunOptions={defaultCompileAndRunOptions}
-          onUpdateLanguage={setDefaultCodeLanguage}
-          onUpdateCompileAndRunOptions={setDefaultCompileAndRunOptions}
+          onUpdateLanguage={codeLanguage => (setModified(true), setDefaultCodeLanguage(codeLanguage))}
+          onUpdateCompileAndRunOptions={options => (setModified(true), setDefaultCompileAndRunOptions(options))}
         />
       </Form>
       <div className={style.notes}>{_(".code_language.content_notes")}</div>
@@ -329,7 +337,7 @@ int main(int argc,char**argv)
           placeholder={CodeFormatter.defaultOptions}
           value={codeFormatterOptions}
           onChange={(e, { value }: { value: string }) =>
-            value.length < 1024 && !pending && setCodeFormatterOptions(value)
+            value.length < 1024 && !pending && (setModified(true), setCodeFormatterOptions(value))
           }
         />
       </Form>
@@ -344,7 +352,7 @@ int main(int argc,char**argv)
         className={style.checkbox}
         checked={!doNotFormatCodeByDefault}
         label={_(".code_formatter.format_code_by_default")}
-        onChange={(e, { checked }) => !pending && setDoNotFormatCodeByDefault(!checked)}
+        onChange={(e, { checked }) => !pending && (setModified(true), setDoNotFormatCodeByDefault(!checked))}
       />
       <Header
         className={style.header}

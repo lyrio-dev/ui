@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import { Table, Icon, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { useNavigation, Link } from "react-navi";
 
 import style from "./UsersPage.module.less";
 
 import api from "@/api";
 import { UserMeta } from "@/interfaces/UserMeta";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useNavigationChecked, Link } from "@/utils/hooks";
 import { appState } from "@/appState";
 import Pagination from "@/components/Pagination";
 import UserLink from "@/components/UserLink";
@@ -46,7 +45,7 @@ interface UsersPageProps {
 
 let UsersPage: React.FC<UsersPageProps> = props => {
   const _ = useLocalizer("users");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "members");

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Table, Header, Button, Segment, Label, Popup, Icon, Form } from "semantic-ui-react";
-import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "./JudgeMachinePage.module.less";
 
-import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer, useNavigationChecked } from "@/utils/hooks";
 import api from "@/api";
 import toast from "@/utils/toast";
 import { appState } from "@/appState";
@@ -43,7 +42,7 @@ interface JudgeMachinePageProps {
 
 let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
   const _ = useLocalizer("judge_machine");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), null, false);

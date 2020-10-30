@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Table, Icon, Button, Segment, Header, Dropdown, Menu } from "semantic-ui-react";
-import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import { Bar, Line } from "react-chartjs-2";
 import { v4 as uuid } from "uuid";
@@ -9,7 +8,7 @@ import style from "./SubmissionStatisticsPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useNavigationChecked } from "@/utils/hooks";
 import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
 import Pagination from "@/components/Pagination";
 import { getScoreColor } from "@/components/ScoreText";
@@ -59,7 +58,7 @@ interface SubmissionStatisticsPageProps {
 
 let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props => {
   const _ = useLocalizer("submission_statistics");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const idString = getProblemIdString(props.id, { use: props.idType });
 

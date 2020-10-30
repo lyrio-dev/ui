@@ -13,7 +13,6 @@ import {
   Segment,
   TextArea
 } from "semantic-ui-react";
-import { Link, useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import * as timeago from "timeago.js";
 import twemoji from "twemoji";
@@ -31,9 +30,11 @@ import {
   useLocalizer,
   useDialog,
   useFocusWithin,
-  useConfirmUnload,
+  useConfirmNavigation,
   useRecaptcha,
-  useScreenWidthWithin
+  useScreenWidthWithin,
+  useNavigationChecked,
+  Link
 } from "@/utils/hooks";
 import { getDiscussionDisplayTitle } from "../utils";
 import toast from "@/utils/toast";
@@ -499,7 +500,7 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
   const [editorFocused, setEditor] = useFocusWithin();
 
   const [modified, setModified] = useState(false);
-  useConfirmUnload(() => modified);
+  useConfirmNavigation(modified);
 
   const isDiscussion = props.type === "NewDiscussion" || props.type === "UpdateDiscussion";
   const isUpdate = props.type === "UpdateDiscussion" || props.type === "UpdateReply";
@@ -638,7 +639,7 @@ interface DiscussionViewPageProps {
 
 let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
   const _ = useLocalizer("discussion");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(

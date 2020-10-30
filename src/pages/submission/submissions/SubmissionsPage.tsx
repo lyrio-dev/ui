@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Table, Form, Icon, Button, Segment, Header } from "semantic-ui-react";
-import { useNavigation } from "react-navi";
 import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
 import { patch } from "jsondiffpatch";
@@ -9,7 +8,13 @@ import style from "./SubmissionsPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer, useFieldCheckSimple, useSocket, useScreenWidthWithin } from "@/utils/hooks";
+import {
+  useLocalizer,
+  useFieldCheckSimple,
+  useSocket,
+  useScreenWidthWithin,
+  useNavigationChecked
+} from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { CodeLanguage, compileAndRunOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
@@ -72,7 +77,7 @@ interface SubmissionsPageProps {
 
 let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   const _ = useLocalizer("submissions");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "submissions");

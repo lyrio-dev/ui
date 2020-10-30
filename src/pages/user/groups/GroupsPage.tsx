@@ -1,21 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Grid,
-  Header,
-  Button,
-  List,
-  Icon,
-  Segment,
-  Popup,
-  Divider,
-  Table,
-  Accordion,
-  Input,
-  Form,
-  Checkbox
-} from "semantic-ui-react";
+import { Grid, Header, Button, Icon, Segment, Popup, Table, Accordion, Form, Checkbox } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { Link } from "react-navi";
 
 import style from "./GroupsPage.module.less";
 

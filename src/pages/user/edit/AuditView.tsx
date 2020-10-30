@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Header, Button, Form, Segment, Icon, Comment, Accordion, Divider, Label } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import { useNavigation, Link } from "react-navi";
 import replace from "string-replace-to-array";
+import { URLDescriptor } from "navi";
 
 import style from "./UserEdit.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useNavigationChecked, Link } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
 import UserAvatar from "@/components/UserAvatar";
 import UserLink from "@/components/UserLink";
@@ -18,7 +18,6 @@ import fixChineseSpace from "@/utils/fixChineseSpace";
 import Pagination from "@/components/Pagination";
 import { UserMeta } from "@/interfaces/UserMeta";
 import PseudoLink from "@/components/PseudoLink";
-import { URLDescriptor } from "navi";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import { getDiscussionDisplayTitle, getDiscussionUrl } from "@/pages/discussion/utils";
@@ -83,7 +82,7 @@ interface AuditViewProps {
 
 const AuditView: React.FC<AuditViewProps> = props => {
   const _ = useLocalizer("user_edit.audit");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${props.response.meta.username}`, null, false);

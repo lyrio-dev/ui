@@ -9,7 +9,7 @@ import style from "./UserEdit.module.less";
 import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending, useConfirmNavigation } from "@/utils/hooks";
 import UserAvatar from "@/components/UserAvatar";
 import { RouteError } from "@/AppRouter";
 import { onEnterPress } from "@/utils/onEnterPress";
@@ -46,6 +46,9 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
   useEffect(() => {
     appState.enterNewPage(`${_(`.title`)} - ${titleUsername}`, null, false);
   }, [appState.locale, titleUsername]);
+
+  const [modified, setModified] = useState(false);
+  useConfirmNavigation(modified);
 
   const [username, setUsername] = useState(props.meta.username);
   const [email, setEmail] = useState(props.meta.email);
@@ -157,6 +160,8 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
       if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
       else {
+        setModified(false);
+
         toast.success(_("user_edit.preference.success"));
         setTitleUsername(username);
 
@@ -183,7 +188,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             readOnly={!(hasPrivilege || allowUserChangeUsername)}
             fluid
             value={username}
-            onChange={(e, { value }) => !pending && value.length < 24 && setUsername(value)}
+            onChange={(e, { value }) => !pending && value.length < 24 && (setModified(true), setUsername(value))}
           />
         </Ref>
         {!(allowUserChangeUsername && props.meta.id === appState.currentUser.id) && (
@@ -195,21 +200,21 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             readOnly={!hasPrivilege}
             fluid
             value={email}
-            onChange={(e, { value }) => !pending && setEmail(value)}
+            onChange={(e, { value }) => !pending && (setModified(true), setEmail(value))}
           />
         </Ref>
         <Checkbox
           className={style.checkbox}
           checked={publicEmail}
           label={_(".public_email")}
-          onChange={(e, { checked }) => !pending && setPublicEmail(checked)}
+          onChange={(e, { checked }) => !pending && (setModified(true), setPublicEmail(checked))}
         />
         <div className={style.notes}>{_(!hasPrivilege ? ".email_notes" : ".email_notes_admin")}</div>
         <Header className={style.header} size="tiny" content={_(".nickname")} />
         <Input
           fluid
           value={nickname}
-          onChange={(e, { value }) => !pending && value.length < 24 && setNickname(value)}
+          onChange={(e, { value }) => !pending && value.length < 24 && (setModified(true), setNickname(value))}
         />
         <Header className={style.header} size="tiny" content={_(".bio")} />
         <Form>
@@ -217,7 +222,9 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             className={style.textarea}
             placeholder={_(".bio_placeholder")}
             value={bio}
-            onChange={(e, { value }) => (value as string).length <= 190 && !pending && setBio(value as string)}
+            onChange={(e, { value }) =>
+              (value as string).length <= 190 && !pending && (setModified(true), setBio(value as string))
+            }
           />
         </Form>
         {bio.length >= 190 - 10 && <div className={style.notes}>{bio.length}/190</div>}
@@ -226,14 +233,14 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           fluid
           placeholder={_(".organization_placeholder")}
           value={organization}
-          onChange={(e, { value }) => value.length < 80 && !pending && setOrganization(value)}
+          onChange={(e, { value }) => value.length < 80 && !pending && (setModified(true), setOrganization(value))}
         />
         <Header className={style.header} size="tiny" content={_(".location")} />
         <Input
           fluid
           placeholder={_(".location_placeholder")}
           value={location}
-          onChange={(e, { value }) => value.length < 80 && !pending && setLocation(value)}
+          onChange={(e, { value }) => value.length < 80 && !pending && (setModified(true), setLocation(value))}
         />
         <Header className={style.header} size="tiny" content={_(".url")} />
         <Ref innerRef={refUrl}>
@@ -243,7 +250,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             value={url}
             error={urlInvalid}
             onBlur={checkUrl}
-            onChange={(e, { value }) => value.length < 80 && !pending && setUrl(value.trim())}
+            onChange={(e, { value }) => value.length < 80 && !pending && (setModified(true), setUrl(value.trim()))}
           />
         </Ref>
         <Header className={style.header} size="tiny" content={_(".qq")} />
@@ -251,7 +258,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           fluid
           placeholder={_(".qq_placeholder")}
           value={qq}
-          onChange={(e, { value }) => value.length < 30 && !pending && setQq(value.trim())}
+          onChange={(e, { value }) => value.length < 30 && !pending && (setModified(true), setQq(value.trim()))}
         />
         {qq && (
           <div className={style.notes}>
@@ -267,7 +274,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           fluid
           placeholder={_(".telegram_placeholder")}
           value={telegram}
-          onChange={(e, { value }) => value.length < 30 && !pending && setTelegram(value.trim())}
+          onChange={(e, { value }) => value.length < 30 && !pending && (setModified(true), setTelegram(value.trim()))}
         />
         {telegram && (
           <div className={style.notes}>
@@ -283,7 +290,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           fluid
           placeholder={_(".github_placeholder")}
           value={github}
-          onChange={(e, { value }) => value.length < 30 && !pending && setGithub(value.trim())}
+          onChange={(e, { value }) => value.length < 30 && !pending && (setModified(true), setGithub(value.trim()))}
         />
         {github && (
           <div className={style.notes}>
@@ -309,21 +316,21 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           <List.Item>
             <Radio
               checked={avatarType === AvatarType.Gravatar}
-              onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.Gravatar)}
+              onChange={(e, { checked }) => checked && (setModified(true), changeAvatarType(AvatarType.Gravatar))}
               label={_(".avatar.gravatar.name")}
             />
           </List.Item>
           <List.Item>
             <Radio
               checked={avatarType === AvatarType.QQ}
-              onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.QQ)}
+              onChange={(e, { checked }) => checked && (setModified(true), changeAvatarType(AvatarType.QQ))}
               label={_(".avatar.qq.name")}
             />
           </List.Item>
           <List.Item>
             <Radio
               checked={avatarType === AvatarType.GitHub}
-              onChange={(e, { checked }) => checked && changeAvatarType(AvatarType.GitHub)}
+              onChange={(e, { checked }) => checked && (setModified(true), changeAvatarType(AvatarType.GitHub))}
               label={_(".avatar.github.name")}
             />
           </List.Item>
@@ -340,7 +347,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
           }
           error={avatarError}
           value={avatarKeyValue}
-          onChange={(e, { value }) => value.length <= 40 && setAvatarKeyValue(value.trim())}
+          onChange={(e, { value }) => value.length <= 40 && (setModified(true), setAvatarKeyValue(value.trim()))}
           onBlur={applyAvatarKey}
           onKeyPress={onEnterPress(() => applyAvatarKey())}
         />

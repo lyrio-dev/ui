@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Header } from "semantic-ui-react";
-import { useNavigation } from "react-navi";
+import { Breadcrumb } from "semantic-ui-react";
 import { v4 as uuid } from "uuid";
 import { observer } from "mobx-react";
 
@@ -9,7 +8,7 @@ import style from "./DiscussionEditPage.module.less";
 import { defineRoute, RouteError } from "@/AppRouter";
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer, useRecaptcha } from "@/utils/hooks";
+import { useLocalizer, useRecaptcha, useNavigationChecked } from "@/utils/hooks";
 import { DiscussionEditor } from "../view/DiscussionViewPage";
 import { getBreadcrumb } from "../discussions/DiscussionsPage";
 import toast from "@/utils/toast";
@@ -25,7 +24,7 @@ interface DiscussionEditPageProps {
 
 let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
   const _ = useLocalizer("discussion_edit");
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   useEffect(() => {
     appState.enterNewPage(props.discussion ? `${_(".title_update")} #${props.discussion.meta.id}` : _(".title_new"));

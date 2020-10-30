@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-navi";
 
 import { UserMeta } from "@/interfaces/UserMeta";
+import { Link } from "@/utils/hooks";
 
 interface UserLinkProps {
   user: UserMeta;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Breadcrumb, Button, Header, Icon, Label, Menu, Segment, Table } from "semantic-ui-react";
-import { Link, useNavigation } from "react-navi";
 import { URLDescriptor } from "navi";
 import { observer } from "mobx-react";
 import { v4 as uuid } from "uuid";
@@ -10,7 +9,7 @@ import style from "./DiscussionsPage.module.less";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
 import api from "@/api";
-import { useLocalizer, useScreenWidthWithin } from "@/utils/hooks";
+import { useLocalizer, useScreenWidthWithin, useNavigationChecked, Link } from "@/utils/hooks";
 import UserSearch from "@/components/UserSearch";
 import Pagination from "@/components/Pagination";
 import PreviewSearch from "@/components/PreviewSearch";
@@ -203,7 +202,7 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
     appState.enterNewPage(_(".title"), "discussion");
   }, [appState.locale]);
 
-  const navigation = useNavigation();
+  const navigation = useNavigationChecked();
 
   const isMobileOrPad = useScreenWidthWithin(0, 1024);
   const isVeryNarrowScreen = useScreenWidthWithin(0, 640);
