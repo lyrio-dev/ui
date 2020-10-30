@@ -8,7 +8,13 @@ export interface ApiResponse<T> {
   response?: T;
 }
 
-async function request<T>(path: string, method: "get" | "post", params?: any, body?: any): Promise<ApiResponse<T>> {
+async function request<T>(
+  path: string,
+  method: "get" | "post",
+  params?: any,
+  body?: any,
+  recaptchaToken?: string
+): Promise<ApiResponse<T>> {
   let response: any;
   try {
     response = await axios(window.apiEndpoint + "api/" + path, {
@@ -17,7 +23,8 @@ async function request<T>(path: string, method: "get" | "post", params?: any, bo
       data: body && JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
-        Authorization: appState.token && `Bearer ${appState.token}`
+        Authorization: appState.token && `Bearer ${appState.token}`,
+        ...(recaptchaToken ? { "X-Recaptcha-Token": recaptchaToken } : {})
       },
       validateStatus: () => true
     });
@@ -34,6 +41,11 @@ async function request<T>(path: string, method: "get" | "post", params?: any, bo
     } catch (e) {
       console.log("response:", response);
     }
+
+    if (response.status === 401)
+      return {
+        requestError: makeToBeLocalizedText("common.request_error.recaptcha_failed")
+      };
 
     if ([400, 500, 502, 503, 504].includes(response.status))
       return {
@@ -55,9 +67,18 @@ async function request<T>(path: string, method: "get" | "post", params?: any, bo
 import * as api from "./api-generated";
 export default api;
 
-export function createPostApi<BodyType, ResponseType>(path: string) {
-  return async (requestBody: BodyType): Promise<ApiResponse<ResponseType>> => {
-    return await request<ResponseType>(path, "post", null, requestBody);
+export function createPostApi<BodyType, ResponseType>(
+  path: string,
+  recaptcha: true
+): (requestBody: BodyType, recaptchaTokenPromise: Promise<string>) => Promise<ApiResponse<ResponseType>>;
+export function createPostApi<BodyType, ResponseType>(
+  path: string,
+  recaptcha: false
+): (requestBody: BodyType) => Promise<ApiResponse<ResponseType>>;
+
+export function createPostApi<BodyType, ResponseType>(path: string, recaptcha: boolean) {
+  return async (requestBody: BodyType, recaptchaTokenPromise?: Promise<string>): Promise<ApiResponse<ResponseType>> => {
+    return await request<ResponseType>(path, "post", null, requestBody, await recaptchaTokenPromise);
   };
 }
 

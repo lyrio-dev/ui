@@ -9,3 +9,4 @@ export * from "./useBoundingRect";
 export * from "./useScreenWidthWithin";
 export * from "./useAsyncCallbackPending";
 export * from "./useFocusWithin";
+export * from "./useRecaptcha";

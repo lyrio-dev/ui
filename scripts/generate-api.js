@@ -77,7 +77,8 @@ function normalizeModuleName(moduleName, forFilename) {
         type: "post",
         path,
         body,
-        response
+        response,
+        recaptcha: (operation.post.description || "").startsWith("Recaptcha required.")
       }
 
       if (body) tags[tag].schemas.add(body);
@@ -103,7 +104,7 @@ function normalizeModuleName(moduleName, forFilename) {
       if (operation.type === "post") {
         const bodyType = operation.body ? `ApiTypes.${operation.body}` : "void",
               responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
-        code += `export const ${functionName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)});\n`;
+        code += `export const ${functionName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)}, ${operation.recaptcha});\n`;
       } else {
         const parameterTypes = operation.parameters
                             && operation.parameters.map(

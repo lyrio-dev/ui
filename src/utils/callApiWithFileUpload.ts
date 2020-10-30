@@ -18,23 +18,27 @@ export async function callApiWithFileUpload<
   Request extends { uploadInfo?: ApiTypes.FileUploadInfoDto },
   Response extends { error?: string; signedUploadRequest?: ApiTypes.SignedFileUploadRequestDto }
 >(
-  api: (request: Request) => Promise<ApiResponse<Response>>,
+  api: (request: Request, recaptchaTokenPromise: Promise<string>) => Promise<ApiResponse<Response>>,
   request: Omit<Request, "uploadInfo">,
+  getRecaptchaToken: () => Promise<string>,
   file: Blob,
   progressCallback?: (progress: FileUploadApiProgress) => void,
   cancelFunctionReceiver?: (cancelFunction: () => void) => void
 ): Promise<ApiResponseWithUploadResult<Response>> {
   if (progressCallback) progressCallback({ status: "Requesting", progress: 0 });
 
-  const result = await api({
-    ...request,
-    uploadInfo: file
-      ? {
-          size: file.size,
-          uuid: null
-        }
-      : null
-  } as Request);
+  const result = await api(
+    {
+      ...request,
+      uploadInfo: file
+        ? {
+            size: file.size,
+            uuid: null
+          }
+        : null
+    } as Request,
+    getRecaptchaToken()
+  );
   if (result.requestError) return result;
 
   if (result.response.signedUploadRequest) {
@@ -79,13 +83,16 @@ export async function callApiWithFileUpload<
 
     if (progressCallback) progressCallback({ status: "Requesting", progress: 0 });
 
-    return await api({
-      ...request,
-      uploadInfo: {
-        size: file.size,
-        uuid: result.response.signedUploadRequest.uuid
-      }
-    } as Request);
+    return await api(
+      {
+        ...request,
+        uploadInfo: {
+          size: file.size,
+          uuid: result.response.signedUploadRequest.uuid
+        }
+      } as Request,
+      getRecaptchaToken()
+    );
   }
   // Upload is not required
   else return result;

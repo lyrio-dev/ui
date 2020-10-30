@@ -9,26 +9,31 @@ export const searchGroup = createGetApi<{ query: string; wildcard?: string }, Ap
   "group/searchGroup"
 );
 export const createGroup = createPostApi<ApiTypes.CreateGroupRequestDto, ApiTypes.CreateGroupResponseDto>(
-  "group/createGroup"
+  "group/createGroup",
+  false
 );
 export const deleteGroup = createPostApi<ApiTypes.DeleteGroupRequestDto, ApiTypes.DeleteGroupResponseDto>(
-  "group/deleteGroup"
+  "group/deleteGroup",
+  false
 );
 export const renameGroup = createPostApi<ApiTypes.RenameGroupRequestDto, ApiTypes.RenameGroupResponseDto>(
-  "group/renameGroup"
+  "group/renameGroup",
+  false
 );
 export const addMember = createPostApi<ApiTypes.AddUserToGroupRequestDto, ApiTypes.AddUserToGroupResponseDto>(
-  "group/addMember"
+  "group/addMember",
+  false
 );
 export const removeMember = createPostApi<
   ApiTypes.RemoveUserFromGroupRequestDto,
   ApiTypes.RemoveUserFromGroupResponseDto
->("group/removeMember");
+>("group/removeMember", false);
 export const setGroupAdmin = createPostApi<ApiTypes.SetGroupAdminRequestDto, ApiTypes.SetGroupAdminResponseDto>(
-  "group/setGroupAdmin"
+  "group/setGroupAdmin",
+  false
 );
 export const getGroupList = createGetApi<void, ApiTypes.GetGroupListResponseDto>("group/getGroupList");
 export const getGroupMemberList = createPostApi<
   ApiTypes.GetGroupMemberListRequestDto,
   ApiTypes.GetGroupMemberListResponseDto
->("group/getGroupMemberList");
+>("group/getGroupMemberList", false);

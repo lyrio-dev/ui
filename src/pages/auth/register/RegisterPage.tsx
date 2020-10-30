@@ -10,7 +10,7 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import api from "@/api";
-import { useLocalizer, useFieldCheck, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useLocalizer, useFieldCheck, useLoginOrRegisterNavigation, useRecaptcha } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
@@ -35,6 +35,8 @@ let RegisterPage: React.FC = () => {
   useEffect(() => {
     appState.enterNewPage(_(".title"));
   }, [appState.locale]);
+
+  const recaptcha = useRecaptcha();
 
   const [successMessage, setSuccessMessage] = useState<string>(null);
 
@@ -146,12 +148,15 @@ let RegisterPage: React.FC = () => {
       refRetypePasswordInput.current.focus();
       refRetypePasswordInput.current.select();
     } else {
-      const { requestError, response } = await api.auth.register({
-        username: username,
-        email: email,
-        emailVerificationCode: emailVerificationCode,
-        password: password
-      });
+      const { requestError, response } = await api.auth.register(
+        {
+          username: username,
+          email: email,
+          emailVerificationCode: emailVerificationCode,
+          password: password
+        },
+        recaptcha("Register")
+      );
 
       if (requestError) toast.error(requestError(_));
       else if (response.error) {
@@ -216,11 +221,14 @@ let RegisterPage: React.FC = () => {
       refEmailInput.current.focus();
       refEmailInput.current.select();
     } else {
-      const { requestError, response } = await api.auth.sendEmailVerifactionCode({
-        email: email,
-        type: "Register",
-        locale: appState.locale
-      });
+      const { requestError, response } = await api.auth.sendEmailVerifactionCode(
+        {
+          email: email,
+          type: "Register",
+          locale: appState.locale
+        },
+        recaptcha("SendEmailVerifactionCode_Register")
+      );
       if (requestError) toast.error(requestError(_));
       else if (response.error) toast.error(_(`.errors.${response.error}`, { errorMessage: response.errorMessage }));
       else {
@@ -385,6 +393,8 @@ let RegisterPage: React.FC = () => {
                 })}
               />
             </Ref>
+
+            {recaptcha.getCopyrightMessage(style.recaptchaCopyright)}
 
             <Button
               className={successMessage && style.successButton}

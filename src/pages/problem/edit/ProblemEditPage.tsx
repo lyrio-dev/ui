@@ -31,7 +31,7 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useLocalizer, useConfirmUnload, useAsyncCallbackPending } from "@/utils/hooks";
+import { useLocalizer, useConfirmUnload, useAsyncCallbackPending, useRecaptcha } from "@/utils/hooks";
 import { observer } from "mobx-react";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { ProblemType } from "@/interfaces/ProblemType";
@@ -704,6 +704,8 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     appState.enterNewPage(props.new ? `${_(".title_new")}` : `${_(".title_edit")} ${idString}`, "problem_set", false);
   }, [appState.locale, props.new, props.problem]);
 
+  const recaptcha = useRecaptcha();
+
   const [localizedContents, setLocalizedContents] = useState(
     (() => {
       const converted: Partial<Record<Locale, LocalizedContent>> = {};
@@ -785,14 +787,17 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     }));
 
     if (props.new) {
-      const { requestError, response } = await api.problem.createProblem({
-        type: newProblemType,
-        statement: {
-          localizedContents: localizedContentsPayload,
-          samples: samplesPayload,
-          problemTagIds: tagIds
-        }
-      });
+      const { requestError, response } = await api.problem.createProblem(
+        {
+          type: newProblemType,
+          statement: {
+            localizedContents: localizedContentsPayload,
+            samples: samplesPayload,
+            problemTagIds: tagIds
+          }
+        },
+        recaptcha("CreateProblem")
+      );
 
       if (requestError) toast.error(requestError(_));
       else if (response.error) {

@@ -3,12 +3,14 @@ import { mount, lazy, withView, route, Resolvable, redirect, Matcher, map } from
 import { Router, View } from "react-navi";
 import { IntlProvider } from "react-intl";
 import { observer } from "mobx-react";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 import AppLayout from "./layouts/AppLayout";
 import ErrorPage, { ErrorPageProps } from "./pages/error/ErrorPage";
 import getRoute from "./utils/getRoute";
 import { appState } from "./appState";
 import { loadLocaleData, ToBeLocalizedText } from "./locales";
+import localeMeta from "./locales/meta";
 
 export class RouteError implements ErrorPageProps {
   constructor(
@@ -72,7 +74,7 @@ const AppRouter: React.FC = () => {
         async () => {
           const localeHyphen = appState.locale.replace("_", "-");
           const localeData = await loadLocaleData(localeHyphen);
-          return (
+          const elements = (
             <IntlProvider locale={localeHyphen} messages={localeData}>
               <AppLayout key={localeHyphen}>
                 <ErrorBoundary>
@@ -80,6 +82,18 @@ const AppRouter: React.FC = () => {
                 </ErrorBoundary>
               </AppLayout>
             </IntlProvider>
+          );
+
+          return appState.serverPreference.security.recaptchaEnabled ? (
+            <GoogleReCaptchaProvider
+              reCaptchaKey={appState.serverPreference.security.recaptchaKey}
+              language={localeMeta[appState.locale].recaptchaLanguageCode}
+              useRecaptchaNet
+            >
+              {elements}
+            </GoogleReCaptchaProvider>
+          ) : (
+            elements
           );
         },
         mount({

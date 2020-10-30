@@ -10,8 +10,14 @@ import AppLogo from "@/assets/syzoj-applogo.svg";
 import { appState } from "@/appState";
 
 import api from "@/api";
-import { useAsyncCallbackPending, useDialog, useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
-import { isValidUsername, isValidPassword } from "@/utils/validators";
+import {
+  useAsyncCallbackPending,
+  useDialog,
+  useLocalizer,
+  useLoginOrRegisterNavigation,
+  useRecaptcha
+} from "@/utils/hooks";
+import { isValidUsername } from "@/utils/validators";
 import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
@@ -35,6 +41,8 @@ let LoginPage: React.FC = () => {
   useEffect(() => {
     appState.enterNewPage(_(".title"));
   }, [appState.locale]);
+
+  const recaptcha = useRecaptcha();
 
   const [formError, setFormError] = useState({ type: null, message: null });
   const setError = (type: "username" | "password", message: string) => setFormError({ type, message });
@@ -184,7 +192,7 @@ let LoginPage: React.FC = () => {
       setError("password", _(".empty_password"));
     } else {
       // Send login request
-      const { requestError, response } = await api.auth.login({ username, password });
+      const { requestError, response } = await api.auth.login({ username, password }, recaptcha("Login"));
 
       if (requestError) toast.error(requestError(_));
       else if (response.error && response.error !== "USER_NOT_MIGRATED") handleCommonError(response.error);
@@ -269,6 +277,8 @@ let LoginPage: React.FC = () => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               />
             </Ref>
+
+            {recaptcha.getCopyrightMessage(style.recaptchaCopyright)}
 
             <Button
               className={successMessage && style.successButton}

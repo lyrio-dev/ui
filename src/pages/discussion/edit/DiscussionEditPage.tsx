@@ -9,7 +9,7 @@ import style from "./DiscussionEditPage.module.less";
 import { defineRoute, RouteError } from "@/AppRouter";
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useRecaptcha } from "@/utils/hooks";
 import { DiscussionEditor } from "../view/DiscussionViewPage";
 import { getBreadcrumb } from "../discussions/DiscussionsPage";
 import toast from "@/utils/toast";
@@ -31,6 +31,8 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
     appState.enterNewPage(props.discussion ? `${_(".title_update")} #${props.discussion.meta.id}` : _(".title_new"));
   }, [appState.locale, props.discussion]);
 
+  const recaptcha = useRecaptcha();
+
   const [title, setTitle] = useState(props.discussion ? props.discussion.meta.title : "");
   const [content, setContent] = useState(props.discussion ? props.discussion.content : "");
 
@@ -41,11 +43,14 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
           title,
           content
         })
-      : await api.discussion.createDiscussion({
-          problemId: props.problem?.meta?.id,
-          title,
-          content
-        });
+      : await api.discussion.createDiscussion(
+          {
+            problemId: props.problem?.meta?.id,
+            title,
+            content
+          },
+          recaptcha("CreateDiscussion")
+        );
 
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));

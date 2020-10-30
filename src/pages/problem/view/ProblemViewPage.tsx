@@ -27,7 +27,13 @@ import api from "@/api";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useLocalizer, useLoginOrRegisterNavigation, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
+import {
+  useLocalizer,
+  useLoginOrRegisterNavigation,
+  useDialog,
+  useAsyncCallbackPending,
+  useRecaptcha
+} from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
 import { isValidDisplayId } from "@/utils/validators";
@@ -148,6 +154,8 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   useEffect(() => {
     appState.enterNewPage(`${all} - ${_(".title")}`, "problem_set");
   }, [appState.locale, props.problem]);
+
+  const recaptcha = useRecaptcha();
 
   // Begin toggle tags
   const [showTags, setShowTags] = useState(appState.showTagsInProblemSet);
@@ -370,6 +378,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         problemId: props.problem.meta.id,
         content: submissionContent
       },
+      () => recaptcha("SubmitProblem"),
       onGetSubmitFile ? await onGetSubmitFile() : null
     );
 

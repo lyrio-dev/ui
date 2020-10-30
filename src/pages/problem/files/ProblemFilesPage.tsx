@@ -27,7 +27,7 @@ import style from "./ProblemFilesPage.module.less";
 import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer, useRecaptcha } from "@/utils/hooks";
 import getFileIcon from "@/utils/getFileIcon";
 import formatFileSize from "@/utils/formatFileSize";
 import downloadFile from "@/utils/downloadFile";
@@ -666,6 +666,8 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");
   }, [appState.locale, props.problem]);
 
+  const recaptcha = useRecaptcha();
+
   function transformResponseToFileTableItems(fileList: ApiTypes.ProblemFileDto[]): FileTableItem[] {
     return fileList.map(file => ({
       uuid: uuid(),
@@ -789,6 +791,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
             type,
             filename: item.filename
           },
+          () => recaptcha("AddProblemFile"),
           item.upload.file,
           progress =>
             updateFileUploadInfo(item.uuid, {

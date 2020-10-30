@@ -38,10 +38,15 @@ module.exports = {
   },
   request_error: {
     400: "无效的请求。",
+    401: "验证失败，请刷新后重试。",
     500: "服务器错误，请稍后重试。",
     502: "无法连接到服务器，请稍后重试。",
     503: "无法连接到服务器，请稍后重试。",
     504: "连接服务器超时，请稍后重试。",
     unknown: "请求出错：{text}"
+  },
+  recaptcha: {
+    copyright:
+      '本网站受 reCAPTCHA 和 Google 的保护，适用<a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">隐私政策</a>和<a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">服务条款</a>。'
   }
 };

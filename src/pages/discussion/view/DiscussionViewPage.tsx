@@ -26,7 +26,14 @@ import LoadMoreBackground from "./LoadMoreBackground.svg";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
 import api from "@/api";
-import { useAsyncCallbackPending, useLocalizer, useDialog, useFocusWithin, useConfirmUnload } from "@/utils/hooks";
+import {
+  useAsyncCallbackPending,
+  useLocalizer,
+  useDialog,
+  useFocusWithin,
+  useConfirmUnload,
+  useRecaptcha
+} from "@/utils/hooks";
 import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { getDiscussionDisplayTitle } from "../utils";
 import toast from "@/utils/toast";
@@ -648,6 +655,8 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     return () => document.head.removeChild(styleElement);
   });
 
+  const recaptcha = useRecaptcha();
+
   const [items, setItems] = useState<ReplyOrLoadMore[]>(
     (() => {
       const head = props.response.repliesHead.map<ReplyOrLoadMore>(reply => ({
@@ -877,10 +886,13 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
 
   const [newReplyContent, setNewReplyContent] = useState("");
   async function onAddNewReply(content: string) {
-    const { requestError, response } = await api.discussion.createDiscussionReply({
-      discussionId: discussion.meta.id,
-      content: content
-    });
+    const { requestError, response } = await api.discussion.createDiscussionReply(
+      {
+        discussionId: discussion.meta.id,
+        content: content
+      },
+      recaptcha("CreateDiscussionReply")
+    );
 
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`.errors.${response.error}`));

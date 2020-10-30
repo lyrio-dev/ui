@@ -521,6 +521,8 @@ declare namespace ApiTypes {
     discussionRepliesMore: number;
   }
   export interface PreferenceConfigSecurity {
+    recaptchaEnabled: boolean;
+    recaptchaKey: string;
     requireEmailVerification: boolean;
     allowUserChangeUsername: boolean;
     allowEveryoneCreateProblem: boolean;
