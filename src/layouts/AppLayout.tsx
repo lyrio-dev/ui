@@ -15,10 +15,9 @@ import GlobalProgressBar from "@/components/GlobalProgressBar";
 import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import { appState } from "@/appState";
-import { useLocalizer, useLoginOrRegisterNavigation } from "@/utils/hooks";
+import { useLocalizer, useLoginOrRegisterNavigation, useScreenWidthWithin } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import api from "@/api";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import formatDateTime from "@/utils/formatDateTime";
 
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";

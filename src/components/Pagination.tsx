@@ -3,7 +3,7 @@ import { Pagination as UIPagination, Icon } from "semantic-ui-react";
 import { observer } from "mobx-react";
 
 import style from "./Pagination.module.less";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { useScreenWidthWithin } from "@/utils/hooks";
 
 interface PaginationProps {
   totalCount: number;

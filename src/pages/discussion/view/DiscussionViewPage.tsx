@@ -32,9 +32,9 @@ import {
   useDialog,
   useFocusWithin,
   useConfirmUnload,
-  useRecaptcha
+  useRecaptcha,
+  useScreenWidthWithin
 } from "@/utils/hooks";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { getDiscussionDisplayTitle } from "../utils";
 import toast from "@/utils/toast";
 import UserLink from "@/components/UserLink";

@@ -32,7 +32,8 @@ import {
   useLoginOrRegisterNavigation,
   useDialog,
   useAsyncCallbackPending,
-  useRecaptcha
+  useRecaptcha,
+  useScreenWidthWithin
 } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import copyToClipboard from "@/utils/copyToClipboard";
@@ -44,7 +45,6 @@ import { StatusIcon } from "@/components/StatusText";
 import { ProblemType } from "@/interfaces/ProblemType";
 import { ProblemTypeView } from "./common/interface";
 import MarkdownContent, { MarkdownContentPatcher } from "@/markdown/MarkdownContent";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { callApiWithFileUpload } from "@/utils/callApiWithFileUpload";
 import { getProblemDisplayName, getProblemUrl } from "../utils";
 import { onEnterPress } from "@/utils/onEnterPress";

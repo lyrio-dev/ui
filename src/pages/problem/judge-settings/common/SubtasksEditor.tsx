@@ -6,10 +6,9 @@ import update, { Spec } from "immutability-helper";
 
 import style from "./SubtasksEditor.module.less";
 
-import { useLocalizer, useDialog } from "@/utils/hooks";
+import { useLocalizer, useDialog, useScreenWidthWithin } from "@/utils/hooks";
 import TestDataFileSelector from "./TestDataFileSelector";
 import { JudgeInfoProcessor, EditorComponentProps } from "./interface";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { detectTestcasesByMatchingInputToOutput, detectTestcasesByMatchingOutputToInput } from "./detect-testcases";
 
 interface Testcase {

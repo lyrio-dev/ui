@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import style from "./HorizontalScroll.module.less";
-import { useBoundingRect } from "@/utils/hooks/useBoundingRect";
+import { useBoundingRect } from "@/utils/hooks";
 
 interface HorizontalScrollProps {
   className?: string;

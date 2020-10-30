@@ -9,7 +9,7 @@ import style from "./SubmissionsPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer, useFieldCheckSimple, useSocket } from "@/utils/hooks";
+import { useLocalizer, useFieldCheckSimple, useSocket, useScreenWidthWithin } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { CodeLanguage, compileAndRunOptions } from "@/interfaces/CodeLanguage";
 import { SubmissionStatus } from "@/interfaces/SubmissionStatus";
@@ -23,7 +23,6 @@ import {
 } from "../componments/SubmissionItem";
 import SimplePagination from "@/components/SimplePagination";
 import { defineRoute, RouteError } from "@/AppRouter";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
 
 const SUBMISSIONS_PER_PAGE = appState.serverPreference.pagination.submissions;

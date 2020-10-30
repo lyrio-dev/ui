@@ -7,16 +7,14 @@ import style from "./ProblemSetPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
+import { useAsyncCallbackPending, useLocalizer, useScreenWidthWithin } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { sortTags, sortTagColors } from "../problemTag";
-
 import Pagination from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { StatusIcon } from "@/components/StatusText";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import ProblemSearch from "@/components/ProblemSearch";
 import { getProblemDisplayName, getProblemIdString, getProblemUrl } from "../utils";
 import { makeToBeLocalizedText } from "@/locales";

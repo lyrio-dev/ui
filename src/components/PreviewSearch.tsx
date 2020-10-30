@@ -4,7 +4,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import style from "./PreviewSearch.module.less";
 
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
+import { useScreenWidthWithin } from "@/utils/hooks";
 import { onEnterPress } from "@/utils/onEnterPress";
 
 interface PreviewSearchProps<T> {

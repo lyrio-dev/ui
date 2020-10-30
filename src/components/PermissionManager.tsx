@@ -5,14 +5,19 @@ import update from "immutability-helper";
 
 import style from "./PermissionManager.module.less";
 
-import { useLocalizer, useConfirmUnload, useDialog, useAsyncCallbackPending } from "@/utils/hooks";
+import {
+  useLocalizer,
+  useConfirmUnload,
+  useDialog,
+  useAsyncCallbackPending,
+  useScreenWidthWithin
+} from "@/utils/hooks";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { GroupMeta } from "@/interfaces/GroupMeta";
 import api from "@/api";
 import toast from "@/utils/toast";
 import TableCellSearchDropdown from "./TableCellSearchDropdown";
 import UserAvatar from "./UserAvatar";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 
 type PermissionLevelDetails = Record<number, { title: string /* description: string; */ }>;
 

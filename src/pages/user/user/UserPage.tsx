@@ -8,11 +8,10 @@ import style from "./UserPage.module.less";
 
 import { appState } from "@/appState";
 import api from "@/api";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useScreenWidthWithin } from "@/utils/hooks";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import UserAvatar from "@/components/UserAvatar";
 import { defineRoute, RouteError } from "@/AppRouter";
-import { useScreenWidthWithin } from "@/utils/hooks/useScreenWidthWithin";
 import { isValidUsername } from "@/utils/validators";
 import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
