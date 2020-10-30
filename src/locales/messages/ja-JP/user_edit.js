@@ -172,7 +172,7 @@ module.exports = {
       },
       ManageProblem: {
         name: "[TBT] Manage problem",
-        notes: "[TBT] View, edit all problems and submissions, set problem public or not and delete problems."
+        notes: "[TBT] View, edit all problems and submissions, manage problems' permissions and delete problems."
       },
       ManageContest: {
         name: "[TBT] Manage contest",
@@ -180,7 +180,8 @@ module.exports = {
       },
       ManageDiscussion: {
         name: "[TBT] Manage discussion",
-        notes: "[TBT] Placeholder."
+        notes:
+          "[TBT] View, edit all discussions and replies, manage discussions' permissions and delete discussions or replies."
       }
     },
     admin_only: "[TBT] Only admins can change user's privileges.",

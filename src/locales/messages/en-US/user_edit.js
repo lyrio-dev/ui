@@ -170,7 +170,7 @@ module.exports = {
       },
       ManageProblem: {
         name: "Manage problem",
-        notes: "View, edit all problems and submissions, set problem public or not and delete problems."
+        notes: "View, edit all problems and submissions, manage problems' permissions and delete problems."
       },
       ManageContest: {
         name: "Manage contest",
@@ -178,7 +178,8 @@ module.exports = {
       },
       ManageDiscussion: {
         name: "Manage discussion",
-        notes: "Placeholder."
+        notes:
+          "View, edit all discussions and replies, manage discussions' permissions and delete discussions or replies."
       }
     },
     admin_only: "Only admins can change user's privileges.",

@@ -8,7 +8,7 @@ module.exports = {
   },
   back_to_profile: "返回个人资料",
   back_to_profile_of_user: "返回该用户个人资料",
-  admin_warning: "您正在使用管理权限查看与编辑其它用户的资料。",
+  admin_warning: "您正在使用管理特权查看并编辑其它用户的资料。",
   errors: {
     PERMISSION_DENIED: "权限不足。",
     NO_SUCH_USER: "无此用户。",
@@ -167,7 +167,7 @@ module.exports = {
       },
       ManageProblem: {
         name: "管理题目",
-        notes: "可以浏览、编辑所有题目与提交记录，设置题目是否公开以及删除题目。"
+        notes: "可以浏览、编辑所有题目与提交记录，设置题目权限以及删除题目。"
       },
       ManageContest: {
         name: "管理比赛",
@@ -175,7 +175,7 @@ module.exports = {
       },
       ManageDiscussion: {
         name: "管理讨论",
-        notes: "等做好了讨论功能我再想想这里该写啥。"
+        notes: "可以浏览、编辑所有讨论与回复，设置讨论权限以及删除讨论与回复。"
       }
     },
     admin_only: "仅管理员可修改用户特权。",
