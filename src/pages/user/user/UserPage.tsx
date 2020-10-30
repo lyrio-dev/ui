@@ -364,7 +364,7 @@ let UserPage: React.FC<UserPageProps> = props => {
       )}
       <Segment className={style.ratingSegment} attached="bottom">
         <Segment placeholder className={style.placeholder}>
-          here be dragons
+          Rating Graph
         </Segment>
       </Segment>
     </>
