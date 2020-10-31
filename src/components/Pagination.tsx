@@ -1,18 +1,41 @@
 import React from "react";
-import { Pagination as UIPagination, Icon } from "semantic-ui-react";
+import { Pagination as UIPagination, PaginationProps as UIPaginationProps, Icon } from "semantic-ui-react";
 import { observer } from "mobx-react";
+import { URLDescriptor } from "navi";
 
 import style from "./Pagination.module.less";
-import { useScreenWidthWithin } from "@/utils/hooks";
+import { Link, useScreenWidthWithin } from "@/utils/hooks";
+
+interface PatchedUIPaginationProps extends UIPaginationProps {
+  pageUrl: (newPage: number) => Partial<URLDescriptor>;
+}
+
+class PatchedUIPagination extends UIPagination {
+  constructor(props: PatchedUIPaginationProps) {
+    super(props);
+
+    const originalHandleItemOverrides: Function = this["handleItemOverrides"];
+    this["handleItemOverrides"] = (active: boolean, type: string, value: number) => {
+      const originalOverrider = originalHandleItemOverrides(active, type, value);
+      const isEllipsisItem = type === "ellipsisItem";
+      return (predefinedProps: unknown) => ({
+        ...originalOverrider(predefinedProps),
+        as: isEllipsisItem ? "span" : Link,
+        href: isEllipsisItem ? undefined : props.pageUrl(value),
+        onClick: undefined
+      });
+    };
+  }
+}
 
 interface PaginationProps {
   totalCount: number;
   itemsPerPage: number;
   currentPage: number;
-  onPageChange: (newPage: number) => void;
+  pageUrl: (newPage: number) => Partial<URLDescriptor>;
 }
 
-let Pagination: React.FC<PaginationProps> = props => {
+export const Pagination: React.FC<PaginationProps> = observer(props => {
   const totalPages = Math.ceil(props.totalCount / props.itemsPerPage);
 
   const screenWidthLessThan376 = useScreenWidthWithin(0, 376);
@@ -43,8 +66,8 @@ let Pagination: React.FC<PaginationProps> = props => {
     siblingRange = 6;
   }
 
-  return (
-    <UIPagination
+  const element = (
+    <PatchedUIPagination
       className={style.pagination}
       activePage={props.currentPage}
       size={size}
@@ -55,12 +78,34 @@ let Pagination: React.FC<PaginationProps> = props => {
       prevItem={{ content: <Icon name="chevron left" />, icon: true, disabled: props.currentPage === 1 }}
       nextItem={{ content: <Icon name="chevron right" />, icon: true, disabled: props.currentPage === totalPages }}
       totalPages={totalPages}
-      onPageChange={(e, { activePage }) => {
-        e.preventDefault();
-        props.onPageChange(parseInt(activePage.toString()));
-      }}
+      pageUrl={props.pageUrl}
     />
   );
-};
 
-export default observer(Pagination);
+  return element;
+});
+
+interface SimplePaginationProps {
+  className?: string;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  pageUrl: (direction: -1 | 1) => Partial<URLDescriptor>;
+}
+
+export const SimplePagination: React.FC<SimplePaginationProps> = observer(props => {
+  return (
+    <div className={style.wrapper + (props.className ? " " + props.className : "")}>
+      <PatchedUIPagination
+        className={style.pagination + " " + style.simple}
+        activePage={2}
+        siblingRange={0}
+        firstItem={null}
+        lastItem={null}
+        prevItem={{ content: <Icon name="chevron left" />, icon: true, disabled: !props.hasPrevPage }}
+        nextItem={{ content: <Icon name="chevron right" />, icon: true, disabled: !props.hasNextPage }}
+        totalPages={3}
+        pageUrl={(page: unknown) => props.pageUrl((Number(page) - 2) as 1 | -1)}
+      />
+    </div>
+  );
+});

@@ -10,7 +10,7 @@ import api from "@/api";
 import { appState } from "@/appState";
 import { useLocalizer, useNavigationChecked } from "@/utils/hooks";
 import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
-import Pagination from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import { getScoreColor } from "@/components/ScoreText";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { getProblemIdString } from "@/pages/problem/utils";
@@ -65,14 +65,6 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
   useEffect(() => {
     appState.enterNewPage(`${_(".title")} ${idString}`, "problem_set");
   }, [appState.locale, props.id, props.idType]);
-
-  function onPageChange(page: number) {
-    navigation.navigate({
-      query: {
-        page: page.toString()
-      }
-    });
-  }
 
   const scores: [number, number][] = Object.entries(props.response.scores)
     .filter(([score, count]) => count)
@@ -150,7 +142,11 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
                 totalCount={props.response.count}
                 currentPage={props.currentPage}
                 itemsPerPage={SUBMISSIONS_PER_PAGE}
-                onPageChange={onPageChange}
+                pageUrl={page => ({
+                  query: {
+                    page: page.toString()
+                  }
+                })}
               />
             </div>
           )}

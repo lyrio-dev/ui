@@ -11,7 +11,7 @@ import { appState } from "@/appState";
 import api from "@/api";
 import { useLocalizer, useScreenWidthWithin, useNavigationChecked, Link } from "@/utils/hooks";
 import UserSearch from "@/components/UserSearch";
-import Pagination from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import PreviewSearch from "@/components/PreviewSearch";
 import { getDiscussionDisplayTitle, getDiscussionUrl } from "../utils";
 import toast from "@/utils/toast";
@@ -275,24 +275,20 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
   }
   // End search
 
-  function onPageChange(page: number) {
-    navigation.navigate({
-      query: Object.assign(
-        {
-          page: page.toString()
-        },
-        generateSearchQuery(props.searchQuery)
-      )
-    });
-  }
-
   const getPagination = () =>
     props.response.count <= DISCUSSIONS_PER_PAGE ? null : (
       <Pagination
         totalCount={props.response.count}
         currentPage={props.currentPage}
         itemsPerPage={DISCUSSIONS_PER_PAGE}
-        onPageChange={onPageChange}
+        pageUrl={page => ({
+          query: Object.assign(
+            {
+              page: page.toString()
+            },
+            generateSearchQuery(props.searchQuery)
+          )
+        })}
       />
     );
 

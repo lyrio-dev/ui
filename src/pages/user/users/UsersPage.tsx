@@ -8,7 +8,7 @@ import api from "@/api";
 import { UserMeta } from "@/interfaces/UserMeta";
 import { useLocalizer, useNavigationChecked, Link } from "@/utils/hooks";
 import { appState } from "@/appState";
-import Pagination from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import UserLink from "@/components/UserLink";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
@@ -50,14 +50,6 @@ let UsersPage: React.FC<UsersPageProps> = props => {
   useEffect(() => {
     appState.enterNewPage(_(".title"), "members");
   }, [appState.locale]);
-
-  function changePage(page: number) {
-    navigation.navigate({
-      query: {
-        page: page.toString()
-      }
-    });
-  }
 
   return (
     <>
@@ -145,7 +137,11 @@ let UsersPage: React.FC<UsersPageProps> = props => {
             totalCount={props.totalCount}
             currentPage={props.currentPage}
             itemsPerPage={USERS_PER_PAGE}
-            onPageChange={changePage}
+            pageUrl={page => ({
+              query: {
+                page: page.toString()
+              }
+            })}
           />
         </div>
       )}

@@ -26,7 +26,7 @@ import {
   SubmissionHeader,
   SubmissionHeaderMobile
 } from "../componments/SubmissionItem";
-import SimplePagination from "@/components/SimplePagination";
+import { SimplePagination } from "@/components/Pagination";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { SubmissionProgressMessageMetaOnly, SubmissionProgressType } from "../common";
 
@@ -184,7 +184,7 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
   const hasPrevPage = props.queryResult.hasLargerId;
   const hasNextPage = props.queryResult.hasSmallerId;
 
-  function onPageChange(direction: -1 | 1) {
+  function pageUrl(direction: -1 | 1) {
     const query = Object.assign({}, props.query);
     if (direction === -1) {
       query.minId = submissions[0].id + 1;
@@ -193,9 +193,10 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
       query.maxId = submissions[submissions.length - 1].id - 1;
       delete query.minId;
     }
-    navigation.navigate({
+
+    return {
       query: Object.fromEntries(Object.entries(query).map(([key, value]) => [key, value.toString()]))
-    });
+    };
   }
 
   const isWideScreen = useScreenWidthWithin(1024, Infinity);
@@ -368,12 +369,9 @@ let SubmissionsPage: React.FC<SubmissionsPageProps> = props => {
             </Table.Body>
           </Table>
           {(hasPrevPage || hasNextPage) && (
-            <SimplePagination
-              className={style.pagination}
-              hasPrevPage={hasPrevPage}
-              hasNextPage={hasNextPage}
-              onPageChange={onPageChange}
-            />
+            <div className={style.pagination}>
+              <SimplePagination hasPrevPage={hasPrevPage} hasNextPage={hasNextPage} pageUrl={pageUrl} />
+            </div>
           )}
         </>
       )}

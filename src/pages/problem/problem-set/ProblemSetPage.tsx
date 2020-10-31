@@ -9,7 +9,7 @@ import { appState } from "@/appState";
 import { useAsyncCallbackPending, useLocalizer, useScreenWidthWithin, useNavigationChecked, Link } from "@/utils/hooks";
 import toast from "@/utils/toast";
 import { sortTags, sortTagColors } from "../problemTag";
-import Pagination from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import ProblemTagManager from "./ProblemTagManager";
 import UserSearch from "@/components/UserSearch";
 import { defineRoute, RouteError } from "@/AppRouter";
@@ -235,17 +235,6 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
   }
   // End search
 
-  function onPageChange(page: number) {
-    navigation.navigate({
-      query: Object.assign(
-        {
-          page: page.toString()
-        },
-        generateSearchQuery(props.searchQuery)
-      )
-    });
-  }
-
   const getPagination = (className: string) =>
     props.response.count <= PROBLEMS_PER_PAGE ? null : (
       <div className={className}>
@@ -253,7 +242,14 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
           totalCount={props.response.count}
           currentPage={props.currentPage}
           itemsPerPage={PROBLEMS_PER_PAGE}
-          onPageChange={onPageChange}
+          pageUrl={page => ({
+            query: Object.assign(
+              {
+                page: page.toString()
+              },
+              generateSearchQuery(props.searchQuery)
+            )
+          })}
         />
       </div>
     );

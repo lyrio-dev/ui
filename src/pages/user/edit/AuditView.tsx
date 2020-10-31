@@ -15,7 +15,7 @@ import UserLink from "@/components/UserLink";
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import formatDateTime from "@/utils/formatDateTime";
 import fixChineseSpace from "@/utils/fixChineseSpace";
-import Pagination from "@/components/Pagination";
+import { Pagination } from "@/components/Pagination";
 import { UserMeta } from "@/interfaces/UserMeta";
 import PseudoLink from "@/components/PseudoLink";
 import copyToClipboard from "@/utils/copyToClipboard";
@@ -116,17 +116,6 @@ const AuditView: React.FC<AuditViewProps> = props => {
 
   function onFilter(queryOverride?: Partial<AuditQuery>) {
     navigation.navigate(getFilterUrl(queryOverride));
-  }
-
-  function onPageChange(page: number) {
-    navigation.navigate({
-      query: Object.fromEntries(
-        Object.entries({
-          ...props.query,
-          page
-        }).map(([key, value]) => [key, value.toString()])
-      )
-    });
   }
 
   function renderObject(
@@ -406,7 +395,14 @@ const AuditView: React.FC<AuditViewProps> = props => {
                 totalCount={props.response.count}
                 currentPage={props.query.page || 1}
                 itemsPerPage={AUDIT_LOGS_PER_PAGE}
-                onPageChange={onPageChange}
+                pageUrl={page => ({
+                  query: Object.fromEntries(
+                    Object.entries({
+                      ...props.query,
+                      page
+                    }).map(([key, value]) => [key, value.toString()])
+                  )
+                })}
               />
             </div>
           )}
