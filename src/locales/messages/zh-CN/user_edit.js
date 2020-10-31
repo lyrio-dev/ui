@@ -157,6 +157,10 @@ module.exports = {
     title: "特权",
     header: "特权",
     privileges: {
+      EditHomepage: {
+        name: "编辑首页",
+        notes: "可以编辑首页的配置与内容，如通知、公告、一言、倒数等。"
+      },
       ManageUser: {
         name: "管理用户",
         notes: "可以修改其他用户的个人资料、偏好设置以及安全设置。"

@@ -12,14 +12,13 @@ import api from "@/api";
 import { useLocalizer, useScreenWidthWithin, useNavigationChecked, Link } from "@/utils/hooks";
 import UserSearch from "@/components/UserSearch";
 import { Pagination } from "@/components/Pagination";
-import PreviewSearch from "@/components/PreviewSearch";
 import { getDiscussionDisplayTitle, getDiscussionUrl } from "../utils";
-import toast from "@/utils/toast";
 import { getProblemDisplayName, getProblemUrl } from "@/pages/problem/utils";
 import UserLink from "@/components/UserLink";
 import formatDateTime from "@/utils/formatDateTime";
 import { Localizer, makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
+import { DiscussionSearch } from "@/components/DiscussionSearch";
 
 export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
   return {
@@ -87,6 +86,8 @@ interface DiscussionsPageSearchQuery {
   nonpublic: boolean;
 }
 
+const DISCUSSIONS_PER_PAGE = appState.serverPreference.pagination.discussions;
+
 function generateRequestFromSearchQuery(
   searchQuery: DiscussionsPageSearchQuery,
   currentPage = 1
@@ -141,53 +142,6 @@ function generateSearchQuery(searchQuery: DiscussionsPageSearchQuery): Record<st
   if (searchQuery.nonpublic) query.nonpublic = "";
   return query;
 }
-
-const DISCUSSIONS_PER_PAGE = appState.serverPreference.pagination.discussions;
-
-interface DiscussionSearchProps {
-  queryParameters: Omit<ApiTypes.QueryDiscussionsRequestDto, "keyword" | "titleOnly" | "skipCount" | "takeCount">;
-  onResultSelect: (discussion: ApiTypes.QueryDiscussionsResponseDiscussionDto) => void;
-  onEnterPress?: (searchKeyword: string) => void;
-}
-
-const SEARCH_DISCUSSION_PREVIEW_LIST_LENGTH = appState.serverPreference.pagination.searchDiscussionsPreview;
-
-let DiscussionSearch: React.FC<DiscussionSearchProps> = props => {
-  const _ = useLocalizer("discussions.search_discussion");
-
-  return (
-    <PreviewSearch
-      className={style.search}
-      placeholder={_(".placeholder")}
-      noResultsMessage={_(".no_result")}
-      onGetResultKey={result => result.meta.id}
-      onSearch={async input => {
-        if (!input) return [];
-
-        const { requestError, response } = await api.discussion.queryDiscussions(
-          Object.assign({}, props.queryParameters, {
-            keyword: input,
-            titleOnly: true,
-            skipCount: 0,
-            takeCount: SEARCH_DISCUSSION_PREVIEW_LIST_LENGTH
-          })
-        );
-
-        if (requestError) toast.error(requestError(_));
-        else return response.discussions;
-
-        return [];
-      }}
-      onRenderResult={result => (
-        <EmojiRenderer>
-          <div className="title">{getDiscussionDisplayTitle(result.meta.title, _)}</div>
-        </EmojiRenderer>
-      )}
-      onResultSelect={props.onResultSelect}
-      onEnterPress={props.onEnterPress}
-    />
-  );
-};
 
 interface DiscussionsPageProps {
   searchQuery: DiscussionsPageSearchQuery;

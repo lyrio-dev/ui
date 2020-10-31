@@ -20,6 +20,7 @@ export async function fetchData(userId: number) {
 }
 
 enum Privilege {
+  EditHomepage = "EditHomepage",
   ManageUser = "ManageUser",
   ManageUserGroup = "ManageUserGroup",
   ManageProblem = "ManageProblem",

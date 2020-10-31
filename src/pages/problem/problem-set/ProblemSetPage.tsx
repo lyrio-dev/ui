@@ -488,7 +488,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                   <Table.Cell>
                     {problem.submission && (
                       <Link href={`/submission/${problem.submission.id}`}>
-                        <StatusIcon status={problem.submission.status} />
+                        <StatusIcon status={problem.submission.status} noMarginRight />
                       </Link>
                     )}
                   </Table.Cell>

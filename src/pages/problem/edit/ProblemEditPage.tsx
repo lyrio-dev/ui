@@ -9,8 +9,6 @@ import {
   Popup,
   Button,
   Form,
-  Tab,
-  Flag,
   Input,
   TextArea,
   Checkbox,
@@ -44,6 +42,7 @@ import MarkdownContent from "@/markdown/MarkdownContent";
 import { getProblemIdString, getProblemUrl } from "../utils";
 import { useProblemViewMarkdownContentPatcher } from "../view/ProblemViewPage";
 import { makeToBeLocalizedText } from "@/locales";
+import { LocalizeTab } from "@/components/LocalizeTab";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -861,7 +860,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     if (pendingSubmit) return;
     setModified(true);
 
-    const locales = Object.keys(localizedContents);
+    const locales = Object.keys(localizedContents) as Locale[];
 
     // Select first non-deleting locale as default
     locales.some((nextLocale: Locale) => {
@@ -873,12 +872,10 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
     // Select the one next to the deleting as active
     const deleteingIndex = locales.indexOf(locale);
-    if (deleteingIndex === 0) {
-      // If deleting the leftist, select the right side as active
-      // The right side is 0 after deleting the current 0
+    if (deleteingIndex === locales.length - 1) {
+      setActiveLocale(locales[deleteingIndex - 1]);
     } else {
-      // Select the left side as active
-      setLanguageTabActiveIndex(deleteingIndex - 1);
+      setActiveLocale(locales[deleteingIndex + 1]);
     }
 
     setLocalizedContents(
@@ -891,8 +888,6 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   function onAddLocale(locale: Locale) {
     if (pendingSubmit) return;
     setModified(true);
-
-    const index = Object.keys(localizedContents).length;
 
     setLocalizedContents(
       update(localizedContents, {
@@ -912,7 +907,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       })
     );
 
-    setLanguageTabActiveIndex(index);
+    setActiveLocale(locale);
   }
 
   function onAddSample() {
@@ -1180,12 +1175,10 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         }))
   );
 
-  const defaultEditingLocaleIndex = props.new
-    ? 0
-    : Object.keys(localizedContents).indexOf(props.requestedLocale || appState.locale);
-  const [languageTabActiveIndex, setLanguageTabActiveIndex] = useState(
-    defaultEditingLocaleIndex == -1 ? 0 : defaultEditingLocaleIndex
-  );
+  const [activeLocale, setActiveLocale] = useState(() => {
+    const locale = props.requestedLocale || appState.locale;
+    return locale in localeMeta ? locale : (Object.keys(localeMeta)[0] as Locale);
+  });
 
   const [tagIds, setTagIds] = useState(
     !props.problem ? [] : props.problem.tagsOfLocale.map(problemTag => problemTag.id)
@@ -1258,82 +1251,31 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         </Grid.Row>
         <Grid.Row className={style.row}>
           <Grid.Column width={11}>
-            <Tab
-              activeIndex={languageTabActiveIndex}
-              onTabChange={(e, { activeIndex }) =>
-                activeIndex !== Object.keys(localizedContents).length &&
-                setLanguageTabActiveIndex(activeIndex as number)
-              }
-              menu={{ pointing: true }}
-              panes={[
-                ...Object.keys(localizedContents).map((locale: Locale) => ({
-                  menuItem: (
-                    <Menu.Item key={locale}>
-                      <Flag name={localeMeta[locale].flag as any} />
-                      {_(`language.${locale}`)}
-                    </Menu.Item>
-                  ),
-                  pane: {
-                    key: locale,
-                    className: style.localeTabPane,
-                    content: (
-                      <LocalizedContentEditor
-                        problemId={props.problem?.meta?.id}
-                        localizedContent={localizedContents[locale]}
-                        samples={samples}
-                        isOnly={Object.keys(localizedContents).length === 1}
-                        isDefault={defaultLocale === locale}
-                        onMakeDefault={() => setDefaultLocale(locale)}
-                        onApplyTemplate={() => onApplyTemplateToLocale(locale)}
-                        onDelete={() => onDeleteLocale(locale)}
-                        onChangeTitle={title => onChangeTitle(locale, title)}
-                        onChangeSectionValue={(index, type, newValue) =>
-                          onChangeSectionValue(locale, index, type, newValue)
-                        }
-                        onChangeSectionType={(index, newType) => onChangeSectionType(locale, index, newType)}
-                        onChangeSectionSampleId={(index, newSampleId) =>
-                          onChangeSectionSampleId(locale, index, newSampleId)
-                        }
-                        onChangeSampleData={onChangeSampleData}
-                        onAddSection={index => onAddSection(locale, index)}
-                        onDeleteSection={index => onDeleteSection(locale, index)}
-                        onMoveSection={(index, direction) => onMoveSection(locale, index, direction)}
-                      />
-                    )
-                  }
-                })),
-                {
-                  menuItem: (
-                    <Dropdown
-                      key="add"
-                      item
-                      icon="add"
-                      // Fix Semantic UI attempts to pass a active={false} to this menu item
-                      active=""
-                      disabled={Object.keys(localizedContents).length === Object.keys(localeMeta).length}
-                      className={`icon ${style.toolbarMenuIconItem}`}
-                    >
-                      <Dropdown.Menu>
-                        {Object.keys(localeMeta)
-                          .filter((locale: Locale) => !(locale in localizedContents))
-                          .map((locale: Locale) => (
-                            <Dropdown.Item
-                              key={locale}
-                              flag={localeMeta[locale].flag}
-                              text={_(`language.${locale}`)}
-                              onClick={() => onAddLocale(locale)}
-                            />
-                          ))}
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  ),
-                  pane: {
-                    key: "add",
-                    content: null
-                  }
-                }
-              ]}
-              renderActiveOnly={false}
+            <LocalizeTab
+              locales={Object.keys(localizedContents) as Locale[]}
+              activeLocale={activeLocale}
+              item={locale => (
+                <LocalizedContentEditor
+                  problemId={props.problem?.meta?.id}
+                  localizedContent={localizedContents[locale]}
+                  samples={samples}
+                  isOnly={Object.keys(localizedContents).length === 1}
+                  isDefault={defaultLocale === locale}
+                  onMakeDefault={() => setDefaultLocale(locale)}
+                  onApplyTemplate={() => onApplyTemplateToLocale(locale)}
+                  onDelete={() => onDeleteLocale(locale)}
+                  onChangeTitle={title => onChangeTitle(locale, title)}
+                  onChangeSectionValue={(index, type, newValue) => onChangeSectionValue(locale, index, type, newValue)}
+                  onChangeSectionType={(index, newType) => onChangeSectionType(locale, index, newType)}
+                  onChangeSectionSampleId={(index, newSampleId) => onChangeSectionSampleId(locale, index, newSampleId)}
+                  onChangeSampleData={onChangeSampleData}
+                  onAddSection={index => onAddSection(locale, index)}
+                  onDeleteSection={index => onDeleteSection(locale, index)}
+                  onMoveSection={(index, direction) => onMoveSection(locale, index, direction)}
+                />
+              )}
+              onAddLocale={onAddLocale}
+              onSetActiveLocale={setActiveLocale}
             />
           </Grid.Column>
           <Grid.Column width={5}>

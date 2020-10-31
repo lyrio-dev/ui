@@ -298,6 +298,27 @@ declare namespace ApiTypes {
     error?: "NO_SUCH_GROUP";
     groupMeta?: ApiTypes.GroupMetaDto;
   }
+  export interface GetHomepageResponseDto {
+    notice: string;
+    noticeLocale: "en_US" | "zh_CN" | "ja_JP";
+    annnouncements: ApiTypes.DiscussionMetaDto[];
+    annnouncementsLocale: "en_US" | "zh_CN" | "ja_JP";
+    hitokoto?: ApiTypes.HomepageSettingsHitokoto;
+    countdown?: ApiTypes.HomepageSettingsCountdown;
+    friendLinks?: ApiTypes.HomepageSettingsFriendLinks;
+    topUsers: ApiTypes.UserMetaDto[];
+    latestUpdatedProblems: ApiTypes.GetHomepageResponseProblemDto[];
+  }
+  export interface GetHomepageResponseProblemDto {
+    meta: ApiTypes.ProblemMetaDto;
+    title: string;
+    submission: ApiTypes.SubmissionBasicMetaDto;
+  }
+  export interface GetHomepageSettingsResponseDto {
+    error?: "PERMISSION_DENIED";
+    settings?: ApiTypes.HomepageSettings;
+    annnouncementDiscussions?: ApiTypes.DiscussionMetaDto[];
+  }
   export interface GetProblemRequestDto {
     id?: number;
     displayId?: number;
@@ -345,7 +366,14 @@ declare namespace ApiTypes {
   export interface GetSessionInfoResponseDto {
     userMeta?: ApiTypes.UserMetaDto;
     joinedGroupsCount?: number;
-    userPrivileges?: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
+    userPrivileges?: (
+      | "EditHomepage"
+      | "ManageUser"
+      | "ManageUserGroup"
+      | "ManageProblem"
+      | "ManageContest"
+      | "ManageDiscussion"
+    )[];
     userPreference?: ApiTypes.UserPreferenceDto;
     serverPreference: ApiTypes.PreferenceConfig;
     serverVersion: ApiTypes.ServerVersionDto;
@@ -397,7 +425,14 @@ declare namespace ApiTypes {
   export interface GetUserMetaResponseDto {
     error?: "NO_SUCH_USER";
     meta?: ApiTypes.UserMetaDto;
-    privileges?: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
+    privileges?: (
+      | "EditHomepage"
+      | "ManageUser"
+      | "ManageUserGroup"
+      | "ManageProblem"
+      | "ManageContest"
+      | "ManageDiscussion"
+    )[];
   }
   export interface GetUserPreferenceRequestDto {
     userId: number;
@@ -431,6 +466,33 @@ declare namespace ApiTypes {
   }
   export interface HeaderParameters {
     "maintaince-key": ApiTypes.Parameters.MaintainceKey;
+  }
+  export interface HomepageSettings {
+    notice: ApiTypes.HomepageSettingsNotice;
+    annnouncements: ApiTypes.HomepageSettingsAnnouncements;
+    hitokoto: ApiTypes.HomepageSettingsHitokoto;
+    countdown: ApiTypes.HomepageSettingsCountdown;
+    friendLinks: ApiTypes.HomepageSettingsFriendLinks;
+  }
+  export interface HomepageSettingsAnnouncements {
+    items: {};
+  }
+  export interface HomepageSettingsCountdown {
+    enabled: boolean;
+    items: {};
+  }
+  export interface HomepageSettingsFriendLinks {
+    enabled: boolean;
+    links: {};
+  }
+  export interface HomepageSettingsHitokoto {
+    enabled: boolean;
+    apiUrl: string;
+    customTitle: string;
+  }
+  export interface HomepageSettingsNotice {
+    enabled: boolean;
+    contents: {};
   }
   export interface JudgeClientInfoDto {
     id: number;
@@ -486,6 +548,7 @@ declare namespace ApiTypes {
     export type Email = string;
     export type GroupId = string;
     export type Jsonp = string;
+    export type Locale = "en_US" | "zh_CN" | "ja_JP";
     export type MaintainceKey = string;
     export type Query = string;
     export type Token = string;
@@ -501,13 +564,17 @@ declare namespace ApiTypes {
   }
   export interface PreferenceConfigFrontend {
     redirectLegacyUrls: boolean;
+    homepageUserListOnMainView: boolean;
   }
   export interface PreferenceConfigMisc {
     discussionReactionEmojis: string[];
     discussionReactionAllowCustomEmojis: boolean;
     renderMarkdownInUserBio: boolean;
+    sortUserByRating: boolean;
   }
   export interface PreferenceConfigPagination {
+    homepageUserList: number;
+    homepageProblemList: number;
     problemSet: number;
     searchProblemsPreview: number;
     submissions: number;
@@ -670,8 +737,7 @@ declare namespace ApiTypes {
     titleLocale: "en_US" | "zh_CN" | "ja_JP";
   }
   export interface QueryParameters {
-    query: ApiTypes.Parameters.Query;
-    wildcard?: ApiTypes.Parameters.Wildcard;
+    locale: ApiTypes.Parameters.Locale;
   }
   export interface QueryProblemSetRequestDto {
     locale: "en_US" | "zh_CN" | "ja_JP";
@@ -814,7 +880,7 @@ declare namespace ApiTypes {
   export interface RenameProblemFileResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "NO_SUCH_FILE";
   }
-  export type RequestBody = ApiTypes.QueryUserMigrationInfoRequestDto;
+  export type RequestBody = ApiTypes.UpdateHomepageSettingsRequestDto;
   export interface ResetJudgeClientKeyRequestDto {
     id: number;
   }
@@ -832,8 +898,8 @@ declare namespace ApiTypes {
     token?: string;
   }
   namespace Responses {
-    export type $200 = string;
-    export type $201 = ApiTypes.QueryUserMigrationInfoResponseDto;
+    export type $200 = ApiTypes.GetHomepageSettingsResponseDto;
+    export type $201 = ApiTypes.UpdateHomepageSettingsResponseDto;
   }
   export interface RevokeUserSessionRequestDto {
     userId: number;
@@ -950,7 +1016,14 @@ declare namespace ApiTypes {
   }
   export interface SetUserPrivilegesRequestDto {
     userId: number;
-    privileges: ("ManageUser" | "ManageUserGroup" | "ManageProblem" | "ManageContest" | "ManageDiscussion")[];
+    privileges: (
+      | "EditHomepage"
+      | "ManageUser"
+      | "ManageUserGroup"
+      | "ManageProblem"
+      | "ManageContest"
+      | "ManageDiscussion"
+    )[];
   }
   export interface SetUserPrivilegesResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "FAILED";
@@ -1052,6 +1125,13 @@ declare namespace ApiTypes {
   }
   export interface UpdateDiscussionResponseDto {
     error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
+  }
+  export interface UpdateHomepageSettingsRequestDto {
+    settings: ApiTypes.HomepageSettings;
+  }
+  export interface UpdateHomepageSettingsResponseDto {
+    error?: "PERMISSION_DENIED" | "NO_SUCH_DISCUSSION";
+    errorDiscussionId?: number;
   }
   export interface UpdateProblemJudgeInfoRequestDto {
     problemId: number;

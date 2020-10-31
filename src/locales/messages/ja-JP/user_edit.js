@@ -162,6 +162,11 @@ module.exports = {
     title: "[TBT] Privileges",
     header: "[TBT] Privileges",
     privileges: {
+      EditHomepage: {
+        name: "[TBT] Edit Homepage",
+        notes:
+          "[TBT] Modify the configuration and contents of homepage. Such as notice, annnouncements, hitokoto and countdown."
+      },
       ManageUser: {
         name: "[TBT] Manage user",
         notes: "[TBT] Modify other user's profile, preference and security settings."

@@ -12,7 +12,7 @@ module.exports = {
   confirm_cancel: "Confirm canel",
   submit_error: {
     PERMISSION_DENIED: "Permission denied.",
-    NO_SUCH_USER: "Can't found user with ID {id}.",
-    NO_SUCH_GROUP: "Can't found group with ID {id}."
+    NO_SUCH_USER: "No such user with ID {id}.",
+    NO_SUCH_GROUP: "No such group with ID {id}."
   }
 };

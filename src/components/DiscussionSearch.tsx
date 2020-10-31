@@ -2,57 +2,54 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import api from "@/api";
+import { appState } from "@/appState";
+import { getDiscussionDisplayTitle } from "@/pages/discussion/utils";
 import { useLocalizer } from "@/utils/hooks";
 import toast from "@/utils/toast";
-import PreviewSearch from "./PreviewSearch";
-import { getProblemDisplayName } from "@/pages/problem/utils";
-import { appState } from "@/appState";
 import { EmojiRenderer } from "./EmojiRenderer";
+import PreviewSearch from "./PreviewSearch";
 
-interface ProblemSearchProps {
+interface DiscussionSearchProps {
   className?: string;
-  placeholder?: string;
   queryParameters?: Omit<
-    ApiTypes.QueryProblemSetRequestDto,
+    ApiTypes.QueryDiscussionsRequestDto,
     "locale" | "keyword" | "titleOnly" | "skipCount" | "takeCount"
   >;
-  onResultSelect: (problem: ApiTypes.QueryProblemSetResponseItemDto) => void;
+  onResultSelect: (discussion: ApiTypes.QueryDiscussionsResponseDiscussionDto) => void;
   onEnterPress?: (searchKeyword: string) => void;
 }
 
-const SEARCH_PROBLEM_PREVIEW_LIST_LENGTH = appState.serverPreference.pagination.searchProblemsPreview;
+const SEARCH_DISCUSSION_PREVIEW_LIST_LENGTH = appState.serverPreference.pagination.searchDiscussionsPreview;
 
-let ProblemSearch: React.FC<ProblemSearchProps> = props => {
-  const _ = useLocalizer("components.problem_search");
+export let DiscussionSearch: React.FC<DiscussionSearchProps> = props => {
+  const _ = useLocalizer("discussions.search_discussion");
 
   return (
     <PreviewSearch
       className={props.className}
-      placeholder={props.placeholder || _(".placeholder")}
+      placeholder={_(".placeholder")}
       noResultsMessage={_(".no_result")}
       onGetResultKey={result => result.meta.id}
       onSearch={async input => {
-        const wildcardStart = input.startsWith("*");
-        if (wildcardStart) input = input.substr(1);
         if (!input) return [];
 
-        const { requestError, response } = await api.problem.queryProblemSet(
+        const { requestError, response } = await api.discussion.queryDiscussions(
           Object.assign({ locale: appState.locale }, props.queryParameters, {
             keyword: input,
             titleOnly: true,
             skipCount: 0,
-            takeCount: SEARCH_PROBLEM_PREVIEW_LIST_LENGTH
+            takeCount: SEARCH_DISCUSSION_PREVIEW_LIST_LENGTH
           })
         );
 
         if (requestError) toast.error(requestError(_));
-        else return response.result;
+        else return response.discussions;
 
         return [];
       }}
       onRenderResult={result => (
         <EmojiRenderer>
-          <div className="title">{getProblemDisplayName(result.meta, result.title, _)}</div>
+          <div className="title">{getDiscussionDisplayTitle(result.meta.title, _)}</div>
         </EmojiRenderer>
       )}
       onResultSelect={props.onResultSelect}
@@ -61,4 +58,4 @@ let ProblemSearch: React.FC<ProblemSearchProps> = props => {
   );
 };
 
-export default observer(ProblemSearch);
+DiscussionSearch = observer(DiscussionSearch);

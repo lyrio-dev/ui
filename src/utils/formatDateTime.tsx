@@ -1,6 +1,9 @@
 import React from "react";
 
-export default function formatDateTime(date: Date | string | number): [JSX.Element, string] {
+export default function formatDateTime(
+  date: Date | string | number,
+  dateOnly?: boolean
+): [JSX.Element | string, string] {
   if (!(date instanceof Date)) date = new Date(date);
   let month = (date.getMonth() + 1).toString();
   let day = date.getDate().toString();
@@ -14,11 +17,17 @@ export default function formatDateTime(date: Date | string | number): [JSX.Eleme
   minute = minute.length === 1 ? "0" + minute : minute;
   second = second.length === 1 ? "0" + second : second;
 
-  const withoutYear = (
+  const withoutYearDateOnly = `${month}/${day}`;
+  const withoutYear = dateOnly ? (
+    withoutYearDateOnly
+  ) : (
     <>
-      {`${month}/${day}`}&nbsp;&nbsp;{`${hour}:${minute}:${second}`}
+      {withoutYearDateOnly}&nbsp;&nbsp;{`${hour}:${minute}:${second}`}
     </>
   );
-  const withYear = `${date.getFullYear()}-${month}-${day} ${hour}:${minute}:${second}`;
+
+  const withYearDateOnly = `${date.getFullYear()}-${month}-${day}`;
+  const withYear = dateOnly ? withYearDateOnly : `${withYearDateOnly} ${hour}:${minute}:${second}`;
+
   return [withoutYear, withYear];
 }

@@ -8,6 +8,7 @@ import * as ImportedGroupApi from "./modules/group";
 import * as ImportedJudgeClientApi from "./modules/judge-client";
 import * as ImportedDiscussionApi from "./modules/discussion";
 import * as ImportedMigrationApi from "./modules/migration";
+import * as ImportedHomepageApi from "./modules/homepage";
 
 export const user = ImportedUserApi;
 export const auth = ImportedAuthApi;
@@ -17,3 +18,4 @@ export const group = ImportedGroupApi;
 export const judgeClient = ImportedJudgeClientApi;
 export const discussion = ImportedDiscussionApi;
 export const migration = ImportedMigrationApi;
+export const homepage = ImportedHomepageApi;

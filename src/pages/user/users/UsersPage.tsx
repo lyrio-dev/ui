@@ -117,13 +117,13 @@ let UsersPage: React.FC<UsersPageProps> = props => {
                 <UserLink user={user} />
               </Table.Cell>
               <Table.Cell className={style.columnBio}>
-                <EmojiRenderer>
-                  {appState.serverPreference.misc.renderMarkdownInUserBio ? (
-                    <MarkdownContent content={user.bio} />
-                  ) : (
+                {appState.serverPreference.misc.renderMarkdownInUserBio ? (
+                  <MarkdownContent content={user.bio} />
+                ) : (
+                  <EmojiRenderer>
                     <div>{user.bio}</div>
-                  )}
-                </EmojiRenderer>
+                  </EmojiRenderer>
+                )}
               </Table.Cell>
               <Table.Cell>{user.acceptedProblemCount}</Table.Cell>
               <Table.Cell>{user.rating}</Table.Cell>
@@ -156,7 +156,8 @@ export default defineRoute(async request => {
   if (page < 1) page = 1;
 
   let sortBy = request.query.sortBy as SortBy;
-  if (!(sortBy in SortBy)) sortBy = SortBy.rating;
+  if (!(sortBy in SortBy))
+    sortBy = appState.serverPreference.misc.sortUserByRating ? SortBy.rating : SortBy.acceptedProblemCount;
 
   const [users, count] = await fetchData(sortBy, page);
 

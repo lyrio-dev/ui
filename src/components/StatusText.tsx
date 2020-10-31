@@ -29,12 +29,13 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
 
 interface StatusIconProps {
   status: string;
+  noMarginRight?: boolean;
 }
 
 export const StatusIcon: React.FC<StatusIconProps> = props => (
   <span className={"statuscolor " + style[props.status]}>
     <Icon
-      className={"statusicon" + " " + style.icon}
+      className={"statusicon" + " " + style.icon + (props.noMarginRight ? " " + style.noMarginRight : "")}
       loading={icons[props.status] === "spinner"}
       name={icons[props.status]}
     />

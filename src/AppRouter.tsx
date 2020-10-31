@@ -97,7 +97,8 @@ const AppRouter: React.FC = () => {
           );
         },
         mount({
-          "/": lazy(() => import("./pages/home")),
+          "/": getRoute(() => import("./pages/home"), "home"),
+          "/homepage-settings": getRoute(() => import("./pages/home"), "homeSettings"),
           "/login": lazy(() => import("./pages/auth/login")),
           "/register": lazy(() => import("./pages/auth/register")),
           "/forgot": lazy(() => import("./pages/auth/forgot")),

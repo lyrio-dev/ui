@@ -56,5 +56,7 @@ module.exports = {
   "discussion.set_non_public": "将讨论 [firstObject] 设为非公开",
   "discussion.set_reply_public": "将讨论 [firstObject] 的回复 [secondObject] 设为公开",
   "discussion.set_reply_non_public": "将讨论 [firstObject] 的回复 [secondObject] 设为非公开",
-  "discussion.set_permissions": "修改讨论 [firstObject] 的权限"
+  "discussion.set_permissions": "修改讨论 [firstObject] 的权限",
+
+  "homepage.update": "编辑首页"
 };

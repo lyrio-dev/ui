@@ -322,6 +322,10 @@
     // }
   }
 
+  &.raw .bubble {
+    width: 100%;
+  }
+
   // Limit the height of markdown contents
   &.discussion .content {
     max-height: 20000px;
@@ -456,6 +460,17 @@
         border-bottom: 1px solid @border-color;
       }
     }
+
+    &.raw > .bubble > .mainSegment {
+      .editor {
+        border-bottom: none !important;
+      }
+
+      .preview {
+        border-bottom: none;
+      }
+    }
+
 
     // highlight focused editor
     &.edit:not(.discussion) > .bubble.editorFocused {

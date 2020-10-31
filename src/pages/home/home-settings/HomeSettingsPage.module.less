@@ -1,0 +1,71 @@
+.headerWrapper {
+  display: flex;
+  align-items: center;
+
+  :global(.header) {
+    margin: 0;
+    flex-grow: 1;
+  }
+}
+
+.subHeader {
+  display: flex;
+  align-items: center;
+
+  :global(.checkbox) {
+    margin-left: 7px;
+  }
+}
+
+.noticeLocalizeTab {
+  position: relative;
+  
+  &.disabled::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 2;
+  }
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+.noticeTab {
+  position: relative;
+
+  .buttons {
+    position: absolute;
+    right: 11px;
+    top: 7px;
+    z-index: 1;
+  }
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+
+  > :global(.header) {
+    margin: 0 13px 0 0;
+  }
+
+  .space {
+    flex-grow: 1;
+  }
+}
+
+.configEditor {
+  height: 250px !important;
+}
+
+.bottomSubmitWrapper {
+  margin-top: 14px;
+  text-align: center;
+}

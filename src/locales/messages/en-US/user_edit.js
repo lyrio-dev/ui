@@ -160,6 +160,11 @@ module.exports = {
     title: "Privileges",
     header: "Privileges",
     privileges: {
+      EditHomepage: {
+        name: "Edit Homepage",
+        notes:
+          "Modify the configuration and contents of homepage. Such as notice, annnouncements, hitokoto and countdown."
+      },
       ManageUser: {
         name: "Manage user",
         notes: "Modify other user's profile, preference and security settings."

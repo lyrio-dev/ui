@@ -14,7 +14,6 @@ import {
   TextArea
 } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import * as timeago from "timeago.js";
 import twemoji from "twemoji";
 import TextAreaAutoSize from "react-textarea-autosize";
 import { v4 as uuid } from "uuid";
@@ -49,6 +48,7 @@ import PermissionManager from "@/components/LazyPermissionManager";
 import { getBreadcrumb, getNewDiscussionUrl } from "../discussions/DiscussionsPage";
 import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer, getTwemojiOptions } from "@/components/EmojiRenderer";
+import TimeAgo from "@/components/TimeAgo";
 
 const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
@@ -68,52 +68,6 @@ async function fetchData(discussionId: number) {
 
   return response;
 }
-
-interface AutoTimeAgoLabelProps {
-  time: Date;
-}
-
-let AutoTimeAgoLabel: React.FC<AutoTimeAgoLabelProps> = props => {
-  // Update per 30s
-  const UPDATE_INTERVAL = 30 * 1000;
-
-  // Use time ago if within 30 days
-  const MAX_TIME_AGO = 30 * 24 * 60 * 60 * 1000;
-
-  const [timeAgoRelativeDate, setTimeAgoRelativeDate] = useState(new Date());
-
-  const getUseTimeAgo = () => +timeAgoRelativeDate - +props.time <= MAX_TIME_AGO;
-  const [useTimeAgo, setUseTimeAgo] = useState(getUseTimeAgo());
-
-  useEffect(() => {
-    if (useTimeAgo) {
-      const id = setInterval(() => setTimeAgoRelativeDate(new Date()), UPDATE_INTERVAL);
-      return () => clearInterval(id);
-    }
-  }, [useTimeAgo]);
-
-  useEffect(() => {
-    if (getUseTimeAgo() !== useTimeAgo) setUseTimeAgo(!useTimeAgo);
-  }, [timeAgoRelativeDate, props.time]);
-
-  const fullDateTime = formatDateTime(props.time)[1];
-
-  return (
-    <>
-      {useTimeAgo ? (
-        <span title={fullDateTime}>
-          {timeago.format(props.time, appState.locale, {
-            relativeDate: timeAgoRelativeDate
-          })}
-        </span>
-      ) : (
-        fullDateTime
-      )}
-    </>
-  );
-};
-
-AutoTimeAgoLabel = observer(AutoTimeAgoLabel);
 
 interface EmojiProps extends React.HTMLAttributes<HTMLDivElement> {
   emoji: string;
@@ -386,7 +340,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
               </div>
               <span className={style.commentedOn}>
                 {_(".commented_on")}
-                <AutoTimeAgoLabel time={props.publishTime} />
+                <TimeAgo time={props.publishTime} />
                 {props.editTime && (
                   <>
                     <span className={style.edited} title={formatDateTime(props.editTime)[1]}>
@@ -476,17 +430,20 @@ DiscussionItem = observer(DiscussionItem);
 interface DiscussionEditorProps {
   className?: string;
 
-  publisher: ApiTypes.UserMetaDto;
+  publisher?: ApiTypes.UserMetaDto;
   content: string;
-  type: "UpdateReply" | "NewReply" | "UpdateDiscussion" | "NewDiscussion";
+  type: "UpdateReply" | "NewReply" | "UpdateDiscussion" | "NewDiscussion" | "RawEditor";
   onChangeContent: (content: string) => void;
   onCancel?: () => void;
-  onSubmit: (content: string) => Promise<boolean>;
+  onSubmit?: (content: string) => Promise<boolean>;
 
   // Only for new/update discussion
   title?: string;
   onChangeTitle?: (title: string) => void;
   noSubmitPermission?: boolean;
+
+  // Only for raw markdown editor
+  placeholder?: string;
 }
 
 export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
@@ -499,11 +456,13 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
 
   const [editorFocused, setEditor] = useFocusWithin();
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified);
-
   const isDiscussion = props.type === "NewDiscussion" || props.type === "UpdateDiscussion";
   const isUpdate = props.type === "UpdateDiscussion" || props.type === "UpdateReply";
+  const isNew = props.type === "NewDiscussion" || props.type === "NewReply";
+  const isRaw = props.type === "RawEditor";
+
+  const [modified, setModified] = useState(false);
+  useConfirmNavigation(modified && !isRaw);
 
   return (
     <div
@@ -511,13 +470,14 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
         style.item +
         " " +
         style.edit +
-        (props.publisher.id === appState.currentUser?.id ? " " + style.currentUser : "") +
-        (!isUpdate ? " " + style.new : "") +
+        (props.publisher?.id === appState.currentUser?.id ? " " + style.currentUser : "") +
+        (isNew ? " " + style.new : "") +
         (isDiscussion ? " " + style.discussion : "") +
+        (isRaw ? " " + style.raw : "") +
         (props.className ? " " + props.className : "")
       }
     >
-      {!isMobile && (
+      {!isMobile && !isRaw && (
         <div className={style.avatar}>
           <UserLink user={props.publisher}>
             <UserAvatar imageSize={40} userAvatar={props.publisher.avatar} />
@@ -526,7 +486,7 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
       )}
       <div className={style.bubble + (editorFocused ? " " + style.editorFocused : "")}>
         <Header block attached="top" className={style.header}>
-          {!isMobile && <div className={style.triangle} />}
+          {!isMobile && !isRaw && <div className={style.triangle} />}
           {isDiscussion && (
             <Input
               className={style.title}
@@ -563,9 +523,11 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
                     ? isDiscussion
                       ? _(".placeholder.update_discussion")
                       : _(".placeholder.update_reply")
-                    : isDiscussion
-                    ? _(".placeholder.add_discussion")
-                    : _(".placeholder.add_reply")
+                    : isNew
+                    ? isDiscussion
+                      ? _(".placeholder.add_discussion")
+                      : _(".placeholder.add_reply")
+                    : props.placeholder
                 }
                 value={props.content}
                 onChange={(e, { value }) => {
@@ -582,37 +544,39 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
               <MarkdownContent className={style.preview} content={props.content} />
             </>
           )}
-          <div className={style.actions}>
-            {!isUpdate ? (
-              <>
-                <Button
-                  positive
-                  content={_(isDiscussion ? ".actions.add_discussion" : ".actions.add_reply")}
-                  onClick={onSubmit}
-                  loading={pendingSubmit}
-                />
-              </>
-            ) : (
-              <>
-                <Button content={_(".actions.cancel")} onClick={props.onCancel} />
-                <Button
-                  positive
-                  content={_(
-                    isDiscussion
-                      ? props.noSubmitPermission
-                        ? ".actions.update_discussion_no_submit_permission"
-                        : ".actions.update_discussion"
-                      : ".actions.update_reply"
-                  )}
-                  onClick={async () => {
-                    if (await onSubmit()) setModified(false);
-                  }}
-                  loading={pendingSubmit}
-                  disabled={props.noSubmitPermission}
-                />
-              </>
-            )}
-          </div>
+          {!isRaw && (
+            <div className={style.actions}>
+              {isNew ? (
+                <>
+                  <Button
+                    positive
+                    content={_(isDiscussion ? ".actions.add_discussion" : ".actions.add_reply")}
+                    onClick={onSubmit}
+                    loading={pendingSubmit}
+                  />
+                </>
+              ) : (
+                <>
+                  <Button content={_(".actions.cancel")} onClick={props.onCancel} />
+                  <Button
+                    positive
+                    content={_(
+                      isDiscussion
+                        ? props.noSubmitPermission
+                          ? ".actions.update_discussion_no_submit_permission"
+                          : ".actions.update_discussion"
+                        : ".actions.update_reply"
+                    )}
+                    onClick={async () => {
+                      if (await onSubmit()) setModified(false);
+                    }}
+                    loading={pendingSubmit}
+                    disabled={props.noSubmitPermission}
+                  />
+                </>
+              )}
+            </div>
+          )}
         </Segment>
       </div>
     </div>

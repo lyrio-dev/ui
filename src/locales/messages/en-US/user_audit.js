@@ -56,5 +56,7 @@ module.exports = {
   "discussion.set_non_public": "Set discussion [firstObject] nonpublic",
   "discussion.set_reply_public": "Set reply [secondObject] of discussion [firstObject] public",
   "discussion.set_reply_non_public": "Set reply [secondObject] of discussion [firstObject] nonpublic",
-  "discussion.set_permissions": "Set permissions of discussion [firstObject]"
+  "discussion.set_permissions": "Set permissions of discussion [firstObject]",
+
+  "homepage.update": "Edit homepage"
 };
