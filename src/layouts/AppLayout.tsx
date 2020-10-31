@@ -25,6 +25,7 @@ import {
 import toast from "@/utils/toast";
 import api from "@/api";
 import formatDateTime from "@/utils/formatDateTime";
+import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
 
@@ -175,7 +176,9 @@ let AppLayout: React.FC = props => {
         <div className={style.logo}>
           <Logo />
         </div>
-        <div className={style.siteName}>{appState.serverPreference.siteName}</div>
+        <EmojiRenderer>
+          <div className={style.siteName}>{appState.serverPreference.siteName}</div>
+        </EmojiRenderer>
       </div>
     </Menu.Item>
   );
@@ -184,12 +187,14 @@ let AppLayout: React.FC = props => {
     <>
       <Segment vertical className={className}>
         <Container textAlign="center">
-          <div>
-            {appState.serverPreference.siteName} Powered by{" "}
-            <a href="https://ng.syzoj.org" target="_blank" rel="noreferrer noopener">
-              SYZOJ NG
-            </a>
-          </div>
+          <EmojiRenderer>
+            <div>
+              {appState.serverPreference.siteName} Powered by{" "}
+              <a href="https://ng.syzoj.org" target="_blank" rel="noreferrer noopener">
+                SYZOJ NG
+              </a>
+            </div>
+          </EmojiRenderer>
           <div id={style.footerVersion} className="monospace">
             <span>
               F: <span title={formatDateTime(window.appVersion.date)[1]}>{window.appVersion.hash}</span>
