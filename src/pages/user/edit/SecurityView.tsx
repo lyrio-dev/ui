@@ -11,7 +11,7 @@ import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
 import { useLocalizer, useFieldCheckSimple, useAsyncCallbackPending, useRecaptcha } from "@/utils/hooks";
-import { isValidPassword } from "@/utils/validators";
+import { isValidPassword, stripInvalidCharactersInEmailVerificationCode } from "@/utils/validators";
 import { RouteError } from "@/AppRouter";
 import fixChineseSpace from "@/utils/fixChineseSpace";
 import formatDateTime from "@/utils/formatDateTime";
@@ -145,7 +145,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
 
   function onChangeVerificationCode(code: string) {
     setEmailVerificationCodeError(false);
-    setEmailVerificationCode(code);
+    setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
   // Errors

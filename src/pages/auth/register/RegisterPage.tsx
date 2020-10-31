@@ -18,7 +18,12 @@ import {
   useNavigationChecked
 } from "@/utils/hooks";
 import toast from "@/utils/toast";
-import { isValidUsername, isValidEmail, isValidPassword } from "@/utils/validators";
+import {
+  isValidUsername,
+  isValidEmail,
+  isValidPassword,
+  stripInvalidCharactersInEmailVerificationCode
+} from "@/utils/validators";
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
@@ -248,7 +253,7 @@ let RegisterPage: React.FC = () => {
 
   function onChangeVerificationCode(code: string) {
     setEmailVerificationCodeError(false);
-    setEmailVerificationCode(code);
+    setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
   return (

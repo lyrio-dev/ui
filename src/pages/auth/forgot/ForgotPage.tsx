@@ -12,7 +12,7 @@ import { appState } from "@/appState";
 import api from "@/api";
 import { useLocalizer, useFieldCheck, useRecaptcha, useNavigationChecked } from "@/utils/hooks";
 import toast from "@/utils/toast";
-import { isValidEmail, isValidPassword } from "@/utils/validators";
+import { isValidEmail, isValidPassword, stripInvalidCharactersInEmailVerificationCode } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
 import { onEnterPress } from "@/utils/onEnterPress";
 
@@ -188,7 +188,7 @@ let ForgetPage: React.FC = () => {
 
   function onChangeVerificationCode(code: string) {
     setEmailVerificationCodeError(false);
-    setEmailVerificationCode(code);
+    setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
   return (

@@ -26,3 +26,7 @@ export function isValidFilename(filename: string): boolean {
   const reservedFilenames = [".", ".."];
   return forbiddenCharacters.every(ch => filename.indexOf(ch) === -1) && !reservedFilenames.includes(filename);
 }
+
+export function stripInvalidCharactersInEmailVerificationCode(str: string) {
+  return str.replace(/[^\d]/g, "");
+}
