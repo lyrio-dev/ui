@@ -11635,6 +11635,11 @@ setprototypeof@1.1.1:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.1.1.tgz#7e95acb24aa92f5885e0abef5ba131330d4ae683"
   integrity sha512-JvdAWfbXeIGaZ9cILp38HntZSFSo3mWg6xGcJJsd+d4aRMOqauag1C63dJfDw7OaMYwEbHMOxEZ1lqVRYP2OAw==
 
+sf-mono-webfont@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/sf-mono-webfont/-/sf-mono-webfont-1.0.0.tgz#c45d8c367bad8c971c15fbcafbe8fdd721f24055"
+  integrity sha512-G436xP/IvmgkBMhZmjQgwaCALD2/iONV8VO45yAR8u29vGFRAn2yu+cNlQqNNQyMylhpNLpN78S0zDMEqiAQ4w==
+
 sha.js@^2.4.0, sha.js@^2.4.8:
   version "2.4.11"
   resolved "https://registry.yarnpkg.com/sha.js/-/sha.js-2.4.11.tgz#37a5cf0b81ecbc6943de109ba2960d1b26584ae7"

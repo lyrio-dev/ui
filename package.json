@@ -87,6 +87,7 @@
     "react-scripts": "3.4.4",
     "react-textarea-autosize": "^8.2.0",
     "semantic-ui-react": "^2.0.0",
+    "sf-mono-webfont": "^1.0.0",
     "socket.io-client": "^2.3.0",
     "socket.io-msgpack-parser": "^2.2.1",
     "streamsaver": "^2.0.5",
