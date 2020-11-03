@@ -1,5 +1,6 @@
 const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin, disableEsLint } = require("customize-cra");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const CssUrlRelativePlugin = require("css-url-relative-plugin");
 const getGitRepoInfo = require("git-repo-info");
 
 const addWebWorkerLoader = loaderOptions => config => {
@@ -63,6 +64,11 @@ const removeServiceWorker = () => config => {
   return config;
 };
 
+const useRelativePath = () => config => {
+  config.output.publicPath = "./";
+  return config;
+}
+
 module.exports = override(
   disableEsLint(),
   addLessLoader(),
@@ -107,9 +113,11 @@ module.exports = override(
       "unusualLineTerminators"
     ]
   })),
+  addWebpackPlugin(new CssUrlRelativePlugin()),
   addBabelPlugin(["prismjs", {
     "languages": Object.keys(require("prismjs/components.js").languages).filter(name => name !== "meta")
   }]),
   patchHtmlWebpackPluginConfig(),
-  removeServiceWorker()
+  removeServiceWorker(),
+  useRelativePath()
 );

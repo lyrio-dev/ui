@@ -318,10 +318,10 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
            && tag.attributes
            && tag.attributes.rel === "stylesheet"
            && typeof tag.attributes.href === "string"
-           && tag.attributes.href.startsWith("/")
+           && tag.attributes.href.startsWith("./")
           ) {
         %>
-          addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(1)) %>);
+          addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(2)) %>);
         <% } else { %>
           <% throw new Error(`Couldn't handle this head tag: ${JSON.stringify(tag)}`); %>
         <% } %>
@@ -378,10 +378,10 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
           if (tag.tagName === "script"
            && tag.attributes
            && typeof tag.attributes.src === "string"
-           && tag.attributes.src.startsWith("/")
+           && tag.attributes.src.startsWith("./")
           ) {
         %>
-          addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(1)) %>);
+          addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(2)) %>);
         <% } else if (tag.tagName === "script" && tag.innerHTML) { %>
           <%= tag.innerHTML %>;
         <% } else { %>

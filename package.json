@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "@svgr/webpack": "^5.4.0",
     "@tanem/react-nprogress": "^3.0.47",
@@ -34,6 +34,7 @@
     "chart.js": "^2.9.4",
     "class-validator": "^0.12.2",
     "css-element-queries": "^1.2.3",
+    "css-url-relative-plugin": "^1.0.1",
     "customize-cra": "^1.0.0",
     "dayjs": "^1.9.3",
     "dtsgenerator": "2.7.0",
@@ -149,5 +150,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "files": [
+    "/build"
+  ]
 }
