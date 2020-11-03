@@ -39,6 +39,7 @@ let ProblemSearch: React.FC<ProblemSearchProps> = props => {
         const { requestError, response } = await api.problem.queryProblemSet(
           Object.assign({ locale: appState.locale }, props.queryParameters, {
             keyword: input,
+            keywordMatchesId: true,
             titleOnly: true,
             skipCount: 0,
             takeCount: SEARCH_PROBLEM_PREVIEW_LIST_LENGTH

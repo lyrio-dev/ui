@@ -742,6 +742,10 @@ declare namespace ApiTypes {
   export interface QueryProblemSetRequestDto {
     locale: "en_US" | "zh_CN" | "ja_JP";
     keyword?: string;
+    /**
+     * The result item by ID may NOT be included in the count.
+     */
+    keywordMatchesId?: boolean;
     tagIds?: number[];
     ownerId?: number;
     nonpublic?: boolean;

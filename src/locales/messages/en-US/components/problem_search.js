@@ -1,4 +1,4 @@
 module.exports = {
-  placeholder: "Title ...",
+  placeholder: "Title / ID ...",
   no_result: "No matching problems."
 };
