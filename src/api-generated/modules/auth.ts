@@ -13,10 +13,10 @@ export const checkAvailability = createGetApi<
   { username?: string; email?: string },
   ApiTypes.CheckAvailabilityResponseDto
 >("auth/checkAvailability");
-export const sendEmailVerifactionCode = createPostApi<
+export const sendEmailVerificationCode = createPostApi<
   ApiTypes.SendEmailVerificationCodeRequestDto,
   ApiTypes.SendEmailVerificationCodeResponseDto
->("auth/sendEmailVerifactionCode", true);
+>("auth/sendEmailVerificationCode", true);
 export const register = createPostApi<ApiTypes.RegisterRequestDto, ApiTypes.RegisterResponseDto>("auth/register", true);
 export const resetPassword = createPostApi<ApiTypes.ResetPasswordRequestDto, ApiTypes.ResetPasswordResponseDto>(
   "auth/resetPassword",

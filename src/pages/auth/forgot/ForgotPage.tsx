@@ -167,7 +167,7 @@ let ForgetPage: React.FC = () => {
       refEmailInput.current.focus();
       refEmailInput.current.select();
     } else {
-      const { requestError, response } = await api.auth.sendEmailVerifactionCode(
+      const { requestError, response } = await api.auth.sendEmailVerificationCode(
         {
           email: email,
           type: "ResetPassword",

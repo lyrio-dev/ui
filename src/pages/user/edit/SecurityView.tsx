@@ -117,7 +117,7 @@ const SecurityView: React.FC<SecurityViewProps> = props => {
   const [sendEmailVerificationCodePending, onSendEmailVerificationCode] = useAsyncCallbackPending(async () => {
     if (emailInvalid || email.toLowerCase() === appState.currentUser.email.toLowerCase()) {
     } else {
-      const { requestError, response } = await api.auth.sendEmailVerifactionCode(
+      const { requestError, response } = await api.auth.sendEmailVerificationCode(
         {
           email: email,
           type: "ChangeEmail",
