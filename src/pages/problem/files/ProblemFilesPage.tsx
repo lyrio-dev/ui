@@ -479,6 +479,7 @@ let FileTable: React.FC<FileTableProps> = props => {
   return (
     <>
       <Table
+        compact
         color={props.color}
         className={style.fileTable + (!props.hasPermission ? " " + style.noManagePermission : "")}
         unstackable
