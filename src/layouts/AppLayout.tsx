@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react";
 import { useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
@@ -40,9 +40,19 @@ let AppLayout: React.FC = props => {
       document.documentElement.classList.toggle(style.sidebarOpen);
   }, [sidebarOpen]);
 
+  // const refPageUrl = useRef<string>(location.pathname);
   useEffect(() => {
     const subscription = navigation.subscribe(route => {
       if (route.type === "ready") {
+        // if (refPageUrl.current !== route.url.pathname) {
+        //   refPageUrl.current = route.url.pathname;
+        //   if ("ga" in window) {
+        //     window["ga"]('set', 'page', route.url.pathname);
+        //     window["ga"]('send', 'pageview');
+        //     console.log("pageview", route.url.pathname);
+        //   }
+        // }
+
         setSidebarOpen(false);
 
         // Reset the scroll position to the top

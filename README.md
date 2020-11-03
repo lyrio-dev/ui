@@ -33,7 +33,7 @@ Start [syzoj-ng](https://github.com/syzoj/syzoj-ng) API server. For example, if 
 * To load compiled frontend resources from another host, replace `__public_path__`.
 * To change the favicon, replace `__favicon__`.
 * To change the app logo, replace `__app_logo__`. Use `null` or `""` to disable logo. Adjust the image width to adjust vertical spacing.
-* To use Google Analytics v4, replace `__ga_v4__` with your Measurement ID (in the form of `"G-XXXXXXXX"`, [NOT `"UA-XXXXXXXX"`](https://support.google.com/analytics/answer/9539598)).
+* To use Google Analytics, replace `__ga__` with your v3 Tracking ID (in the form of `"G-XXXXXXX-Y"`) or v4 Measurement ID (in the form of `"UA-XXXXXXXX"`).
 
 All these replacements work in development or production environment.
 

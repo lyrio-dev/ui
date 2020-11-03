@@ -107,26 +107,12 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.appLogoUrl = appLogoUrl;
 
-      // Google Analytics v4
-      var googleAnalyticsMeasurementId;
+      // Google Analytics
+      var googleAnalyticsId;
       try {
-        googleAnalyticsMeasurementId = __ga_v4__;
+        googleAnalyticsId = __ga__;
       } catch (e) {}
-
-      if (googleAnalyticsMeasurementId) {
-        var dataLayer = [];
-        window.dataLayer = dataLayer;
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        gtag("js", new Date);
-        gtag("config", googleAnalyticsMeasurementId);
-
-        var script = document.createElement("script");
-        script.src = "https://www.googletagmanager.com/gtag/js?id=" + googleAnalyticsMeasurementId;
-        script.async = true;
-        document.head.appendChild(script);
-      }
+      if (googleAnalyticsId) window.gaId = googleAnalyticsId;
 
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");

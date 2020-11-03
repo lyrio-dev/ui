@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.less";
 import "./webfonts";
+import "./analytics";
 import App from "./App";
 
 import initApp from "./initApp";

@@ -9,7 +9,7 @@ function patchFetch() {
   const realFetch = window.fetch;
   window.fetch = function () {
     if (typeof arguments[0] === "string" && arguments[0].endsWith("tree-sitter.wasm")) arguments[0] = TreeSitterWasmUrl;
-    return realFetch.apply(window, arguments);
+    return realFetch.apply(window, arguments as any);
   };
 }
 

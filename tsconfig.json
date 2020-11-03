@@ -18,7 +18,8 @@
     "noEmit": true,
     "jsx": "react",
     "strict": false,
-    "module": "esnext"
+    "module": "esnext",
+    "strictBindCallApply": true
   },
   "include": [
     "src"

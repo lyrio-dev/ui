@@ -26,7 +26,7 @@ export function defineRoute(getViewFunction: Resolvable<React.ReactNode>) {
   return route({
     async getView() {
       try {
-        return await getViewFunction.apply(this, arguments);
+        return await getViewFunction.apply(this, arguments as any);
       } catch (e) {
         if (e instanceof RouteError) return <ErrorPage {...e} />;
 
