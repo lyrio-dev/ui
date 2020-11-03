@@ -5,7 +5,6 @@ import { useCurrentRoute } from "react-navi";
 import { observer } from "mobx-react";
 
 import style from "../common.module.less";
-import AppLogo from "@/assets/syzoj-applogo.svg";
 
 import { appState } from "@/appState";
 
@@ -256,11 +255,13 @@ let RegisterPage: React.FC = () => {
     setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
+  const logo = window.appLogoUrl && <img className={style.logo} src={window.appLogoUrl} />;
+
   return (
     <>
       <div className={style.wrapper}>
-        <Header as="h2" className={style.header} textAlign="center">
-          <Image as={AppLogo} className={style.logo} />
+        <Header as="h2" className={style.header + (logo ? " " + style.withLogo : "")} textAlign="center">
+          {logo}
           {_(".register_new_account")}
         </Header>
         <Form size="large" ref={refForm}>

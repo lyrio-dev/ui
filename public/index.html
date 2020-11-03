@@ -98,6 +98,15 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         faviconUrl = publicPath + "favicon.ico";
       }
 
+      // Specify the app logo URL in the same way.
+      var appLogoUrl;
+      try {
+        appLogoUrl = __app_logo__;
+      } catch (e) {
+        appLogoUrl = publicPath + "logo.svg";
+      }
+      window.appLogoUrl = appLogoUrl;
+
       // Google Analytics v4
       var googleAnalyticsMeasurementId;
       try {

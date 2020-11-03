@@ -8,7 +8,6 @@ import "noty/lib/noty.css";
 import "noty/lib/themes/semanticui.css";
 
 import style from "./AppLayout.module.less";
-import Logo from "@/assets/syzoj-applogo.svg";
 
 import GlobalProgressBar from "@/components/GlobalProgressBar";
 
@@ -173,9 +172,11 @@ let AppLayout: React.FC = props => {
   const logo = (
     <Menu.Item as={Link} href="/" className={style.logoItem}>
       <div className={style.content}>
-        <div className={style.logo}>
-          <Logo />
-        </div>
+        {window.appLogoUrl && (
+          <div className={style.logo}>
+            <img src={window.appLogoUrl} />
+          </div>
+        )}
         <EmojiRenderer>
           <div className={style.siteName}>{appState.serverPreference.siteName}</div>
         </EmojiRenderer>

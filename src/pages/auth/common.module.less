@@ -36,15 +36,29 @@
 }
 
 .header {
-  margin: 7px 0 20px 0 !important;
+  margin: 0 0 28px 0 !important;
   font-size: 26px !important;
   font-weight: 500 !important;
   opacity: 0.9;
+
+  @media only screen and (max-width: 767px) {
+    margin: 14px 0 28px 0 !important;
+  }
+
+  &.withLogo {
+    margin: 0 0 20px 0 !important;
+
+    @media only screen and (max-width: 767px) {
+      margin: 14px 0 20px 0 !important;
+    }
+  }
 }
 
 .logo {
   margin-top: -4px !important;
   margin-left: -12px;
+  height: 2.5em !important;
+  width: auto !important;
 }
 
 .successButton {
