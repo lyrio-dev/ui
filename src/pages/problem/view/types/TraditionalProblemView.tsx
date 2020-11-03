@@ -12,7 +12,7 @@ import { JudgeInfoTraditional } from "../../judge-settings/types/TraditionalProb
 import { ProblemTypeLabelsProps, ProblemTypeSubmitViewProps, ProblemTypeView } from "../common/interface";
 import SubmitViewFrame from "../common/SubmitViewFrame";
 import CodeLanguageAndOptions from "../common/CodeLanguageAndOptions";
-import { getLimit } from "../common";
+import { getLimit, hasAnySubtaskTestcase } from "../common";
 
 type TraditionalProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoTraditional>;
 
@@ -120,6 +120,7 @@ const traditionalProblemViews: ProblemTypeView<JudgeInfoTraditional> = {
       },
       CodeLanguageAndOptions.getDefault()
     ),
+  isSubmittable: hasAnySubtaskTestcase,
   enableStatistics: () => true
 };
 

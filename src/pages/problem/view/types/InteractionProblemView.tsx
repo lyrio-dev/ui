@@ -9,7 +9,7 @@ import { JudgeInfoInteraction } from "../../judge-settings/types/InteractionProb
 import { ProblemTypeLabelsProps, ProblemTypeSubmitViewProps, ProblemTypeView } from "../common/interface";
 import SubmitViewFrame from "../common/SubmitViewFrame";
 import CodeLanguageAndOptions from "../common/CodeLanguageAndOptions";
-import { getLimit } from "../common";
+import { getLimit, hasAnySubtaskTestcase } from "../common";
 
 type InteractionProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoInteraction>;
 
@@ -82,6 +82,7 @@ const interactionProblemViews: ProblemTypeView<JudgeInfoInteraction> = {
       },
       CodeLanguageAndOptions.getDefault()
     ),
+  isSubmittable: hasAnySubtaskTestcase,
   enableStatistics: () => true
 };
 

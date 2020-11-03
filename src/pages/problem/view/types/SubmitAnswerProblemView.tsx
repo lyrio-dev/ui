@@ -12,6 +12,7 @@ import FileChooser from "../common/FileChooser";
 import TabbedEditor from "../common/TabbedEditor";
 import PseudoLink from "@/components/PseudoLink";
 import { createZipBlob } from "@/utils/zip";
+import { hasAnySubtaskTestcase } from "../common";
 
 type SubmitAnswerProblemLabelsProps = ProblemTypeLabelsProps<JudgeInfoSubmitAnswer>;
 
@@ -157,6 +158,7 @@ const SubmitAnswerProblemViews: ProblemTypeView<JudgeInfoSubmitAnswer> = {
   Labels: SubmitAnswerProblemLabels,
   SubmitView: SubmitAnswerProblemSubmitView,
   getDefaultSubmissionContent: () => ({}),
+  isSubmittable: hasAnySubtaskTestcase,
   enableStatistics: () => false
 };
 

@@ -22,5 +22,6 @@ export interface ProblemTypeView<JudgeInfo, SubmissionContent = object> {
   Labels: React.FC<ProblemTypeLabelsProps<JudgeInfo>>;
   SubmitView: React.FC<ProblemTypeSubmitViewProps<JudgeInfo, SubmissionContent>>;
   getDefaultSubmissionContent: () => SubmissionContent;
+  isSubmittable: (judgeInfo: JudgeInfo) => boolean;
   enableStatistics: () => boolean;
 }

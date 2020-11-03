@@ -648,20 +648,22 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         <div className={style.rightContainer}>
           <div className={style.actionMenusWrapper}>
             <Menu pointing secondary vertical className={style.actionMenu}>
-              <Popup
-                trigger={
-                  <Menu.Item
-                    className={style.menuItemImportant}
-                    name={_(".action.submit")}
-                    icon="paper plane"
-                    onClick={appState.currentUser ? openSubmitView : null}
-                  />
-                }
-                disabled={!!appState.currentUser}
-                content={<Button primary content={_(".action.login_to_submit")} onClick={() => navigateToLogin()} />}
-                on="click"
-                position="top left"
-              />
+              {props.ProblemTypeView.isSubmittable(props.problem.judgeInfo) && (
+                <Popup
+                  trigger={
+                    <Menu.Item
+                      className={style.menuItemImportant}
+                      name={_(".action.submit")}
+                      icon="paper plane"
+                      onClick={appState.currentUser ? openSubmitView : null}
+                    />
+                  }
+                  disabled={!!appState.currentUser}
+                  content={<Button primary content={_(".action.login_to_submit")} onClick={() => navigateToLogin()} />}
+                  on="click"
+                  position="top left"
+                />
+              )}
               <Menu.Item
                 name={_(".action.submission")}
                 icon="list"

@@ -21,3 +21,10 @@ export function getLimit(judgeInfo: any, limit: "timeLimit" | "memoryLimit") {
   if (min === max) return min.toString();
   return min + " - " + max;
 }
+
+export function hasAnySubtaskTestcase(judgeInfo: any) {
+  return (
+    Array.isArray(judgeInfo?.subtasks) &&
+    judgeInfo.subtasks.some(subtask => Array.isArray(subtask?.testcases) && subtask?.testcases.length > 0)
+  );
+}
