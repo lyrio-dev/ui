@@ -28,7 +28,13 @@ By default this app listens on `0.0.0.0:3000`, you can change this with the envi
 
 Start [syzoj-ng](https://github.com/syzoj/syzoj-ng) API server. For example, if the API server in accessible on `http://syzoj-ng.test`, the API endpoint is actually `http://syzoj-ng.test` (without `/api`).
 
-If the API endpoint is not the same as the syzoj-ng-app's root url, you should replace the `__api_endpoint__` string in syzoj-ng-app's HTML (e.g. with Nginx's `ngx_http_sub_module` module) with the API endpoint (in the form of JS string, e.g. `"http://syzoj-ng.test"`). To change the initial title of the page, replace `__default_title__`. To load compiled frontend resources from another host, replace `__public_path__`. To change the favicon, replace `__favicon__`. All these replacements work in development or production environment.
+* If the API endpoint is not the same as the syzoj-ng-app's root url, you should replace the `__api_endpoint__` string in syzoj-ng-app's HTML (e.g. with Nginx's `ngx_http_sub_module` module) with the API endpoint (in the form of JS expression, e.g. `"http://syzoj-ng.test"`).
+* To change the initial title of the page, replace `__default_title__`.
+* To load compiled frontend resources from another host, replace `__public_path__`.
+* To change the favicon, replace `__favicon__`.
+* To use Google Analytics v4, replace `__ga_v4__` with your Measurement ID (in the form of `"G-XXXXXXXX"`, [NOT `"UA-XXXXXXXX"`](https://support.google.com/analytics/answer/9539598)).
+
+All these replacements work in development or production environment.
 
 Here's a Nginx development configuration file for reference (don't forget to add the `.test` domains to your `hosts` or local DNS server):
 

@@ -98,6 +98,27 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         faviconUrl = publicPath + "favicon.ico";
       }
 
+      // Google Analytics v4
+      var googleAnalyticsMeasurementId;
+      try {
+        googleAnalyticsMeasurementId = __ga_v4__;
+      } catch (e) {}
+
+      if (googleAnalyticsMeasurementId) {
+        var dataLayer = [];
+        window.dataLayer = dataLayer;
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date);
+        gtag("config", googleAnalyticsMeasurementId);
+
+        var script = document.createElement("script");
+        script.src = "https://www.googletagmanager.com/gtag/js?id=" + googleAnalyticsMeasurementId;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");
         link.rel = rel;
