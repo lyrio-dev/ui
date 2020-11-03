@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 import { appState } from "./appState";
-import { availableCodeFonts } from "./webfonts";
+import { availableCodeFonts } from "./misc/webfonts";
 
 import AppRouter from "./AppRouter";
 

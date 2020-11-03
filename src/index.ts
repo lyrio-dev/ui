@@ -2,6 +2,21 @@
 // See `window.publicPath` in ../public/index.html
 __webpack_public_path__ = window["publicPath"];
 
+/**
+ * The initialization sequence:
+ *
+ * index.ts                  (webpack entry)
+ * => index.tsx              (app entry)
+ *    => misc
+ *       => webfonts.ts
+ *       => analytics.js
+ *    => initApp.ts          (session initialization)
+ *       => appState.ts      (app global state)
+ *    => App.tsx             (top-level react component)
+ *       => AppRouter.tsx    (react routing)
+ *          => Layout.tsx    (app view layout)
+ *          => page routes
+ */
 require("./index.tsx");
 
 export {}; // Fix the error "All files must be modules when the '--isolatedModules' flag is provided".

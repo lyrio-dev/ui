@@ -11,7 +11,7 @@ import style from "./CodeEditor.module.less";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 import { appState } from "@/appState";
-import { availableCodeFonts } from "@/webfonts";
+import { availableCodeFonts } from "@/misc/webfonts";
 
 function loadAceHighlights() {
   Monaco.languages.register({ id: "haskell" });

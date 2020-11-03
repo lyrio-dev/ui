@@ -16,7 +16,7 @@ import { CodeLanguage, filterValidCompileAndRunOptions } from "@/interfaces/Code
 import { HighlightedCodeBox } from "@/components/CodeBox";
 import { RouteError } from "@/AppRouter";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
-import { availableCodeFonts } from "@/webfonts";
+import { availableCodeFonts } from "@/misc/webfonts";
 import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(userId: number) {
