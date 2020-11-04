@@ -302,10 +302,13 @@ let HomePage: React.FC<HomePageProps> = props => {
   const getProblemSearch = () => (
     <>
       <Header className={style.header} as="h4" block icon="search" content={_(".search_problem")} attached="top" />
-      <Segment className={style.segment} attached="bottom">
+      <Segment className={style.segment + " " + style.search} attached="bottom">
         <ProblemSearch
           className={style.search}
           onResultSelect={({ meta }) => navigation.navigate(getProblemUrl(meta))}
+          onEnterPress={searchKeyword =>
+            navigation.navigate({ pathname: "/problems", query: { keyword: searchKeyword } })
+          }
         />
       </Segment>
     </>
