@@ -451,7 +451,9 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
   const _ = useLocalizer("discussion.edit");
 
   const isMobile = useScreenWidthWithin(0, 768);
-  const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => await props.onSubmit(props.content));
+  const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
+    if (props.onSubmit && (await props.onSubmit(props.content))) setModified(false);
+  });
 
   const [preview, setPreview] = useState(false);
 
@@ -464,6 +466,9 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
 
   const [modified, setModified] = useState(false);
   useConfirmNavigation(modified && !isRaw);
+
+  const isEmpty = props.content.length === 0 || (isDiscussion && props.title.length === 0);
+  const submitDisabled = props.noSubmitPermission || isEmpty;
 
   return (
     <div
@@ -512,7 +517,11 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
             </Menu>
           </div>
         </Header>
-        <Segment attached className={style.mainSegment}>
+        <Segment
+          attached
+          className={style.mainSegment}
+          onKeyPress={onEnterPress(e => !submitDisabled && e.ctrlKey && onSubmit(), false)}
+        >
           <Form style={preview ? { display: "none" } : {}}>
             <Ref innerRef={setEditor}>
               <TextArea
@@ -553,12 +562,25 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
                     positive
                     content={_(isDiscussion ? ".actions.add_discussion" : ".actions.add_reply")}
                     onClick={onSubmit}
+                    disabled={submitDisabled}
                     loading={pendingSubmit}
                   />
                 </>
               ) : (
                 <>
-                  <Button content={_(".actions.cancel")} onClick={props.onCancel} />
+                  <Popup
+                    trigger={<Button content={_(".actions.cancel")} onClick={() => !modified && props.onCancel()} />}
+                    content={
+                      <Button
+                        negative
+                        content={_(".actions.confirm_cancel")}
+                        onClick={() => (setModified(false), props.onCancel())}
+                      />
+                    }
+                    disabled={!modified}
+                    position="bottom center"
+                    on="click"
+                  />
                   <Button
                     positive
                     content={_(
@@ -568,11 +590,9 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
                           : ".actions.update_discussion"
                         : ".actions.update_reply"
                     )}
-                    onClick={async () => {
-                      if (await onSubmit()) setModified(false);
-                    }}
+                    onClick={onSubmit}
                     loading={pendingSubmit}
-                    disabled={props.noSubmitPermission}
+                    disabled={submitDisabled}
                   />
                 </>
               )}

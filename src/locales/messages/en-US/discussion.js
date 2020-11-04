@@ -52,7 +52,8 @@ module.exports = {
       update_reply: "Update reply",
       update_discussion: "Submit",
       update_discussion_no_submit_permission: "No Permission",
-      cancel: "Cancel"
+      cancel: "Cancel",
+      confirm_cancel: "Discard changes"
     }
   },
   load_more: {

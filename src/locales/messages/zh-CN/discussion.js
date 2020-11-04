@@ -52,7 +52,8 @@ module.exports = {
       update_reply: "修改回复",
       update_discussion: "提交",
       update_discussion_no_submit_permission: "无提交权限",
-      cancel: "取消"
+      cancel: "取消",
+      confirm_cancel: "放弃修改并取消"
     }
   },
   load_more: {

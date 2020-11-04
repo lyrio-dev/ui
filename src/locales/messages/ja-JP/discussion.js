@@ -52,7 +52,8 @@ module.exports = {
       update_reply: "[TBT] Update reply",
       update_discussion: "[TBT] Submit",
       update_discussion_no_submit_permission: "[TBT] No Permission",
-      cancel: "[TBT] Cancel"
+      cancel: "[TBT] Cancel",
+      confirm_cancel: "[TBT] Discard changes"
     }
   },
   load_more: {
