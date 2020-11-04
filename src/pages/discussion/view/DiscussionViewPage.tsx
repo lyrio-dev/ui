@@ -159,6 +159,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
   const _ = useLocalizer("discussion.item");
 
   const isMobile = useScreenWidthWithin(0, 768);
+  const isWideScreen = useScreenWidthWithin(1210, Infinity);
 
   const emojisAndCount = (Object.entries(props.reactions.count) as [string, number][])
     .filter(([, count]) => count)
@@ -375,7 +376,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
                     onOpen={() => setEmojiPopupOpen(true)}
                     onClose={() => setEmojiPopupOpen(false)}
                     on="click"
-                    position={isMobile ? "right center" : "bottom center"}
+                    position={isWideScreen ? "bottom center" : "right center"}
                   />
                 </div>
               )}
