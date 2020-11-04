@@ -68,7 +68,7 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
       {getBreadcrumb(
         props.discussion ? props.discussion.problem : props.problem,
         _,
-        false,
+        null,
         <>
           <Breadcrumb.Divider icon="right angle" />
           <Breadcrumb.Section>

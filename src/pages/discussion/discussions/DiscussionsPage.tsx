@@ -32,21 +32,25 @@ export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
 export function getBreadcrumb(
   problem: { meta: ApiTypes.ProblemMetaDto; title: string },
   _: Localizer,
-  allProblems?: boolean,
+  inTopLevelList?: "general" | "allProblems",
   extra?: React.ReactNode
 ) {
   return (
     <Breadcrumb className={style.breadcrumb}>
       <Breadcrumb.Section>{_("discussions.breadcrumb.discussion")}</Breadcrumb.Section>
       <Breadcrumb.Divider icon="right angle" />
-      {allProblems ? (
+      {inTopLevelList ? (
         <>
-          <Breadcrumb.Section
-            active
-            as={Link}
-            href={({ pathname: "/discussions", query: { problemId: "all" } } as unknown) as string}
-          >
-            {_("discussions.breadcrumb.problem")}
+          <Breadcrumb.Section active className={style.switch}>
+            {inTopLevelList === "general" ? _("discussions.breadcrumb.general") : _("discussions.breadcrumb.problem")}
+            <span className={style.divider}>/</span>
+            {inTopLevelList === "allProblems" ? (
+              <Link href="/discussions">{_("discussions.breadcrumb.general")}</Link>
+            ) : (
+              <Link href={{ pathname: "/discussions", query: { problemId: "all" } }}>
+                {_("discussions.breadcrumb.problem")}
+              </Link>
+            )}
           </Breadcrumb.Section>
         </>
       ) : problem ? (
@@ -331,12 +335,17 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
   );
 
   const hideProblemColumn = !allProblems;
+  const breadcrumb = getBreadcrumb(
+    props.response.filterProblem,
+    _,
+    allProblems ? "allProblems" : !props.response.filterProblem ? "general" : null
+  );
 
   return (
     <>
       {isVeryNarrowScreen ? (
         <>
-          {getBreadcrumb(props.response.filterProblem, _, allProblems)}
+          {breadcrumb}
           <div className={style.headerRow}>
             {headerSearch}
             {headerButtons}
@@ -345,7 +354,7 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
         </>
       ) : (
         <>
-          {getBreadcrumb(props.response.filterProblem, _, allProblems)}
+          {breadcrumb}
           <div className={style.headerRow}>
             {headerSearch}
             <div className={style.headerRightControls}>{headerButtons}</div>
