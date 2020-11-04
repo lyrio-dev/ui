@@ -57,8 +57,7 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
       const newId = props.discussion
         ? props.discussion.meta.id
         : (response as ApiTypes.CreateDiscussionResponseDto).discussionId;
-      navigation.navigate(`/discussion/${newId}`);
-      return true;
+      return () => navigation.navigate(`/discussion/${newId}`);
     }
 
     return false;

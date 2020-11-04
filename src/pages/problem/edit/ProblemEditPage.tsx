@@ -743,7 +743,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   const [newProblemType, setNewProblemType] = useState(ProblemType.Traditional);
 
-  const [modified, setModified] = useState(false);
+  const [modified, setModified] = useConfirmNavigation();
   const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
     // Swap the default locale to the first of the array.
     const localizedContentsPayload = Object.keys(localizedContents)
@@ -807,6 +807,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       else if (response.error) {
         toast.error(_(`.error.${response.error}`));
       } else {
+        setModified(false);
         navigation.navigate(getProblemUrl(response.id));
       }
     } else {
@@ -828,10 +829,12 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   });
 
   function onBackToProblem() {
+    setModified(false);
+
     if (props.new) {
-      navigation.unconfirmed.navigate("/problems");
+      navigation.navigate("/problems");
     } else {
-      navigation.unconfirmed.navigate({
+      navigation.navigate({
         pathname: getProblemUrl(props.problem.meta, { use: props.idType }),
         query: props.requestedLocale
           ? {
@@ -1200,8 +1203,6 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   );
 
   const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.includes("Modify");
-
-  useConfirmNavigation(modified);
 
   return (
     <>

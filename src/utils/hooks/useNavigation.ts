@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { observable } from "mobx";
 import { useNavigation, Link as NaviLink } from "react-navi";
 import { LinkProps } from "react-navi/dist/types/Link";
@@ -56,13 +56,23 @@ export function useNavigationChecked() {
   };
 }
 
-export function useConfirmNavigation(confirm: boolean) {
-  useEffect(() => {
-    if (confirm) {
-      confirmNavigationState.count++;
-      return () => confirmNavigationState.count--;
+export function useConfirmNavigation(): [boolean, (confirm: boolean) => void] {
+  const refConfirm = useRef<boolean>(false);
+  const [stateConfirm, setStateConfirm] = useState(false);
+
+  useEffect(() => () => refConfirm.current && confirmNavigationState.count--, []);
+
+  return [
+    stateConfirm,
+    (confirm: boolean) => {
+      if (confirm != refConfirm.current) {
+        refConfirm.current = confirm;
+        setStateConfirm(confirm);
+
+        confirmNavigationState.count += confirm ? 1 : -1;
+      }
     }
-  }, [confirm]);
+  ];
 }
 
 export const Link: React.FC<LinkProps> = props => {

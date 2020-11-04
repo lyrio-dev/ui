@@ -132,8 +132,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
   const _ = useLocalizer("problem_tag_manager");
   const navigation = useNavigationChecked();
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified);
+  const [modified, setModified] = useConfirmNavigation();
 
   const [tags, setTags] = useState<Record<number, ApiTypes.ProblemTagWithAllLocalesDto>>({});
   const tagsCount = Object.keys(tags).length;

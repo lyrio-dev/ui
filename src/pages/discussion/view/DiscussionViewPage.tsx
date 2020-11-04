@@ -436,7 +436,7 @@ interface DiscussionEditorProps {
   type: "UpdateReply" | "NewReply" | "UpdateDiscussion" | "NewDiscussion" | "RawEditor";
   onChangeContent: (content: string) => void;
   onCancel?: () => void;
-  onSubmit?: (content: string) => Promise<boolean>;
+  onSubmit?: (content: string) => Promise<boolean | (() => void)>;
 
   // Only for new/update discussion
   title?: string;
@@ -452,7 +452,11 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
 
   const isMobile = useScreenWidthWithin(0, 768);
   const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
-    if (props.onSubmit && (await props.onSubmit(props.content))) setModified(false);
+    if (props.onSubmit) {
+      const result = await props.onSubmit(props.content);
+      if (result) setModified(false);
+      if (typeof result === "function") result();
+    }
   });
 
   const [preview, setPreview] = useState(false);
@@ -464,8 +468,8 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
   const isNew = props.type === "NewDiscussion" || props.type === "NewReply";
   const isRaw = props.type === "RawEditor";
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified && !isRaw);
+  const [modified, setModifiedReal] = useConfirmNavigation();
+  const setModified = isRaw ? () => {} : setModifiedReal;
 
   const isEmpty = props.content.length === 0 || (isDiscussion && props.title.length === 0);
   const submitDisabled = props.noSubmitPermission || isEmpty;

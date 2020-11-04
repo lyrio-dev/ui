@@ -41,8 +41,7 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
     appState.enterNewPage(_(".title"), null, false);
   }, [appState.locale]);
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified);
+  const [modified, setModified] = useConfirmNavigation();
 
   const [noticeEnabled, setNoticeEnabled] = useState(props.settings.notice.enabled);
   const [notice, setNotice] = useState(

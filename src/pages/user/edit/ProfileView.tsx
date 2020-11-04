@@ -47,8 +47,7 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
     appState.enterNewPage(`${_(`.title`)} - ${titleUsername}`, null, false);
   }, [appState.locale, titleUsername]);
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified);
+  const [modified, setModified] = useConfirmNavigation();
 
   const [username, setUsername] = useState(props.meta.username);
   const [email, setEmail] = useState(props.meta.email);

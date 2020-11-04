@@ -70,8 +70,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   const defaultPermissionLevel = Number(Object.keys(props.permissionsLevelDetails)[0]);
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified);
+  const [modified, setModified] = useConfirmNavigation();
 
   const [opened, setOpened] = useState(false);
 

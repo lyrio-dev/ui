@@ -362,8 +362,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     setInSubmitView(false);
   }
 
-  const [modified, setModified] = useState(false);
-  useConfirmNavigation(modified);
+  const [modified, setModified] = useConfirmNavigation();
   function updateSubmissionContent(path: string, value: any) {
     setModified(true);
     const spec = {};
@@ -391,7 +390,10 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     else if (requestError) toast.error(requestError(_));
     else if (response.error) {
       toast.error(_(`.error.${response.error}`));
-    } else navigation.unconfirmed.navigate(`/submission/${response.submissionId}`);
+    } else {
+      setModified(false);
+      navigation.navigate(`/submission/${response.submissionId}`);
+    }
 
     setSubmitPending(false);
   }

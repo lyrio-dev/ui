@@ -68,7 +68,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   const [editorUuid, setEditorUuid] = useState(uuid());
 
   const [pending, setPending] = useState(false);
-  const [modified, setModified] = useState(false);
+  const [modified, setModified] = useConfirmNavigation();
 
   function onUpdate(deltaOrReducer: unknown | ((judgeInfo: unknown) => Partial<unknown>), isNotByUser?: boolean) {
     if (pending) return;
@@ -80,7 +80,8 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   }
 
   function onBackToProblem() {
-    navigation.unconfirmed.navigate(getProblemUrl(props.problem.meta, { use: props.idType }));
+    setModified(false);
+    navigation.navigate(getProblemUrl(props.problem.meta, { use: props.idType }));
   }
 
   async function onSubmit() {
@@ -143,6 +144,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           try {
             const parsed = parseJudgeInfo(yaml.safeLoad(editRawEditorValue));
             setJudgeInfo(parsed);
+            setModified(true);
             setEditorUuid(uuid());
             editRawDialog.close();
           } catch (e) {
@@ -152,8 +154,6 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
       />
     </>
   );
-
-  useConfirmNavigation(modified);
 
   const [newType, setNewType] = useState(props.problem.meta.type as ProblemType);
   const [switchProblemPopupOpen, setSwitchProblemPopupOpen] = useState(false);
