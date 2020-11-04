@@ -143,12 +143,12 @@ let AppLayout: React.FC = props => {
           {_(".header.user.problems")}
         </Dropdown.Item>
         <Dropdown.Item as={Link} href={{ pathname: "/discussions", query: { publisherId: appState.currentUser.id } }}>
-          <Icon name="book" />
+          <Icon name="comments" />
           {_(".header.user.discussions")}
         </Dropdown.Item>
         {appState.currentUserJoinedGroupsCount > 0 && (
           <Dropdown.Item as={Link} href="/users/groups">
-            <Icon name="comments" />
+            <Icon name="users" />
             {_(".header.user.groups")}
           </Dropdown.Item>
         )}
