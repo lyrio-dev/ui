@@ -90,6 +90,7 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
             </>
           }
           hoverable
+          position="bottom center"
         />
       );
     }
@@ -204,11 +205,11 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
         <Table>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell className={style.columnStatus}>{_(".status")}</Table.HeaderCell>
-              <Table.HeaderCell>{_(".name")}</Table.HeaderCell>
+              <Table.HeaderCell className={style.nowrap}>{_(".status")}</Table.HeaderCell>
+              <Table.HeaderCell className={style.nowrap}>{_(".name")}</Table.HeaderCell>
               <Table.HeaderCell>{_(".cpu")}</Table.HeaderCell>
               <Table.HeaderCell>{_(".memory")}</Table.HeaderCell>
-              <Table.HeaderCell>{_(".kernel")}</Table.HeaderCell>
+              <Table.HeaderCell className={style.nowrap}>{_(".kernel")}</Table.HeaderCell>
               {props.hasManagePermission && (
                 <Table.HeaderCell textAlign="center" className={style.columnOperations}>
                   {_(".operations")}
@@ -219,16 +220,18 @@ let JudgeMachinePage: React.FC<JudgeMachinePageProps> = props => {
           <Table.Body>
             {props.judgeClients.map(judgeClient => (
               <Table.Row key={judgeClient.id}>
-                <Table.Cell className={style.columnStatus}>
-                  <Label className={style.onlineStatus} circular color={judgeClient.online ? "green" : "red"} empty />
-                  {judgeClient.online ? _(".online") : _(".offline")}
+                <Table.Cell className={style.nowrap}>
+                  <div className={style.status}>
+                    <Label className={style.onlineStatus} circular color={judgeClient.online ? "green" : "red"} empty />
+                    {judgeClient.online ? _(".online") : _(".offline")}
+                  </div>
                 </Table.Cell>
                 <EmojiRenderer>
-                  <Table.Cell>{judgeClient.name}</Table.Cell>
+                  <Table.Cell className={style.nowrap}>{judgeClient.name}</Table.Cell>
                 </EmojiRenderer>
                 <Table.Cell>{getCpu(judgeClient)}</Table.Cell>
                 <Table.Cell>{getMemory(judgeClient)}</Table.Cell>
-                <Table.Cell>{getKernel(judgeClient)}</Table.Cell>
+                <Table.Cell className={style.nowrap}>{getKernel(judgeClient)}</Table.Cell>
                 {props.hasManagePermission && (
                   <Table.Cell textAlign="center" className={style.columnOperations}>
                     <Popup
