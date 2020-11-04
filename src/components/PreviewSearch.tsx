@@ -4,7 +4,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import style from "./PreviewSearch.module.less";
 
-import { useScreenWidthWithin } from "@/utils/hooks";
+import { useNavigationChecked, useScreenWidthWithin } from "@/utils/hooks";
 import { onEnterPress } from "@/utils/onEnterPress";
 
 interface PreviewSearchProps<T> {
@@ -42,8 +42,13 @@ const PreviewSearch = <T extends {}>(props: PropsWithChildren<PreviewSearchProps
     }
 
     setResults(results || []);
+    setHideResults(false);
     setPending(false);
   }, 500).callback;
+
+  const [hideResults, setHideResults] = useState(true);
+  const navigation = useNavigationChecked();
+  navigation.subscribe(route => route.type === "ready" && !hideResults && setHideResults(true));
 
   const isMobile = useScreenWidthWithin(0, 768);
 
@@ -60,13 +65,17 @@ const PreviewSearch = <T extends {}>(props: PropsWithChildren<PreviewSearchProps
       }}
       input={{ iconPosition: "left", fluid: isMobile }}
       // Workaround Semantic UI's buggy "custom result renderer"
-      results={results.map(result => ({
-        key: props.onGetResultKey(result),
-        title: "",
-        data: result
-      }))}
+      results={
+        hideResults
+          ? []
+          : results.map(result => ({
+              key: props.onGetResultKey(result),
+              title: "",
+              data: result
+            }))
+      }
       loading={pending}
-      showNoResults={!pending}
+      showNoResults={!pending && !hideResults}
       resultRenderer={(result: any) => props.onRenderResult(result.data) as any}
       onResultSelect={(e, { result }: { result: any }) => props.onResultSelect(result.data)}
       onKeyPress={onEnterPress(() => searchKeyword && props.onEnterPress && props.onEnterPress(searchKeyword))}
