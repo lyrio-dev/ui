@@ -222,11 +222,11 @@ const ProfileView: React.FC<ProfileViewProps> = props => {
             placeholder={_(".bio_placeholder")}
             value={bio}
             onChange={(e, { value }) =>
-              (value as string).length <= 190 && !pending && (setModified(true), setBio(value as string))
+              (value as string).length <= 160 && !pending && (setModified(true), setBio(value as string))
             }
           />
         </Form>
-        {bio.length >= 190 - 10 && <div className={style.notes}>{bio.length}/190</div>}
+        {bio.length >= 160 - 10 && <div className={style.notes}>{bio.length}/160</div>}
         <Header className={style.header} size="tiny" content={_(".organization")} />
         <Input
           fluid
