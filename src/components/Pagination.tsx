@@ -21,7 +21,7 @@ class PatchedUIPagination extends UIPagination {
       return (predefinedProps: unknown) => ({
         ...originalOverrider(predefinedProps),
         as: isEllipsisItem ? "span" : Link,
-        href: isEllipsisItem ? undefined : props.pageUrl(value),
+        href: isEllipsisItem ? undefined : this.props.pageUrl(value),
         onClick: undefined
       });
     };
