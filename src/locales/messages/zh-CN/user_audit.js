@@ -58,5 +58,7 @@ module.exports = {
   "discussion.set_reply_non_public": "将讨论 [firstObject] 的回复 [secondObject] 设为非公开",
   "discussion.set_permissions": "修改讨论 [firstObject] 的权限",
 
+  "migration.migrate": "账户迁移到新版系统",
+
   "homepage.update": "编辑首页"
 };

@@ -58,5 +58,7 @@ module.exports = {
   "discussion.set_reply_non_public": "Set reply [secondObject] of discussion [firstObject] nonpublic",
   "discussion.set_permissions": "Set permissions of discussion [firstObject]",
 
+  "migration.migrate": "Migrate to new system",
+
   "homepage.update": "Edit homepage"
 };
