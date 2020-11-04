@@ -40,19 +40,9 @@ let AppLayout: React.FC = props => {
       document.documentElement.classList.toggle(style.sidebarOpen);
   }, [sidebarOpen]);
 
-  // const refPageUrl = useRef<string>(location.pathname);
   useEffect(() => {
     const subscription = navigation.subscribe(route => {
       if (route.type === "ready") {
-        // if (refPageUrl.current !== route.url.pathname) {
-        //   refPageUrl.current = route.url.pathname;
-        //   if ("ga" in window) {
-        //     window["ga"]('set', 'page', route.url.pathname);
-        //     window["ga"]('send', 'pageview');
-        //     console.log("pageview", route.url.pathname);
-        //   }
-        // }
-
         setSidebarOpen(false);
 
         // Reset the scroll position to the top
