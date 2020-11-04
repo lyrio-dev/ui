@@ -1177,7 +1177,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   const [activeLocale, setActiveLocale] = useState(() => {
     const locale = props.requestedLocale || appState.locale;
-    return locale in localeMeta ? locale : (Object.keys(localeMeta)[0] as Locale);
+    return locale in localizedContents ? locale : (Object.keys(localizedContents)[0] as Locale);
   });
 
   const [tagIds, setTagIds] = useState(
