@@ -36,6 +36,7 @@ module.exports = {
     locale: "语言",
     github: "开源项目"
   },
+  invalid_url: "无效的 URL。",
   request_error: {
     400: "无效的请求。",
     401: "验证失败，请刷新后重试。",

@@ -36,6 +36,7 @@ module.exports = {
     locale: "[TBT] Language",
     github: "[TBT] Open source"
   },
+  invalid_url: "[TBT] Invalid URL.",
   request_error: {
     400: "[TBT] Invalid request.",
     401: "[TBT] Verification failed. Please refresh and try again.",

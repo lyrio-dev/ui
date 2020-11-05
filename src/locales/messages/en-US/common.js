@@ -36,6 +36,7 @@ module.exports = {
     locale: "Language",
     github: "Open source"
   },
+  invalid_url: "Invalid URL.",
   request_error: {
     400: "Invalid request.",
     401: "Verification failed. Please refresh and try again.",

@@ -1,6 +1,6 @@
 import React, { Suspense, useMemo } from "react";
 import { mount, lazy, withView, route, Resolvable, redirect, Matcher, map } from "navi";
-import { Router, View } from "react-navi";
+import { NotFoundBoundary, Router, View } from "react-navi";
 import { IntlProvider } from "react-intl";
 import { observer } from "mobx-react";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -9,7 +9,7 @@ import AppLayout from "./layouts/AppLayout";
 import ErrorPage, { ErrorPageProps } from "./pages/error/ErrorPage";
 import getRoute from "./utils/getRoute";
 import { appState } from "./appState";
-import { loadLocaleData, ToBeLocalizedText } from "./locales";
+import { loadLocaleData, makeToBeLocalizedText, ToBeLocalizedText } from "./locales";
 import localeMeta from "./locales/meta";
 
 export class RouteError implements ErrorPageProps {
@@ -78,7 +78,13 @@ const AppRouter: React.FC = () => {
             <IntlProvider locale={localeHyphen} messages={localeData}>
               <AppLayout key={localeHyphen}>
                 <ErrorBoundary>
-                  <View />
+                  <NotFoundBoundary
+                    render={() => (
+                      <ErrorPage message={makeToBeLocalizedText("common.invalid_url")} options={{ showBack: true }} />
+                    )}
+                  >
+                    <View />
+                  </NotFoundBoundary>
                 </ErrorBoundary>
               </AppLayout>
             </IntlProvider>
