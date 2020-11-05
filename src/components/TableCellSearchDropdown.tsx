@@ -12,28 +12,38 @@ interface ResultItem {
 
 interface TableCellSearchDropdownProps {
   placeholder: string;
+  noResultMessage: string;
   onSearch: (input: string) => Promise<ResultItem[]>;
   onSelect: (data: any) => void;
 }
 
 const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props => {
   const [result, setResult] = useState<ResultItem[]>([]);
+  const [noResult, setNoResult] = useState(false);
 
   // If the search result returns after the input changed, don't show the result
   const [pending, setPending] = useState(false);
   const refInput = useRef("");
   const onSearch = useDebouncedCallback(async (input: string) => {
     input = input.trim();
-    if (!input) return;
 
     setPending(true);
     refInput.current = input;
-    setResult(await props.onSearch(input));
+
+    if (!input) {
+      setPending(false);
+      return;
+    }
+
+    const results = await props.onSearch(input);
+
     if (refInput.current !== input) {
       // Still pending
       return;
     }
 
+    setResult(results || []);
+    if (!results || results.length === 0) setNoResult(true);
     setPending(false);
   }, 500).callback;
 
@@ -48,7 +58,11 @@ const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props =>
       placeholder={props.placeholder}
       fluid
       value={null}
-      onSearchChange={(e, { searchQuery }) => onSearch(searchQuery)}
+      onSearchChange={(e, { searchQuery }) => {
+        setPending(true);
+        setNoResult(false);
+        onSearch(searchQuery);
+      }}
       search={(_, query) =>
         result.map(({ key, content }, i) => ({
           key,
@@ -57,7 +71,7 @@ const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props =>
         }))
       }
       onChange={(e, { value }) => onSelect(value as number)}
-      noResultsMessage={null}
+      noResultsMessage={noResult ? props.noResultMessage : null}
       loading={pending}
     />
   );

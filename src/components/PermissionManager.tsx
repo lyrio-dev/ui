@@ -338,6 +338,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                 <Table.HeaderCell colSpan={4} className={style.columnDropdown}>
                   <TableCellSearchDropdown
                     placeholder={_(".search_users")}
+                    noResultMessage={_(".search_users_no_result")}
                     onSearch={onSearchUser}
                     onSelect={user => addUser(user)}
                   />
@@ -393,6 +394,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                 <Table.HeaderCell colSpan={3} className={style.columnDropdown}>
                   <TableCellSearchDropdown
                     placeholder={_(".search_groups")}
+                    noResultMessage={_(".search_groups_no_result")}
                     onSearch={onSearchGroup}
                     onSelect={group => addGroup(group)}
                   />
