@@ -59,10 +59,9 @@ let AppLayout: React.FC = props => {
     if (requestError) {
       toast.error(requestError(_));
     } else {
-      appState.token = appState.currentUser = null;
-      appState.currentUserPrivileges = [];
-      appState.userPreference = {};
-      navigation.refresh();
+      appState.token = null;
+      appState.logout = true;
+      location.reload();
     }
   }
 

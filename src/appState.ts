@@ -60,6 +60,10 @@ export class AppState {
   @observable
   showTagsInProblemSet: boolean = false;
 
+  @persist
+  @observable
+  logout = false;
+
   @observable
   currentUser: ApiTypes.UserMetaDto = null;
 

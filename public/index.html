@@ -300,7 +300,12 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
     function refreshSession(token) {
       function getSessionToken() {
         try {
-          return JSON.parse(localStorage["appState"])["token"];
+          var appState = JSON.parse(localStorage["appState"]);
+          if (appState.logout) {
+            appState.logout = false;
+            localStorage["appState"] = JSON.stringify(appState);
+          } else
+            return appState.token;
         } catch (e) {
           return null;
         }
