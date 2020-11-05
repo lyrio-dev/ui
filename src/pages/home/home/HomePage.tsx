@@ -402,9 +402,9 @@ let HomePage: React.FC<HomePageProps> = props => {
           {getAnnnouncements()}
           {getHitokoto()}
           {getProblemSearch()}
-          {appState.serverPreference.frontend.homepageUserListOnMainView ? getTopUsers(false) : getLatestProblems(true)}
+          {appState.serverPreference.misc.homepageUserListOnMainView ? getTopUsers(false) : getLatestProblems(true)}
           {getCountdown()}
-          {appState.serverPreference.frontend.homepageUserListOnMainView ? getLatestProblems(true) : getTopUsers(false)}
+          {appState.serverPreference.misc.homepageUserListOnMainView ? getLatestProblems(true) : getTopUsers(false)}
           {getFriendLinks()}
         </>
       ) : (
@@ -412,17 +412,13 @@ let HomePage: React.FC<HomePageProps> = props => {
           <Grid.Column width={11}>
             {getNotice()}
             {getAnnnouncements()}
-            {appState.serverPreference.frontend.homepageUserListOnMainView
-              ? getTopUsers(true)
-              : getLatestProblems(true)}
+            {appState.serverPreference.misc.homepageUserListOnMainView ? getTopUsers(true) : getLatestProblems(true)}
           </Grid.Column>
           <Grid.Column width={5}>
             {getHitokoto()}
             {getCountdown()}
             {getProblemSearch()}
-            {appState.serverPreference.frontend.homepageUserListOnMainView
-              ? getLatestProblems(false)
-              : getTopUsers(false)}
+            {appState.serverPreference.misc.homepageUserListOnMainView ? getLatestProblems(false) : getTopUsers(false)}
             {getFriendLinks()}
           </Grid.Column>
         </Grid>
@@ -439,7 +435,7 @@ export default defineRoute(async request => {
   // If user bio is need to be rendered, await the renderer to be loaded.
   if (
     appState.serverPreference.misc.renderMarkdownInUserBio &&
-    appState.serverPreference.frontend.homepageUserListOnMainView
+    appState.serverPreference.misc.homepageUserListOnMainView
   ) {
     await LazyMarkdownContent.load();
   }

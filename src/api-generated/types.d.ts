@@ -557,20 +557,17 @@ declare namespace ApiTypes {
   }
   export interface PreferenceConfig {
     siteName: string;
-    frontend: ApiTypes.PreferenceConfigFrontend;
     security: ApiTypes.PreferenceConfigSecurity;
     pagination: ApiTypes.PreferenceConfigPagination;
     misc: ApiTypes.PreferenceConfigMisc;
   }
-  export interface PreferenceConfigFrontend {
+  export interface PreferenceConfigMisc {
     redirectLegacyUrls: boolean;
     homepageUserListOnMainView: boolean;
-  }
-  export interface PreferenceConfigMisc {
+    sortUserByRating: boolean;
+    renderMarkdownInUserBio: boolean;
     discussionReactionEmojis: string[];
     discussionReactionAllowCustomEmojis: boolean;
-    renderMarkdownInUserBio: boolean;
-    sortUserByRating: boolean;
   }
   export interface PreferenceConfigPagination {
     homepageUserList: number;

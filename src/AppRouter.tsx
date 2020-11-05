@@ -64,7 +64,7 @@ class ErrorBoundary extends React.Component<{}, { hasError: boolean; error?: Err
 }
 
 export function legacyRoutes(paths: Record<string, Matcher<any, any>>): Record<string, Matcher<any, any>> {
-  return appState.serverPreference.frontend.redirectLegacyUrls ? paths : {};
+  return appState.serverPreference.misc.redirectLegacyUrls ? paths : {};
 }
 
 const AppRouter: React.FC = () => {
