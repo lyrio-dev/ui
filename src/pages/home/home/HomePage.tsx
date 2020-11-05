@@ -9,7 +9,7 @@ import { appState } from "@/appState";
 import { Link, useLocalizer, useNavigationChecked, useScreenWidthWithin } from "@/utils/hooks";
 import { defineRoute, RouteError } from "@/AppRouter";
 import api from "@/api";
-import MarkdownContent from "@/markdown/MarkdownContent";
+import LazyMarkdownContent from "@/markdown/LazyMarkdownContent";
 import { getDiscussionDisplayTitle, getDiscussionUrl } from "@/pages/discussion/utils";
 import formatDateTime from "@/utils/formatDateTime";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
@@ -76,7 +76,7 @@ let HomePage: React.FC<HomePageProps> = props => {
   const getNotice = () =>
     props.notice && (
       <Segment className={style.segment} color="pink">
-        <MarkdownContent content={props.notice} />
+        <LazyMarkdownContent placeholderLines={7} content={props.notice} />
       </Segment>
     );
 
@@ -222,7 +222,7 @@ let HomePage: React.FC<HomePageProps> = props => {
               </div>
             </EmojiRenderer>
           ) : (
-            <Placeholder className={style.placeholder}>
+            <Placeholder>
               <Placeholder.Line />
               <Placeholder.Line />
               <Placeholder.Line />
@@ -347,7 +347,7 @@ let HomePage: React.FC<HomePageProps> = props => {
                   {inMainView ? (
                     <Table.Cell className={style.columnBio}>
                       {appState.serverPreference.misc.renderMarkdownInUserBio ? (
-                        <MarkdownContent content={user.bio} />
+                        <LazyMarkdownContent content={user.bio} />
                       ) : (
                         <EmojiRenderer>
                           <div>{user.bio}</div>
@@ -433,4 +433,16 @@ let HomePage: React.FC<HomePageProps> = props => {
 
 HomePage = observer(HomePage);
 
-export default defineRoute(async request => <HomePage {...await fetchData()} />);
+export default defineRoute(async request => {
+  const dataPromise: ReturnType<typeof fetchData> = fetchData();
+
+  // If user bio is need to be rendered, await the renderer to be loaded.
+  if (
+    appState.serverPreference.misc.renderMarkdownInUserBio &&
+    appState.serverPreference.frontend.homepageUserListOnMainView
+  ) {
+    await LazyMarkdownContent.load();
+  }
+
+  return <HomePage {...await dataPromise} />;
+});

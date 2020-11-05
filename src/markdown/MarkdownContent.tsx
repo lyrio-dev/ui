@@ -22,7 +22,7 @@ export interface MarkdownContentPatcher {
   ) => string | boolean | void;
 }
 
-interface MarkdownContentProps {
+export interface MarkdownContentProps {
   className?: string;
   content: string;
   noSanitize?: boolean;

@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Loader } from "semantic-ui-react";
-import { CodeEditorProps } from "./CodeEditor";
+import type { CodeEditorProps } from "./CodeEditor";
 
 import style from "./CodeEditor.module.less";
 
