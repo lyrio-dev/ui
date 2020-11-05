@@ -90,6 +90,15 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.polyfillServiceUrl = normalizePath(polyfillServiceUrl);
 
+      // Specify the Gravatar CDN URL in the same way.
+      var gravatarCdnUrl;
+      try {
+        gravatarCdnUrl = __gravatar__;
+      } catch (e) {
+        gravatarCdnUrl = "https://gravatar.com";
+      }
+      window.gravatarCdnUrl = normalizePath(gravatarCdnUrl);
+
       // Specify the favicon URL in the same way.
       var faviconUrl;
       try {
