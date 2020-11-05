@@ -839,7 +839,7 @@ let ProblemFilesPage: React.FC<ProblemFilesPageProps> = props => {
     <>
       <Header
         className={style.header + " withIcon"}
-        icon="file alternative"
+        icon="file alternate"
         as="h2"
         content={
           <>
