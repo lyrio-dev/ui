@@ -527,17 +527,20 @@ declare namespace ApiTypes {
     /**
      * A SYZOJ 2 username is allowed to check if a user is not migrated.
      */
-    username: string;
+    username?: string;
+    email?: string;
     password: string;
   }
   export interface LoginResponseDto {
     error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER" | "WRONG_PASSWORD" | "USER_NOT_MIGRATED";
     token?: string;
+    username?: string;
   }
   export interface MigrateUserRequestDto {
-    oldUsername: string;
+    email?: string;
+    oldUsername?: string;
     oldPassword: string;
-    newUsername: string;
+    newUsername?: string;
     newPassword: string;
   }
   export interface MigrateUserResponseDto {
@@ -822,7 +825,8 @@ declare namespace ApiTypes {
     scores?: number[];
   }
   export interface QueryUserMigrationInfoRequestDto {
-    oldUsername: string;
+    email?: string;
+    oldUsername?: string;
   }
   export interface QueryUserMigrationInfoResponseDto {
     error?: "ALREADY_LOGGEDIN" | "NO_SUCH_USER";

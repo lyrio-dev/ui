@@ -22,6 +22,7 @@ import toast from "@/utils/toast";
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { isEmail } from "class-validator";
 
 let LoginPage: React.FC = () => {
   const _ = useLocalizer("login");
@@ -44,8 +45,11 @@ let LoginPage: React.FC = () => {
 
   const recaptcha = useRecaptcha();
 
-  const [formError, setFormError] = useState({ type: null, message: null });
-  const setError = (type: "username" | "password", message: string) => setFormError({ type, message });
+  const [formError, setFormError] = useState<{ type: "usernameOrEmail" | "password"; message: string }>({
+    type: null,
+    message: null
+  });
+  const setError = (type: "usernameOrEmail" | "password", message: string) => setFormError({ type, message });
 
   const [successMessage, setSuccessMessage] = useState<string>(null);
   const setSuccess = (message: string) => {
@@ -53,7 +57,7 @@ let LoginPage: React.FC = () => {
     setSuccessMessage(message);
   };
 
-  const [username, setUsername] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
 
@@ -70,7 +74,7 @@ let LoginPage: React.FC = () => {
     }
 
     const { requestError, response } = await api.migration.migrateUser({
-      oldUsername: username,
+      [isEmail(usernameOrEmail) ? "email" : "oldUsername"]: usernameOrEmail,
       oldPassword: password,
       newUsername: migrationNewUsername,
       newPassword: password
@@ -80,7 +84,7 @@ let LoginPage: React.FC = () => {
     else if (response.error) handleCommonError(response.error);
     else {
       refNewUsername.current = migrationNewUsername;
-      setUsername(migrationNewUsername);
+      setUsernameOrEmail(migrationNewUsername);
       refOnMigrationDialogFinish.current(response.token);
     }
   });
@@ -125,7 +129,7 @@ let LoginPage: React.FC = () => {
   function handleCommonError(error: string) {
     switch (error) {
       case "NO_SUCH_USER":
-        setError("username", _(".no_such_user"));
+        setError("usernameOrEmail", _(".no_such_user"));
         refUsernameInput.current.focus();
         refUsernameInput.current.select();
         break;
@@ -149,7 +153,7 @@ let LoginPage: React.FC = () => {
 
   async function tryMigrate() {
     const { requestError, response } = await api.migration.queryUserMigrationInfo({
-      oldUsername: username
+      [isEmail(usernameOrEmail) ? "email" : "oldUsername"]: usernameOrEmail
     });
 
     if (requestError) toast.error(requestError(_));
@@ -166,9 +170,8 @@ let LoginPage: React.FC = () => {
 
       {
         const { requestError, response } = await api.migration.migrateUser({
-          oldUsername: username,
+          [isEmail(usernameOrEmail) ? "email" : "oldUsername"]: usernameOrEmail,
           oldPassword: password,
-          newUsername: username,
           newPassword: password
         });
 
@@ -183,16 +186,19 @@ let LoginPage: React.FC = () => {
     if (pending) return;
     setPending(true);
 
-    if (username.length === 0) {
-      setError("username", _(".empty_username"));
-    } else if (username.length > 80) {
+    if (usernameOrEmail.length === 0) {
+      setError("usernameOrEmail", _(".empty_username_or_email"));
+    } else if (usernameOrEmail.length > 80 && !isEmail(usernameOrEmail)) {
       // A SYZOJ 2 username is allowed to check if a user is not migrated.
-      setError("username", _(".invalid_username"));
+      setError("usernameOrEmail", _(".invalid_username_or_email"));
     } else if (password.length === 0) {
       setError("password", _(".empty_password"));
     } else {
       // Send login request
-      const { requestError, response } = await api.auth.login({ username, password }, recaptcha("Login"));
+      const { requestError, response } = await api.auth.login(
+        { [isEmail(usernameOrEmail) ? "email" : "username"]: usernameOrEmail, password },
+        recaptcha("Login")
+      );
 
       if (requestError) toast.error(requestError(_));
       else if (response.error && response.error !== "USER_NOT_MIGRATED") handleCommonError(response.error);
@@ -208,7 +214,7 @@ let LoginPage: React.FC = () => {
           appState.token = token;
 
           {
-            setSuccess(_(".welcome", { username: refNewUsername.current || username }));
+            setSuccess(_(".welcome", { username: refNewUsername.current || response.username }));
 
             setTimeout(async () => {
               await refreshSession();
@@ -240,7 +246,7 @@ let LoginPage: React.FC = () => {
               <Form.Field
                 control={Input}
                 error={
-                  formError.type === "username" && {
+                  formError.type === "usernameOrEmail" && {
                     content: formError.message,
                     pointing: "left"
                   }
@@ -248,11 +254,11 @@ let LoginPage: React.FC = () => {
                 fluid
                 icon="user"
                 iconPosition="left"
-                placeholder={_(".username")}
-                value={username}
+                placeholder={_(".username_or_email")}
+                value={usernameOrEmail}
                 autoComplete="username"
                 readOnly={pending}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsernameOrEmail(e.target.value)}
                 onKeyPress={onEnterPress(() => refPasswordInput.current.focus())}
               />
             </Ref>
