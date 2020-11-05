@@ -49,20 +49,6 @@ function patchStyles(wrapper: HTMLDivElement) {
       element.classList.add("ui", "structured", "celled", "table");
     }
   });
-
-  // Replace <blockquote> tags with messages
-  Array.from(wrapper.getElementsByTagName("blockquote")).forEach(element => {
-    const message = document.createElement("div");
-    message.className = "ui message";
-    message.append(...element.childNodes);
-    element.parentNode.replaceChild(message, element);
-  });
-
-  // Align the only <img> tag in paragraph
-  Array.from(wrapper.querySelectorAll<HTMLImageElement>("p > img:only-child")).forEach(element => {
-    element.style.display = "block";
-    element.style.margin = "0 auto";
-  });
 }
 
 function parseUrlIfSameOrigin(href: string) {

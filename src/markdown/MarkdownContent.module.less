@@ -3,8 +3,31 @@
   overflow: hidden;
   transform: translate3d(0, 0, 0);
 
-  p, mjx-container {
+  p, blockquote, mjx-container[display="true"] {
     overflow: auto;
+  }
+
+  blockquote {
+    color: #777;
+    padding: 0 0 0 1em;
+    border-left: 0.25em solid #dedede;
+    margin: 1em 0;
+  }
+
+  blockquote, mjx-container[display="true"] {
+    &:first-child {
+      margin-top: 0 !important;
+    }
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  // Center align images
+  p > img:only-child {
+    display: block;
+    margin: 0 auto;
   }
 }
 
