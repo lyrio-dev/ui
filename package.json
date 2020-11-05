@@ -153,5 +153,6 @@
   },
   "files": [
     "/build"
-  ]
+  ],
+  "jsdelivr": "build/index.html"
 }
