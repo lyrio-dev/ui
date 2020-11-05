@@ -17,7 +17,7 @@ const defaultAvatarDataUrl = svgToDataUrl(DefaultAvatar);
 function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
   switch (avatar.type) {
     case "gravatar":
-      return `https://${window.gravatarCdnUrl}/avatar/${avatar.key}?size=${size}&default=404`;
+      return `${window.gravatarCdnUrl}avatar/${avatar.key}?size=${size}&default=404`;
     case "qq":
       let sizeParam: number;
       if (size <= 40) sizeParam = 1;
