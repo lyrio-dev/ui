@@ -323,7 +323,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                       disabled:
                         !permissions.haveSubmitPermission && Number(permissionLevel) !== userPermission.permissionLevel
                     }))}
-                    onChange={(e, { value }) => changeUserPermission(index, value as number)}
+                    onChange={(e, { value }) => changeUserPermission(index, Number(value))}
                   />
                 </Table.Cell>
                 <Table.Cell textAlign="right">
@@ -373,7 +373,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                           !permissions.haveSubmitPermission &&
                           Number(permissionLevel) !== groupPermission.permissionLevel
                       }))}
-                      onChange={(e, { value }) => changeGroupPermission(index, value as number)}
+                      onChange={(e, { value }) => changeGroupPermission(index, Number(value))}
                     />
                   </Table.Cell>
                   <Table.Cell width={5} textAlign="right">
