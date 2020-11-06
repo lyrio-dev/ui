@@ -74,6 +74,7 @@ module.exports = {
     edit_raw: "コードを編集する",
     parse_error: "YAML パースに失敗しました",
     cancel: "キャンセル",
+    confirm_cancel: "[TBT] Discard changes",
     ok: "保存"
   },
   problem_type: "問題のタイプ",

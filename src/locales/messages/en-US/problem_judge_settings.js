@@ -70,6 +70,7 @@ module.exports = {
     edit_raw: "Edit Raw",
     parse_error: "YAML Parsing Error",
     cancel: "Cancel",
+    confirm_cancel: "Discard changes",
     ok: "OK"
   },
   problem_type: "Problem type",

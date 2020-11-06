@@ -68,6 +68,7 @@ module.exports = {
     edit_raw: "编辑源代码",
     parse_error: "YAML 解析错误",
     cancel: "取消",
+    confirm_cancel: "放弃修改",
     ok: "确定"
   },
   problem_type: "题目类型",

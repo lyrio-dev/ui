@@ -111,7 +111,12 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   }
 
   const [editRawEditorValue, setEditRawEditorValue] = useState(yaml.safeDump(normalizeJudgeInfo(judgeInfo)));
+  const [editRowEditorModified, setEditRowEditorModified] = useConfirmNavigation();
   const [editRawEditorErrorMessage, setEditRawEditorErrorMessage] = useState("");
+  function closeEditRawDialog() {
+    setEditRowEditorModified(false);
+    editRawDialog.close();
+  }
   const editRawDialog = useDialog(
     {},
     <Header icon="code" content={_(".edit_raw.edit_raw")} />,
@@ -132,11 +137,22 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
         className={style.codeEditor}
         value={editRawEditorValue}
         language="yaml"
-        onChange={value => setEditRawEditorValue(value)}
+        onChange={value => {
+          setEditRowEditorModified(true);
+          setEditRawEditorValue(value);
+        }}
       />
     </>,
     <>
-      <Button content={_(".edit_raw.cancel")} onClick={() => editRawDialog.close()} />
+      <Popup
+        trigger={
+          <Button content={_(".edit_raw.cancel")} onClick={() => !editRowEditorModified && closeEditRawDialog()} />
+        }
+        content={<Button negative content={_(".edit_raw.confirm_cancel")} onClick={() => closeEditRawDialog()} />}
+        disabled={!editRowEditorModified}
+        position="top center"
+        on="click"
+      />
       <Button
         positive
         content={_(".edit_raw.ok")}
@@ -146,7 +162,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
             setJudgeInfo(parsed);
             setModified(true);
             setEditorUuid(uuid());
-            editRawDialog.close();
+            closeEditRawDialog();
           } catch (e) {
             setEditRawEditorErrorMessage(e.message);
           }
