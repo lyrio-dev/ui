@@ -520,10 +520,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                 <Table.Cell>{problem.meta.submissionCount}</Table.Cell>
                 {!isVeryNarrowScreen && (
                   <Table.Cell>
-                    {Math.ceil(
-                      (problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0
-                    ).toFixed(2)}
-                    %
+                    {((problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0).toFixed(1)}%
                   </Table.Cell>
                 )}
               </Table.Row>
