@@ -116,7 +116,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
 
   const [preview, setPreview] = useState(false);
 
-  const refOptionsButton = useRef(null);
+  const [refOptionsButton, setRefOptionsButton] = useState<HTMLElement>();
 
   const problemViewMarkdownContentPatcher = useProblemViewMarkdownContentPatcher(props.problemId);
 
@@ -211,7 +211,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               />
             </Dropdown.Menu>
           </Dropdown>
-          <Ref innerRef={refOptionsButton}>
+          <Ref innerRef={setRefOptionsButton}>
             <Dropdown item icon="bars" className={`icon ${style.toolbarMenuIconItem}`}>
               <Dropdown.Menu>
                 <Dropdown.Item

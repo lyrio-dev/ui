@@ -84,7 +84,7 @@ interface SubtaskEditorTastcaseItemProps {
 let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props => {
   const _ = useLocalizer("problem_judge_settings");
 
-  const refOptionsButton = useRef(null);
+  const [refOptionsButton, setRefOptionsButton] = useState<HTMLElement>(null);
 
   return (
     <>
@@ -221,7 +221,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
               <Menu.Item className={style.itemLabel}>MiB</Menu.Item>
             </>
           )}
-          <Ref innerRef={refOptionsButton}>
+          <Ref innerRef={setRefOptionsButton}>
             <Dropdown item icon="bars" className={`icon ${style.itemWithIcon}`}>
               <Dropdown.Menu>
                 <Dropdown.Item

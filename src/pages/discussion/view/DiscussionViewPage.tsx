@@ -224,7 +224,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
     )
   );
 
-  const refActionsMenuIcon = useRef<HTMLElement>();
+  const [refActionsMenuIcon, setRefActionsMenuIcon] = useState<HTMLElement>();
 
   const actions = [
     props.permission.includes("Modify") &&
@@ -260,7 +260,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
         open={confirmSetPublicPopupOpen}
         onOpen={() => setConfirmSetPublicPopupOpen(true)}
         onClose={() => setConfirmSetPublicPopupOpen(false)}
-        context={refActionsMenuIcon.current}
+        context={refActionsMenuIcon}
         on="click"
         position="top center"
       />
@@ -289,7 +289,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
         open={confirmDeletePopupOpen}
         onOpen={() => setConfirmDeletePopupOpen(true)}
         onClose={() => setConfirmDeletePopupOpen(false)}
-        context={refActionsMenuIcon.current}
+        context={refActionsMenuIcon}
         on="click"
         position="top center"
       />
@@ -381,7 +381,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
                 </div>
               )}
               {actions.length > 0 && (
-                <Ref innerRef={refActionsMenuIcon}>
+                <Ref innerRef={setRefActionsMenuIcon}>
                   <Dropdown
                     direction={isMobile ? "left" : "right"}
                     className={style.actionIcon + (actionDropdownOpen ? " " + style.active : "")}

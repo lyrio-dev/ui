@@ -785,7 +785,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     setOperationPending(false);
   }
 
-  const statusNodeRef = useRef<HTMLElement>();
+  const [statusNodeRef, setStatusNodeRef] = useState<HTMLElement>();
 
   const [operationsPopupOpen, setOperationsPopupOpen] = useState(false);
   const [cancelPopupOpen, setCancelPopupOpen] = useState(false);
@@ -803,7 +803,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       statusNode
     ) : (
       <>
-        <Ref innerRef={e => e && e.tagName === "TD" && (statusNodeRef.current = e)}>
+        <Ref innerRef={e => e && e.tagName === "TD" && setStatusNodeRef(e)}>
           <Popup
             className={style.operationsPopup}
             trigger={statusNode}
@@ -868,7 +868,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           <Popup
             open={cancelPopupOpen}
             onClose={() => setCancelPopupOpen(false)}
-            context={statusNodeRef.current}
+            context={statusNodeRef}
             content={<Button negative content={_(".confirm_cancel")} loading={operationPending} onClick={onCancel} />}
             position="bottom left"
           />
@@ -877,7 +877,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           <Popup
             open={rejudgePopupOpen}
             onClose={() => setRejudgePopupOpen(false)}
-            context={statusNodeRef.current}
+            context={statusNodeRef}
             content={<Button negative content={_(".confirm_rejudge")} loading={operationPending} onClick={onRejudge} />}
             position="bottom left"
           />
@@ -886,7 +886,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           <Popup
             open={togglePublicPopupOpen}
             onClose={() => setTogglePublicPopupOpen(false)}
-            context={statusNodeRef.current}
+            context={statusNodeRef}
             content={
               <Button
                 positive={!meta.isPublic}
@@ -902,7 +902,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
           <Popup
             open={deletePopupOpen}
             onClose={() => setDeletePopupOpen(false)}
-            context={statusNodeRef.current}
+            context={statusNodeRef}
             content={<Button negative content={_(".confirm_delete")} loading={operationPending} onClick={onDelete} />}
             position="bottom left"
           />

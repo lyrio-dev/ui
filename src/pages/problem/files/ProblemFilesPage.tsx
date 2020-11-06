@@ -466,7 +466,7 @@ let FileTable: React.FC<FileTableProps> = props => {
     });
   }
 
-  const refSelectedInfoDropdown = useRef(null);
+  const [refSelectedInfoDropdown, setRefSelectedInfoDropdown] = useState<HTMLElement>(null);
   const [selectedInfoDropdownOpen, setSelectedInfoDropdownOpen] = useState(false);
   const [popupDeleteSelectedOpen, setPopupDeleteSelectedOpen] = useState(false);
   const [deleteSelectedPending, onDeleteSelected] = useAsyncCallbackPending(async () => {
@@ -535,7 +535,7 @@ let FileTable: React.FC<FileTableProps> = props => {
               <div className={style.fileTableFooterInfo}>
                 <div className={style.tableFooterText}>
                   {selectedFilesArray.length > 0 ? (
-                    <Ref innerRef={refSelectedInfoDropdown.current}>
+                    <Ref innerRef={setRefSelectedInfoDropdown}>
                       <Dropdown
                         open={selectedInfoDropdownOpen}
                         onOpen={() => !popupDeleteSelectedOpen && setSelectedInfoDropdownOpen(true)}

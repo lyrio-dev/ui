@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { Table, Icon, Popup, Ref } from "semantic-ui-react";
 
 import style from "./SubmissionItem.module.less";
@@ -81,7 +81,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
 
   const { submission, submissionLink, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
 
-  const refAnswerInfoIcon = useRef<HTMLElement>();
+  const [refAnswerInfoIcon, setRefAnswerInfoIcon] = useState<HTMLElement>();
 
   return (
     <Table.Row className={style[props.page + "Page"]}>
@@ -125,7 +125,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
           trigger={
             <span>
               {props.answerInfo && (
-                <Ref innerRef={refAnswerInfoIcon}>
+                <Ref innerRef={setRefAnswerInfoIcon}>
                   <Icon name="info circle" />
                 </Ref>
               )}
