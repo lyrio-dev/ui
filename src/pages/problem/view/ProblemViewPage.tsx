@@ -703,7 +703,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   }
                 }}
               >
-                <Icon name="comment alternate" />
+                <Icon name="comments" />
                 {_(".action.discussion")}
                 {props.problem.discussionCount ? (
                   <Label
