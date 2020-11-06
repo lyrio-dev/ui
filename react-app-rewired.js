@@ -1,4 +1,4 @@
-const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin, disableEsLint } = require("customize-cra");
+const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin } = require("customize-cra");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const CssUrlRelativePlugin = require("css-url-relative-plugin");
 const getGitRepoInfo = require("git-repo-info");
@@ -68,6 +68,11 @@ const useRelativePath = () => config => {
   config.output.publicPath = "./";
   return config;
 }
+
+const disableEsLint = () => config => {
+  config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== "ESLintWebpackPlugin");
+  return config;
+};
 
 module.exports = override(
   disableEsLint(),
