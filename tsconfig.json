@@ -19,7 +19,8 @@
     "jsx": "react",
     "strict": false,
     "module": "esnext",
-    "strictBindCallApply": true
+    "strictBindCallApply": true,
+    "noFallthroughCasesInSwitch": false
   },
   "include": [
     "src"
