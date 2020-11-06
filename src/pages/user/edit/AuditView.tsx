@@ -45,7 +45,7 @@ function normalizeQuery(rawQuery: Record<string, string>): AuditQuery {
   return Object.fromEntries(Object.entries(result).filter(([key, value]) => value != null));
 }
 
-export async function fetchData(userId: number, rawQuery: Record<string, string>) {
+export async function fetchData(username: string, rawQuery: Record<string, string>) {
   const query = normalizeQuery(rawQuery);
   const page = query.page || 1;
 
@@ -55,9 +55,9 @@ export async function fetchData(userId: number, rawQuery: Record<string, string>
   };
 
   for (const { requestError, response } of await Promise.all([
-    api.user.getUserMeta({ userId }),
+    api.user.getUserMeta({ username }),
     api.user.queryAuditLogs({
-      userId: userId,
+      username,
       actionQuery: query.actionQuery,
       ip: query.ip,
       firstObjectId: query.firstObjectId,
@@ -179,7 +179,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
             color={problemTag.color as any}
             as={Link}
             href={{
-              pathname: "/problems",
+              pathname: "/p",
               query: {
                 tagIds: problemTag.id.toString()
               }
@@ -188,7 +188,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
         );
       }
       case "Submission": {
-        return wrap(<Link href={`/submission/${objectId}`}>#{objectId}</Link>);
+        return wrap(<Link href={`/s/${objectId}`}>#{objectId}</Link>);
       }
       case "Discussion": {
         const discussion = object as ApiTypes.DiscussionMetaDto;

@@ -22,7 +22,7 @@ import { DiscussionSearch } from "@/components/DiscussionSearch";
 
 export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
   return {
-    pathname: "/discussion/new",
+    pathname: "/d/new",
     query: problemId && {
       problemId: String(problemId)
     }
@@ -45,11 +45,9 @@ export function getBreadcrumb(
             {inTopLevelList === "general" ? _("discussions.breadcrumb.general") : _("discussions.breadcrumb.problem")}
             <span className={style.divider}>/</span>
             {inTopLevelList === "allProblems" ? (
-              <Link href="/discussions">{_("discussions.breadcrumb.general")}</Link>
+              <Link href="/d">{_("discussions.breadcrumb.general")}</Link>
             ) : (
-              <Link href={{ pathname: "/discussions", query: { problemId: "all" } }}>
-                {_("discussions.breadcrumb.problem")}
-              </Link>
+              <Link href={{ pathname: "/d", query: { problemId: "all" } }}>{_("discussions.breadcrumb.problem")}</Link>
             )}
           </Breadcrumb.Section>
         </>
@@ -58,7 +56,7 @@ export function getBreadcrumb(
           <Breadcrumb.Section
             active
             as={Link}
-            href={({ pathname: "/discussions", query: { problemId: "all" } } as unknown) as string}
+            href={({ pathname: "/d", query: { problemId: "all" } } as unknown) as string}
             className={style.allProblemsLink}
           >
             {_("discussions.breadcrumb.problem")}
@@ -72,7 +70,7 @@ export function getBreadcrumb(
         </>
       ) : (
         <>
-          <Breadcrumb.Section active as={Link} href="/discussions">
+          <Breadcrumb.Section active as={Link} href="/d">
             {_("discussions.breadcrumb.general")}
           </Breadcrumb.Section>
         </>

@@ -435,7 +435,8 @@ declare namespace ApiTypes {
     )[];
   }
   export interface GetUserPreferenceRequestDto {
-    userId: number;
+    userId?: number;
+    username?: string;
   }
   export interface GetUserPreferenceResponseDto {
     error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
@@ -443,7 +444,8 @@ declare namespace ApiTypes {
     preference?: ApiTypes.UserPreferenceDto;
   }
   export interface GetUserProfileRequestDto {
-    userId: number;
+    userId?: number;
+    username?: string;
   }
   export interface GetUserProfileResponseDto {
     error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
@@ -453,7 +455,8 @@ declare namespace ApiTypes {
     information?: ApiTypes.UserInformationDto;
   }
   export interface GetUserSecuritySettingsRequestDto {
-    userId: number;
+    userId?: number;
+    username?: string;
   }
   export interface GetUserSecuritySettingsResponseDto {
     error?: "NO_SUCH_USER" | "PERMISSION_DENIED";
@@ -507,7 +510,8 @@ declare namespace ApiTypes {
     hasManagePermission: boolean;
   }
   export interface ListUserSessionsRequestDto {
-    userId: number;
+    userId?: number;
+    username?: string;
   }
   export interface ListUserSessionsResponseDto {
     error?: "PERMISSION_DENIED";
@@ -668,6 +672,7 @@ declare namespace ApiTypes {
   }
   export interface QueryAuditLogsRequestDto {
     userId?: number;
+    username?: string;
     /**
      * The query string for action field, will be matching as prefix.
      */

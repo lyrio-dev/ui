@@ -167,7 +167,7 @@ let HomePage: React.FC<HomePageProps> = props => {
                   {appState.currentUser && (
                     <Table.Cell textAlign="center">
                       {submission && (
-                        <Link href={`/submission/${submission.id}`}>
+                        <Link href={`/s/${submission.id}`}>
                           <StatusIcon status={submission.status} noMarginRight />
                         </Link>
                       )}
@@ -306,9 +306,7 @@ let HomePage: React.FC<HomePageProps> = props => {
         <ProblemSearch
           className={style.search}
           onResultSelect={({ meta }) => navigation.navigate(getProblemUrl(meta))}
-          onEnterPress={searchKeyword =>
-            navigation.navigate({ pathname: "/problems", query: { keyword: searchKeyword } })
-          }
+          onEnterPress={searchKeyword => navigation.navigate({ pathname: "/p", query: { keyword: searchKeyword } })}
         />
       </Segment>
     </>

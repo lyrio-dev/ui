@@ -17,12 +17,12 @@ import fixChineseSpace from "@/utils/fixChineseSpace";
 import formatDateTime from "@/utils/formatDateTime";
 import { makeToBeLocalizedText } from "@/locales";
 
-export async function fetchData(userId: number) {
+export async function fetchData(username: string) {
   const result = {};
 
   for (const { requestError, response } of await Promise.all([
-    api.user.getUserSecuritySettings({ userId }),
-    api.auth.listUserSessions({ userId })
+    api.user.getUserSecuritySettings({ username }),
+    api.auth.listUserSessions({ username })
   ])) {
     if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
     else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));

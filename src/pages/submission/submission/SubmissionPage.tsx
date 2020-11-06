@@ -778,7 +778,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".success_delete"));
-      navigation.navigate("/submissions");
+      navigation.navigate("/s");
     }
 
     setDeletePopupOpen(false);

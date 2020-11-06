@@ -861,7 +861,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     else {
       if (type === "Discussion") {
         navigation.navigate({
-          pathname: "/discussions",
+          pathname: "/d",
           query: discussion.problem
             ? {
                 problemId: String(discussion.problem.meta.id)
@@ -1050,7 +1050,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
           }
           onSetPublic={() => onSetPublic("Discussion", discussion.meta.id, !discussion.meta.isPublic)}
           onManagePermission={() => refOpenPermissionManager.current && refOpenPermissionManager.current()}
-          onEnterEdit={`/discussion/${discussion.meta.id}/edit`}
+          onEnterEdit={`/d/${discussion.meta.id}/edit`}
           onDelete={async () => await onDelete("Discussion", discussion.meta.id)}
         />
         {items.map((item, i) =>

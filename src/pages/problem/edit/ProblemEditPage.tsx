@@ -832,7 +832,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     setModified(false);
 
     if (props.new) {
-      navigation.navigate("/problems");
+      navigation.navigate("/p");
     } else {
       navigation.navigate({
         pathname: getProblemUrl(props.problem.meta, { use: props.idType }),

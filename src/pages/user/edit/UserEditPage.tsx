@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Menu, Icon, Message } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { useCurrentRoute } from "react-navi";
 import { v4 as uuid } from "uuid";
+import { redirect } from "navi";
 
 import style from "./UserEdit.module.less";
 
@@ -22,11 +23,10 @@ enum EditType {
 }
 
 interface UserEditPageProps {
-  userId: number;
+  username: string;
   type: EditType;
   data: unknown;
   view: React.FC<any>;
-  byUsername: boolean;
 }
 
 let UserEditPage: React.FC<UserEditPageProps> = props => {
@@ -36,21 +36,19 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
   const View = props.view;
 
-  const isEditingCurrentUser = props.userId === appState.currentUser.id;
+  const isEditingCurrentUser = useMemo(() => props.username === appState.currentUser?.username, []);
 
   const showPrivilegeTab =
     appState.currentUserPrivileges.length > 0 || appState.currentUser.isAdmin || props.type === EditType.Privilege;
 
   // If username is changed, navigate to the new url
   function onChangeUsername(newUsername: string) {
-    if (props.byUsername) {
-      // /u/:username/edit/profile
-      // ["", "u", ":username", "edit", "profile"]
-      // The :username is [2]
-      const splitted = currentRoute.url.pathname.split("/");
-      splitted[2] = newUsername;
-      navigation.navigate(splitted.join("/"));
-    }
+    // /u/:username/edit/profile
+    // ["", "u", ":username", "edit", "profile"]
+    // The :username is [2]
+    const splitted = currentRoute.url.pathname.split("/");
+    splitted[2] = newUsername;
+    navigation.navigate(splitted.join("/"));
   }
 
   return (
@@ -100,37 +98,24 @@ let UserEditPage: React.FC<UserEditPageProps> = props => {
 
 UserEditPage = observer(UserEditPage);
 
-async function getView(userId: number, type: EditType, query: Record<string, string>, byUsername: boolean) {
+async function getView(username: string, type: EditType, query: Record<string, string>) {
   if (!Object.values(EditType).includes(type)) type = EditType.Profile;
 
   const { fetchData, View } = await {
-    [EditType.Profile]: import("./ProfileView"),
-    [EditType.Preference]: import("./PreferenceView"),
-    [EditType.Security]: import("./SecurityView"),
-    [EditType.Privilege]: import("./PrivilegeView"),
-    [EditType.Audit]: import("./AuditView")
-  }[type];
+    [EditType.Profile]: () => import("./ProfileView"),
+    [EditType.Preference]: () => import("./PreferenceView"),
+    [EditType.Security]: () => import("./SecurityView"),
+    [EditType.Privilege]: () => import("./PrivilegeView"),
+    [EditType.Audit]: () => import("./AuditView")
+  }[type]();
 
-  const response = await fetchData(userId, query);
+  const response = await fetchData(username, query);
 
-  return <UserEditPage key={uuid()} userId={userId} type={type} data={response} view={View} byUsername={byUsername} />;
+  return <UserEditPage key={uuid()} username={username} type={type} data={response} view={View} />;
 }
 
-export default {
-  byId: defineRoute(
-    async request =>
-      await getView(Number(request.params.userId) || 0, request.params.type as EditType, request.query, false)
-  ),
-  byUsername: defineRoute(async request => {
-    const username = request.params.username;
-    if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.NO_SUCH_USER`));
-
-    const { requestError, response } = await api.user.getUserMeta({
-      username
-    });
-    if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
-    else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
-
-    return await getView(response.meta.id, request.params.type as EditType, request.query, true);
-  })
-};
+export default defineRoute(async request => {
+  const username = request.params.username;
+  if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.NO_SUCH_USER`));
+  return await getView(request.params.username, request.params.type as EditType, request.query);
+});

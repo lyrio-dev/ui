@@ -122,7 +122,7 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
           <Link
             className={style.link}
             href={{
-              pathname: "/submissions",
+              pathname: "/s",
               query: {
                 submitter: props.username
               }

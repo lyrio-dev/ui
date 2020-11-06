@@ -57,7 +57,7 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
       const newId = props.discussion
         ? props.discussion.meta.id
         : (response as ApiTypes.CreateDiscussionResponseDto).discussionId;
-      return () => navigation.navigate(`/discussion/${newId}`);
+      return () => navigation.navigate(`/d/${newId}`);
     }
 
     return false;
@@ -84,7 +84,7 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
         content={content}
         onChangeTitle={title => title.length <= 80 && setTitle(title)}
         onChangeContent={setContent}
-        onCancel={() => navigation.navigate(`/discussion/${props.discussion.meta.id}`)}
+        onCancel={() => navigation.navigate(`/d/${props.discussion.meta.id}`)}
         onSubmit={onSubmit}
         noSubmitPermission={props.discussion && !props.discussion.permissions.includes("Modify")}
       />

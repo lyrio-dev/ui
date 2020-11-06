@@ -16,7 +16,7 @@ import { EmojiRenderer } from "@/components/EmojiRenderer";
 function parseSubmissionMeta(submission: ApiTypes.SubmissionMetaDto) {
   return {
     submission,
-    submissionLink: `/submission/${submission.id}`,
+    submissionLink: `/s/${submission.id}`,
     timeString: formatDateTime(submission.submitTime),
     problemIdString: getProblemIdString(submission.problem),
     problemUrl: getProblemUrl(submission.problem)

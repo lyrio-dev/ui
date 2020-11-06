@@ -303,7 +303,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
     else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       toast.success(_(".action.delete_success"));
-      navigation.unconfirmed.navigate("/problems");
+      navigation.unconfirmed.navigate("/p");
     }
   });
   const deleteDialog = useDialog(
@@ -392,7 +392,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       toast.error(_(`.error.${response.error}`));
     } else {
       setModified(false);
-      navigation.navigate(`/submission/${response.submissionId}`);
+      navigation.navigate(`/s/${response.submissionId}`);
     }
 
     setSubmitPending(false);
@@ -426,7 +426,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
             {props.problem.lastSubmission.lastAcceptedSubmission && (
               <Link
                 className={style.lastAcceptedSubmission}
-                href={`/submission/${props.problem.lastSubmission.lastAcceptedSubmission.id}`}
+                href={`/s/${props.problem.lastSubmission.lastAcceptedSubmission.id}`}
               >
                 <StatusIcon status="Accepted" />
               </Link>
@@ -499,7 +499,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                           color={tag.color as any}
                           as={Link}
                           href={{
-                            pathname: "/problems",
+                            pathname: "/p",
                             query: {
                               tagIds: tag.id.toString()
                             }
@@ -671,7 +671,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                 icon="list"
                 as={Link}
                 href={{
-                  pathname: "/submissions",
+                  pathname: "/s",
                   query:
                     props.idType === "id"
                       ? {
@@ -687,17 +687,13 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
                   name={_(".action.statistics")}
                   icon="sort content ascending"
                   as={Link}
-                  href={
-                    props.idType === "id"
-                      ? `/submissions/statistics/by-id/${props.problem.meta.id}/fastest`
-                      : `/submissions/statistics/${props.problem.meta.displayId}/fastest`
-                  }
+                  href={getProblemUrl(props.problem.meta, { subRoute: "statistics/fastest" })}
                 />
               )}
               <Menu.Item
                 as={Link}
                 href={{
-                  pathname: "/discussions",
+                  pathname: "/d",
                   query: {
                     problemId: props.problem.meta.id
                   }

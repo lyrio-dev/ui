@@ -11,8 +11,8 @@ import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
 import { makeToBeLocalizedText } from "@/locales";
 
-export async function fetchData(userId: number) {
-  const { requestError, response } = await api.user.getUserMeta({ userId, getPrivileges: true });
+export async function fetchData(username: string) {
+  const { requestError, response } = await api.user.getUserMeta({ username, getPrivileges: true });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 

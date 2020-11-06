@@ -57,10 +57,10 @@ let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
         {props.lastSubmission && props.lastSubmission.lastSubmission && (
           <div className={style.lastSubmission}>
             <Header size="tiny" content={_(".submit.last_submission")} />
-            <Link href={`/submission/${props.lastSubmission.lastSubmission.id}`}>
+            <Link href={`/s/${props.lastSubmission.lastSubmission.id}`}>
               <StatusText status={props.lastSubmission.lastSubmission.status} />
             </Link>
-            <Link className={style.scoreText} href={`/submission/${props.lastSubmission.lastSubmission.id}`}>
+            <Link className={style.scoreText} href={`/s/${props.lastSubmission.lastSubmission.id}`}>
               <ScoreText score={props.lastSubmission.lastSubmission.score} />
             </Link>
           </div>

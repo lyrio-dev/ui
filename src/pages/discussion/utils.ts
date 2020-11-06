@@ -3,5 +3,5 @@ export function getDiscussionDisplayTitle(title: string, _: (id: string) => stri
 }
 
 export function getDiscussionUrl(meta: ApiTypes.DiscussionMetaDto) {
-  return `/discussion/${meta.id}`;
+  return `/d/${meta.id}`;
 }

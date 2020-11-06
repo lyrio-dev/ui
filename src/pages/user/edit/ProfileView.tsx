@@ -16,8 +16,8 @@ import { onEnterPress } from "@/utils/onEnterPress";
 import { makeToBeLocalizedText } from "@/locales";
 import { isValidEmail, isValidUsername } from "@/utils/validators";
 
-export async function fetchData(userId: number) {
-  const { requestError, response } = await api.user.getUserProfile({ userId });
+export async function fetchData(username: string) {
+  const { requestError, response } = await api.user.getUserProfile({ username });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 

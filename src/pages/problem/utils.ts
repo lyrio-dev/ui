@@ -14,11 +14,11 @@ export function getProblemUrl(
   return (
     (typeof metaOrId === "number"
       ? use === "displayId"
-        ? `/problem/${metaOrId}`
-        : `/problem/by-id/${metaOrId}`
+        ? `/p/${metaOrId}`
+        : `/p/id/${metaOrId}`
       : (!use && metaOrId.displayId) || use === "displayId"
-      ? `/problem/${metaOrId.displayId}`
-      : `/problem/by-id/${metaOrId.id}`) + (subRoute ? `/${subRoute}` : "")
+      ? `/p/${metaOrId.displayId}`
+      : `/p/id/${metaOrId.id}`) + (subRoute ? `/${subRoute}` : "")
   );
 }
 

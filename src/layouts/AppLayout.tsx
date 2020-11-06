@@ -76,7 +76,7 @@ let AppLayout: React.FC = props => {
     problem_set: {
       icon: "book",
       text: ".navbar.problem_set",
-      url: "/problems"
+      url: "/p"
     },
     // contests: {
     //   icon: "calendar",
@@ -86,17 +86,17 @@ let AppLayout: React.FC = props => {
     submissions: {
       icon: "hourglass",
       text: ".navbar.submissions",
-      url: "/submissions"
+      url: "/s"
     },
     members: {
       icon: "users",
       text: ".navbar.members",
-      url: "/users"
+      url: "/u"
     },
     discussion: {
       icon: "comments",
       text: ".navbar.discussion",
-      url: "/discussions"
+      url: "/d"
     }
   };
 
@@ -130,23 +130,20 @@ let AppLayout: React.FC = props => {
           <Icon name="user" />
           {_(".header.user.profile")}
         </Dropdown.Item>
-        <Dropdown.Item
-          as={Link}
-          href={{ pathname: "/submissions", query: { submitter: appState.currentUser.username } }}
-        >
+        <Dropdown.Item as={Link} href={{ pathname: "/s", query: { submitter: appState.currentUser.username } }}>
           <Icon name="hourglass half" />
           {_(".header.user.submissions")}
         </Dropdown.Item>
-        <Dropdown.Item as={Link} href={{ pathname: "/problems", query: { ownerId: appState.currentUser.id } }}>
+        <Dropdown.Item as={Link} href={{ pathname: "/p", query: { ownerId: appState.currentUser.id } }}>
           <Icon name="book" />
           {_(".header.user.problems")}
         </Dropdown.Item>
-        <Dropdown.Item as={Link} href={{ pathname: "/discussions", query: { publisherId: appState.currentUser.id } }}>
+        <Dropdown.Item as={Link} href={{ pathname: "/d", query: { publisherId: appState.currentUser.id } }}>
           <Icon name="comments" />
           {_(".header.user.discussions")}
         </Dropdown.Item>
         {appState.currentUserJoinedGroupsCount > 0 && (
-          <Dropdown.Item as={Link} href="/users/groups">
+          <Dropdown.Item as={Link} href="/groups">
             <Icon name="users" />
             {_(".header.user.groups")}
           </Dropdown.Item>

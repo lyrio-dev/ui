@@ -1,5 +1,5 @@
 import React, { Suspense, useMemo } from "react";
-import { mount, lazy, withView, route, Resolvable, redirect, Matcher, map } from "navi";
+import { mount, lazy, withView, route, Resolvable, redirect, Matcher, map, NaviRequest } from "navi";
 import { NotFoundBoundary, Router, View } from "react-navi";
 import { IntlProvider } from "react-intl";
 import { observer } from "mobx-react";
@@ -22,17 +22,25 @@ export class RouteError implements ErrorPageProps {
   ) {}
 }
 
-export function defineRoute(getViewFunction: Resolvable<React.ReactNode>) {
-  return route({
-    async getView() {
-      try {
-        return await getViewFunction.apply(this, arguments as any);
-      } catch (e) {
-        if (e instanceof RouteError) return <ErrorPage {...e} />;
+export function defineRoute(getViewFunction: (request: NaviRequest) => Promise<React.ReactNode>) {
+  return map(async request => {
+    try {
+      const result = await getViewFunction(request);
+      return typeof result === "function"
+        ? (result as Matcher<any, any>)
+        : route({
+            view: result
+          });
+    } catch (e) {
+      if (e instanceof RouteError)
+        return route({
+          view: <ErrorPage {...e} />
+        });
 
-        if (!(e instanceof Error)) e = new Error(String(e));
-        return <ErrorPage uncaughtError={e} message={null} options={null} />;
-      }
+      if (!(e instanceof Error)) e = new Error(String(e));
+      return route({
+        view: <ErrorPage uncaughtError={e} message={null} options={null} />
+      });
     }
   });
 }
@@ -108,22 +116,24 @@ const AppRouter: React.FC = () => {
           "/login": lazy(() => import("./pages/auth/login")),
           "/register": lazy(() => import("./pages/auth/register")),
           "/forgot": lazy(() => import("./pages/auth/forgot")),
-          "/problems": getRoute(() => import("./pages/problem"), "problems"),
-          "/problem": getRoute(() => import("./pages/problem"), "problem"),
-          "/submissions": getRoute(() => import("./pages/submission"), "submissions"),
-          "/submission": getRoute(() => import("./pages/submission"), "submission"),
-          "/users": getRoute(() => import("./pages/user"), "users"),
-          "/users/groups": getRoute(() => import("./pages/user"), "groups"),
-          "/user": getRoute(() => import("./pages/user"), "user"),
+          "/p": getRoute(() => import("./pages/problem"), "p"),
+          "/s": getRoute(() => import("./pages/submission"), "s"),
           "/u": getRoute(() => import("./pages/user"), "u"),
-          "/discussions": getRoute(() => import("./pages/discussion"), "discussions"),
-          "/discussion": getRoute(() => import("./pages/discussion"), "discussion"),
+          "/user": getRoute(() => import("./pages/user"), "user"),
+          "/groups": getRoute(() => import("./pages/user"), "groups"),
+          "/d": getRoute(() => import("./pages/discussion"), "d"),
           "/judge-machine": lazy(() => import("./pages/judge-machine")),
           ...legacyRoutes({
-            "/ranklist": redirect("/users"),
-            "/article/0/edit": redirect("/discussion/new"),
-            "/article/:id": redirect(request => `/discussion/${request.params.id}`),
-            "/article/:id/edit": redirect(request => `/discussion/${request.params.id}/edit`)
+            "/problem": getRoute(() => import("./pages/problem"), "problem"),
+            "/problems": getRoute(() => import("./pages/problem"), "problems"),
+            "/submissions": redirect(request => ({ pathname: "/s", query: request.query })),
+            "/ranklist": redirect("/u"),
+            "/discussion/global": redirect("/d"),
+            "/discussion/problems": redirect("/d?problemId=all"),
+            "/discussion/problem/:id": redirect(request => `/d?problemId=${request.params.id}`),
+            "/article/0/edit": redirect("/d/new"),
+            "/article/:id": redirect(request => `/d/${request.params.id}`),
+            "/article/:id/edit": redirect(request => `/d/${request.params.id}/edit`)
           })
         })
       ),

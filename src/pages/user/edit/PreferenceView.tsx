@@ -19,8 +19,8 @@ import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 import { availableCodeFonts } from "@/misc/webfonts";
 import { makeToBeLocalizedText } from "@/locales";
 
-export async function fetchData(userId: number) {
-  const { requestError, response } = await api.user.getUserPreference({ userId });
+export async function fetchData(username: string) {
+  const { requestError, response } = await api.user.getUserPreference({ username });
   if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
   else if (response.error) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.${response.error}`));
 

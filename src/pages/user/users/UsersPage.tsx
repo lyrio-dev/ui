@@ -57,7 +57,7 @@ let UsersPage: React.FC<UsersPageProps> = props => {
         <UserSearch onResultSelect={user => navigation.navigate(`/u/${user.username}`)} />
         {appState.currentUserHasPrivilege("ManageUserGroup") && (
           <div className={style.manageGroups}>
-            <Button primary content={_(".manage_groups")} as={Link} href="/users/groups" />
+            <Button primary content={_(".manage_groups")} as={Link} href="/groups" />
           </div>
         )}
       </div>

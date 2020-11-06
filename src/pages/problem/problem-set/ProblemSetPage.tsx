@@ -407,7 +407,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         />
       )}
       {props.response.permissions.createProblem && (
-        <Button className="labeled icon" icon="plus" content={_(".add_problem")} as={Link} href="/problem/new" />
+        <Button className="labeled icon" icon="plus" content={_(".add_problem")} as={Link} href="/p/new" />
       )}
     </div>
   );
@@ -450,7 +450,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
               <Button primary onClick={() => navigation.goBack()}>
                 {_(".no_problem.back")}
               </Button>
-              <Button as={Link} href="/problems">
+              <Button as={Link} href="/p">
                 {_(".no_problem.clear_filters")}
               </Button>
             </Segment.Inline>
@@ -463,7 +463,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             </Header>
             {props.response.permissions.createProblem && (
               <Segment.Inline>
-                <Button primary as={Link} href="/problem/new">
+                <Button primary as={Link} href="/p/new">
                   {_(".no_problem.create")}
                 </Button>
               </Segment.Inline>
@@ -487,7 +487,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                 {appState.currentUser && (
                   <Table.Cell>
                     {problem.submission && (
-                      <Link href={`/submission/${problem.submission.id}`}>
+                      <Link href={`/s/${problem.submission.id}`}>
                         <StatusIcon status={problem.submission.status} noMarginRight />
                       </Link>
                     )}

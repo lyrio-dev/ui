@@ -100,12 +100,7 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
               key: type,
               value: type,
               text: _(`.type.${type}`),
-              onClick: () =>
-                navigation.navigate(
-                  props.idType === "id"
-                    ? `/submissions/statistics/by-id/${props.id}/${type.toLowerCase()}`
-                    : `/submissions/statistics/${props.id}/${type.toLowerCase()}`
-                )
+              onClick: () => navigation.navigate(type.toLowerCase())
             }))}
           />
         </Menu>
