@@ -8,8 +8,13 @@ import style from "./SubmissionStatisticsPage.module.less";
 
 import api from "@/api";
 import { appState } from "@/appState";
-import { useLocalizer, useNavigationChecked } from "@/utils/hooks";
-import { SubmissionItem, SubmissionHeader } from "../componments/SubmissionItem";
+import { useLocalizer, useNavigationChecked, useScreenWidthWithin } from "@/utils/hooks";
+import {
+  SubmissionItem,
+  SubmissionHeader,
+  SubmissionHeaderMobile,
+  SubmissionItemMobile
+} from "../componments/SubmissionItem";
 import { Pagination } from "@/components/Pagination";
 import { getScoreColor } from "@/components/ScoreText";
 import { defineRoute, RouteError } from "@/AppRouter";
@@ -74,13 +79,13 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
   for (let i = 1; i < scores.length; i++) scorePrefixSum[i][1] += scorePrefixSum[i - 1][1];
   for (let i = scores.length - 2; i >= 0; i--) scoreSuffixSum[i][1] += scoreSuffixSum[i + 1][1];
 
-  // To prevent the most important column to be hidden
-  const statisticsField = {
-    [SubmissionStatisticsType.Fastest]: "Time",
-    [SubmissionStatisticsType.MinMemory]: "Memory",
-    [SubmissionStatisticsType.MinAnswerSize]: "AnswerSize",
-    [SubmissionStatisticsType.Earliest]: "SubmitTime"
-  }[props.type];
+  const isMobile = useScreenWidthWithin(0, 768);
+  const importantField =
+    props.type === SubmissionStatisticsType.Fastest
+      ? "timeUsed"
+      : props.type === SubmissionStatisticsType.MinMemory
+      ? "memoryUsed"
+      : null;
 
   return (
     <>
@@ -121,17 +126,18 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
         <>
           <Table textAlign="center" basic="very" className={style.table} unstackable fixed>
             <Table.Header>
-              <SubmissionHeader page="statistics" statisticsField={statisticsField as any} />
+              {isMobile ? (
+                <SubmissionHeaderMobile importantField={importantField} />
+              ) : (
+                <SubmissionHeader page="statistics" />
+              )}
             </Table.Header>
             <Table.Body>
               {props.response.submissions.map(submission => {
-                return (
-                  <SubmissionItem
-                    key={submission.id}
-                    submission={submission}
-                    page="statistics"
-                    statisticsField={statisticsField as any}
-                  />
+                return isMobile ? (
+                  <SubmissionItemMobile key={submission.id} submission={submission} importantField={importantField} />
+                ) : (
+                  <SubmissionItem key={submission.id} submission={submission} page="statistics" />
                 );
               })}
             </Table.Body>

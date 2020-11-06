@@ -29,7 +29,6 @@ interface SubmissionItemConfig {
 
 interface SubmissionHeaderProps {
   page: "submission" | "submissions" | "statistics";
-  statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
   config?: SubmissionItemConfig;
 }
 
@@ -37,12 +36,7 @@ export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
   const _ = useLocalizer("submission_item");
 
   return (
-    <Table.Row
-      className={
-        style[props.page + "Page"] +
-        (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
-      }
-    >
+    <Table.Row className={style[props.page + "Page"]}>
       <Table.HeaderCell className={style.columnStatus} textAlign="left">
         {_(".columns.status")}
       </Table.HeaderCell>
@@ -66,7 +60,6 @@ export const SubmissionHeader: React.FC<SubmissionHeaderProps> = props => {
 interface SubmissionItemProps {
   submission: ApiTypes.SubmissionMetaDto;
   page: "submission" | "submissions" | "statistics";
-  statisticsField?: "Time" | "Memory" | "Answer" | "Submit";
 
   // This is passed to <StatusText> to override the display text for status
   statusText?: string;
@@ -91,12 +84,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   const refAnswerInfoIcon = useRef<HTMLElement>();
 
   return (
-    <Table.Row
-      className={
-        style[props.page + "Page"] +
-        (props.statisticsField ? " " + style["statisticsType" + props.statisticsField] : "")
-      }
-    >
+    <Table.Row className={style[props.page + "Page"]}>
       {(props.statusPopup || (x => x))(
         <Table.Cell className={style.columnStatus} textAlign="left">
           <Link href={props.page !== "submission" ? submissionLink : null}>
@@ -168,7 +156,11 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
   );
 };
 
-export const SubmissionHeaderMobile: React.FC<{}> = () => {
+interface SubmissionHeaderMobileProps {
+  importantField?: "timeUsed" | "memoryUsed";
+}
+
+export const SubmissionHeaderMobile: React.FC<SubmissionHeaderMobileProps> = props => {
   const _ = useLocalizer("submission_item");
 
   return (
@@ -187,9 +179,17 @@ export const SubmissionHeaderMobile: React.FC<{}> = () => {
 
           <div>
             <div>{_(".columns.problem")}</div>
-            <div className={style.submitterAndTime}>
+            <div>
               <div>{_(".columns.submitter")}</div>
-              <div>{_(".columns.submit_time")}</div>
+              <div>
+                {_(
+                  props.importantField === "timeUsed"
+                    ? ".columns.time"
+                    : props.importantField === "memoryUsed"
+                    ? ".columns.memory"
+                    : ".columns.submit_time"
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -201,6 +201,7 @@ export const SubmissionHeaderMobile: React.FC<{}> = () => {
 interface SubmissionItemMobileProps {
   submission: ApiTypes.SubmissionMetaDto;
   statusText?: string;
+  importantField?: "timeUsed" | "memoryUsed";
 }
 
 // For mobile view of submissions page only
@@ -209,6 +210,8 @@ export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props =
   const _ = useLocalizer("submission_item");
 
   const { submission, submissionLink, timeString, problemIdString, problemUrl } = parseSubmissionMeta(props.submission);
+
+  const importantField = props.importantField || "submitTime";
 
   return (
     <Table.Row className={style.submissionItemMobile}>
@@ -238,11 +241,19 @@ export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props =
                 <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
               </EmojiRenderer>
             </div>
-            <div className={style.submitterAndTime}>
+            <div>
               <div>
                 <UserLink user={submission.submitter} />
               </div>
-              <div title={timeString[1]}>{timeString[0]}</div>
+              {props.importantField === "timeUsed" ? (
+                <div>{Math.round(submission.timeUsed || 0) + " ms"}</div>
+              ) : props.importantField === "memoryUsed" ? (
+                <div title={(submission.memoryUsed || 0) + " K"}>
+                  {formatFileSize((submission.memoryUsed || 0) * 1024, 1)}
+                </div>
+              ) : (
+                <div title={timeString[1]}>{timeString[0]}</div>
+              )}
             </div>
           </div>
         </div>
