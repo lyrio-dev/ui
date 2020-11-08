@@ -137,12 +137,12 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
               </Menu.Menu>
             </Menu>
             {extraSourceFiles &&
-              Object.entries(extraSourceFiles).map(([codeLanguage, files]) =>
+              Object.entries(extraSourceFiles).map(([codeLanguage, files], iLanguage, { length: lengthLanguage }) =>
                 files.map(([uuid, dst, src], i) => (
                   <Menu
                     className={style.extraSourceFilesItem}
                     key={uuid}
-                    attached={i == files.length - 1 ? "bottom" : (true as any)}
+                    attached={i == files.length - 1 && iLanguage === lengthLanguage - 1 ? "bottom" : (true as any)}
                   >
                     <Menu.Item
                       className={style.itemTitle + " " + style.language}

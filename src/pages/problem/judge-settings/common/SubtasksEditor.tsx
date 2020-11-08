@@ -247,7 +247,7 @@ let SubtaskEditorTastcaseItem: React.FC<SubtaskEditorTastcaseItemProps> = props 
                     />
                   }
                   on="click"
-                  position="top center"
+                  position="bottom center"
                 />
               </Dropdown.Menu>
             </Dropdown>
@@ -770,7 +770,7 @@ let SubtaskEditor: React.FC<SubtaskEditorProps> = props => {
                     />
                   }
                   on="click"
-                  position="top center"
+                  position="bottom center"
                 />
               </Dropdown.Menu>
             </Dropdown>

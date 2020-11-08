@@ -244,7 +244,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                     />
                   }
                   on="click"
-                  position="top right"
+                  position="bottom right"
                 />
               </Dropdown.Menu>
             </Dropdown>
@@ -555,7 +555,7 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
                     />
                   }
                   on="click"
-                  position="top right"
+                  position="bottom right"
                 />
               </Dropdown.Menu>
             </Dropdown>
