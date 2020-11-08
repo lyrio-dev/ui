@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { Table, Icon, Button } from "semantic-ui-react";
 import { observer } from "mobx-react";
+import { useCurrentRoute } from "react-navi";
+import { v4 as uuid } from "uuid";
 
 import style from "./UsersPage.module.less";
 
@@ -46,10 +48,16 @@ interface UsersPageProps {
 let UsersPage: React.FC<UsersPageProps> = props => {
   const _ = useLocalizer("users");
   const navigation = useNavigationChecked();
+  const currentRoute = useCurrentRoute();
 
   useEffect(() => {
     appState.enterNewPage(_(".title"), "members");
   }, [appState.locale]);
+
+  const scrollElement = document.documentElement;
+  useEffect(() => {
+    scrollElement.scrollTop = 0;
+  }, [props.currentPage]);
 
   return (
     <>
@@ -139,6 +147,7 @@ let UsersPage: React.FC<UsersPageProps> = props => {
             itemsPerPage={USERS_PER_PAGE}
             pageUrl={page => ({
               query: {
+                ...currentRoute.url.query,
                 page: page.toString()
               }
             })}
