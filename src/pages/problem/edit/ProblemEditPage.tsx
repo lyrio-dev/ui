@@ -344,7 +344,7 @@ interface LocalizedContentEditorProps {
   onChangeSectionType: (index: number, newType: "Text" | "Sample") => void;
   onChangeSectionSampleId: (index: number, newSampleId: number) => void;
   onChangeSampleData: (sampleId: number, type: "inputData" | "outputData", newData: string) => void;
-  onAddSection: (index: number) => void;
+  onAddSection: (index: number, type: "Text" | "Sample") => void;
   onDeleteSection: (index: number) => void;
   onMoveSection: (index: number, direction: "UP" | "DOWN") => void;
 }
@@ -444,8 +444,8 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
           onChangeSectionType={newType => props.onChangeSectionType(index, newType)}
           onChangeSectionSampleId={newSampleId => props.onChangeSectionSampleId(index, newSampleId)}
           onChangeSampleData={props.onChangeSampleData}
-          onAddSectionBefore={() => props.onAddSection(index)}
-          onAddSectionAfter={() => props.onAddSection(index + 1)}
+          onAddSectionBefore={() => props.onAddSection(index, section.type)}
+          onAddSectionAfter={() => props.onAddSection(index + 1, section.type)}
           onMoveSectionUp={() => props.onMoveSection(index, "UP")}
           onMoveSectionDown={() => props.onMoveSection(index, "DOWN")}
           onDeleteSection={() => props.onDeleteSection(index)}
@@ -937,7 +937,16 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     );
   }
 
-  function onAddSection(locale: Locale, index: number) {
+  function ensureFirstNotReferencedSampleId(locale: Locale) {
+    const id = [...samples.keys()].find(
+      i => !localizedContents[locale].contentSections.some(section => section.sampleId === i)
+    );
+    if (id != null) return id;
+    onAddSample();
+    return samples.length; // This still references to the old "samples" array
+  }
+
+  function onAddSection(locale: Locale, index: number, type: "Text" | "Sample") {
     if (pendingSubmit) return;
     setModified(true);
 
@@ -952,8 +961,9 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                 {
                   uuid: uuid(),
                   sectionTitle: "",
-                  type: "Text",
-                  text: ""
+                  type,
+                  text: "",
+                  ...(type === "Sample" ? { sampleId: ensureFirstNotReferencedSampleId(locale) } : {})
                 }
               ]
             ]
@@ -1034,14 +1044,13 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     if (pendingSubmit) return;
     setModified(true);
 
-    if (newType === "Sample" && !samples.length) onAddSample();
     setLocalizedContents(
       update(localizedContents, {
         [locale]: {
           contentSections: {
             [index]: {
               type: { $set: newType },
-              sampleId: newType === "Sample" ? { $set: 0 } : {},
+              sampleId: newType === "Sample" ? { $set: ensureFirstNotReferencedSampleId(locale) } : {},
               $unset: newType === "Text" ? ["sampleId"] : []
             }
           }
@@ -1277,7 +1286,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                   onChangeSectionType={(index, newType) => onChangeSectionType(locale, index, newType)}
                   onChangeSectionSampleId={(index, newSampleId) => onChangeSectionSampleId(locale, index, newSampleId)}
                   onChangeSampleData={onChangeSampleData}
-                  onAddSection={index => onAddSection(locale, index)}
+                  onAddSection={(index, type) => onAddSection(locale, index, type)}
                   onDeleteSection={index => onDeleteSection(locale, index)}
                   onMoveSection={(index, direction) => onMoveSection(locale, index, direction)}
                 />
