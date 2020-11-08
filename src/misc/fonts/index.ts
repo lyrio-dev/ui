@@ -68,6 +68,7 @@ function getFallbackFontList(locale: Locale) {
         "ヒラギノ角ゴ Pro",
         "Hiragino Kaku Gothic Pro",
         "メイリオ",
+        "Yu Gothic",
         "Meiryo",
         "Osaka",
         "ＭＳ Ｐゴシック",
