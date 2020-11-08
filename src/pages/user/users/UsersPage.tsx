@@ -118,7 +118,7 @@ let UsersPage: React.FC<UsersPageProps> = props => {
               </Table.Cell>
               <Table.Cell className={style.columnBio}>
                 {appState.serverPreference.misc.renderMarkdownInUserBio ? (
-                  <MarkdownContent content={user.bio} />
+                  <MarkdownContent content={user.bio} dontUseContentFont />
                 ) : (
                   <EmojiRenderer>
                     <div>{user.bio}</div>

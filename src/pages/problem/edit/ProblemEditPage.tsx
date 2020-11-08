@@ -43,6 +43,7 @@ import { getProblemIdString, getProblemUrl } from "../utils";
 import { useProblemViewMarkdownContentPatcher } from "../view/ProblemViewPage";
 import { makeToBeLocalizedText } from "@/locales";
 import { LocalizeTab } from "@/components/LocalizeTab";
+import { getMarkdownEditorFontClass } from "@/misc/fonts";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -257,6 +258,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               <Grid.Column>
                 <Form>
                   <TextArea
+                    className="monospace"
                     rows={4}
                     value={props.samples[props.section.sampleId].inputData}
                     placeholder={_(".content_editor.sample_input")}
@@ -269,6 +271,7 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
               <Grid.Column>
                 <Form>
                   <TextArea
+                    className="monospace"
                     rows={4}
                     value={props.samples[props.section.sampleId].outputData}
                     placeholder={_(".content_editor.sample_output")}
@@ -288,8 +291,9 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
                 ) : (
                   <Form>
                     <TextArea
+                      className={getMarkdownEditorFontClass()}
                       as={TextAreaAutoSize}
-                      minRows={4}
+                      minRows={6}
                       maxRows={16}
                       value={props.section.text}
                       placeholder={_(".content_editor.sample_explanation")}
@@ -307,8 +311,9 @@ const LocalizedContentEditorSection: React.FC<LocalizedContentEditorSectionProps
         ) : (
           <Form>
             <TextArea
+              className={getMarkdownEditorFontClass()}
               as={TextAreaAutoSize}
-              minRows={4}
+              minRows={6}
               maxRows={16}
               value={props.section.text}
               placeholder={_(".content_editor.section_content")}
@@ -563,6 +568,7 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
             <Grid.Column>
               <Form>
                 <TextArea
+                  className="monospace"
                   rows={4}
                   value={props.sample ? props.sample.inputData : ""}
                   placeholder={_(".content_editor.sample_input")}
@@ -573,6 +579,7 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
             <Grid.Column>
               <Form>
                 <TextArea
+                  className="monospace"
                   rows={4}
                   value={props.sample ? props.sample.outputData : ""}
                   placeholder={_(".content_editor.sample_output")}

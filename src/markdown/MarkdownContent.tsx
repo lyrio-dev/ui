@@ -27,6 +27,7 @@ export interface MarkdownContentProps {
   content: string;
   noSanitize?: boolean;
   patcher?: MarkdownContentPatcher;
+  dontUseContentFont?: boolean;
 }
 
 // Patch rendered-markdown's styles for semantic-ui
@@ -133,7 +134,11 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
 
   return (
     <div
-      className={style.markdownContent + (props.className ? " " + props.className : "")}
+      className={
+        style.markdownContent +
+        (props.className ? " " + props.className : "") +
+        (!props.dontUseContentFont ? " content-font" : "")
+      }
       dangerouslySetInnerHTML={{ __html: html }}
       ref={setWrapperElement}
     />

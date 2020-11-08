@@ -13,10 +13,10 @@ import { Locale } from "@/interfaces/Locale";
 import localeMeta from "@/locales/meta";
 import * as CodeFormatter from "@/utils/CodeFormatter";
 import { CodeLanguage, filterValidCompileAndRunOptions } from "@/interfaces/CodeLanguage";
-import { HighlightedCodeBox } from "@/components/CodeBox";
+import { CodeBox, HighlightedCodeBox } from "@/components/CodeBox";
 import { RouteError } from "@/AppRouter";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
-import { availableCodeFonts } from "@/misc/webfonts";
+import { availableCodeFonts, availableContentFonts } from "@/misc/fonts";
 import { makeToBeLocalizedText } from "@/locales";
 
 export async function fetchData(username: string) {
@@ -54,12 +54,18 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.locale?.system || null) as Locale);
   const [contentLocale, setContentLocale] = useState<Locale>((props.preference.locale?.content || null) as Locale);
+  const [contentFontFace, setContentFontFace] = useState(
+    props.preference.font?.contentFontFace || availableContentFonts[0] || "sans-serif"
+  );
   const [codeFontFace, setCodeFontFace] = useState(
     props.preference.font?.codeFontFace || availableCodeFonts[0] || "monospace"
   );
   const [codeFontSize, setCodeFontSize] = useState(props.preference.font?.codeFontSize || 14);
   const [codeLineHeight, setCodeLineHeight] = useState(props.preference.font?.codeLineHeight || 1.3);
   const [codeFontLigatures, setCodeFontLigatures] = useState(props.preference.font?.codeFontLigatures !== false);
+  const [markdownEditorFont, setMarkdownEditorFont] = useState(
+    (props.preference.font?.markdownEditorFont || "content") as "content" | "code"
+  );
   const [codeFormatterOptions, setCodeFormatterOptions] = useState(props.preference.codeFormatter?.options || "");
   const [doNotFormatCodeByDefault, setDoNotFormatCodeByDefault] = useState(
     !!props.preference.codeFormatter?.disableByDefault
@@ -85,10 +91,12 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
         content: contentLocale
       },
       font: {
+        contentFontFace,
         codeFontFace,
         codeFontSize,
         codeLineHeight,
-        codeFontLigatures
+        codeFontLigatures,
+        markdownEditorFont
       },
       codeFormatter: {
         options: codeFormatterOptions,
@@ -121,6 +129,8 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
       }
     }
   });
+
+  const fontPreviewContent = `<h2>A Harmony of LIGHT</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. A scelerisque purus semper eget duis at tellus at. Adipiscing elit duis tristique sollicitudin nibh.</p><h2>Awaits You in a Lost WORLD</h2><p>Velit sed ullamcorper morbi tincidunt ornare. Suscipit tellus mauris a diam maecenas. Tellus integer feugiat scelerisque varius morbi enim nunc. Eget aliquet nibh praesent tristique. Interdum posuere lorem ipsum dolor sit. Sed sed risus pretium quam vulputate dignissim suspendisse in est.</p><p>Elementum sagittis vitae et leo duis. Neque convallis a cras semper auctor. Justo eget magna fermentum iaculis eu non diam.</p>`;
 
   // XD I write this because I'm studying the course -- Introduction to Database Systems
   const fontPreviewCode = `puts("Tell me something about Menci~www");
@@ -243,13 +253,47 @@ int main(int argc,char**argv)
       />
       <div className={style.notes}>{_(".locale.content_notes")}</div>
       <Header className={style.sectionHeader} size="large" content={_(".font.header")} />
-      <Header className={style.header} size="tiny" content={_(".font.code_font_face")} />
+      <Header className={style.header} size="tiny" content={_(".font.content_font_face")} />
       {/* The browser may won't load the webfonts until the user open the select. */}
       <div className={style.forceLoadFonts}>
-        {availableCodeFonts.map(fontFace => (
+        {[...availableCodeFonts, ...availableContentFonts].map(fontFace => (
           <FontNameWithPreview key={fontFace} fontFace={fontFace} />
         ))}
       </div>
+      <Select
+        className={style.notFullWidth + " " + style.fontSelect}
+        fluid
+        value={contentFontFace}
+        onChange={(e, { value }) => (setModified(true), setContentFontFace(value as string))}
+        options={[
+          {
+            key: "sans-serif",
+            value: "sans-serif",
+            text: <span style={{ fontFamily: "sans-serif" }}>{_(".font.system_default_sans_serif")}</span>
+          },
+          {
+            key: "serif",
+            value: "serif",
+            text: <span style={{ fontFamily: "serif" }}>{_(".font.system_default_serif")}</span>
+          },
+          ...availableContentFonts.map(fontFace => ({
+            text: <FontNameWithPreview fontFace={fontFace} />,
+            value: fontFace,
+            key: fontFace
+          }))
+        ]}
+      />
+      <Header className={style.header} size="tiny" content={_(".font.content_preview")} />
+      <CodeBox
+        className="content-font"
+        segment={{
+          color: "pink"
+        }}
+        html={fontPreviewContent}
+        fontFaceOverride={contentFontFace}
+        wrap
+      />
+      <Header className={style.header} size="tiny" content={_(".font.code_font_face")} />
       <Select
         className={style.notFullWidth + " " + style.fontSelect}
         fluid
@@ -306,7 +350,7 @@ int main(int argc,char**argv)
       <Header className={style.header} size="tiny" content={_(".font.code_preview")} />
       <HighlightedCodeBox
         segment={{
-          color: "pink"
+          color: "blue"
         }}
         language={"cpp"}
         code={fontPreviewCode}
@@ -315,6 +359,23 @@ int main(int argc,char**argv)
         lineHeightOverride={codeLineHeight}
         fontLigaturesOverride={codeFontLigatures}
       />
+      <Form>
+        <Form.Group inline>
+          <label className={style.formLabel}>{_(".font.markdown_editor_font.markdown_editor")}</label>
+          <Form.Radio
+            label={_(".font.markdown_editor_font.content_font")}
+            value="content"
+            checked={markdownEditorFont === "content"}
+            onChange={() => setMarkdownEditorFont("content")}
+          />
+          <Form.Radio
+            label={_(".font.markdown_editor_font.code_font")}
+            value="code"
+            checked={markdownEditorFont === "code"}
+            onChange={() => setMarkdownEditorFont("code")}
+          />
+        </Form.Group>
+      </Form>
       <Header className={style.sectionHeader} size="large" content={_(".code_language.header")} />
       <Form className={style.notFullWidth}>
         <CodeLanguageAndOptions
@@ -331,7 +392,7 @@ int main(int argc,char**argv)
       <Header className={style.header} size="tiny" content={_(".code_formatter.astyle_options")} />
       <Form>
         <TextArea
-          className={style.textarea}
+          className={style.textarea + " monospace"}
           rows="5"
           placeholder={CodeFormatter.defaultOptions}
           value={codeFormatterOptions}
@@ -360,7 +421,7 @@ int main(int argc,char**argv)
       />
       <HighlightedCodeBox
         segment={{
-          color: formatPreviewSuccess ? "blue" : "red"
+          color: formatPreviewSuccess ? "green" : "red"
         }}
         language={formatPreviewSuccess ? "cpp" : null}
         code={formattedPreviewCode}

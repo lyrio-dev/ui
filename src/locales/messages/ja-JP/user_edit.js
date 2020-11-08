@@ -82,6 +82,10 @@ module.exports = {
     },
     font: {
       header: "[TBT] Font",
+      content_font_face: "[TBT] Content Font",
+      system_default_sans_serif: "[TBT] sans-serif (browser default)",
+      system_default_serif: "[TBT] serif (browser default)",
+      content_preview: "[TBT] Preview",
       code_font_face: "[TBT] Code Font",
       system_default: "[TBT] monospace (browser default)",
       code_font_size: "[TBT] Code Font Size",
@@ -89,7 +93,12 @@ module.exports = {
       code_font_ligatures: "[TBT] Enable Ligatures",
       code_font_ligatures_notes:
         "[TBT] Ligatures could display some combining symbols in a more readable form. Only several fonts support this feature.",
-      code_preview: "[TBT] Preview"
+      code_preview: "[TBT] Preview",
+      markdown_editor_font: {
+        markdown_editor: "[TBT] Markdown Editor",
+        content_font: "[TBT] Content Font",
+        code_font: "[TBT] Code Font"
+      }
     },
     code_language: {
       header: "プログラミング言語",

@@ -345,7 +345,7 @@ let HomePage: React.FC<HomePageProps> = props => {
                   {inMainView ? (
                     <Table.Cell className={style.columnBio}>
                       {appState.serverPreference.misc.renderMarkdownInUserBio ? (
-                        <LazyMarkdownContent content={user.bio} />
+                        <LazyMarkdownContent content={user.bio} dontUseContentFont />
                       ) : (
                         <EmojiRenderer>
                           <div>{user.bio}</div>

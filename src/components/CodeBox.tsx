@@ -26,6 +26,7 @@ interface CodeBoxProps {
   fontSizeOverride?: number;
   lineHeightOverride?: number;
   fontLigaturesOverride?: boolean;
+  wrap?: boolean;
 }
 
 export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, ref) => {
@@ -78,7 +79,7 @@ export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, re
         <EmojiRenderer>
           <pre
             ref={refPre}
-            className={style.codeBoxContent}
+            className={style.codeBoxContent + " " + style.wrap}
             dangerouslySetInnerHTML={props.html ? { __html: props.html } : undefined}
           >
             {content}

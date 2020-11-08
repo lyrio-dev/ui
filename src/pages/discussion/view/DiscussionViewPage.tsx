@@ -49,6 +49,7 @@ import { getBreadcrumb, getNewDiscussionUrl } from "../discussions/DiscussionsPa
 import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer, getTwemojiOptions } from "@/components/EmojiRenderer";
 import TimeAgo from "@/components/TimeAgo";
+import { getMarkdownEditorFontClass } from "@/misc/fonts";
 
 const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
@@ -530,7 +531,7 @@ export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
             <Ref innerRef={setEditor}>
               <TextArea
                 as={TextAreaAutoSize}
-                className={style.editor}
+                className={style.editor + " " + getMarkdownEditorFontClass()}
                 maxRows={999}
                 placeholder={
                   isUpdate

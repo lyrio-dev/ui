@@ -3,33 +3,16 @@ import { observer } from "mobx-react";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 import { appState } from "./appState";
-import { availableCodeFonts } from "./misc/webfonts";
+import { updateCodeFontCss, updateContentFontCss, updateUiFontCss } from "./misc/fonts";
 
 import AppRouter from "./AppRouter";
 
 const App: React.FC = () => {
   useEffect(() => {
-    const ID = "font-preference";
-
-    const style = document.createElement("style");
-    style.innerHTML = `
-      .monospace, code, pre {
-        font-family: "${
-          appState.userPreference.font?.codeFontFace || availableCodeFonts[0] || "monospace"
-        }", monospace !important;
-        font-size: ${appState.userPreference.font?.codeFontSize || 14}px !important;
-        line-height: ${appState.userPreference.font?.codeLineHeight || 1.3} !important;
-        font-variant-ligatures: ${
-          appState.userPreference.font?.codeFontLigatures === false ? "none" : "normal"
-        } !important;
-      }
-    `;
-    style.id = ID;
-
-    const oldStyle = document.getElementById(ID);
-    if (oldStyle) document.head.replaceChild(style, oldStyle);
-    else document.head.appendChild(style);
-  }, [appState.userPreference.font]);
+    updateCodeFontCss(appState.locale);
+    updateContentFontCss(appState.locale);
+    updateUiFontCss(appState.locale);
+  }, [appState.userPreference.font, appState.locale]);
 
   return (
     <>

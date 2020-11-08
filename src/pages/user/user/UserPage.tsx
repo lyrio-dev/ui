@@ -188,7 +188,7 @@ let UserPage: React.FC<UserPageProps> = props => {
         <EmojiRenderer>
           <p className={style.bio}>
             {appState.serverPreference.misc.renderMarkdownInUserBio ? (
-              <MarkdownContent content={props.meta.bio} />
+              <MarkdownContent content={props.meta.bio} dontUseContentFont />
             ) : (
               props.meta.bio
             )}

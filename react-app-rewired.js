@@ -1,3 +1,4 @@
+const path = require("path");
 const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin } = require("customize-cra");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const CssUrlRelativePlugin = require("css-url-relative-plugin");
@@ -67,7 +68,7 @@ const removeServiceWorker = () => config => {
 const useRelativePath = () => config => {
   config.output.publicPath = "./";
   return config;
-}
+};
 
 const disableEsLint = () => config => {
   config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== "ESLintWebpackPlugin");
@@ -86,6 +87,10 @@ module.exports = override(
     test: /\.wasm$/,
     type: "javascript/auto",
     loader: "file-loader"
+  }),
+  addWebpackModuleRule({
+    test: require.resolve("./src/misc/fonts/ui-font-selectors"),
+    loader: "val-loader"
   }),
   addWebWorkerLoader({
     test: /\.worker\.(js|ts)$/,

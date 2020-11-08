@@ -81,13 +81,22 @@ module.exports = {
     },
     font: {
       header: "字体",
+      content_font_face: "正文字体",
+      system_default_sans_serif: "sans-serif（浏览器默认）",
+      system_default_serif: "serif（浏览器默认）",
+      content_preview: "预览",
       code_font_face: "代码字体",
       system_default: "monospace（浏览器默认）",
       code_font_size: "代码字体大小",
       code_line_height: "代码行高",
       code_font_ligatures: "启用连字（Ligatures）",
       code_font_ligatures_notes: "连字（Ligatures）功能可将部分组合符号显示为更易于阅读的形式。仅部分字体支持此功能。",
-      code_preview: "预览"
+      code_preview: "预览",
+      markdown_editor_font: {
+        markdown_editor: "Markdown 编辑器",
+        content_font: "正文字体",
+        code_font: "代码字体"
+      }
     },
     code_language: {
       header: "编程语言",

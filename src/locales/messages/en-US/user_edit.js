@@ -83,6 +83,10 @@ module.exports = {
     },
     font: {
       header: "Font",
+      content_font_face: "Content Font",
+      system_default_sans_serif: "sans-serif (browser default)",
+      system_default_serif: "serif (browser default)",
+      content_preview: "Preview",
       code_font_face: "Code Font",
       system_default: "monospace (browser default)",
       code_font_size: "Code Font Size",
@@ -90,7 +94,12 @@ module.exports = {
       code_font_ligatures: "Enable Ligatures",
       code_font_ligatures_notes:
         "Ligatures could display some combining symbols in a more readable form. Only several fonts support this feature.",
-      code_preview: "Preview"
+      code_preview: "Preview",
+      markdown_editor_font: {
+        markdown_editor: "Markdown Editor",
+        content_font: "Content Font",
+        code_font: "Code Font"
+      }
     },
     code_language: {
       header: "Programming Language",

@@ -11,7 +11,7 @@ import style from "./CodeEditor.module.less";
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 import { appState } from "@/appState";
-import { availableCodeFonts } from "@/misc/webfonts";
+import { availableCodeFonts, generateCodeFontEditorOptions } from "@/misc/fonts";
 
 function loadAceHighlights() {
   Monaco.languages.register({ id: "haskell" });
@@ -83,8 +83,6 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
     }
   }
 
-  const fontSize = appState.userPreference.font?.codeFontSize || 14;
-
   return (
     <div
       ref={initializeResizeSensor}
@@ -93,18 +91,11 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
       <ReactMonacoEditor
         language={props.language}
         value={props.value}
-        options={Object.assign(
-          {
-            lineNumbersMinChars: 4,
-            fontFamily: `"${
-              appState.userPreference.font?.codeFontFace || availableCodeFonts[0] || "monospace"
-            }", monospace`,
-            fontSize: fontSize,
-            lineHeight: (appState.userPreference.font?.codeLineHeight || 1.3) * fontSize,
-            fontLigatures: appState.userPreference.font?.codeFontLigatures !== false
-          },
-          props.options
-        )}
+        options={{
+          lineNumbersMinChars: 4,
+          ...generateCodeFontEditorOptions(appState.locale),
+          ...props.options
+        }}
         editorDidMount={editorDidMount}
         onChange={props.onChange}
       />

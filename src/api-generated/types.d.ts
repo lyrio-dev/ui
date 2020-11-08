@@ -1248,10 +1248,12 @@ declare namespace ApiTypes {
     code?: ApiTypes.UserPreferenceCodeDto;
   }
   export interface UserPreferenceFontDto {
+    contentFontFace?: string;
     codeFontFace?: string;
     codeFontSize?: number;
     codeLineHeight?: number;
     codeFontLigatures?: boolean;
+    markdownEditorFont?: string;
   }
   export interface UserPreferenceLocaleDto {
     system?: "en_US" | "zh_CN" | "ja_JP";
