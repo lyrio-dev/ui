@@ -26,7 +26,7 @@ module.exports = {
     after_time: "",
     after_days: " 天",
     completed_before_event: "",
-    completed_after_event: "已开始"
+    completed_after_event: " 已开始"
   },
   search_problem: "搜索题目",
   top_users: {

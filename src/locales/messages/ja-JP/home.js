@@ -26,7 +26,7 @@ module.exports = {
     after_days_before_event: "[TBT]  days before ",
     after_event: "[TBT] ",
     completed_before_event: "[TBT] ",
-    completed_after_event: "[TBT] has started"
+    completed_after_event: "[TBT]  has started"
   },
   search_problem: "[TBT] Search Problem",
   top_users: {
