@@ -1,7 +1,7 @@
 {
   "name": "syzoj-ng-app",
   "version": "0.0.6",
-  "dependencies": {
+  "devDependencies": {
     "@svgr/webpack": "^5.4.0",
     "@tanem/react-nprogress": "^3.0.47",
     "@types/blueimp-md5": "^2.7.0",
@@ -38,6 +38,7 @@
     "css-element-queries": "^1.2.3",
     "css-url-relative-plugin": "^1.0.1",
     "customize-cra": "^1.0.0",
+    "cz-conventional-changelog": "3.3.0",
     "dayjs": "^1.9.5",
     "dtsgenerator": "2.7.0",
     "file-loader": "^6.2.0",
@@ -155,9 +156,6 @@
   "repository": "https://github.com/syzoj/syzoj-ng-app",
   "author": "Menci",
   "license": "AGPL-3.0",
-  "devDependencies": {
-    "cz-conventional-changelog": "3.3.0"
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
