@@ -707,7 +707,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
       });
 
       if (requestError) toast.error(requestError(_));
-      else if (response.error) toast.error(`.errors.${response.error}`);
+      else if (response.error) toast.error(_(`.errors.${response.error}`));
       else downloadFile(response.url);
     });
 

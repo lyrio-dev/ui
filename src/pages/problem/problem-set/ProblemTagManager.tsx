@@ -171,7 +171,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
       id: tagId
     });
     if (requestError) toast.error(requestError(_));
-    else if (response.error) toast.error(`.error.${response.error}`);
+    else if (response.error) toast.error(_(`.error.${response.error}`));
     else {
       const newTags = Object.assign({}, tags);
       delete newTags[tagId];
@@ -214,7 +214,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         localizedNames: localizedNames
       });
       if (requestError) toast.error(requestError(_));
-      else if (response.error) toast.error(`.error.${response.error}`);
+      else if (response.error) toast.error(_(`.error.${response.error}`));
       else {
         setTags(
           Object.assign({}, tags, {
@@ -236,7 +236,7 @@ let ProblemTagManager: React.FC<ProblemTagManagerProps> = props => {
         localizedNames: localizedNames
       });
       if (requestError) toast.error(requestError(_));
-      else if (response.error) toast.error(`.error.${response.error}`);
+      else if (response.error) toast.error(_(`.error.${response.error}`));
       else {
         setTags(
           Object.assign({}, tags, {
