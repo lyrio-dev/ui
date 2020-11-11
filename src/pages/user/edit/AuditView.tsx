@@ -377,9 +377,11 @@ const AuditView: React.FC<AuditViewProps> = props => {
                       <Comment.Action as={Link} className={style.item} href={getFilterUrl({ ip: result.ip })}>
                         {result.ip}
                       </Comment.Action>
-                      <Comment.Action className={style.item} as="span">
-                        {fixChineseSpace(result.ipLocation)}
-                      </Comment.Action>
+                      {result.ipLocation && (
+                        <Comment.Action className={style.item} as="span">
+                          {fixChineseSpace(result.ipLocation)}
+                        </Comment.Action>
+                      )}
                       <Comment.Action className={style.item} as="span">
                         {formatDateTime(result.time)[1]}
                       </Comment.Action>
