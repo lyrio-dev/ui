@@ -22,6 +22,7 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
   Accepted: "checkmark",
   JudgementFailed: "server",
   Waiting: "hourglass half",
+  Preparing: "spinner",
   Compiling: "spinner",
   Running: "spinner",
   Skipped: "fast forward"

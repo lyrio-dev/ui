@@ -40,6 +40,7 @@ export enum SubmissionStatusAll {
   JudgementFailed = "JudgementFailed",
 
   Waiting = "Waiting",
+  Preparing = "Preparing",
   Compiling = "Compiling",
   Running = "Running",
   Skipped = "Skipped"
