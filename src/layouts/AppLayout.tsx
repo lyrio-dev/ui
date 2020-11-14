@@ -78,11 +78,15 @@ let AppLayout: React.FC = props => {
       text: ".navbar.problem_set",
       url: "/p"
     },
-    // contests: {
-    //   icon: "calendar",
-    //   text: ".navbar.contests",
-    //   url: "/contests"
-    // },
+    ...(appState.serverPreference.misc.legacyContestsEntryUrl
+      ? {
+          contests: {
+            icon: "calendar",
+            text: ".navbar.contests",
+            url: appState.serverPreference.misc.legacyContestsEntryUrl
+          }
+        }
+      : {}),
     submissions: {
       icon: "hourglass",
       text: ".navbar.submissions",

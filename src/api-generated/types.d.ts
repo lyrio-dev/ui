@@ -570,6 +570,7 @@ declare namespace ApiTypes {
   }
   export interface PreferenceConfigMisc {
     redirectLegacyUrls: boolean;
+    legacyContestsEntryUrl: boolean;
     homepageUserListOnMainView: boolean;
     sortUserByRating: boolean;
     renderMarkdownInUserBio: boolean;
