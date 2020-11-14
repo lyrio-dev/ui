@@ -22,7 +22,7 @@ module.exports = {
     title: "Title",
     preview_all: "Preview",
     default: "Default language",
-    confirm_apply_template: "Confirm apply template",
+    add_default_sections: "Add default sections",
     confirm_delete: "Confirm delete language",
     section_title: "Section Title",
     preview: "Preview",

@@ -22,7 +22,7 @@ module.exports = {
     title: "タイトル",
     preview_all: "プレビュー",
     default: "デフォルト言語",
-    confirm_apply_template: "テンプレートで上書きする",
+    add_default_sections: "[TBT] Add default sections",
     confirm_delete: "削除する",
     section_title: "セクションのタイトル",
     preview: "プレビュー",

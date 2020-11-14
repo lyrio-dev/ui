@@ -44,6 +44,7 @@ import { useProblemViewMarkdownContentPatcher } from "../view/ProblemViewPage";
 import { makeToBeLocalizedText } from "@/locales";
 import { LocalizeTab } from "@/components/LocalizeTab";
 import { getMarkdownEditorFontClass } from "@/misc/fonts";
+import defaultSections from "./defaultSections";
 
 type Problem = ApiTypes.GetProblemResponseDto;
 
@@ -72,7 +73,7 @@ async function fetchDataAllProblemTags(): Promise<ApiTypes.LocalizedProblemTagDt
   return response.tags;
 }
 
-interface LocalizedContentSection {
+export interface LocalizedContentSection {
   uuid: string;
   sectionTitle: string;
   type: "Text" | "Sample";
@@ -335,7 +336,7 @@ interface LocalizedContentEditorProps {
   isOnly: boolean;
   isDefault: boolean;
   onMakeDefault: () => void;
-  onApplyTemplate: () => void;
+  onAddDefaultSections: () => void;
   onDelete: () => void;
 
   onChangeTitle: (newTitle: string) => void;
@@ -354,10 +355,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
 
   const [preview, setPreview] = useState(false);
 
-  const safeToApplyTemplate = props.localizedContent.contentSections.every(
-    section => !section.sectionTitle && section.type === "Text" && !section.text
-  );
-  const [applyTemplatePopupOpen, setApplyTemplatePopupOpen] = useState(false);
+  const [addDefaultSectionsPopupOpen, setAddDefaultSectionsPopupOpen] = useState(false);
 
   return (
     <>
@@ -392,25 +390,17 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
             </>
           )}
           <Popup
-            trigger={
-              <Menu.Item
-                as="a"
-                icon="file alternate outline"
-                className={style.toolbarMenuIconItem}
-                onClick={() => safeToApplyTemplate && props.onApplyTemplate()}
-              />
-            }
-            disabled={safeToApplyTemplate}
-            open={applyTemplatePopupOpen}
-            onOpen={() => setApplyTemplatePopupOpen(true)}
-            onClose={() => setApplyTemplatePopupOpen(false)}
+            trigger={<Menu.Item as="a" icon="file alternate outline" className={style.toolbarMenuIconItem} />}
+            open={addDefaultSectionsPopupOpen}
+            onOpen={() => setAddDefaultSectionsPopupOpen(true)}
+            onClose={() => setAddDefaultSectionsPopupOpen(false)}
             content={
               <Button
                 color="green"
-                content={_(".content_editor.confirm_apply_template")}
+                content={_(".content_editor.add_default_sections")}
                 onClick={() => {
-                  setApplyTemplatePopupOpen(false);
-                  props.onApplyTemplate();
+                  setAddDefaultSectionsPopupOpen(false);
+                  props.onAddDefaultSections();
                 }}
               />
             }
@@ -594,109 +584,6 @@ const SampleEditor: React.FC<SampleEditorProps> = props => {
   );
 };
 
-// FIXME: Don't write localized text in code
-const sectionsTemplate: Record<Locale, LocalizedContentSection[]> = {
-  [Locale.zh_CN]: [
-    {
-      uuid: uuid(),
-      sectionTitle: "题目描述",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "输入格式",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "输出格式",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "样例",
-      type: "Sample",
-      sampleId: 0,
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "数据范围与提示",
-      type: "Text",
-      text: ""
-    }
-  ],
-  [Locale.en_US]: [
-    {
-      uuid: uuid(),
-      sectionTitle: "Description",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "Input",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "Output",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "Sample",
-      type: "Sample",
-      sampleId: 0,
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "Limits And Hints",
-      type: "Text",
-      text: ""
-    }
-  ],
-  [Locale.ja_JP]: [
-    {
-      uuid: uuid(),
-      sectionTitle: "問題文",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "入力",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "出力",
-      type: "Text",
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "例",
-      type: "Sample",
-      sampleId: 0,
-      text: ""
-    },
-    {
-      uuid: uuid(),
-      sectionTitle: "制約",
-      type: "Text",
-      text: ""
-    }
-  ]
-};
-
 interface ProblemEditPageProps {
   idType?: "id" | "displayId";
   problem?: Problem;
@@ -734,14 +621,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         // For a new problem, use the user's preferred locale
         converted[appState.locale] = {
           title: "",
-          contentSections: [
-            {
-              uuid: uuid(),
-              sectionTitle: "",
-              type: "Text",
-              text: ""
-            }
-          ]
+          contentSections: defaultSections[appState.locale]
         };
       }
       return converted;
@@ -852,7 +732,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     }
   }
 
-  function onApplyTemplateToLocale(locale: Locale) {
+  function onAddDefaultSectionsToLocale(locale: Locale) {
     if (pendingSubmit) return;
     setModified(true);
 
@@ -860,7 +740,14 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
     setLocalizedContents(
       update(localizedContents, {
         [locale]: {
-          contentSections: { $set: sectionsTemplate[locale] }
+          contentSections: {
+            $set: [
+              ...defaultSections[locale],
+              ...localizedContents[locale].contentSections.filter(
+                section => !(section.type === "Text" && !section.sectionTitle && !section.text)
+              )
+            ]
+          }
         }
       })
     );
@@ -1187,7 +1074,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   const [samples, setSamples] = useState<Sample[]>(
     props.new
-      ? []
+      ? [{ uuid: uuid(), inputData: "", outputData: "" }]
       : props.problem.samples.map(sample => ({
           uuid: uuid(),
           ...sample
@@ -1279,7 +1166,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                   isOnly={Object.keys(localizedContents).length === 1}
                   isDefault={defaultLocale === locale}
                   onMakeDefault={() => setDefaultLocale(locale)}
-                  onApplyTemplate={() => onApplyTemplateToLocale(locale)}
+                  onAddDefaultSections={() => onAddDefaultSectionsToLocale(locale)}
                   onDelete={() => onDeleteLocale(locale)}
                   onChangeTitle={title => onChangeTitle(locale, title)}
                   onChangeSectionValue={(index, type, newValue) => onChangeSectionValue(locale, index, type, newValue)}

@@ -22,7 +22,7 @@ module.exports = {
     title: "标题",
     preview_all: "预览",
     default: "设为默认语言",
-    confirm_apply_template: "确认应用模板",
+    add_default_sections: "添加默认栏目",
     confirm_delete: "确认删除语言",
     section_title: "栏目标题",
     preview: "预览",
