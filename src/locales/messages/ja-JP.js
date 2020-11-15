@@ -1,1 +1,3 @@
-export default require.context("./ja-JP", true, /\.js$/);
+const importMessages = require("./importMessages");
+
+module.exports = (options, loaderContext) => importMessages("ja-JP", loaderContext);

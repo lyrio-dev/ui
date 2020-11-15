@@ -81,7 +81,7 @@ const AppRouter: React.FC = () => {
       withView(
         async () => {
           const localeHyphen = appState.locale.replace("_", "-");
-          const localeData = await loadLocaleData(localeHyphen);
+          const localeData = await loadLocaleData(appState.locale);
           const elements = (
             <IntlProvider locale={localeHyphen} messages={localeData}>
               <AppLayout key={localeHyphen}>

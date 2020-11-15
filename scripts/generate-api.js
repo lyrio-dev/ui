@@ -2,8 +2,8 @@ const fetch = require("node-fetch");
 const dtsgenerator = require("dtsgenerator").default;
 const fs = require("fs-extra");
 
-const apiUrl = process.argv.filter(arg =>
-  arg.toLowerCase().startsWith("http://") || arg.toLowerCase().startsWith("https://")
+const apiUrl = process.argv.filter(
+  arg => arg.toLowerCase().startsWith("http://") || arg.toLowerCase().startsWith("https://")
 )[0];
 
 if (!apiUrl) {
@@ -13,14 +13,14 @@ if (!apiUrl) {
 
 const skipTags = ["App", "CORS"];
 const namespaceName = "ApiTypes";
-const generatedMessage = "// This file is generated automatically, do NOT modify it.\n\n"
+const generatedMessage = "// This file is generated automatically, do NOT modify it.\n\n";
 
 function getSchemaName(schema) {
   return schema["$ref"] && schema["$ref"].split("/").pop();
 }
 
 function getRequestBodySchemaName(requestBody) {
-  return requestBody && getSchemaName(requestBody.content["application/json"].schema)
+  return requestBody && getSchemaName(requestBody.content["application/json"].schema);
 }
 
 function getResponseSchemaName(responses) {
@@ -65,21 +65,22 @@ function normalizeModuleName(moduleName, forFilename) {
       tags[tag].operations[operation.get.operationId] = {
         type: "get",
         path,
-        parameters: operation.get.parameters && operation.get.parameters.map(({ name, required }) => ({ name, required })),
+        parameters:
+          operation.get.parameters && operation.get.parameters.map(({ name, required }) => ({ name, required })),
         response
-      }
+      };
 
       if (response) tags[tag].schemas.add(response);
     } else {
       const body = getRequestBodySchemaName(operation.post.requestBody),
-            response = getResponseSchemaName(operation.post.responses);
+        response = getResponseSchemaName(operation.post.responses);
       tags[tag].operations[operation.post.operationId] = {
         type: "post",
         path,
         body,
         response,
         recaptcha: (operation.post.description || "").startsWith("Recaptcha required.")
-      }
+      };
 
       if (body) tags[tag].schemas.add(body);
       if (response) tags[tag].schemas.add(response);
@@ -103,16 +104,19 @@ function normalizeModuleName(moduleName, forFilename) {
 
       if (operation.type === "post") {
         const bodyType = operation.body ? `ApiTypes.${operation.body}` : "void",
-              responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
-        code += `export const ${functionName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)}, ${operation.recaptcha});\n`;
+          responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
+        code += `export const ${functionName} = createPostApi<${bodyType}, ${responseType}>(${JSON.stringify(path)}, ${
+          operation.recaptcha
+        });\n`;
       } else {
-        const parameterTypes = operation.parameters
-                            && operation.parameters.map(
-                                 ({ name, required }) => `${name}${required ? "" : "?"}: string`
-                               ).join(", "),
-              parameterType = parameterTypes ? `{ ${parameterTypes} }` : "void",
-              responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
-        code += `export const ${functionName} = createGetApi<${parameterType}, ${responseType}>(${JSON.stringify(path)});\n`;
+        const parameterTypes =
+            operation.parameters &&
+            operation.parameters.map(({ name, required }) => `${name}${required ? "" : "?"}: string`).join(", "),
+          parameterType = parameterTypes ? `{ ${parameterTypes} }` : "void",
+          responseType = operation.response ? `ApiTypes.${operation.response}` : "void";
+        code += `export const ${functionName} = createGetApi<${parameterType}, ${responseType}>(${JSON.stringify(
+          path
+        )});\n`;
       }
     }
 
@@ -124,7 +128,10 @@ function normalizeModuleName(moduleName, forFilename) {
 
   code += generatedMessage;
   for (const moduleName in tags) {
-    code += `import * as Imported${normalizeModuleName(moduleName)}Api from "./modules/${normalizeModuleName(moduleName, true)}";\n`;
+    code += `import * as Imported${normalizeModuleName(moduleName)}Api from "./modules/${normalizeModuleName(
+      moduleName,
+      true
+    )}";\n`;
   }
   code += "\n";
   for (const moduleName in tags) {
@@ -134,5 +141,4 @@ function normalizeModuleName(moduleName, forFilename) {
   }
 
   await fs.writeFile(__dirname + `/../src/api-generated/index.ts`, code);
-
 })();

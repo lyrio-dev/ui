@@ -133,7 +133,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\" \"src/**/*.tsx\"",
+    "format": "prettier --write \"*.js\" \"scripts/**/*.js\" \"src/**/*.ts\" \"src/**/*.js\" \"src/**/*.tsx\"",
     "generate-api": "node scripts/generate-api.js $API_HOST/docs-json && prettier --write \"src/api-generated/**/*.ts\"",
     "postinstall": "patch-package"
   },

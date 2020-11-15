@@ -1,5 +1,11 @@
-const path = require("path");
-const { override, addLessLoader, addWebpackAlias, addWebpackModuleRule, addWebpackPlugin, addBabelPlugin } = require("customize-cra");
+const {
+  override,
+  addLessLoader,
+  addWebpackAlias,
+  addWebpackModuleRule,
+  addWebpackPlugin,
+  addBabelPlugin
+} = require("customize-cra");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const CssUrlRelativePlugin = require("css-url-relative-plugin");
 const getGitRepoInfo = require("git-repo-info");
@@ -7,17 +13,17 @@ const getGitRepoInfo = require("git-repo-info");
 const addWebWorkerLoader = loaderOptions => config => {
   const mergedLoaderOptions = Object.assign({}, loaderOptions);
   if (loaderOptions.use) {
-    if (Array.isArray(loaderOptions.use))
-      mergedLoaderOptions.use = Array.from(loaderOptions.use);
-    else
-      mergedLoaderOptions.use = [loaderOptions.use];
+    if (Array.isArray(loaderOptions.use)) mergedLoaderOptions.use = Array.from(loaderOptions.use);
+    else mergedLoaderOptions.use = [loaderOptions.use];
   } else if (loaderOptions.loader) {
     delete mergedLoaderOptions.loader;
     delete mergedLoaderOptions.options;
-    mergedLoaderOptions.use = [{
-      loader: loaderOptions.loader,
-      options: loaderOptions.options
-    }];
+    mergedLoaderOptions.use = [
+      {
+        loader: loaderOptions.loader,
+        options: loaderOptions.options
+      }
+    ];
   } else throw new Error("loaderOptions should have .use or .loader");
 
   const rules = config.module.rules;
@@ -75,6 +81,36 @@ const disableEsLint = () => config => {
   return config;
 };
 
+const fixChunkSplitting = () => config => {
+  config.optimization.splitChunks = {
+    chunks: "all",
+    minSize: 0,
+    maxAsyncRequests: 99999,
+    maxInitialRequests: 99999,
+    cacheGroups: {
+      common: {
+        name: "common",
+        chunks: "initial",
+        priority: 2,
+        minChunks: 2
+      },
+      styles: {
+        test: /\.(css|scss|less)$/,
+        enforce: true
+      }
+    }
+  };
+
+  return config;
+};
+
+const patchTerserOptions = () => config => {
+  const terserOptions = config.optimization.minimizer[0].options.terserOptions;
+  terserOptions.output.ascii_only = false;
+
+  return config;
+};
+
 module.exports = override(
   disableEsLint(),
   addLessLoader(),
@@ -92,42 +128,53 @@ module.exports = override(
     test: require.resolve("./src/misc/fonts/ui-font-selectors"),
     loader: "val-loader"
   }),
+  addWebpackModuleRule({
+    test: `${__dirname}/src/locales/messages`,
+    loader: "val-loader"
+  }),
   addWebWorkerLoader({
     test: /\.worker\.(js|ts)$/,
-    use: "workerize-loader",
+    use: "workerize-loader"
   }),
   addWebpackAlias({
     ["@"]: __dirname + "/src",
     ["semantic-ui-css"]: "fomantic-ui-css"
   }),
-  addWebpackPlugin(new MonacoWebpackPlugin({
-    languages: ["yaml", "cpp", "java", "kotlin", "pascal", "python", "rust", "go", "csharp", "fsharp"],
-    features: [
-      "bracketMatching",
-      "caretOperations",
-      "clipboard",
-      "contextmenu",
-      "coreCommands",
-      "cursorUndo",
-      "find",
-      "folding",
-      "fontZoom",
-      "gotoLine",
-      "iPadShowKeyboard",
-      "inPlaceReplace",
-      "indentation",
-      "linesOperations",
-      "links",
-      "multicursor",
-      "smartSelect",
-      "unusualLineTerminators"
-    ]
-  })),
+  addWebpackPlugin(
+    new MonacoWebpackPlugin({
+      languages: ["yaml", "cpp", "java", "kotlin", "pascal", "python", "rust", "go", "csharp", "fsharp"],
+      features: [
+        "bracketMatching",
+        "caretOperations",
+        "clipboard",
+        "contextmenu",
+        "coreCommands",
+        "cursorUndo",
+        "find",
+        "folding",
+        "fontZoom",
+        "gotoLine",
+        "iPadShowKeyboard",
+        "inPlaceReplace",
+        "indentation",
+        "linesOperations",
+        "links",
+        "multicursor",
+        "smartSelect",
+        "unusualLineTerminators"
+      ]
+    })
+  ),
   addWebpackPlugin(new CssUrlRelativePlugin()),
-  addBabelPlugin(["prismjs", {
-    "languages": Object.keys(require("prismjs/components.js").languages).filter(name => name !== "meta")
-  }]),
+  addBabelPlugin([
+    "prismjs",
+    {
+      languages: Object.keys(require("prismjs/components.js").languages).filter(name => name !== "meta")
+    }
+  ]),
   patchHtmlWebpackPluginConfig(),
   removeServiceWorker(),
-  useRelativePath()
+  useRelativePath(),
+  fixChunkSplitting(),
+  patchTerserOptions()
 );

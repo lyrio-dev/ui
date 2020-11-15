@@ -1,1 +1,3 @@
-export default require.context("./en-US", true, /\.js$/);
+const importMessages = require("./importMessages");
+
+module.exports = (options, loaderContext) => importMessages("en-US", loaderContext);
