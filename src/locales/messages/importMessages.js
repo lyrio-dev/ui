@@ -11,10 +11,11 @@ function escapeLocalizedMessage(text) {
 function escapeLocalizedMessages(object) {
   if (typeof object === "string") return escapeLocalizedMessage(object);
 
+  const result = {};
   for (const i in object) {
-    object[i] = escapeLocalizedMessages(object[i]);
+    result[i] = escapeLocalizedMessages(object[i]);
   }
-  return object;
+  return result;
 }
 
 // From https://stackoverflow.com/questions/5827612/node-js-fs-readdir-recursive-directory-search
