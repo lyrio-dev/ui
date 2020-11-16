@@ -15,6 +15,10 @@ declare module "*.wasm" {
   export default url;
 }
 
+declare module "mobx-react" {
+  export * from "mobx-react-lite";
+}
+
 interface Window {
   publicPath: string;
   apiEndpoint: string;

@@ -80,7 +80,7 @@
     "mathjax-full": "^3.1.2",
     "mobx": "^4.15.4",
     "mobx-persist": "^0.4.1",
-    "mobx-react": "^6.3.0",
+    "mobx-react-lite": "^2.2.2",
     "mobx-utils": "^5.6.1",
     "monaco-ace-tokenizer": "^0.2.1",
     "monaco-editor": "^0.21.2",

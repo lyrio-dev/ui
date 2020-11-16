@@ -138,7 +138,8 @@ module.exports = override(
   }),
   addWebpackAlias({
     ["@"]: __dirname + "/src",
-    ["semantic-ui-css"]: "fomantic-ui-css"
+    ["semantic-ui-css"]: "fomantic-ui-css",
+    ["mobx-react"]: "mobx-react-lite"
   }),
   addWebpackPlugin(
     new MonacoWebpackPlugin({
