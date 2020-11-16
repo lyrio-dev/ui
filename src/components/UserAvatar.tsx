@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ImageProps, Image } from "semantic-ui-react";
 import lodashIsEqual from "lodash.isequal";
 
-import DefaultAvatar from "@/assets/default-avatar.svg";
-import svgToDataUrl from "@/utils/svgToUrl";
+import defaultAvatar from "@/assets/default-avatar.svg";
 
 interface UserAvatarProps extends ImageProps {
   userAvatar: ApiTypes.UserAvatarDto;
@@ -11,8 +10,6 @@ interface UserAvatarProps extends ImageProps {
   imageSize?: number;
   onError?: () => void;
 }
-
-const defaultAvatarDataUrl = svgToDataUrl(DefaultAvatar);
 
 function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
   switch (avatar.type) {
@@ -65,7 +62,7 @@ const UserAvatar: React.FC<UserAvatarProps> = props => {
   }
 
   return error || props.placeholder ? (
-    <Image src={defaultAvatarDataUrl} {...imageProps} />
+    <Image src={defaultAvatar} {...imageProps} />
   ) : (
     <Image src={url} {...imageProps} onError={onImageError} />
   );

@@ -25,7 +25,11 @@
 <%
 // Esacpe </script> in JSON.stringify's result
 function safeStringify(object) {
-  return JSON.stringify(object).split("<").join("\\u003C");
+  try {
+    return JSON.stringify(object).split("<").join("\\u003C");
+  } catch (e) {
+    return "undefined";
+  }
 }
 
 const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
@@ -46,7 +50,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 
     var addLinkTag = (function () {
       function normalizePath(path) {
-        while (path.endsWith("/")) path = path.slice(0, -1);
+        while (path.slice(-1) === "/") path = path.slice(0, -1);
         return path + "/";
       }
 
@@ -321,21 +325,20 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
     refreshSession();
 
     (function () {
-      // Handle public path for CSS <link> tags
-      function addCssLinkTag(href) {
-        addLinkTag("stylesheet", href, handleLoadingError);
-      }
+      // Handle public path for <link> tags
 
       <% for (const tag of htmlWebpackPlugin.tags.headTags) { %>
         <%
           if (tag.tagName === "link"
            && tag.attributes
-           && tag.attributes.rel === "stylesheet"
-           && typeof tag.attributes.href === "string"
            && tag.attributes.href.startsWith("./")
           ) {
         %>
-          addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(2)) %>);
+          addLinkTag(
+            <%= safeStringify(tag.attributes.rel) %>,
+            window.publicPath + <%= safeStringify(tag.attributes.href.substr(2)) %>,
+            handleLoadingError
+          );
         <% } else { %>
           <% throw new Error(`Couldn't handle this head tag: ${JSON.stringify(tag)}`); %>
         <% } %>
@@ -359,6 +362,15 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
     </div>
   </div>
 
+  <!--
+    Detect if the browser support ES modules
+    See https://github.com/JoviDeCroock/webpack-module-nomodule-plugin
+    Note that this script runs asynchronously so the result will only be available after "DOMContentLoaded" event fired
+  -->
+  <script type="module">
+    self.esModulesSupported = 1;
+  </script>
+
   <!-- Dynamicly generate <script> tags -->
   <script>
     (function () {
@@ -371,9 +383,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
 
       // Load polyfill-service
-      addScriptTag(window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015", {
-        crossorigin: "anonymous"
-      });
+      addScriptTag(window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015");
 
       // Check for cross-origin API endpoint.
       var apiEndpoint = window.apiEndpoint;
@@ -387,6 +397,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
 
       var publicPath = window.publicPath;
+      <% const scriptsWithModule = [], scriptsWithNoModule = []; %>
       <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
         <%
           if (tag.tagName === "script"
@@ -395,13 +406,29 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
            && tag.attributes.src.startsWith("./")
           ) {
         %>
-          addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(2)) %>);
+          <%
+            if (tag.attributes.type === "module")
+              scriptsWithModule.push(tag.attributes.src);
+            else if ("nomodule" in tag.attributes)
+              scriptsWithNoModule.push(tag.attributes.src);
+            else {
+          %>
+            addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(2)) %>);
+          <% } %>
         <% } else if (tag.tagName === "script" && tag.innerHTML) { %>
           <%= tag.innerHTML %>;
         <% } else { %>
           <% throw new Error(`Couldn't handle this body tag: ${JSON.stringify(tag)}`); %>
         <% } %>
       <% } %>
+
+      addEventListener("DOMContentLoaded", function () {
+        var scriptsWithModule = <%= safeStringify(scriptsWithModule) %>;
+        var scriptsWithNoModule = <%= safeStringify(scriptsWithNoModule) %>;
+        var scripts = window.esModulesSupported ? scriptsWithModule : scriptsWithNoModule;
+        for (var i in scripts)
+          addScriptTag(scripts[i]);
+      });
     })();
   </script>
 </body>
