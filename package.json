@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "The frontend of next-generation SYZOJ",
   "repository": "https://github.com/syzoj/syzoj-ng-app",
   "license": "AGPL-3.0",
