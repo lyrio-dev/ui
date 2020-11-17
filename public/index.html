@@ -34,9 +34,8 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 <html>
 
 <head>
-  <meta charset="utf-8" />
-
-  <meta name="theme-color" content="#FFFFFF" />
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#FFFFFF">
 
   <script>
     window.appVersion = <%= safeStringify({
@@ -46,7 +45,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 
     var addLinkTag = (function () {
       function normalizePath(path) {
-        while (path.endsWith("/")) path = path.slice(0, -1);
+        while (path.slice(-1) === "/") path = path.slice(0, -1);
         return path + "/";
       }
 
@@ -362,46 +361,54 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
   <!-- Dynamicly generate <script> tags -->
   <script>
     (function () {
-      function addScriptTag(src, attributes) {
+      function addScriptTag(src) {
         var script = document.createElement("script");
         script.src = src;
         script.onerror = handleLoadingError;
-        for (var key in (attributes || {})) script.setAttribute(key, attributes[key]);
         document.body.appendChild(script);
+        return script;
       }
 
       // Load polyfill-service
-      addScriptTag(window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015", {
-        crossorigin: "anonymous"
-      });
+      var polyfillServiceScriptTag = addScriptTag(
+        window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015%2Ces6"
+      );
+      polyfillServiceScriptTag.crossOrigin = "anonymous";
 
-      // Check for cross-origin API endpoint.
-      var apiEndpoint = window.apiEndpoint;
-      var apiEndpointUrl = new URL(apiEndpoint, document.location);
-      if (apiEndpointUrl.origin !== document.location.origin) {
-        // Load xdomain library from API host.
-        var apiHostCorsPath = apiEndpoint + "api/cors/";
-        addScriptTag(apiHostCorsPath + "xdomain.min.js", {
-          "data-slave": apiHostCorsPath
-        });
-      }
+      // Delay everything to load after the polyfills loaded
+      polyfillServiceScriptTag.onload = function () {
+        // Check for cross-origin API endpoint.
+        function isCrossOrigin(url) {
+          // IE doesn't support parsing urls with `window.URL`. We just check if the url is absolute.
+          // Please do NOT use a absolute url if your API server is on the same server
+          return /^(https?:\/\/|\/\/)/i.test(url);
+        }
 
-      var publicPath = window.publicPath;
-      <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
-        <%
-          if (tag.tagName === "script"
-           && tag.attributes
-           && typeof tag.attributes.src === "string"
-           && tag.attributes.src.startsWith("./")
-          ) {
-        %>
-          addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(2)) %>);
-        <% } else if (tag.tagName === "script" && tag.innerHTML) { %>
-          <%= tag.innerHTML %>;
-        <% } else { %>
-          <% throw new Error(`Couldn't handle this body tag: ${JSON.stringify(tag)}`); %>
+        var apiEndpoint = window.apiEndpoint;
+        if (isCrossOrigin(apiEndpoint)) {
+          // Load xdomain library from API host.
+          var apiHostCorsPath = apiEndpoint + "api/cors/";
+          var xdomainScriptTag = addScriptTag(apiHostCorsPath + "xdomain.min.js");
+          xdomainScriptTag.setAttribute("data-slave", apiHostCorsPath);
+        }
+
+        var publicPath = window.publicPath;
+        <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
+          <%
+            if (tag.tagName === "script"
+             && tag.attributes
+             && typeof tag.attributes.src === "string"
+             && tag.attributes.src.startsWith("./")
+            ) {
+          %>
+            addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(2)) %>);
+          <% } else if (tag.tagName === "script" && tag.innerHTML) { %>
+            <%= tag.innerHTML %>;
+          <% } else { %>
+            <% throw new Error(`Couldn't handle this body tag: ${JSON.stringify(tag)}`); %>
+          <% } %>
         <% } %>
-      <% } %>
+      };
     })();
   </script>
 </body>

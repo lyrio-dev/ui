@@ -41,13 +41,15 @@ function patchStyles(wrapper: HTMLDivElement) {
     segment.appendChild(element);
 
     // Add default styles for <pre>
-    element.classList.add(style.pre);
+    // IE doesn't have classList.add
+    element.className += " " + style.pre;
   });
 
   // Add default class names for <table>
   Array.from(wrapper.getElementsByTagName("table")).forEach(element => {
     if (!element.classList.contains("ui")) {
-      element.classList.add("ui", "structured", "celled", "table");
+      // IE doesn't have classList.add
+      element.className += " ui structured celled table";
     }
   });
 }
@@ -91,7 +93,8 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
 
     // Patch <a> tags for security reason
     Array.from(wrapper.getElementsByTagName("a")).forEach(a => {
-      a.relList.add("noreferrer", "noreferrer");
+      // IE doesn't have relList
+      if (a.relList) a.relList.add("noreferrer", "noreferrer");
       if (!parseUrlIfSameOrigin(a.href)) a.target = "_blank";
     });
 

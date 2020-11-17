@@ -13,11 +13,13 @@ import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 import { appState } from "@/appState";
 import { availableCodeFonts, generateCodeFontEditorOptions } from "@/misc/fonts";
 
+const isIE = navigator.userAgent.indexOf("Trident") !== -1;
+
 function loadAceHighlights() {
   Monaco.languages.register({ id: "haskell" });
   registerRulesForLanguage("haskell", new (require("monaco-ace-tokenizer/es/ace/definitions/haskell").default)());
 }
-loadAceHighlights();
+if (!isIE) loadAceHighlights();
 
 export interface CodeEditorProps {
   editorDidMount?: (editor: Monaco.editor.IStandaloneCodeEditor) => void;
@@ -85,20 +87,36 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
 
   return (
     <div
-      ref={initializeResizeSensor}
+      ref={isIE ? undefined : initializeResizeSensor}
       className={props.className ? `${style.editorContainer} ${props.className}` : style.editorContainer}
     >
-      <ReactMonacoEditor
-        language={props.language}
-        value={props.value}
-        options={{
-          lineNumbersMinChars: 4,
-          ...generateCodeFontEditorOptions(appState.locale),
-          ...props.options
-        }}
-        editorDidMount={editorDidMount}
-        onChange={props.onChange}
-      />
+      {
+        // Monaco editor doesn't support IE
+        isIE ? (
+          props.editorDidMount ? (
+            <>Editor not supported on IE</>
+          ) : (
+            // Fallback to <textarea>
+            <textarea
+              className={`monospace ${style.fallbackTextArea}`}
+              value={props.value}
+              onChange={e => props.onChange(e.target.value)}
+            />
+          )
+        ) : (
+          <ReactMonacoEditor
+            language={props.language}
+            value={props.value}
+            options={{
+              lineNumbersMinChars: 4,
+              ...generateCodeFontEditorOptions(appState.locale),
+              ...props.options
+            }}
+            editorDidMount={editorDidMount}
+            onChange={props.onChange}
+          />
+        )
+      }
     </div>
   );
 };
