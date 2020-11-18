@@ -40,6 +40,7 @@ module.exports = {
   request_error: {
     400: "[TBT] Invalid request.",
     401: "[TBT] Verification failed. Please refresh and try again.",
+    429: "[TBT] Too many requests. Please try again later.",
     500: "[TBT] Server error. Please try again later.",
     502: "[TBT] Couldn't connect to the server. Please try again later.",
     503: "[TBT] Couldn't connect to the server. Please try again later.",

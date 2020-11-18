@@ -42,7 +42,7 @@ async function request<T>(
       console.log("response:", response);
     }
 
-    if ([400, 401, 500, 502, 503, 504].includes(response.status))
+    if ([400, 401, 429, 500, 502, 503, 504].includes(response.status))
       return {
         requestError: makeToBeLocalizedText(`common.request_error.${response.status}`)
       };
