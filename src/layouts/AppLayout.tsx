@@ -189,12 +189,7 @@ let AppLayout: React.FC = props => {
       <Segment vertical className={className}>
         <Container textAlign="center">
           <EmojiRenderer>
-            <div>
-              {appState.serverPreference.siteName} Powered by{" "}
-              <a href="https://ng.syzoj.org" target="_blank" rel="noreferrer noopener">
-                SYZOJ NG
-              </a>
-            </div>
+            <div>{appState.serverPreference.siteName} Powered by SYZOJ NG</div>
           </EmojiRenderer>
           <div id={style.footerVersion} className="monospace">
             <span>
