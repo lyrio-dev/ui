@@ -73,7 +73,16 @@ export function createPostApi<BodyType, ResponseType>(
 
 export function createPostApi<BodyType, ResponseType>(path: string, recaptcha: boolean) {
   return async (requestBody: BodyType, recaptchaTokenPromise?: Promise<string>): Promise<ApiResponse<ResponseType>> => {
-    return await request<ResponseType>(path, "post", null, requestBody, await recaptchaTokenPromise);
+    let recaptchaToken: string;
+    try {
+      recaptchaToken = await recaptchaTokenPromise;
+    } catch (e) {
+      return {
+        requestError: makeToBeLocalizedText("common.request_error.401")
+      };
+    }
+
+    return await request<ResponseType>(path, "post", null, requestBody, recaptchaToken);
   };
 }
 
