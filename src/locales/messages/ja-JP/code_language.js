@@ -13,11 +13,16 @@ module.exports = {
       std: {
         name: "[TBT] C++ Standard",
         values: {
-          "c++03": "[TBT] C++ 03",
-          "c++11": "[TBT] C++ 11",
-          "c++14": "[TBT] C++ 14",
-          "c++17": "[TBT] C++ 17",
-          "c++20": "[TBT] C++ 20"
+          "c++03": "[TBT] ISO C++ 03",
+          "c++11": "[TBT] ISO C++ 11",
+          "c++14": "[TBT] ISO C++ 14",
+          "c++17": "[TBT] ISO C++ 17",
+          "c++20": "[TBT] ISO C++ 20",
+          "gnu++03": "[TBT] GNU C++ 03",
+          "gnu++11": "[TBT] GNU C++ 11",
+          "gnu++14": "[TBT] GNU C++ 14",
+          "gnu++17": "[TBT] GNU C++ 17",
+          "gnu++20": "[TBT] GNU C++ 20"
         }
       },
       O: {
@@ -53,10 +58,14 @@ module.exports = {
       std: {
         name: "[TBT] C Standard",
         values: {
-          c89: "[TBT] C89",
-          c99: "[TBT] C99",
-          c11: "[TBT] C11",
-          c17: "[TBT] C17"
+          c89: "[TBT] ISO C89",
+          c99: "[TBT] ISO C99",
+          c11: "[TBT] ISO C11",
+          c17: "[TBT] ISO C17",
+          gnu89: "[TBT] GNU C89",
+          gnu99: "[TBT] GNU C99",
+          gnu11: "[TBT] GNU C11",
+          gnu17: "[TBT] GNU C17"
         }
       },
       O: {

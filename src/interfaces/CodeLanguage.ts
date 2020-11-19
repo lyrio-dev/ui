@@ -58,7 +58,7 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "std",
       type: CodeLanguageOptionType.Select,
-      values: ["c++03", "c++11", "c++14", "c++17", "c++20"],
+      values: ["c++03", "c++11", "c++14", "c++17", "c++20", "gnu++03", "gnu++11", "gnu++14", "gnu++17", "gnu++20"],
       defaultValue: "c++11"
     },
     {
@@ -84,7 +84,7 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "std",
       type: CodeLanguageOptionType.Select,
-      values: ["c89", "c99", "c11", "c17"],
+      values: ["c89", "c99", "c11", "c17", "gnu89", "gnu99", "gnu11", "gnu17"],
       defaultValue: "c11"
     },
     {

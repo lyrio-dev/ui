@@ -13,11 +13,16 @@ module.exports = {
       std: {
         name: "C++ Standard",
         values: {
-          "c++03": "C++ 03",
-          "c++11": "C++ 11",
-          "c++14": "C++ 14",
-          "c++17": "C++ 17",
-          "c++20": "C++ 20"
+          "c++03": "ISO C++ 03",
+          "c++11": "ISO C++ 11",
+          "c++14": "ISO C++ 14",
+          "c++17": "ISO C++ 17",
+          "c++20": "ISO C++ 20",
+          "gnu++03": "GNU C++ 03",
+          "gnu++11": "GNU C++ 11",
+          "gnu++14": "GNU C++ 14",
+          "gnu++17": "GNU C++ 17",
+          "gnu++20": "GNU C++ 20"
         }
       },
       O: {
@@ -53,10 +58,14 @@ module.exports = {
       std: {
         name: "C Standard",
         values: {
-          c89: "C89",
-          c99: "C99",
-          c11: "C11",
-          c17: "C17"
+          c89: "ISO C89",
+          c99: "ISO C99",
+          c11: "ISO C11",
+          c17: "ISO C17",
+          gnu89: "GNU C89",
+          gnu99: "GNU C99",
+          gnu11: "GNU C11",
+          gnu17: "GNU C17"
         }
       },
       O: {
