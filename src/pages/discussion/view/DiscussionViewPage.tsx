@@ -448,168 +448,170 @@ interface DiscussionEditorProps {
   placeholder?: string;
 }
 
-export let DiscussionEditor: React.FC<DiscussionEditorProps> = props => {
-  const _ = useLocalizer("discussion.edit");
+export let DiscussionEditor = observer<DiscussionEditorProps, HTMLDivElement>(
+  (props, ref) => {
+    const _ = useLocalizer("discussion.edit");
 
-  const isMobile = useScreenWidthWithin(0, 768);
-  const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
-    if (props.onSubmit) {
-      const result = await props.onSubmit(props.content);
-      if (result) setModified(false);
-      if (typeof result === "function") result();
-    }
-  });
-
-  const [preview, setPreview] = useState(false);
-
-  const [editorFocused, setEditor] = useFocusWithin();
-
-  const isDiscussion = props.type === "NewDiscussion" || props.type === "UpdateDiscussion";
-  const isUpdate = props.type === "UpdateDiscussion" || props.type === "UpdateReply";
-  const isNew = props.type === "NewDiscussion" || props.type === "NewReply";
-  const isRaw = props.type === "RawEditor";
-
-  const [modified, setModifiedReal] = useConfirmNavigation();
-  const setModified = isRaw ? () => {} : setModifiedReal;
-
-  const isEmpty = props.content.length === 0 || (isDiscussion && props.title.length === 0);
-  const submitDisabled = props.noSubmitPermission || isEmpty;
-
-  return (
-    <div
-      className={
-        style.item +
-        " " +
-        style.edit +
-        (props.publisher?.id === appState.currentUser?.id ? " " + style.currentUser : "") +
-        (isNew ? " " + style.new : "") +
-        (isDiscussion ? " " + style.discussion : "") +
-        (isRaw ? " " + style.raw : "") +
-        (props.className ? " " + props.className : "")
+    const isMobile = useScreenWidthWithin(0, 768);
+    const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
+      if (props.onSubmit) {
+        const result = await props.onSubmit(props.content);
+        if (result) setModified(false);
+        if (typeof result === "function") result();
       }
-    >
-      {!isMobile && !isRaw && (
-        <div className={style.avatar}>
-          <UserLink user={props.publisher}>
-            <UserAvatar imageSize={40} userAvatar={props.publisher.avatar} />
-          </UserLink>
-        </div>
-      )}
-      <div className={style.bubble + (editorFocused ? " " + style.editorFocused : "")}>
-        <Header block attached="top" className={style.header}>
-          {!isMobile && !isRaw && <div className={style.triangle} />}
-          {isDiscussion && (
-            <Input
-              className={style.title}
-              placeholder={_(".placeholder.title")}
-              value={props.title}
-              onChange={(e, { value }) => {
-                if (!pendingSubmit) {
-                  setModified(true);
-                  props.onChangeTitle(value);
-                }
-              }}
-            />
-          )}
-          <div className={style.headerContents}>
-            <Menu attached="top" className={style.editTab} tabular>
-              <Menu.Item active={!preview} onClick={() => setPreview(false)}>
-                {_(".tabs.edit")}
-              </Menu.Item>
-              <Menu.Item active={preview} onClick={() => setPreview(true)}>
-                {_(".tabs.preview")}
-              </Menu.Item>
-            </Menu>
+    });
+
+    const [preview, setPreview] = useState(false);
+
+    const [editorFocused, setEditor] = useFocusWithin();
+
+    const isDiscussion = props.type === "NewDiscussion" || props.type === "UpdateDiscussion";
+    const isUpdate = props.type === "UpdateDiscussion" || props.type === "UpdateReply";
+    const isNew = props.type === "NewDiscussion" || props.type === "NewReply";
+    const isRaw = props.type === "RawEditor";
+
+    const [modified, setModifiedReal] = useConfirmNavigation();
+    const setModified = isRaw ? () => {} : setModifiedReal;
+
+    const isEmpty = props.content.length === 0 || (isDiscussion && props.title.length === 0);
+    const submitDisabled = props.noSubmitPermission || isEmpty;
+
+    return (
+      <div
+        ref={ref}
+        className={
+          style.item +
+          " " +
+          style.edit +
+          (props.publisher?.id === appState.currentUser?.id ? " " + style.currentUser : "") +
+          (isNew ? " " + style.new : "") +
+          (isDiscussion ? " " + style.discussion : "") +
+          (isRaw ? " " + style.raw : "") +
+          (props.className ? " " + props.className : "")
+        }
+      >
+        {!isMobile && !isRaw && (
+          <div className={style.avatar}>
+            <UserLink user={props.publisher}>
+              <UserAvatar imageSize={40} userAvatar={props.publisher.avatar} />
+            </UserLink>
           </div>
-        </Header>
-        <Segment
-          attached
-          className={style.mainSegment}
-          onKeyPress={onEnterPress(e => !submitDisabled && e.ctrlKey && onSubmit(), false)}
-        >
-          <Form style={preview ? { display: "none" } : {}}>
-            <Ref innerRef={setEditor}>
-              <TextArea
-                as={TextAreaAutoSize}
-                className={style.editor + " " + getMarkdownEditorFontClass()}
-                maxRows={999}
-                placeholder={
-                  isUpdate
-                    ? isDiscussion
-                      ? _(".placeholder.update_discussion")
-                      : _(".placeholder.update_reply")
-                    : isNew
-                    ? isDiscussion
-                      ? _(".placeholder.add_discussion")
-                      : _(".placeholder.add_reply")
-                    : props.placeholder
-                }
-                value={props.content}
+        )}
+        <div className={style.bubble + (editorFocused ? " " + style.editorFocused : "")}>
+          <Header block attached="top" className={style.header}>
+            {!isMobile && !isRaw && <div className={style.triangle} />}
+            {isDiscussion && (
+              <Input
+                className={style.title}
+                placeholder={_(".placeholder.title")}
+                value={props.title}
                 onChange={(e, { value }) => {
                   if (!pendingSubmit) {
                     setModified(true);
-                    props.onChangeContent(String(value));
+                    props.onChangeTitle(value);
                   }
                 }}
               />
-            </Ref>
-          </Form>
-          {preview && (
-            <>
-              <MarkdownContent className={style.preview} content={props.content} />
-            </>
-          )}
-          {!isRaw && (
-            <div className={style.actions}>
-              {isNew ? (
-                <>
-                  <Button
-                    positive
-                    content={_(isDiscussion ? ".actions.add_discussion" : ".actions.add_reply")}
-                    onClick={onSubmit}
-                    disabled={submitDisabled}
-                    loading={pendingSubmit}
-                  />
-                </>
-              ) : (
-                <>
-                  <Popup
-                    trigger={<Button content={_(".actions.cancel")} onClick={() => !modified && props.onCancel()} />}
-                    content={
-                      <Button
-                        negative
-                        content={_(".actions.confirm_cancel")}
-                        onClick={() => (setModified(false), props.onCancel())}
-                      />
-                    }
-                    disabled={!modified}
-                    position="bottom center"
-                    on="click"
-                  />
-                  <Button
-                    positive
-                    content={_(
-                      isDiscussion
-                        ? props.noSubmitPermission
-                          ? ".actions.update_discussion_no_submit_permission"
-                          : ".actions.update_discussion"
-                        : ".actions.update_reply"
-                    )}
-                    onClick={onSubmit}
-                    loading={pendingSubmit}
-                    disabled={submitDisabled}
-                  />
-                </>
-              )}
+            )}
+            <div className={style.headerContents}>
+              <Menu attached="top" className={style.editTab} tabular>
+                <Menu.Item active={!preview} onClick={() => setPreview(false)}>
+                  {_(".tabs.edit")}
+                </Menu.Item>
+                <Menu.Item active={preview} onClick={() => setPreview(true)}>
+                  {_(".tabs.preview")}
+                </Menu.Item>
+              </Menu>
             </div>
-          )}
-        </Segment>
+          </Header>
+          <Segment
+            attached
+            className={style.mainSegment}
+            onKeyPress={onEnterPress(e => !submitDisabled && e.ctrlKey && onSubmit(), false)}
+          >
+            <Form style={preview ? { display: "none" } : {}}>
+              <Ref innerRef={setEditor}>
+                <TextArea
+                  as={TextAreaAutoSize}
+                  className={style.editor + " " + getMarkdownEditorFontClass()}
+                  maxRows={999}
+                  placeholder={
+                    isUpdate
+                      ? isDiscussion
+                        ? _(".placeholder.update_discussion")
+                        : _(".placeholder.update_reply")
+                      : isNew
+                      ? isDiscussion
+                        ? _(".placeholder.add_discussion")
+                        : _(".placeholder.add_reply")
+                      : props.placeholder
+                  }
+                  value={props.content}
+                  onChange={(e, { value }) => {
+                    if (!pendingSubmit) {
+                      setModified(true);
+                      props.onChangeContent(String(value));
+                    }
+                  }}
+                />
+              </Ref>
+            </Form>
+            {preview && (
+              <>
+                <MarkdownContent className={style.preview} content={props.content} />
+              </>
+            )}
+            {!isRaw && (
+              <div className={style.actions}>
+                {isNew ? (
+                  <>
+                    <Button
+                      positive
+                      content={_(isDiscussion ? ".actions.add_discussion" : ".actions.add_reply")}
+                      onClick={onSubmit}
+                      disabled={submitDisabled}
+                      loading={pendingSubmit}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Popup
+                      trigger={<Button content={_(".actions.cancel")} onClick={() => !modified && props.onCancel()} />}
+                      content={
+                        <Button
+                          negative
+                          content={_(".actions.confirm_cancel")}
+                          onClick={() => (setModified(false), props.onCancel())}
+                        />
+                      }
+                      disabled={!modified}
+                      position="bottom center"
+                      on="click"
+                    />
+                    <Button
+                      positive
+                      content={_(
+                        isDiscussion
+                          ? props.noSubmitPermission
+                            ? ".actions.update_discussion_no_submit_permission"
+                            : ".actions.update_discussion"
+                          : ".actions.update_reply"
+                      )}
+                      onClick={onSubmit}
+                      loading={pendingSubmit}
+                      disabled={submitDisabled}
+                    />
+                  </>
+                )}
+              </div>
+            )}
+          </Segment>
+        </div>
       </div>
-    </div>
-  );
-};
-
-DiscussionEditor = observer(DiscussionEditor);
+    );
+  },
+  { forwardRef: true }
+);
 
 interface ReplyOrLoadMore {
   type: "Reply" | "LoadMore" | "EditReply";
@@ -936,6 +938,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
     return false;
   }
 
+  const refNewReply = useRef<HTMLDivElement>();
   function onQuote(username: string, text: string) {
     let content = newReplyContent;
     if (content) {
@@ -953,6 +956,8 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
           .join("\n") +
         "\n\n"
     );
+
+    if (refNewReply.current) refNewReply.current.scrollIntoView();
   }
 
   const refOpenPermissionManager = useRef<() => Promise<boolean>>();
@@ -1100,6 +1105,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
           <>
             {!isMobile && <div className={style.dividerBeforeAddReply} />}
             <DiscussionEditor
+              ref={refNewReply}
               publisher={appState.currentUser}
               content={newReplyContent}
               type="NewReply"
