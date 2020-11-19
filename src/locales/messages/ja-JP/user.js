@@ -3,7 +3,7 @@ module.exports = {
     NO_SUCH_USER: "ユーザが存在しません。"
   },
   edit_profile: "プロファイル設定",
-  joined: "入会日時",
+  joined: "入会日時 ",
   social: {
     email: "メールアドレス",
     qq: "QQ",

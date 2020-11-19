@@ -2,6 +2,11 @@ const fs = require("fs");
 const path = require("path");
 
 function escapeLocalizedMessage(text) {
+  // Remove the "to-be-translated" prefix from message first
+  if (text.startsWith("[TBT] ")) {
+    text = text.replace("[TBT] ", "");
+  }
+
   text = text.split("&").join("&amp;").split("<").join("&lt;");
   // The space is a workaround for that react-intl doesn't support empty message
   text = " " + text;

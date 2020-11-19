@@ -12,17 +12,14 @@ import { Localizer, unescapeLocalizedMessage } from "@/locales";
  * @param defaultModuleName The default module name of localized message.
  */
 export function useLocalizer(defaultModuleName?: string) {
-  const removeToBeTranslatedTag = (s: string) => (s.startsWith("[TBT] ") ? s.replace("[TBT] ", "") : s);
   const intl = useIntl();
   const localizer: Localizer = (messageId, paramaters) =>
-    removeToBeTranslatedTag(
-      unescapeLocalizedMessage(
-        intl.formatMessage(
-          {
-            id: messageId.startsWith(".") ? defaultModuleName + messageId : messageId
-          },
-          paramaters as Record<string, string>
-        )
+    unescapeLocalizedMessage(
+      intl.formatMessage(
+        {
+          id: messageId.startsWith(".") ? defaultModuleName + messageId : messageId
+        },
+        paramaters as Record<string, string>
       )
     );
 
