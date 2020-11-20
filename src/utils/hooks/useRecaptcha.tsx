@@ -9,14 +9,16 @@ export function useRecaptcha() {
   const _ = useLocalizer("common.recaptcha");
 
   const recaptcha = appState.serverPreference.security.recaptchaEnabled
-    ? async (action: string) => {
-        try {
-          return await executeRecaptcha(action);
-        } catch (e) {
-          console.error("Recaptcha Error:", e);
-          return null;
+    ? appState.currentUserHasPrivilege("SkipRecaptcha")
+      ? async () => "skip"
+      : async (action: string) => {
+          try {
+            return await executeRecaptcha(action);
+          } catch (e) {
+            console.error("Recaptcha Error:", e);
+            return null;
+          }
         }
-      }
     : async () => "";
 
   return Object.assign(recaptcha, {

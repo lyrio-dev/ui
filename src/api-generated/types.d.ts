@@ -373,6 +373,7 @@ declare namespace ApiTypes {
       | "ManageProblem"
       | "ManageContest"
       | "ManageDiscussion"
+      | "SkipRecaptcha"
     )[];
     userPreference?: ApiTypes.UserPreferenceDto;
     serverPreference: ApiTypes.PreferenceConfig;
@@ -432,6 +433,7 @@ declare namespace ApiTypes {
       | "ManageProblem"
       | "ManageContest"
       | "ManageDiscussion"
+      | "SkipRecaptcha"
     )[];
   }
   export interface GetUserPreferenceRequestDto {
@@ -1034,6 +1036,7 @@ declare namespace ApiTypes {
       | "ManageProblem"
       | "ManageContest"
       | "ManageDiscussion"
+      | "SkipRecaptcha"
     )[];
   }
   export interface SetUserPrivilegesResponseDto {

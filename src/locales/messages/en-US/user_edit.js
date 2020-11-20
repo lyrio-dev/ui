@@ -171,8 +171,7 @@ module.exports = {
     privileges: {
       EditHomepage: {
         name: "Edit Homepage",
-        notes:
-          "Modify the configuration and contents of homepage. Such as notice, annnouncements, hitokoto and countdown."
+        notes: "Modify the configuration and contents of homepage. e.g. notice and annnouncements."
       },
       ManageUser: {
         name: "Manage user",
@@ -194,6 +193,10 @@ module.exports = {
         name: "Manage discussion",
         notes:
           "View, edit all discussions and replies, manage discussions' permissions and delete discussions or replies."
+      },
+      SkipRecaptcha: {
+        name: "Skip reCAPTCHA",
+        notes: "Submit any requests without verifying reCAPTCHA (if enabled). Useful for robots and virtual judge."
       }
     },
     admin_only: "Only admins can change user's privileges.",

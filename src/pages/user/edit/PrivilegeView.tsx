@@ -25,7 +25,8 @@ enum Privilege {
   ManageUserGroup = "ManageUserGroup",
   ManageProblem = "ManageProblem",
   ManageContest = "ManageContest",
-  ManageDiscussion = "ManageDiscussion"
+  ManageDiscussion = "ManageDiscussion",
+  SkipRecaptcha = "SkipRecaptcha"
 }
 
 interface PrevilegeViewProps {

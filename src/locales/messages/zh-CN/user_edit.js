@@ -168,7 +168,7 @@ module.exports = {
     privileges: {
       EditHomepage: {
         name: "编辑首页",
-        notes: "可以编辑首页的配置与内容，如通知、公告、一言、倒数等。"
+        notes: "可以编辑首页的配置与内容，如通知和公告。"
       },
       ManageUser: {
         name: "管理用户",
@@ -189,6 +189,10 @@ module.exports = {
       ManageDiscussion: {
         name: "管理讨论",
         notes: "可以浏览、编辑所有讨论与回复，设置讨论权限以及删除讨论与回复。"
+      },
+      SkipRecaptcha: {
+        name: "跳过 reCAPTCHA",
+        notes: "可以在不验证 reCAPTCHA（如果已启用）的情况下提交任意请求。适用于机器人或虚拟评测。"
       }
     },
     admin_only: "仅管理员可修改用户特权。",

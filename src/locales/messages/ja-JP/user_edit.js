@@ -173,8 +173,7 @@ module.exports = {
     privileges: {
       EditHomepage: {
         name: "[TBT] Edit Homepage",
-        notes:
-          "[TBT] Modify the configuration and contents of homepage. Such as notice, annnouncements, hitokoto and countdown."
+        notes: "[TBT] Modify the configuration and contents of homepage. e.g. notice and annnouncements."
       },
       ManageUser: {
         name: "[TBT] Manage user",
@@ -196,6 +195,11 @@ module.exports = {
         name: "[TBT] Manage discussion",
         notes:
           "[TBT] View, edit all discussions and replies, manage discussions' permissions and delete discussions or replies."
+      },
+      SkipRecaptcha: {
+        name: "[TBT] Skip reCAPTCHA",
+        notes:
+          "[TBT] Submit any requests without verifying reCAPTCHA (if enabled). Useful for robots and virtual judge."
       }
     },
     admin_only: "[TBT] Only admins can change user's privileges.",
