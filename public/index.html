@@ -369,28 +369,37 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         return script;
       }
 
-      // Load polyfill-service
+      // Load polyfill-service and xdomain.js before loading application
+      var scriptsToWaitBeforeLoadingApplication = 0;
+
+      // polyfill-service
       var polyfillServiceScriptTag = addScriptTag(
         window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015%2Ces6"
       );
       polyfillServiceScriptTag.crossOrigin = "anonymous";
+      polyfillServiceScriptTag.onload = loadApplication;
+      scriptsToWaitBeforeLoadingApplication++;
+
+      // xdomain.js
+      // Check for cross-origin API endpoint.
+      var apiEndpoint = window.apiEndpoint;
+      function isCrossOrigin(url) {
+        // IE doesn't support parsing urls with `window.URL`. We just check if the url is absolute.
+        // Please do NOT use a absolute url if your API server is on the same server
+        return /^(https?:\/\/|\/\/)/i.test(url);
+      }
+      if (isCrossOrigin(apiEndpoint)) {
+        // Load xdomain library from API host.
+        var apiHostCorsPath = apiEndpoint + "api/cors/";
+        var xdomainScriptTag = addScriptTag(apiHostCorsPath + "xdomain.min.js");
+        xdomainScriptTag.setAttribute("data-slave", apiHostCorsPath);
+        xdomainScriptTag.onload = loadApplication;
+        scriptsToWaitBeforeLoadingApplication++;
+      }
 
       // Delay everything to load after the polyfills loaded
-      polyfillServiceScriptTag.onload = function () {
-        // Check for cross-origin API endpoint.
-        function isCrossOrigin(url) {
-          // IE doesn't support parsing urls with `window.URL`. We just check if the url is absolute.
-          // Please do NOT use a absolute url if your API server is on the same server
-          return /^(https?:\/\/|\/\/)/i.test(url);
-        }
-
-        var apiEndpoint = window.apiEndpoint;
-        if (isCrossOrigin(apiEndpoint)) {
-          // Load xdomain library from API host.
-          var apiHostCorsPath = apiEndpoint + "api/cors/";
-          var xdomainScriptTag = addScriptTag(apiHostCorsPath + "xdomain.min.js");
-          xdomainScriptTag.setAttribute("data-slave", apiHostCorsPath);
-        }
+      function loadApplication() {
+        if (--scriptsToWaitBeforeLoadingApplication > 0) return;
 
         var publicPath = window.publicPath;
         <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
