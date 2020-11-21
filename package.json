@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "devDependencies": {
     "@svgr/webpack": "^5.4.0",
     "@tanem/react-nprogress": "^3.0.47",
