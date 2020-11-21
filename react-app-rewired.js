@@ -111,6 +111,11 @@ const patchTerserOptions = () => config => {
   return config;
 };
 
+const disableInlineChunk = () => config => {
+  config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== "InlineChunkHtmlPlugin");
+  return config;
+};
+
 module.exports = override(
   disableEsLint(),
   addLessLoader(),
@@ -177,5 +182,6 @@ module.exports = override(
   removeServiceWorker(),
   useRelativePath(),
   fixChunkSplitting(),
-  patchTerserOptions()
+  patchTerserOptions(),
+  disableInlineChunk()
 );
