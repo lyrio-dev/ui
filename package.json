@@ -2,7 +2,6 @@
   "name": "syzoj-ng-app",
   "version": "0.1.1",
   "devDependencies": {
-    "@svgr/webpack": "^5.4.0",
     "@tanem/react-nprogress": "^3.0.47",
     "@types/blueimp-md5": "^2.7.0",
     "@types/chart.js": "^2.9.27",
@@ -112,6 +111,8 @@
     "socket.io-msgpack-parser": "^2.2.1",
     "streamsaver": "^2.0.5",
     "string-replace-to-array": "^1.0.3",
+    "svgo": "^1.3.2",
+    "svgo-loader": "^2.2.1",
     "timeago.js": "^4.0.2",
     "tree-sitter-wasm-prebuilt": "^0.0.1",
     "twemoji": "^13.0.1",

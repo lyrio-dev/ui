@@ -19,7 +19,7 @@ import TextAreaAutoSize from "react-textarea-autosize";
 import { v4 as uuid } from "uuid";
 
 import style from "./DiscussionViewPage.module.less";
-import LoadMoreBackground from "./LoadMoreBackground.svg";
+import loadMoreBackground from "./LoadMoreBackground.svg";
 
 import { defineRoute, RouteError } from "@/AppRouter";
 import { appState } from "@/appState";
@@ -42,7 +42,6 @@ import formatDateTime from "@/utils/formatDateTime";
 import UserAvatar from "@/components/UserAvatar";
 import MarkdownContent from "@/markdown/MarkdownContent";
 import PseudoLink from "@/components/PseudoLink";
-import svgToDataUrl from "@/utils/svgToUrl";
 import { onEnterPress } from "@/utils/onEnterPress";
 import PermissionManager from "@/components/LazyPermissionManager";
 import { getBreadcrumb, getNewDiscussionUrl } from "../discussions/DiscussionsPage";
@@ -50,8 +49,6 @@ import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer, getTwemojiOptions } from "@/components/EmojiRenderer";
 import TimeAgo from "@/components/TimeAgo";
 import { getMarkdownEditorFontClass } from "@/misc/fonts";
-
-const loadMoreBackground = svgToDataUrl(LoadMoreBackground);
 
 async function fetchData(discussionId: number) {
   const pagination = appState.serverPreference.pagination;
