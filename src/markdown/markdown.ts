@@ -2,7 +2,7 @@ import MarkdownIt from "markdown-it";
 import { v4 as uuid } from "uuid";
 
 import MarkdownItMath from "markdown-it-math-loose";
-import MarkdownItMergeCells from "markdown-it-merge-cells";
+import MarkdownItMergeCells from "markdown-it-merge-cells/src";
 import MarkdownItMentions from "markdown-it-mentions";
 
 export interface MarkdownHighlightPlaceholder {

@@ -8236,10 +8236,10 @@ markdown-it-mentions@^1.0.0:
   dependencies:
     markdown-it-regexp "^0.4.0"
 
-markdown-it-merge-cells@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/markdown-it-merge-cells/-/markdown-it-merge-cells-1.0.0.tgz#597eda7bb4f771bd56d8a9b8bd3453b2f8f9862e"
-  integrity sha512-ZaAgJaOEaSFq7DCzfDTe3zhBNqlEjckPtULc9fw4PvNi+9rTGoQTcc3Yh0xCH9rNr8mwRnOmKMvyVKuF6yrHDA==
+markdown-it-merge-cells@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/markdown-it-merge-cells/-/markdown-it-merge-cells-1.0.1.tgz#ad375a09fa709213c19a354e537e560789ae2be8"
+  integrity sha512-4I6wBy8OPgPRSYAw7VC3SEgIcuM7HiFvTi1AW9bbPYRoXoAsr6inyjX723gyDUUj9dQT7ICNWtxrom9ULOW46A==
   dependencies:
     babel-runtime "^6.26.0"
 
