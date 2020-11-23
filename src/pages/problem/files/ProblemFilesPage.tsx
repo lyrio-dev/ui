@@ -43,7 +43,10 @@ import { Localizer, makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 // Firefox have no WritableStream
-if (!window.WritableStream) streamsaver.WritableStream = WritableStream;
+if (!window.WritableStream) (streamsaver as any).WritableStream = WritableStream;
+if (window.apiEndpoint.toLowerCase().startsWith("https://")) {
+  (streamsaver as any).mitm = `${window.apiEndpoint}api/cors/streamsaver/mitm.html`;
+}
 
 export async function downloadProblemFile(
   problemId: number,

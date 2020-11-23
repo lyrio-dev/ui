@@ -20,6 +20,7 @@
     "@types/react-chartjs-2": "^2.5.7",
     "@types/react-dom": "^16.9.9",
     "@types/socket.io-client": "^1.4.33",
+    "@types/streamsaver": "^2.0.0",
     "@types/twemoji": "^12.1.1",
     "@types/ua-parser-js": "^0.7.33",
     "@types/uuid": "^8.3.0",
