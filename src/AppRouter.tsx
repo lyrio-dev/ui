@@ -127,6 +127,7 @@ const AppRouter: React.FC = () => {
             "/problem": getRoute(() => import("./pages/problem"), "problem"),
             "/problems": getRoute(() => import("./pages/problem"), "problems"),
             "/submissions": redirect(request => ({ pathname: "/s", query: request.query })),
+            "/submission/:id": redirect(request => `/s/${request.params.id}`),
             "/ranklist": redirect("/u"),
             "/discussion/global": redirect("/d"),
             "/discussion/problems": redirect("/d?problemId=all"),
