@@ -158,7 +158,7 @@ export function updateContentFontCss(locale: Locale) {
 export function updateUiFontCss(locale: Locale) {
   updateFontCss(
     "font-ui",
-    `${uiFontSelectors.join(", ")} {
+    `.ui-font, ${uiFontSelectors.join(", ")} {
   font-family: ${generateFontFamily("Lato", locale, "sans-serif")};
 }`
   );
