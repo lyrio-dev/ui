@@ -8,7 +8,7 @@ const LazyPermissionManager: React.FC<PermissionManagerProps> = props => {
 
   const [loading, setLoading] = useState(false);
   const refFirstTimeMounted = useRef<boolean>();
-  const refFirstOpenPromiseResolve = useRef<() => void>();
+  const refFirstOpenPromiseResolve = useRef<(success: boolean) => void>();
 
   useEffect(() => {
     if (!refFirstTimeMounted.current) {

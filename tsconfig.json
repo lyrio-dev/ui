@@ -9,18 +9,24 @@
     "allowJs": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": false,
     "module": "esnext",
     "strictBindCallApply": true,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "semantic-ui-css": ["node_modules/fomantic-ui-css"],
+      "mobx-react": ["node_modules/mobx-react-lite"]
+    },
   },
   "include": [
     "src"
@@ -28,6 +34,5 @@
   "exclude": [
     "node_modules",
     "dist"
-  ],
-  "extends": "./tsconfig-paths.json"
+  ]
 }

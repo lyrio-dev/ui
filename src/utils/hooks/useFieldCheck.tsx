@@ -72,7 +72,7 @@ export function useFieldCheck(
   // Used when the being checked value if required
   async function waitForCheck(forceRecheck?: boolean): Promise<boolean> {
     if (fieldValueLastChecked === null || fieldChecking || forceRecheck) {
-      const promise = new Promise(res => (onDoneRef.current = res));
+      const promise = new Promise<void>(res => (onDoneRef.current = res));
       if (!fieldChecking || forceRecheck) checkField(true);
       await promise;
     }

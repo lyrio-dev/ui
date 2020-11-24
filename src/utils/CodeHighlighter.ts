@@ -122,9 +122,9 @@ export async function tryLoadTreeSitterLanguage(language: CodeLanguage): Promise
 function importMonacoTreeSitterTheme(theme: CodeHighlighterTheme): Promise<MonacoTreeSitter.ThemeConfig> {
   switch (theme) {
     case CodeHighlighterTheme.Tomorrow:
-      return import("@/assets/highlight-themes/tomorrow/monaco-tree-sitter.json") as Promise<
-        MonacoTreeSitter.ThemeConfig
-      >;
+      return import(
+        "@/assets/highlight-themes/tomorrow/monaco-tree-sitter.json"
+      ) as Promise<MonacoTreeSitter.ThemeConfig>;
   }
 }
 
