@@ -26,6 +26,7 @@ import {
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { getAppLogo } from "@/layouts/AppLayout";
 
 let RegisterPage: React.FC = () => {
   const _ = useLocalizer("register");
@@ -255,7 +256,7 @@ let RegisterPage: React.FC = () => {
     setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
-  const logo = window.appLogoUrl && <img className={style.logo} src={window.appLogoUrl} />;
+  const logo = getAppLogo() && <img className={style.logo} src={getAppLogo()} />;
 
   return (
     <>

@@ -5,8 +5,10 @@ function getScript(url) {
   document.head.appendChild(script);
 }
 
-function loadGoogleAnalytics() {
-  const googleAnalyticsId = window.gaId;
+/**
+ * @param {string} googleAnalyticsId
+ */
+export function loadGoogleAnalytics(googleAnalyticsId: string) {
   if (!googleAnalyticsId) return;
 
   if (googleAnalyticsId.startsWith("G")) {

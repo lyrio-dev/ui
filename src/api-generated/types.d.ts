@@ -571,6 +571,9 @@ declare namespace ApiTypes {
     misc: ApiTypes.PreferenceConfigMisc;
   }
   export interface PreferenceConfigMisc {
+    appLogo: string;
+    googleAnalyticsId: string;
+    gravatarCdn: string;
     redirectLegacyUrls: boolean;
     legacyContestsEntryUrl: boolean;
     homepageUserListOnMainView: boolean;

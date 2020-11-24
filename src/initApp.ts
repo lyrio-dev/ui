@@ -1,4 +1,5 @@
 import { appState, initAppStateStore } from "@/appState";
+import { loadGoogleAnalytics } from "@/misc/analytics";
 
 // Wait for getSessionInfo JSONP API returns
 async function waitForSessionInitialization() {
@@ -23,6 +24,7 @@ async function waitForSessionInitialization() {
 
 export default async function initApp() {
   await Promise.all([initAppStateStore(), waitForSessionInitialization()]);
+  loadGoogleAnalytics(appState.serverPreference.misc.googleAnalyticsId);
 }
 
 export const refreshSession = async () => {

@@ -14,6 +14,7 @@ import toast from "@/utils/toast";
 import { isValidEmail, isValidPassword, stripInvalidCharactersInEmailVerificationCode } from "@/utils/validators";
 import { refreshSession } from "@/initApp";
 import { onEnterPress } from "@/utils/onEnterPress";
+import { getAppLogo } from "@/layouts/AppLayout";
 
 let ForgetPage: React.FC = () => {
   const _ = useLocalizer("forgot");
@@ -190,7 +191,7 @@ let ForgetPage: React.FC = () => {
     setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
-  const logo = window.appLogoUrl && <img className={style.logo} src={window.appLogoUrl} />;
+  const logo = getAppLogo() && <img className={style.logo} src={getAppLogo()} />;
 
   return (
     <>

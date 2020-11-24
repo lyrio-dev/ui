@@ -32,10 +32,7 @@ Start [syzoj-ng](https://github.com/syzoj/syzoj-ng) API server. For example, if 
 * To change the initial title of the page, replace `__default_title__`.
 * To load compiled frontend resources from another host, replace `__public_path__`.
 * To load polyfills from another [polyfill-service](https://github.com/Financial-Times/polyfill-service) host, replace `__polyfill_service__`.
-* To load Gravatar avatars from CDN, replace `__gravatar__`.
 * To change the favicon, replace `__favicon__`.
-* To change the app logo, replace `__app_logo__`. Use `null` or `""` to disable logo. Adjust the image width to adjust vertical spacing.
-* To use Google Analytics, replace `__ga__` with your v3 Tracking ID (in the form of `"G-XXXXXXX-Y"`) or v4 Measurement ID (in the form of `"UA-XXXXXXXX"`).
 
 All these replacements work in development or production environment.
 

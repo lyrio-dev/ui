@@ -23,6 +23,7 @@ import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
 import { isEmail } from "class-validator";
+import { getAppLogo } from "@/layouts/AppLayout";
 
 let LoginPage: React.FC = () => {
   const _ = useLocalizer("login");
@@ -230,7 +231,7 @@ let LoginPage: React.FC = () => {
     setPending(false);
   }
 
-  const logo = window.appLogoUrl && <img className={style.logo} src={window.appLogoUrl} />;
+  const logo = getAppLogo() && <img className={style.logo} src={getAppLogo()} />;
 
   return (
     <>

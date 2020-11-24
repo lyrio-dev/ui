@@ -89,15 +89,6 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.polyfillServiceUrl = normalizePath(polyfillServiceUrl);
 
-      // Specify the Gravatar CDN URL in the same way.
-      var gravatarCdnUrl;
-      try {
-        gravatarCdnUrl = __gravatar__;
-      } catch (e) {
-        gravatarCdnUrl = "https://gravatar.com";
-      }
-      window.gravatarCdnUrl = normalizePath(gravatarCdnUrl);
-
       // Specify the favicon URL in the same way.
       var faviconUrl;
       try {
@@ -105,22 +96,6 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       } catch (e) {
         faviconUrl = publicPath + "favicon.ico";
       }
-
-      // Specify the app logo URL in the same way.
-      var appLogoUrl;
-      try {
-        appLogoUrl = __app_logo__;
-      } catch (e) {
-        appLogoUrl = publicPath + "logo.svg";
-      }
-      window.appLogoUrl = appLogoUrl;
-
-      // Google Analytics
-      var googleAnalyticsId;
-      try {
-        googleAnalyticsId = __ga__;
-      } catch (e) {}
-      if (googleAnalyticsId) window.gaId = googleAnalyticsId;
 
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");

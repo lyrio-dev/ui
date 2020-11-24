@@ -16,9 +16,6 @@ declare module "*.wasm" {
 interface Window {
   publicPath: string;
   apiEndpoint: string;
-  appLogoUrl: string;
-  gravatarCdnUrl: string;
-  gaId: string; // Google Analytics
   appVersion: {
     hash?: string;
     date?: string;

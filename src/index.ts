@@ -7,11 +7,10 @@ __webpack_public_path__ = window["publicPath"];
  *
  * index.ts                  (webpack entry)
  * => index.tsx              (app entry)
- *    => misc
- *       => webfonts.ts
- *       => analytics.js
+ *    => misc/webfonts.ts
  *    => initApp.ts          (session initialization)
  *       => appState.ts      (app global state)
+ *       => misc/analytics.js
  *    => App.tsx             (top-level react component)
  *       => AppRouter.tsx    (react routing)
  *          => Layout.tsx    (app view layout)

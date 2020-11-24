@@ -28,6 +28,13 @@ import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
 
+export const getAppLogo = () =>
+  appState.serverPreference.misc.appLogo
+    ? appState.serverPreference.misc.appLogo === "default"
+      ? `${window.publicPath}logo.svg`
+      : appState.serverPreference.misc.appLogo
+    : null;
+
 let AppLayout: React.FC = props => {
   const navigation = useNavigationChecked();
   const loadingRoute = useLoadingRoute();
@@ -168,9 +175,9 @@ let AppLayout: React.FC = props => {
   const logo = (
     <Menu.Item as={Link} href="/" className={style.logoItem}>
       <div className={style.content}>
-        {window.appLogoUrl && (
+        {getAppLogo() && (
           <div className={style.logo}>
-            <img src={window.appLogoUrl} />
+            <img src={getAppLogo()} />
           </div>
         )}
         <EmojiRenderer>

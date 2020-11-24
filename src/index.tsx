@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.less";
 import "./misc/fonts";
-import "./misc/analytics";
 import App from "./App";
 
 import initApp from "./initApp";

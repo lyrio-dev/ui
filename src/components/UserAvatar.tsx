@@ -3,6 +3,7 @@ import { ImageProps, Image } from "semantic-ui-react";
 import lodashIsEqual from "lodash.isequal";
 
 import defaultAvatar from "@/assets/default-avatar.svg";
+import { appState } from "@/appState";
 
 interface UserAvatarProps extends ImageProps {
   userAvatar: ApiTypes.UserAvatarDto;
@@ -11,10 +12,16 @@ interface UserAvatarProps extends ImageProps {
   onError?: () => void;
 }
 
+function ensureTrailingSlash(url: string) {
+  return url.endsWith("/") ? url : `${url}/`;
+}
+
 function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
   switch (avatar.type) {
     case "gravatar":
-      return `${window.gravatarCdnUrl}avatar/${avatar.key}?size=${size}&default=404`;
+      return `${ensureTrailingSlash(appState.serverPreference.misc.gravatarCdn)}avatar/${
+        avatar.key
+      }?size=${size}&default=404`;
     case "qq":
       let sizeParam: number;
       if (size <= 40) sizeParam = 1;
