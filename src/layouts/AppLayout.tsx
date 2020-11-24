@@ -44,10 +44,6 @@ let AppLayout: React.FC = props => {
     const subscription = navigation.subscribe(route => {
       if (route.type === "ready") {
         setSidebarOpen(false);
-
-        // Reset the scroll position to the top
-        // Notice that the scroll position won't be back after "Go back" operation in browser (i.e. history popstate)
-        document.body.scrollTop = 0;
       }
     });
 
