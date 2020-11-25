@@ -73,6 +73,7 @@ module.exports = {
   },
   problem_type: "题目类型",
   switch_type: "切换",
+  submittable: "允许提交",
   confirm_switch_type: "确认切换题目类型",
   switch_type_success: "切换题目类型成功。",
   meta: {

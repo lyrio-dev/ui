@@ -79,6 +79,7 @@ module.exports = {
   },
   problem_type: "問題のタイプ",
   switch_type: "スイッチする",
+  submittable: "[TBT] Submittable",
   confirm_switch_type: "[TBT] Confirm switch type",
   switch_type_success: "[TBT] Successfully switched problem type.",
   meta: {

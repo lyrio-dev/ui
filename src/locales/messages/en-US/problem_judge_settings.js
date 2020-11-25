@@ -75,6 +75,7 @@ module.exports = {
   },
   problem_type: "Problem type",
   switch_type: "Switch",
+  submittable: "Submittable",
   confirm_switch_type: "Confirm switch type",
   switch_type_success: "Successfully switched problem type.",
   meta: {

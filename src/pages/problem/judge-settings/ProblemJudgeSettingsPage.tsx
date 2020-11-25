@@ -63,6 +63,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   }
 
   const [judgeInfo, setJudgeInfo] = useState(parseJudgeInfo(props.problem.judgeInfo));
+  const [submittable, setSubmittable] = useState(props.problem.submittable);
 
   // Unmount and remount the editor after each time the judge info is edited raw by source
   const [editorUuid, setEditorUuid] = useState(uuid());
@@ -91,7 +92,8 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
 
     const { requestError, response } = await api.problem.updateProblemJudgeInfo({
       problemId: props.problem.meta.id,
-      judgeInfo: normalizeJudgeInfo(judgeInfo)
+      judgeInfo: normalizeJudgeInfo(judgeInfo),
+      submittable
     });
 
     if (requestError) {
@@ -253,35 +255,48 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
           </Grid.Column>
           <Grid.Column width={9}>
             <Form className={style.problemTypeForm}>
-              <Form.Field inline className={style.field}>
-                <label className={style.label}>{_(".problem_type")}</label>
-                <Dropdown
-                  className={style.dropdown}
-                  selection
-                  value={newType}
-                  options={Object.values(ProblemType).map(type => ({
-                    key: type,
-                    value: type,
-                    text: _(`problem.type.${type}`)
-                  }))}
-                  onChange={(e, { value }) => setNewType(value as ProblemType)}
+              <Form.Group inline>
+                <Form.Field inline width={16} className={style.field}>
+                  <label className={style.label}>{_(".problem_type")}</label>
+                  <Dropdown
+                    className={style.dropdown}
+                    selection
+                    value={newType}
+                    options={Object.values(ProblemType).map(type => ({
+                      key: type,
+                      value: type,
+                      text: _(`problem.type.${type}`)
+                    }))}
+                    onChange={(e, { value }) => setNewType(value as ProblemType)}
+                  />
+                  <Popup
+                    trigger={
+                      <Button
+                        disabled={pending || newType === props.problem.meta.type}
+                        className={style.switchButton}
+                        content={_(".switch_type")}
+                      />
+                    }
+                    content={<Button negative content={_(".confirm_switch_type")} onClick={onChangeType} />}
+                    open={switchProblemPopupOpen}
+                    onOpen={() => setSwitchProblemPopupOpen(true)}
+                    onClose={() => setSwitchProblemPopupOpen(false)}
+                    position="top center"
+                    on="click"
+                  />
+                </Form.Field>
+                <Form.Checkbox
+                  inline
+                  toggle
+                  className={style.submittable}
+                  label={_(".submittable")}
+                  checked={submittable}
+                  onChange={(e, { checked }) => {
+                    setModified(true);
+                    setSubmittable(checked);
+                  }}
                 />
-                <Popup
-                  trigger={
-                    <Button
-                      disabled={pending || newType === props.problem.meta.type}
-                      className={style.switchButton}
-                      content={_(".switch_type")}
-                    />
-                  }
-                  content={<Button negative content={_(".confirm_switch_type")} onClick={onChangeType} />}
-                  open={switchProblemPopupOpen}
-                  onOpen={() => setSwitchProblemPopupOpen(true)}
-                  onClose={() => setSwitchProblemPopupOpen(false)}
-                  position="top center"
-                  on="click"
-                />
-              </Form.Field>
+              </Form.Group>
             </Form>
             <ProblemTypeEditorComponent
               key={editorUuid}

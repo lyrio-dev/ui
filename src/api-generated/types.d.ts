@@ -347,6 +347,7 @@ declare namespace ApiTypes {
     tagsOfLocale?: ApiTypes.LocalizedProblemTagDto[];
     samples?: ApiTypes.ProblemSampleDataMemberDto[];
     judgeInfo?: {};
+    submittable?: boolean;
     testData?: ApiTypes.ProblemFileDto[];
     additionalFiles?: ApiTypes.ProblemFileDto[];
     discussionCount?: number;
@@ -1152,7 +1153,8 @@ declare namespace ApiTypes {
   }
   export interface UpdateProblemJudgeInfoRequestDto {
     problemId: number;
-    judgeInfo?: {};
+    judgeInfo: {};
+    submittable: boolean;
   }
   export interface UpdateProblemJudgeInfoResponseDto {
     error?: "NO_SUCH_PROBLEM" | "PERMISSION_DENIED" | "INVALID_JUDGE_INFO";

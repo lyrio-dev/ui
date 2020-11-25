@@ -650,7 +650,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         <div className={style.rightContainer}>
           <div className={style.actionMenusWrapper}>
             <Menu pointing secondary vertical className={style.actionMenu}>
-              {props.ProblemTypeView.isSubmittable(props.problem.judgeInfo) && (
+              {props.problem.submittable && props.ProblemTypeView.isSubmittable(props.problem.judgeInfo) && (
                 <Popup
                   trigger={
                     <Menu.Item
