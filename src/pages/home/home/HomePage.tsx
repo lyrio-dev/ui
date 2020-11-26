@@ -381,7 +381,9 @@ let HomePage: React.FC<HomePageProps> = props => {
             {Object.entries(props.friendLinks.links).map(([title, url], i) => (
               <List.Item key={i}>
                 <EmojiRenderer>
-                  <Link href={url}>{title}</Link>
+                  <a href={url as string} target="_blank" rel="noreferrer noopener">
+                    {title}
+                  </a>
                 </EmojiRenderer>
               </List.Item>
             ))}
