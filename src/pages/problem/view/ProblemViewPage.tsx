@@ -229,7 +229,9 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   // End set public
 
   // Begin "localized content unavailable" message
-  const [localizedContentUnavailableMessageVisable, setLocalizedContentUnavailableMessageVisable] = useState(true);
+  const [localizedContentUnavailableMessageVisable, setLocalizedContentUnavailableMessageVisable] = useState(
+    !appState.userPreference?.locale?.hideUnavailableMessage
+  );
   // End "locaized content unavailable" message
 
   // Begin Permission Manager
@@ -528,29 +530,23 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
       />
       <div className={style.statementView} style={{ display: inSubmitView ? "none" : null }}>
         <div className={style.leftContainer}>
-          {(() => {
-            if (!localizedContentUnavailableMessageVisable) return;
-            let message: string;
-            if (props.requestedLocale && props.problem.localizedContentsOfLocale.locale !== props.requestedLocale) {
-              message = _("common.localized_content_unavailable.requested_unavailable", {
-                display_locale: `<b>${_(`language.${props.problem.localizedContentsOfLocale.locale}`)}</b>`
-              });
-            } else if (
-              !props.requestedLocale &&
-              props.problem.localizedContentsOfLocale.locale !== appState.contentLocale
-            ) {
-              message = _("common.localized_content_unavailable.preferred_unavailable", {
-                display_locale: `<b>${_(`language.${props.problem.localizedContentsOfLocale.locale}`)}</b>`
-              });
-            } else return;
-
-            return (
+          {localizedContentUnavailableMessageVisable &&
+            ![appState.contentLocale, props.requestedLocale].includes(
+              props.problem.localizedContentsOfLocale.locale as Locale
+            ) && (
               <Message
                 onDismiss={() => setLocalizedContentUnavailableMessageVisable(false)}
-                content={<span dangerouslySetInnerHTML={{ __html: message }} />}
+                content={
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: _("common.localized_content_unavailable", {
+                        display_locale: `<b>${_(`language.${props.problem.localizedContentsOfLocale.locale}`)}</b>`
+                      })
+                    }}
+                  />
+                }
               />
-            );
-          })()}
+            )}
           {props.problem.localizedContentsOfLocale.contentSections.map((section, i) => (
             <React.Fragment key={i}>
               <EmojiRenderer>

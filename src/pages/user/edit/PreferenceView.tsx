@@ -54,6 +54,10 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.locale?.system || null) as Locale);
   const [contentLocale, setContentLocale] = useState<Locale>((props.preference.locale?.content || null) as Locale);
+  const [
+    hidePreferredLocalizedContentUnavailableMessage,
+    setHidePreferredLocalizedContentUnavailableMessage
+  ] = useState(props.preference.locale?.hideUnavailableMessage || false);
   const [contentFontFace, setContentFontFace] = useState(
     props.preference.font?.contentFontFace || availableContentFonts[0] || "sans-serif"
   );
@@ -88,7 +92,8 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
     const preference: ApiTypes.UserPreferenceDto = {
       locale: {
         system: systemLocale,
-        content: contentLocale
+        content: contentLocale,
+        hideUnavailableMessage: hidePreferredLocalizedContentUnavailableMessage
       },
       font: {
         contentFontFace,
@@ -252,6 +257,14 @@ int main(int argc,char**argv)
         ]}
       />
       <div className={style.notes}>{_(".locale.content_notes")}</div>
+      <Checkbox
+        className={style.checkbox}
+        checked={hidePreferredLocalizedContentUnavailableMessage}
+        label={_(".locale.hide_unavailable_message")}
+        onChange={(e, { checked }) =>
+          !pending && (setModified(true), setHidePreferredLocalizedContentUnavailableMessage(checked))
+        }
+      />
       <Header className={style.sectionHeader} size="large" content={_(".font.header")} />
       <Header className={style.header} size="tiny" content={_(".font.content_font_face")} />
       {/* The browser may won't load the webfonts until the user open the select. */}

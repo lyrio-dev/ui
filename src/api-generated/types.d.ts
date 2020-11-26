@@ -1267,6 +1267,7 @@ declare namespace ApiTypes {
   export interface UserPreferenceLocaleDto {
     system?: "en_US" | "zh_CN" | "ja_JP";
     content?: "en_US" | "zh_CN" | "ja_JP";
+    hideUnavailableMessage?: boolean;
   }
   export interface UserSessionDto {
     sessionId: number;

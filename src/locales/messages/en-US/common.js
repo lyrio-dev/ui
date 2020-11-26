@@ -27,10 +27,8 @@ module.exports = {
     warning: "Warning",
     error: "Error"
   },
-  localized_content_unavailable: {
-    preferred_unavailable: "This content is not available in your language, here is the {display_locale} version.",
-    requested_unavailable: "This content is not available in selected language, here is the {display_locale} version."
-  },
+  localized_content_unavailable:
+    "This content is not available in your preferred language, here is the {display_locale} version.",
   footer: {
     judge_machine: "Judge Machine",
     locale: "Language",

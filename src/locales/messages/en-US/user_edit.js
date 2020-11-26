@@ -79,7 +79,8 @@ module.exports = {
       content_default: "Same as system language",
       content_default_name: "Same as system language ({name})",
       content_notes:
-        "If the selected language is not available for some contents, we'll display the default language versions of them."
+        "If the selected language is not available for some contents, we'll display the default language versions of them.",
+      hide_unavailable_message: 'Hide "this content is not available in your preferred language" message'
     },
     font: {
       header: "Font",

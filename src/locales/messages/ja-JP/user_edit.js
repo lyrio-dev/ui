@@ -78,7 +78,8 @@ module.exports = {
       content: "問題文の言語",
       content_default: "システムのデフォルト",
       content_default_name: "システムのデフォルト（{name}）",
-      content_notes: "選択した言語の問題文がない場合は、問題のデフォルト言語で表示します"
+      content_notes: "選択した言語の問題文がない場合は、問題のデフォルト言語で表示します",
+      hide_unavailable_message: '[TBT] Hide "this content is not available in your preferred language" message'
     },
     font: {
       header: "[TBT] Font",

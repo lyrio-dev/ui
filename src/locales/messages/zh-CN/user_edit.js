@@ -77,7 +77,8 @@ module.exports = {
       content: "偏好内容语言",
       content_default: "与系统语言相同",
       content_default_name: "与系统语言相同（{name}）",
-      content_notes: "如果所选语言的内容不可用，则会为您展示默认语言版本的内容。"
+      content_notes: "如果所选语言的内容不可用，则会为您展示默认语言版本的内容。",
+      hide_unavailable_message: "隐藏「该内容没有您偏好的语言版本」信息"
     },
     font: {
       header: "字体",

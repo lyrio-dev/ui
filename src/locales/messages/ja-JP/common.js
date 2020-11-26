@@ -27,10 +27,7 @@ module.exports = {
     warning: "警告",
     error: "エラー"
   },
-  localized_content_unavailable: {
-    preferred_unavailable: "設定された言語では表示できないため，{display_locale}で表示します。",
-    requested_unavailable: "選択された言語では表示できないため，{display_locale}で表示します。"
-  },
+  localized_content_unavailable: "設定された言語では表示できないため，{display_locale}で表示します。",
   footer: {
     judge_machine: "ジャッジサーバーの状態",
     locale: "[TBT] Language",
