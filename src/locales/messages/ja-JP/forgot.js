@@ -14,8 +14,7 @@ module.exports = {
     NO_SUCH_USER: "ユーザは存在しません。",
     INVALID_EMAIL_VERIFICATION_CODE: "[TBT] Invalid email verification code.",
     FAILED_TO_SEND: "[TBT] Failed to send mail: {errorMessage}",
-    RATE_LIMITED: "[TBT] Your operations are too frequent. Please try again later.",
-    USER_NOT_MIGRATED: "[TBT] Your user has not been migrated to the new system. Please contact the administrator."
+    RATE_LIMITED: "[TBT] Your operations are too frequent. Please try again later."
   },
   empty_email: "メールアドレスを入力してください",
   invalid_email: "無効なメールアドレスです",

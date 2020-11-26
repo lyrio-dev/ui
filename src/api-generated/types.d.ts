@@ -944,7 +944,6 @@ declare namespace ApiTypes {
       | "PERMISSION_DENIED"
       | "DUPLICATE_EMAIL"
       | "NO_SUCH_USER"
-      | "USER_NOT_MIGRATED"
       | "ALREADY_LOGGEDIN"
       | "FAILED_TO_SEND"
       | "RATE_LIMITED";
