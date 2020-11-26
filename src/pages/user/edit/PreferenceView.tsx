@@ -390,7 +390,7 @@ int main(int argc,char**argv)
         </Form.Group>
       </Form>
       <Header className={style.sectionHeader} size="large" content={_(".code_language.header")} />
-      <Form className={style.notFullWidth}>
+      <Form className={style.notFullWidth + " " + style.headerMargin}>
         <CodeLanguageAndOptions
           headerForLanguage={_(".code_language.language")}
           classNameForCompileAndRunOptions={style.halfWidthFieldContainer}
