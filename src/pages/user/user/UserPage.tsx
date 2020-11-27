@@ -253,7 +253,7 @@ let UserPage: React.FC<UserPageProps> = props => {
             <div className={style.iconWrapper}>
               <Icon name="linkify" />
             </div>
-            <a href={props.information.url} title={props.information.url}>
+            <a href={props.information.url} title={props.information.url} target="_blank" rel="noreferrer noopener">
               {props.information.url}
             </a>
           </List.Item>
@@ -261,44 +261,48 @@ let UserPage: React.FC<UserPageProps> = props => {
       </List>
       <div className={style.socialIcons}>
         {props.meta.email && (
-          <Link
+          <a
             className={style.socialIcon}
             href={`mailto:${props.meta.email}`}
             title={_(".social.email")}
             target="_blank"
+            rel="noreferrer noopener"
           >
             <Icon name="mail" />
-          </Link>
+          </a>
         )}
         {props.information.qq && (
-          <Link
+          <a
             className={style.socialIcon}
             href={`https://wpa.qq.com/msgrd?V=3&Uin=${props.information.qq}`}
             title={_(".social.qq")}
             target="_blank"
+            rel="noreferrer noopener"
           >
             <Icon name="qq" />
-          </Link>
+          </a>
         )}
         {props.information.telegram && (
-          <Link
+          <a
             className={style.socialIcon}
             href={`https://t.me/${props.information.telegram}`}
             title={_(".social.telegram")}
             target="_blank"
+            rel="noreferrer noopener"
           >
             <Icon name="telegram" />
-          </Link>
+          </a>
         )}
         {props.information.github && (
-          <Link
+          <a
             className={style.socialIcon}
             href={`https://github.com/${props.information.github}`}
             title={_(".social.github")}
             target="_blank"
+            rel="noreferrer noopener"
           >
             <Icon name="github" />
-          </Link>
+          </a>
         )}
       </div>
     </>
