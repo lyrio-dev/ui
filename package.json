@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "devDependencies": {
     "@tanem/react-nprogress": "^3.0.49",
     "@types/blueimp-md5": "^2.7.0",
