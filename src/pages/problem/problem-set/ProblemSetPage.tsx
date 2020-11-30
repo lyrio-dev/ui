@@ -130,7 +130,9 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         ? []
         : !searchTagKeyword
         ? Object.entries(tags)
-        : Object.entries(tags).filter(([tagId, tag]) => tag.name.indexOf(searchTagKeyword) !== -1),
+        : Object.entries(tags).filter(
+            ([tagId, tag]) => tag.name.toLowerCase().indexOf(searchTagKeyword.toLowerCase()) !== -1
+          ),
     [tags, searchMode, searchTagKeyword]
   );
   const tagsCount = tagEntires.length;
