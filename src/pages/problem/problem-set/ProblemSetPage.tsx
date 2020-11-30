@@ -131,7 +131,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         : !searchTagKeyword
         ? Object.entries(tags)
         : Object.entries(tags).filter(([tagId, tag]) => tag.name.indexOf(searchTagKeyword) !== -1),
-    [tags]
+    [tags, searchMode, searchTagKeyword]
   );
   const tagsCount = tagEntires.length;
   const colors = useMemo(() => sortTagColors(Array.from(new Set(tagEntires.map(([tagId, tag]) => tag.color)))), [tags]);
@@ -146,7 +146,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
             .sort((i, j) => (tags[i].name < tags[j].name ? -1 : tags[i].name > tags[j].name ? 1 : 0))
         ])
       ),
-    [tags]
+    [tagEntires]
   );
 
   const problems = useMemo(
