@@ -161,7 +161,9 @@ body {
 
 // Set "position: relative; " on <body> instead of <html> to make Popper.js work
 body {
-  position: relative;
+  // Extensions e.g. "Youdao directory" will add a inline style "position: static; " to <body>
+  // Adding "!important" to prevent it from broken
+  position: relative !important;
 }
 
 .footer {
