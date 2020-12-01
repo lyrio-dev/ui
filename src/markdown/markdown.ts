@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid";
 import MarkdownItMath from "markdown-it-math-loose";
 import MarkdownItMergeCells from "markdown-it-merge-cells/src";
 import MarkdownItMentions from "markdown-it-mentions";
+import MarkdownItTaskLists from "@hackmd/markdown-it-task-lists";
 
 export interface MarkdownHighlightPlaceholder {
   id: string;
@@ -85,6 +86,9 @@ export function renderMarkdown(
   renderer.use(MarkdownItMergeCells);
   renderer.use(MarkdownItMentions, {
     parseURL: (username: string) => `/u/${username}`
+  });
+  renderer.use(MarkdownItTaskLists, {
+    enabled: true
   });
 
   if (onPatchRenderer) onPatchRenderer(renderer);

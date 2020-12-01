@@ -1172,6 +1172,11 @@
     intl-messageformat-parser "6.0.17"
     tslib "^2.0.1"
 
+"@hackmd/markdown-it-task-lists@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@hackmd/markdown-it-task-lists/-/markdown-it-task-lists-2.1.1.tgz#8001dac48ff3b4fca81c5dddd3a3b127a2842aad"
+  integrity sha512-SOE60IE31RnGqnfmzl2uumuG63I1b+3kTA5U9BcYqmJ46cl17sx9iq4S2wHAffcbAqxkFhciNDWg2O9m1vNKsQ==
+
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"

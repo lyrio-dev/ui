@@ -35,6 +35,20 @@
     margin: 0 auto;
     max-width: 100%;
   }
+
+  :global(.contains-task-list) {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 1em;
+
+    > li {
+      margin: 3px 0;
+    }
+
+    .taskListCheckbox > label:first-of-type {
+      padding-left: 24px;
+    }
+  }
 }
 
 .pre {

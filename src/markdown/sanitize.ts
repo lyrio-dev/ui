@@ -7,6 +7,8 @@ const xssWhiteList = require("xss/lib/default").whiteList;
 delete xssWhiteList.audio;
 delete xssWhiteList.video;
 
+xssWhiteList.input = ["type", "disabled", "checked"];
+
 // Allow "style" and "class" attributes
 Object.keys(xssWhiteList).forEach(tag => {
   xssWhiteList[tag].push("style", "class");

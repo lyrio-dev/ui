@@ -98,6 +98,33 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
       if (!parseUrlIfSameOrigin(a.href)) a.target = "_blank";
     });
 
+    Array.from(wrapper.getElementsByClassName("task-list-item")).forEach(li => {
+      if (li.tagName !== "LI") return;
+
+      const input = li.firstElementChild as HTMLInputElement;
+      if (
+        !input ||
+        input.tagName !== "INPUT" ||
+        input.type.toLowerCase() !== "checkbox" ||
+        input.className !== "task-list-item-checkbox"
+      )
+        return;
+
+      const checked = input.checked;
+
+      const semanticCheckbox = document.createElement("div");
+      semanticCheckbox.className = "ui checkbox " + style.taskListCheckbox + (checked ? " checked" : "");
+      input.className = "hidden";
+      semanticCheckbox.appendChild(input);
+
+      const label = document.createElement("label");
+      if (label.append) label.append(...li.childNodes);
+      else while (li.firstChild) label.appendChild(li.firstChild);
+      semanticCheckbox.appendChild(label);
+
+      li.appendChild(semanticCheckbox);
+    });
+
     patchStyles(wrapper);
 
     return wrapper.innerHTML;
