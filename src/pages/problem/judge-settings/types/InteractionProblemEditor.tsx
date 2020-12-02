@@ -12,9 +12,7 @@ import {
   CodeLanguage,
   filterValidCompileAndRunOptions,
   getPreferredCompileAndRunOptions,
-  checkCodeFileExtension,
-  compileAndRunOptions,
-  CodeLanguageOptionType
+  checkCodeFileExtension
 } from "@/interfaces/CodeLanguage";
 import { useLocalizer } from "@/utils/hooks";
 import { Segment, Form, Header, Menu, Input } from "semantic-ui-react";
@@ -93,18 +91,10 @@ let InteractionProblemEditor: React.FC<InteractionProblemEditorProps> = props =>
   const interactorInterfaces: InteractorInterface[] = ["stdio", "shm"];
   const interactor = props.judgeInfo.interactor;
   function onUpdateInteractor(delta: Partial<InteractorConfig>) {
-    props.onUpdateJudgeInfo({
+    props.onUpdateJudgeInfo(({ interactor }) => ({
       interactor: Object.assign({}, interactor, delta)
-    });
+    }));
   }
-
-  const setLanguageOption = (name: string, value: unknown) => {
-    onUpdateInteractor({
-      compileAndRunOptions: Object.assign({}, interactor.compileAndRunOptions, {
-        [name]: value
-      })
-    });
-  };
 
   const normalizeSharedMemorySize = (x: number) => {
     x = Math.round(x);
