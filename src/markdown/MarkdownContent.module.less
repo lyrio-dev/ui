@@ -19,7 +19,7 @@
     margin: 1em 0;
   }
 
-  blockquote, mjx-container[display="true"] {
+  ul, ol, blockquote, mjx-container[display="true"] {
     &:first-child {
       margin-top: 0 !important;
     }
@@ -36,16 +36,35 @@
     max-width: 100%;
   }
 
-  :global(.contains-task-list) {
-    list-style: none;
-    padding-left: 0;
-    margin: 0 0 1em;
+  // Normal lists
+  ul, ol {
+    padding-left: 2em;
 
-    > li {
-      margin: 3px 0;
+    ul, ol {
+      padding-left: 1.5em;
+    }
+  }
+
+  // Task lists
+  :global(.contains-task-list) {
+    &, ul, ol {
+      padding-left: 21px;
     }
 
-    .taskListCheckbox > label:first-of-type {
+    li {
+      margin-top: 6px;
+
+      &:global(.task-list-item) {
+        list-style-type: none;
+        margin-left: -18.5px;
+      }
+
+      &:not(:global(.task-list-item)) {
+        padding-left: 5.5px;
+      }
+    }
+
+    .taskListCheckbox > label:first-of-type + div {
       padding-left: 24px;
     }
   }

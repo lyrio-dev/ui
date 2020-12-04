@@ -117,10 +117,11 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
       input.className = "hidden";
       semanticCheckbox.appendChild(input);
 
-      const label = document.createElement("label");
-      if (label.append) label.append(...li.childNodes);
-      else while (li.firstChild) label.appendChild(li.firstChild);
-      semanticCheckbox.appendChild(label);
+      const div = document.createElement("div");
+      if (div.append) div.append(...li.childNodes);
+      else while (li.firstChild) div.appendChild(li.firstChild);
+      semanticCheckbox.appendChild(document.createElement("label"));
+      semanticCheckbox.appendChild(div);
 
       li.appendChild(semanticCheckbox);
     });
