@@ -629,14 +629,16 @@ let FileTable: React.FC<FileTableProps> = props => {
                             </EmojiRenderer>
                           ))}
                         </List>
-                        <Button
-                          onClick={() => {
-                            setOverridingFiles([]);
-                            refDoUpload.current();
-                          }}
-                        >
-                          {_(".confirm_override")}
-                        </Button>
+                        <Ref innerRef={button => button && window.requestAnimationFrame(() => button.focus())}>
+                          <Button
+                            onClick={() => {
+                              setOverridingFiles([]);
+                              refDoUpload.current();
+                            }}
+                          >
+                            {_(".confirm_override")}
+                          </Button>
+                        </Ref>
                       </>
                     }
                     on="click"
