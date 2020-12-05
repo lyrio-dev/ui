@@ -79,7 +79,7 @@ export const CodeBox = React.forwardRef<HTMLPreElement, CodeBoxProps>((props, re
         <EmojiRenderer>
           <pre
             ref={refPre}
-            className={style.codeBoxContent + " " + style.wrap}
+            className={style.codeBoxContent + (props.wrap ? " " + style.wrap : "")}
             dangerouslySetInnerHTML={props.html ? { __html: props.html } : undefined}
           >
             {content}
@@ -181,3 +181,8 @@ export const OmittableAnsiCodeBox = React.forwardRef<HTMLPreElement, OmittableAn
     </CodeBox>
   );
 });
+
+export const codeBoxStyle = {
+  segment: style.codeBoxSegment,
+  pre: style.codeBoxContent
+};

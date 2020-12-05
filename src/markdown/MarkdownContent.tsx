@@ -10,6 +10,7 @@ import { sanitize } from "./sanitize";
 import { useNavigationChecked } from "@/utils/hooks";
 import { highlight } from "@/utils/CodeHighlighter";
 import { getTwemojiOptions } from "@/components/EmojiRenderer";
+import { codeBoxStyle } from "@/components/CodeBox";
 
 export interface MarkdownContentPatcher {
   onPatchRenderer?: (renderer: MarkdownIt) => void;
@@ -36,13 +37,13 @@ function patchStyles(wrapper: HTMLDivElement) {
   Array.from(wrapper.getElementsByTagName("pre")).forEach(element => {
     // Wrap
     const segment = document.createElement("div");
-    segment.className = "ui existing segment";
+    segment.className = "ui existing segment " + codeBoxStyle.segment;
     element.parentNode.replaceChild(segment, element);
     segment.appendChild(element);
 
     // Add default styles for <pre>
     // IE doesn't have classList.add
-    element.className += " " + style.pre;
+    element.className += " " + codeBoxStyle.pre;
   });
 
   // Add default class names for <table>
