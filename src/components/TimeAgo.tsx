@@ -10,6 +10,12 @@ interface TimeAgoProps {
   dateOnly?: boolean;
 }
 
+function fixLater(time: Date, relative: Date) {
+  // Accept the client's time is <= 1 minute slower than server's time
+  if (time >= relative) return new Date(+time - Math.min(+time - +relative + 1, 60 * 1000));
+  return time;
+}
+
 let TimeAgo: React.FC<TimeAgoProps> = props => {
   // Update per 30s
   const UPDATE_INTERVAL = 30 * 1000;
@@ -17,21 +23,21 @@ let TimeAgo: React.FC<TimeAgoProps> = props => {
   // Use time ago if within 30 days
   const MAX_TIME_AGO = 30 * 24 * 60 * 60 * 1000;
 
-  const [timeAgoRelativeDate, setTimeAgoRelativeDate] = useState(new Date());
+  const [relativeDate, setRelativeDate] = useState(new Date());
 
-  const getUseTimeAgo = () => +timeAgoRelativeDate - +props.time <= MAX_TIME_AGO;
+  const getUseTimeAgo = () => +relativeDate - +props.time <= MAX_TIME_AGO;
   const [useTimeAgo, setUseTimeAgo] = useState(getUseTimeAgo());
 
   useEffect(() => {
     if (useTimeAgo) {
-      const id = setInterval(() => setTimeAgoRelativeDate(new Date()), UPDATE_INTERVAL);
+      const id = setInterval(() => setRelativeDate(new Date()), UPDATE_INTERVAL);
       return () => clearInterval(id);
     }
   }, [useTimeAgo]);
 
   useEffect(() => {
     if (getUseTimeAgo() !== useTimeAgo) setUseTimeAgo(!useTimeAgo);
-  }, [timeAgoRelativeDate, props.time]);
+  }, [relativeDate, props.time]);
 
   const fullDateTime = formatDateTime(props.time, props.dateOnly)[1];
 
@@ -39,8 +45,8 @@ let TimeAgo: React.FC<TimeAgoProps> = props => {
     <>
       {useTimeAgo ? (
         <span title={fullDateTime}>
-          {timeago.format(props.time, appState.locale, {
-            relativeDate: timeAgoRelativeDate
+          {timeago.format(fixLater(props.time, relativeDate), appState.locale, {
+            relativeDate: relativeDate
           })}
         </span>
       ) : (
