@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "devDependencies": {
     "@hackmd/markdown-it-task-lists": "^2.1.1",
     "@tanem/react-nprogress": "^3.0.49",
