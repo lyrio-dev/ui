@@ -93,18 +93,9 @@ export function useProblemViewMarkdownContentPatcher(problemId: number): Markdow
       renderer.validateLink = url => originValidateLink(url) || isStartedWithFileDownloadPrefix(url.toLowerCase());
     },
     onPatchResult(element) {
-      async function onLinkClick(e: MouseEvent) {
-        const targetElement = e.target as HTMLElement;
-        if (targetElement.tagName === "A") {
-          const a = targetElement as HTMLAnchorElement;
-          if (tryParseAndDownload(a.href)) {
-            e.preventDefault();
-          }
-        }
-      }
+      const onLinkClick = (href: string) => (e: MouseEvent) => tryParseAndDownload(href) && e.preventDefault();
 
-      element.addEventListener("click", onLinkClick);
-      return () => element.removeEventListener("click", onLinkClick);
+      for (const link of element.getElementsByTagName("a")) link.addEventListener("click", onLinkClick(link.href));
     },
     onXssFileterAttr(tagName, attrName, value, escapeAttrValue) {
       if (tagName === "a" && attrName === "href" && isStartedWithFileDownloadPrefix(value)) return true;
