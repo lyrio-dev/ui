@@ -77,8 +77,7 @@ export function useProblemViewMarkdownContentPatcher(problemId: number): Markdow
       );
       return true;
     } else if (fileUrl.startsWith(FILE_DOWNLOAD_LINK_PREFIX)) {
-      let filename = fileUrl.substr(FILE_DOWNLOAD_LINK_PREFIX.length);
-      while (filename.startsWith("/")) filename = filename.substr(1);
+      const filename = fileUrl.substr(FILE_DOWNLOAD_LINK_PREFIX.length).split("/").join("");
 
       downloadProblemFile(problemId, "AdditionalFile", filename, _);
       return true;
