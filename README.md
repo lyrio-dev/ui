@@ -18,12 +18,6 @@ $ cd syzoj-ng-app
 $ yarn
 ```
 
-Create a `config.yaml` file based on `config-example.yaml`:
-
-```bash
-$ cp config-example.yaml config.yaml
-```
-
 By default this app listens on `0.0.0.0:3000`, you can change this with the environment variables `PORT` and `HOST`. You can use nginx as reversed proxy to access the app with a domain name like `syzoj-ng-app.test`.
 
 Start [syzoj-ng](https://github.com/syzoj/syzoj-ng) API server. For example, if the API server in accessible on `http://syzoj-ng.test`, the API endpoint is actually `http://syzoj-ng.test` (without `/api`).
