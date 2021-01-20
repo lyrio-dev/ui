@@ -158,7 +158,7 @@
   "description": "The frontend of next-generation SYZOJ",
   "repository": "https://github.com/syzoj/syzoj-ng-app",
   "author": "Menci",
-  "license": "AGPL-3.0",
+  "license": "MIT",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
