@@ -54,8 +54,16 @@ export async function callApiWithFileUpload<
 
     if (cancelFunctionReceiver) cancelFunctionReceiver(cancelFunction);
 
+    let error = false;
     function onUploadProgress(e: ProgressEvent<EventTarget>) {
-      if (progressCallback) progressCallback({ status: "Uploading", progress: e.loaded / e.total });
+      // setTimeout is a workaround for Axios triggers a "progress" event with 100% loaded after error
+
+      if (progressCallback)
+        setTimeout(() => {
+          if (error) return;
+
+          progressCallback({ status: "Uploading", progress: e.loaded / e.total });
+        }, 0);
     }
 
     try {
@@ -77,6 +85,7 @@ export async function callApiWithFileUpload<
         });
       }
     } catch (e) {
+      error = true;
       if (isCancelled) return { uploadCancelled: true };
       return { uploadError: e };
     }

@@ -272,7 +272,13 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
     if (props.file.upload.progressType === "Error") {
       return (
         <>
-          <Popup trigger={<span>{status}</span>} content={props.file.upload.error} on="hover" position="top center" />
+          <Popup
+            trigger={<span>{status}</span>}
+            hoverable
+            content={props.file.upload.error}
+            on="hover"
+            position="top center"
+          />
         </>
       );
     } else if (props.file.upload.cancel) {
