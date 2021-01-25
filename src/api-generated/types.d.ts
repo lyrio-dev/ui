@@ -327,6 +327,7 @@ declare namespace ApiTypes {
     localizedContentsTitleOnly?: boolean;
     localizedContentsOfAllLocales?: boolean;
     tagsOfLocale?: "en_US" | "zh_CN" | "ja_JP";
+    tagsOfAllLocales?: boolean;
     samples?: boolean;
     judgeInfo?: boolean;
     judgeInfoToBePreprocessed?: boolean;
@@ -345,6 +346,7 @@ declare namespace ApiTypes {
     localizedContentsOfLocale?: ApiTypes.ProblemLocalizedContentDto;
     localizedContentsOfAllLocales?: ApiTypes.ProblemLocalizedContentDto[];
     tagsOfLocale?: ApiTypes.LocalizedProblemTagDto[];
+    tagsOfAllLocales?: ApiTypes.ProblemTagWithAllLocalesDto[];
     samples?: ApiTypes.ProblemSampleDataMemberDto[];
     judgeInfo?: {};
     submittable?: boolean;
@@ -573,6 +575,7 @@ declare namespace ApiTypes {
   }
   export interface PreferenceConfigMisc {
     appLogo: string;
+    appLogoForTheme: {};
     googleAnalyticsId: string;
     gravatarCdn: string;
     redirectLegacyUrls: boolean;
@@ -806,7 +809,6 @@ declare namespace ApiTypes {
       | "TimeLimitExceeded"
       | "MemoryLimitExceeded"
       | "OutputLimitExceeded"
-      | "InvalidInteraction"
       | "PartiallyCorrect"
       | "WrongAnswer"
       | "Accepted"
@@ -1069,7 +1071,6 @@ declare namespace ApiTypes {
       | "TimeLimitExceeded"
       | "MemoryLimitExceeded"
       | "OutputLimitExceeded"
-      | "InvalidInteraction"
       | "PartiallyCorrect"
       | "WrongAnswer"
       | "Accepted"
@@ -1095,7 +1096,6 @@ declare namespace ApiTypes {
       | "TimeLimitExceeded"
       | "MemoryLimitExceeded"
       | "OutputLimitExceeded"
-      | "InvalidInteraction"
       | "PartiallyCorrect"
       | "WrongAnswer"
       | "Accepted"
@@ -1251,6 +1251,7 @@ declare namespace ApiTypes {
   }
   export interface UserPreferenceDto {
     locale?: ApiTypes.UserPreferenceLocaleDto;
+    theme?: string;
     font?: ApiTypes.UserPreferenceFontDto;
     codeFormatter?: ApiTypes.UserPreferenceCodeFormatterDto;
     code?: ApiTypes.UserPreferenceCodeDto;

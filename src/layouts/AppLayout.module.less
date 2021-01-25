@@ -1,8 +1,6 @@
 .menu {
   width: 100vw !important;
   height: 48px;
-  border: none !important;
-  box-shadow: none !important;
 }
 
 .logo {
@@ -71,7 +69,7 @@
   &.sidebarOpen {
     transform: translateX(0) !important;
     right: 0 !important;
-    box-shadow: 0 0 20px rgba(34, 36, 38, 0.15) !important;
+    box-shadow: 0 0 20px var(--theme-shadow) !important;
   }
 
   .userMenu {
@@ -103,13 +101,19 @@ html.sidebarOpen {
 }
 
 body {
-  @margin-top: 49px;
-
+  @margin-top: 48px;
   min-height: calc(100vh - @margin-top);
   display: block;
   margin: @margin-top 0 0 0;
-  padding-top: 28px;
   box-sizing: border-box;
+}
+
+:global(#root) {
+  padding-top: 29px;
+
+  @media only screen and (max-width: 767px) {
+    padding-top: 16px;
+  }
 }
 
 @media only screen and (max-width: 1127px) {
@@ -141,10 +145,6 @@ body {
 // Reset SemanticUI scrollbar styles
 // TODO: Remove the scrollbar style from SemanticUI css with webpack
 @media only screen and (max-width: 767px) {
-  body {
-    padding-top: 15px;
-  }
-
   ::-webkit-scrollbar {
     all: unset !important;
   }
@@ -166,13 +166,13 @@ body {
   position: relative !important;
 }
 
-.footer {
+:global(#root) .footer {
   @margin-top: 28px;
   @margin-bottom: 14px;
 
   padding: 0 !important;
   border: none !important;
-  color: #888;
+  color: var(--theme-footer) !important;
 
   &.placeholder {
     margin: calc(@margin-top + @margin-bottom) 0 0 0 !important;
@@ -194,13 +194,13 @@ body {
 }
 
 #footerVersion {
-  color: #c7c7c7;
+  color: var(--theme-footer-version);
   font-size: 12px !important;
   margin: 4px 0 4px;
 }
 
 .footerIcons {
-  color: #999;
+  color: var(--theme-footer-icons);
 
   a {
     color: inherit !important;

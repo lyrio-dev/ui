@@ -214,19 +214,22 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       font-family: "Fira Code", "Roboto Mono", "DM Mono", "Menlo", "Consolas", "Ubuntu Mono";
     }
 
-    /* Show the top menu's border and shadow as a preview */
-    #root::before {
-      content: " ";
-      height: 47px;
-      width: 100vw;
-      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
-      box-shadow: 0 1px 2px 0 rgba(34, 36, 38, 0.15);
-      box-sizing: content-box;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 102; /* Same as Semantic UI's sidebar menu */
-      pointer-events: none;
+    /* Early stage light/dark mode support */
+
+    /*
+     * The page will flickering to white and then back to black since the stylesheet applies before theme is set
+     * Use a default value as workaround
+     * This value is in themes/pure.css (light) and themes/far.css (dark)
+     */
+
+    body {
+      background: var(--theme-background, #fff) !important;
+    }
+
+    @media only screen and (prefers-color-scheme: dark) {
+      body {
+        background: var(--theme-background, #222) !important;
+      }
     }
   </style>
 

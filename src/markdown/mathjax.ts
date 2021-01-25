@@ -44,7 +44,7 @@ export function renderMath(math: string, display: boolean) {
     message.innerText = `Failed to render math, ${String(e)}`;
     message.style.fontWeight = "bold";
     message.style.display = "inline-block";
-    message.style.border = "2px solid #000";
+    message.style.border = "2px solid var(--theme-foreground)";
     message.style.padding = "0 4px";
 
     wrapper.appendChild(message);

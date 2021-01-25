@@ -82,7 +82,23 @@ module.exports = {
         "If the selected language is not available for some contents, we'll display the default language versions of them.",
       hide_unavailable_message: 'Hide "this content is not available in your preferred language" message'
     },
-    font: {
+    appearance: {
+      header: "Appearance",
+      theme: "Theme",
+      themes: {
+        auto: {
+          name: "Auto",
+          description: "Use light (PURE) or dark (FAR) theme based on browser or system preference"
+        },
+        pure: {
+          name: "PURE",
+          description: "Light theme"
+        },
+        far: {
+          name: "FAR",
+          description: "Dark theme"
+        }
+      },
       header: "Font",
       content_font_face: "Content Font",
       system_default_sans_serif: "sans-serif (browser default)",

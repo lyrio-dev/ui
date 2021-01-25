@@ -74,6 +74,7 @@ th .fileTableCheckbox {
 
 .fileTable {
   background: none !important;
+  transform: translateX(0); // I don't want to know WHY I MUST CREATE A NEW STACKING CONTEXT TO MAKE THE Z-INDEX WORK
 
   td {
     position: relative;
@@ -87,7 +88,7 @@ th .fileTableCheckbox {
       height: 100%;
       max-width: unset !important;
       z-index: -1;
-      background-color: rgba(0, 0, 0, 0.05) !important;
+      background-color: var(--theme-table-progress-bar-background) !important;
 
       > :global(.bar) {
         border-radius: 0 !important;

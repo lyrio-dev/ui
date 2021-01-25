@@ -18,6 +18,7 @@ import { RouteError } from "@/AppRouter";
 import CodeLanguageAndOptions from "@/components/CodeLanguageAndOptions";
 import { availableCodeFonts, availableContentFonts } from "@/misc/fonts";
 import { makeToBeLocalizedText } from "@/locales";
+import { themeList } from "@/themes";
 
 export async function fetchData(username: string) {
   const { requestError, response } = await api.user.getUserPreference({ username });
@@ -58,6 +59,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
     hidePreferredLocalizedContentUnavailableMessage,
     setHidePreferredLocalizedContentUnavailableMessage
   ] = useState(props.preference.locale?.hideUnavailableMessage || false);
+  const [theme, setTheme] = useState(props.preference.theme in themeList ? props.preference.theme : "");
   const [contentFontFace, setContentFontFace] = useState(
     props.preference.font?.contentFontFace || availableContentFonts[0] || "sans-serif"
   );
@@ -88,6 +90,12 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const defaultSystemLocale = browserDefaultLocale;
   const defaultContentLocale = systemLocale || browserDefaultLocale;
 
+  // Theme preview
+  useEffect(() => {
+    appState.temporaryThemeOverride = theme;
+    return () => (appState.temporaryThemeOverride = null);
+  }, [theme]);
+
   const [pending, onSubmit] = useAsyncCallbackPending(async () => {
     const preference: ApiTypes.UserPreferenceDto = {
       locale: {
@@ -95,6 +103,7 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
         content: contentLocale,
         hideUnavailableMessage: hidePreferredLocalizedContentUnavailableMessage
       },
+      theme,
       font: {
         contentFontFace,
         codeFontFace,
@@ -265,8 +274,27 @@ int main(int argc,char**argv)
           !pending && (setModified(true), setHidePreferredLocalizedContentUnavailableMessage(checked))
         }
       />
-      <Header className={style.sectionHeader} size="large" content={_(".font.header")} />
-      <Header className={style.header} size="tiny" content={_(".font.content_font_face")} />
+      <Header className={style.sectionHeader} size="large" content={_(".appearance.header")} />
+      <Header className={style.header} size="tiny" content={_(".appearance.theme")} />
+      <Select
+        className={style.notFullWidth}
+        fluid
+        value={theme || "auto"}
+        onChange={(e, { value }) => (setModified(true), setTheme(value === "auto" ? "" : (value as string)))}
+        options={["auto", ...Object.keys(themeList)].map(theme => ({
+          key: theme,
+          value: theme,
+          text: (
+            <>
+              {_(`.appearance.themes.${theme}.name`)}
+              <div className={style.notes + " " + style.selectOptionNotes}>
+                {_(`.appearance.themes.${theme}.description`)}
+              </div>
+            </>
+          )
+        }))}
+      />
+      <Header className={style.header} size="tiny" content={_(".appearance.content_font_face")} />
       {/* The browser may won't load the webfonts until the user open the select. */}
       <div className={style.forceLoadFonts}>
         {[...availableCodeFonts, ...availableContentFonts].map(fontFace => (
@@ -282,12 +310,12 @@ int main(int argc,char**argv)
           {
             key: "sans-serif",
             value: "sans-serif",
-            text: <span style={{ fontFamily: "sans-serif" }}>{_(".font.system_default_sans_serif")}</span>
+            text: <span style={{ fontFamily: "sans-serif" }}>{_(".appearance.system_default_sans_serif")}</span>
           },
           {
             key: "serif",
             value: "serif",
-            text: <span style={{ fontFamily: "serif" }}>{_(".font.system_default_serif")}</span>
+            text: <span style={{ fontFamily: "serif" }}>{_(".appearance.system_default_serif")}</span>
           },
           ...availableContentFonts.map(fontFace => ({
             text: <FontNameWithPreview fontFace={fontFace} />,
@@ -296,7 +324,7 @@ int main(int argc,char**argv)
           }))
         ]}
       />
-      <Header className={style.header} size="tiny" content={_(".font.content_preview")} />
+      <Header className={style.header} size="tiny" content={_(".appearance.content_preview")} />
       <CodeBox
         className="content-font"
         segment={{
@@ -306,7 +334,7 @@ int main(int argc,char**argv)
         fontFaceOverride={contentFontFace}
         wrap
       />
-      <Header className={style.header} size="tiny" content={_(".font.code_font_face")} />
+      <Header className={style.header} size="tiny" content={_(".appearance.code_font_face")} />
       <Select
         className={style.notFullWidth + " " + style.fontSelect}
         fluid
@@ -316,7 +344,7 @@ int main(int argc,char**argv)
           {
             key: "monospace",
             value: "monospace",
-            text: <span style={{ fontFamily: "monospace" }}>{_(".font.system_default")}</span>
+            text: <span style={{ fontFamily: "monospace" }}>{_(".appearance.system_default")}</span>
           },
           ...availableCodeFonts.map(fontFace => ({
             text: <FontNameWithPreview fontFace={fontFace} />,
@@ -325,7 +353,7 @@ int main(int argc,char**argv)
           }))
         ]}
       />
-      <Header className={style.header} size="tiny" content={_(".font.code_font_size")} />
+      <Header className={style.header} size="tiny" content={_(".appearance.code_font_size")} />
       <Input
         className={style.notFullWidth}
         fluid
@@ -339,7 +367,7 @@ int main(int argc,char**argv)
           if (x >= 5 && x <= 20) setModified(true), setCodeFontSize(x);
         }}
       />
-      <Header className={style.header} size="tiny" content={_(".font.code_line_height")} />
+      <Header className={style.header} size="tiny" content={_(".appearance.code_line_height")} />
       <Input
         className={style.notFullWidth}
         fluid
@@ -356,11 +384,11 @@ int main(int argc,char**argv)
       <Checkbox
         className={style.checkbox + " " + style.largeMargin}
         checked={codeFontLigatures}
-        label={_(".font.code_font_ligatures")}
+        label={_(".appearance.code_font_ligatures")}
         onChange={(e, { checked }) => !pending && (setModified(true), setCodeFontLigatures(checked))}
       />
-      <div className={style.notes}>{_(".font.code_font_ligatures_notes")}</div>
-      <Header className={style.header} size="tiny" content={_(".font.code_preview")} />
+      <div className={style.notes}>{_(".appearance.code_font_ligatures_notes")}</div>
+      <Header className={style.header} size="tiny" content={_(".appearance.code_preview")} />
       <HighlightedCodeBox
         segment={{
           color: "blue"
@@ -374,15 +402,15 @@ int main(int argc,char**argv)
       />
       <Form>
         <Form.Group inline>
-          <label className={style.formLabel}>{_(".font.markdown_editor_font.markdown_editor")}</label>
+          <label className={style.formLabel}>{_(".appearance.markdown_editor_font.markdown_editor")}</label>
           <Form.Radio
-            label={_(".font.markdown_editor_font.content_font")}
+            label={_(".appearance.markdown_editor_font.content_font")}
             value="content"
             checked={markdownEditorFont === "content"}
             onChange={() => setMarkdownEditorFont("content")}
           />
           <Form.Radio
-            label={_(".font.markdown_editor_font.code_font")}
+            label={_(".appearance.markdown_editor_font.code_font")}
             value="code"
             checked={markdownEditorFont === "code"}
             onChange={() => setMarkdownEditorFont("code")}

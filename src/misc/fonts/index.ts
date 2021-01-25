@@ -2,26 +2,26 @@ import "typeface-lato"; // UI
 import "typeface-saira"; // Logo
 
 // Content
-import "fontsource-noto-sans";
-import "fontsource-noto-serif";
-import "fontsource-nunito-sans";
-import "fontsource-open-sans";
-import "fontsource-pt-sans";
-import "fontsource-roboto";
-import "fontsource-roboto-slab";
-import "fontsource-source-serif-pro";
-import "fontsource-zilla-slab";
+import "@fontsource/noto-sans";
+import "@fontsource/noto-serif";
+import "@fontsource/nunito-sans";
+import "@fontsource/open-sans";
+import "@fontsource/pt-sans";
+import "@fontsource/roboto";
+import "@fontsource/roboto-slab";
+import "@fontsource/source-serif-pro";
+import "@fontsource/zilla-slab";
 
 // Code
-import "fontsource-fira-code";
-import "fontsource-roboto-mono";
-import "fontsource-inconsolata";
-import "fontsource-source-code-pro";
-import "fontsource-ubuntu-mono";
-import "fontsource-pt-mono";
+import "@fontsource/fira-code";
+import "@fontsource/roboto-mono";
+import "@fontsource/inconsolata";
+import "@fontsource/source-code-pro";
+import "@fontsource/ubuntu-mono";
+import "@fontsource/pt-mono";
 import "hack-font/build/web/hack-subset.css";
-import "fontsource-dm-mono";
-import "fontsource-jetbrains-mono";
+import "@fontsource/dm-mono";
+import "@fontsource/jetbrains-mono";
 import "sf-mono-webfont/stylesheet.css";
 
 import type { editor } from "monaco-editor";

@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import "./themes";
 import "./index.less";
 import "./misc/fonts";
 import App from "./App";

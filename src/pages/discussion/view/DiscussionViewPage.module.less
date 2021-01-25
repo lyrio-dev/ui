@@ -23,7 +23,7 @@
     :global(.header) {
       display: inline;
       font-weight: normal;
-      color: #3a3a3a;
+      color: var(--theme-discussion-title) !important;
       margin: 0 !important;
       height: @title-height;
       vertical-align: middle;
@@ -36,7 +36,7 @@
         white-space: pre;
       }
 
-      color: #777;
+      color: var(--theme-discussion-reply-count);
       height: @title-height;
       display: inline;
       vertical-align: middle;
@@ -71,24 +71,25 @@
 @desktop-avatar-size: 40px;
 @desktop-avatar-margin: 19px;
 
-@border-color: rgb(225, 225, 225);
-@border-color-current-user: #bcd9f5;
+@border-color: var(--theme-discussion-border);
+@border-color-current-user: var(--theme-discussion-border-current-user);
 @border-color-focused-editor: @border-color-current-user;
 
-@line-color: #e1e1e1;
+@line-color: var(--theme-discussion-line-color);
 @vertical-line-height: 17px;
 @vertical-line-width: 2px;
 @vertical-line-color: @line-color;
 
 @header-one-row-height: 42px;
 
-.item {
+:global(#root) .item {
   display: flex;
   position: relative;
 
-  @header-background: #f7f7f7;
-  @header-background-current-user: #f1f8ff;
-  @reaction-item-background-hover: #f9fdff;
+  @header-background: var(--theme-discussion-header-background);
+  @header-background-current-user: var(--theme-discussion-header-background-current-user);
+  @reaction-item-background-hover: var(--theme-discussion-reaction-background-hover);
+  @reaction-item-background-selected: var(--theme-discussion-reaction-background-selected);
   @content-margin: 14px;
 
   > .avatar {
@@ -143,7 +144,7 @@
 
     .headerContents {
       display: flex;
-      color: #777;
+      color: var(--theme-discussion-header-foreground);
       line-height: @header-line-height;
 
       .left {
@@ -187,9 +188,13 @@
         .label {
           background: none !important;
           font-weight: normal;
-          color: #666;
           margin: 0 !important;
           font-size: 0.8em;
+
+          &:not(:global(.red)) {
+            color: var(--theme-secondary-title) !important;
+            border-color: var(--theme-discussion-header-label-border) !important;
+          }
         }
       }
 
@@ -225,7 +230,7 @@
         }
 
         .delete {
-          color: #db2828;
+          color: var(--theme-discussion-delete) !important;
         }
       }
     }
@@ -276,7 +281,7 @@
             cursor: default;
 
             .link {
-              color: #777;
+              color: var(--theme-discussion-reaction-foreground-disabled);
               cursor: default;
             }
           }
@@ -286,7 +291,7 @@
           }
 
           &.selected {
-            background-color: @header-background-current-user;
+            background-color: @reaction-item-background-selected;
           }
 
           .emoji {
@@ -302,24 +307,6 @@
     > :last-child {
       margin-bottom: 0 !important;
     }
-
-    // GitHub style pending dimmer
-    //
-    // &.pending::after {
-    //   @media only screen and (min-width: 768px) {
-    //     left: -@triangle-size;
-    //     width: calc(100% + @triangle-size + 1px);
-    //   }
-    //
-    //   content: "";
-    //   display: block;
-    //   position: absolute;
-    //   top: 0;
-    //   left: 0;
-    //   width: 100%;
-    //   height: 100%;
-    //   background-color: rgba(255, 255, 255, 0.5);
-    // }
   }
 
   &.raw .bubble {
@@ -380,6 +367,7 @@
         border-top-right-radius: @header-border-radius !important;
         overflow: hidden;
         border-bottom: 1px solid @border-color;
+        background: var(--theme-background) !important;
 
         > input {
           border: none !important;
@@ -409,11 +397,12 @@
 
     > .mainSegment {
       padding: 0;
+      overflow: hidden;
 
       .editor {
         border-top: none;
-        border-left-color: @border-color;
-        border-right-color: @border-color;
+        border-left-color: @border-color !important;
+        border-right-color: @border-color !important;
         border-radius: 0;
         resize: none;
         margin-left: -1px;
@@ -439,7 +428,7 @@
 
   // border colors
   &.edit {
-    > .bubble > .header {
+    > .bubble > .header.header { // Fix priority
       border-bottom-color: @border-color !important;
 
       > .headerContents > :global(.menu) {
@@ -562,9 +551,24 @@
     width: calc(100% - @margin);
   }
   text-align: center;
-  background-repeat: repeat-x;
-  background-position: 0;
-  background-size: 15px;
+  position: relative;
+  
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    mask-position: 0;
+    -webkit-mask-position: 0;
+    mask-repeat: repeat-x;
+    -webkit-mask-repeat: repeat-x;
+    mask-size: 15px;background-size: 15px;
+    -webkit-mask-size: 15px;background-size: 15px;
+    background-color: var(--theme-discussion-load-more);
+  }
 
   > div {
     box-sizing: content-box;
@@ -572,10 +576,12 @@
     display: inline-block;
     border-radius: 4px;
     border: 1px solid @border-color;
-    color: #555;
+    color: var(--theme-discussion-load-more-text);
     padding: 7px 14px;
     line-height: 24px;
-    background-color: #fff;
+    background-color: var(--theme-background);
+    z-index: 1;
+    position: relative;
 
     > a {
       display: block;
@@ -629,11 +635,11 @@
         }
 
         &:hover {
-          background: rgba(0, 0, 0, 0.05);
+          background: var(--theme-discussion-reaction-picker-hover);
         }
 
         &.selected {
-          background: rgba(0, 0, 0, 0.1);
+          background: var(--theme-discussion-reaction-picker-selected);
         }
       }
     }
@@ -646,7 +652,7 @@
     > input {
       border-radius: 0;
       border: none;
-      border-top: 1px solid rgba(34, 36, 38, 0.15) !important;
+      border-top: 1px solid var(--theme-border) !important;
       padding: @margin;
       padding-left: calc(@margin + 4px);
     }

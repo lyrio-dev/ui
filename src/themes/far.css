@@ -1,0 +1,166 @@
+body[data-theme=far] {
+  --theme-background: #222;
+  --theme-background-transparent: #222222dd;
+  --theme-foreground: rgba(255, 255, 255, 0.95);
+  --theme-foreground-transparent: rgba(255, 255, 255, 0.95);
+  --theme-foreground-disabled: rgba(230, 230, 230, 0.3);
+  --theme-selection-background: rgba(155, 155, 155, 0.4);
+
+  --theme-border: rgb(70, 70, 70);
+  --theme-border-light: rgb(40, 40, 40);
+  --theme-border-hover: #5f5f5f;
+  --theme-border-active: #6f6f6f;
+  --theme-shadow: rgba(24, 26, 28, 0.95);
+
+  --theme-hyperlink: #61affb;
+  --theme-hyperlink-hover: #97cbff;
+
+  --theme-input-placeholder: rgba(191, 191, 191, 0.87);
+  --theme-input-placeholder-focus: rgba(233, 233, 233, 0.9);
+  --theme-input-border-focus: #6f6f6f;
+
+  --theme-button-background: #4f4f4f;
+  --theme-button-background-hover: #444;
+  --theme-button-background-active: #3f3f3f;
+  --theme-button-foreground: var(--theme-foreground);
+
+  --theme-block-header-background: #353637;
+
+  --theme-table-header-background: #28292a;
+
+  --theme-toggle-lane-unchecked: rgba(255, 255, 255, 0.1);
+  --theme-toggle-lane-unchecked-hover: rgba(255, 255, 255, 0.2);
+  --theme-toggle-lane-checked: #0d71bb;
+  --theme-toggle-lane-checked-focus: #2185D0;
+
+  --theme-dialog-actions-background: #292a2b;
+
+  --theme-dropdown-item-hover-background: rgb(52, 52, 52);
+  --theme-dropdown-item-selected-background: rgb(47, 47, 47);
+  --theme-dropdown-message-foreground: rgba(255, 255, 255, 0.4);
+  
+  --theme-menu-item-hover-background: rgb(47, 47, 47);
+  --theme-menu-item-active-background: rgb(52, 52, 52);
+
+  --theme-search-result-background-hover: #292a2b;
+
+  --theme-placeholder-segment-background: #292a2b;
+
+  --theme-accordion-non-active: rgba(255, 255, 255, 0.6);
+
+  --theme-progress-bar-background: rgba(255, 255, 255, 0.1);
+  --theme-table-progress-bar-background: rgba(255, 255, 255, 0.15);
+
+  --theme-placeholder-background: var(--theme-background);
+  --theme-placeholder-image: linear-gradient(to right, rgba(255, 255, 255, 0.08) 0, rgba(255, 255, 255, 0.15) 15%, rgba(255, 255, 255, 0.08) 30%);
+
+  --theme-message-background: #2a2a29;
+  --theme-message-foreground: var(--theme-foreground);
+  --theme-message-border: var(--theme-border);
+  --theme-message-error-background: #6d2727;
+  --theme-message-error-foreground: var(--theme-foreground);
+  --theme-message-error-border: #c74e4e;
+  --theme-message-success-background: #379a3e;
+  --theme-message-success-foreground: var(--theme-foreground);
+  --theme-message-success-border: #64d22d;
+  --theme-message-info-background: #3584a2;
+  --theme-message-info-foreground: var(--theme-foreground);
+  --theme-message-info-border: #3cc1dc;
+  --theme-message-warning-background: #b98c26;
+  --theme-message-warning-foreground: var(--theme-foreground);
+  --theme-message-warning-border: #c19f57;
+
+  --theme-scrollbar-track: rgba(255, 255, 255, 0.1);
+  --theme-scrollbar-thumb: rgba(255, 255, 255, 0.25);
+  --theme-scrollbar-thumb-inactive: rgba(255, 255, 255, 0.15);
+  --theme-scrollbar-thumb-hover: rgba(255, 255, 255, 0.35);
+
+  --theme-action-menu-item-background: var(--theme-background);
+  --theme-action-menu-item-background-hover: var(--theme-menu-item-hover-background);
+  --theme-action-menu-item-foreground: var(--theme-foreground);
+  --theme-action-menu-item-foreground-hover: var(--theme-foreground);
+  --theme-action-menu-item-side: rgba(210, 210, 210, 0.15);
+  --theme-action-menu-item-side-hover: rgba(255, 255, 255, 0.95);
+  --theme-action-menu-item-important-background: #2185d0;
+  --theme-action-menu-item-important-background-hover: #1678c2;
+  --theme-action-menu-item-important-foreground: #fff;
+  --theme-action-menu-item-important-foreground-hover: #fff;
+  --theme-action-menu-item-important-side: rgba(255, 255, 255, 0.5);
+  --theme-action-menu-item-important-side-hover: rgba(255, 255, 255, 0.7);
+  --theme-action-menu-item-dangerous-background: var(--theme-action-menu-item-background);
+  --theme-action-menu-item-dangerous-background-hover: rgba(219, 40, 40, 0.12);
+  --theme-action-menu-item-dangerous-foreground: #db2828;
+  --theme-action-menu-item-dangerous-foreground-hover: #db2828;
+  --theme-action-menu-item-dangerous-side: rgba(219, 40, 40, 0.5);
+  --theme-action-menu-item-dangerous-side-hover: #db2828;
+
+  --theme-status-pending: #6cf;
+  --theme-status-configuration-error: #e28989;
+  --theme-status-system-error: #a5a5a5;
+  --theme-status-compilation-error: #3387da;
+  --theme-status-canceled: #6770d0;
+  --theme-status-file-error: #bc35ff;
+  --theme-status-runtime-error: #bc35ff;
+  --theme-status-time-limit-exceeded: #ff9840;
+  --theme-status-memory-limit-exceeded: #ff9840;
+  --theme-status-output-limit-exceeded: #ff9840;
+  --theme-status-partially-correct: #01bab2;
+  --theme-status-wrong-answer: #ff4545;
+  --theme-status-accepted: #37da58;
+  --theme-status-judgement-failed: #FF5722;
+  --theme-status-waiting: #a5a5a5;
+  --theme-status-preparing: #de4d9e;
+  --theme-status-compiling: #00b5ad;
+  --theme-status-running: #6cf;
+  --theme-status-skipped: #78909C;
+
+  --theme-score-0: #ff4545;
+  --theme-score-1: #ff694f;
+  --theme-score-2: #f8603a;
+  --theme-score-3: #fc8354;
+  --theme-score-4: #fa9231;
+  --theme-score-5: #f7bb3b;
+  --theme-score-6: #ecdb44;
+  --theme-score-7: #e2ec52;
+  --theme-score-8: #b0d628;
+  --theme-score-9: #a9b42a;
+  --theme-score-10: #37da58;
+
+  --theme-subway-graph-level-0: #414141;
+  --theme-subway-graph-level-1: #355332;
+  --theme-subway-graph-level-2: #37742e;
+  --theme-subway-graph-level-3: #27943d;
+  --theme-subway-graph-level-4: #1dca3a;
+
+  --theme-os-icon-light: rgba(255, 255, 255, 0.4);
+  --theme-os-icon-heavy: rgba(255, 255, 255, 0.7);
+
+  --theme-discussion-title: #d6d6d6;
+  --theme-discussion-reply-count: #9c9c9c;
+  --theme-discussion-border: #4e4e4e;
+  --theme-discussion-border-current-user: #384d61;
+  --theme-discussion-header-foreground: #9c9c9c;
+  --theme-discussion-header-background: #313131;
+  --theme-discussion-header-background-current-user: hsl(210 22% 17% / 1);
+  --theme-discussion-header-label-border: #888;
+  --theme-discussion-delete: #db2828;
+  --theme-discussion-reaction-background-hover: hsl(0 0% 18% / 1);
+  --theme-discussion-reaction-background-selected: hsl(0 0% 22% / 1);
+  --theme-discussion-reaction-disabled: #777;
+  --theme-discussion-reaction-picker-hover: rgba(255, 255, 255, 0.08);
+  --theme-discussion-reaction-picker-selected: rgba(255, 255, 255, 0.13);
+  --theme-discussion-line-color: #4e4e4e;
+  --theme-discussion-load-more-text: #aaa;
+  --theme-discussion-load-more: #474747;
+
+  --theme-footer: #bbb;
+  --theme-footer-version: #666;
+  --theme-footer-icons: #a7a7a7;
+
+  --theme-secondary-title: #999;
+
+  --theme-description-message-foreground: rgba(255, 255, 255, 0.4);
+
+  --theme-blockquote-foreground: #999;
+  --theme-blockquote-side: #434343;
+}

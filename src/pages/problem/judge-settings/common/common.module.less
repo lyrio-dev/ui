@@ -9,8 +9,6 @@
 @color_8: #a333c8;
 @color_9: #e03997;
 @color_10: #a5673f;
-@color_11: #767676;
-@color_12: #1b1c1d;
 
 .menu {
   border-radius: 0 !important;
@@ -40,11 +38,13 @@
   padding: 0 !important;
 }
 
-.menuHeader, .menuFooter {
-  background-color: #f9f9f9 !important;
+:global(#root) {
+  .menuHeader, .menuFooter {
+    background-color: var(--theme-table-header-background) !important;
+  }
 }
 
-.menuHeader {
+:global(#root) .menuHeader {
   border-top: .2em solid !important;
   border-top-left-radius: .28571429rem !important;
   border-top-right-radius: .28571429rem !important;
@@ -60,8 +60,6 @@
   &.color_8 { border-top-color: @color_8 !important; }
   &.color_9 { border-top-color: @color_9 !important; }
   &.color_10 { border-top-color: @color_10 !important; }
-  &.color_11 { border-top-color: @color_11 !important; }
-  &.color_12 { border-top-color: @color_12 !important; }
 }
 
 :global(#root) {

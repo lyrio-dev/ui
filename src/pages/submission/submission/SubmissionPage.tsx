@@ -994,12 +994,8 @@ export default defineRoute(async request => {
       ProblemTypeSubmissionView.getHighlightLanguageList(queryResult.content)) ||
     [];
 
-  if (highlightLanguageList.length > 0) {
-    // If no language is returned, don't load the code formatter either.
-    await Promise.all<unknown>([
-      CodeFormatter.ready,
-      ...highlightLanguageList.map(CodeHighlighter.tryLoadTreeSitterLanguage)
-    ]);
+  if (highlightLanguageList.some(lang => CodeFormatter.isLanguageSupported(lang))) {
+    await CodeFormatter.ready;
   }
 
   return (

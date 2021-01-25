@@ -30,7 +30,7 @@ let ErrorPage: React.FC<ErrorPageProps> = props => {
   if (props.uncaughtError) console.error(props.uncaughtError);
 
   return (
-    <Message className={style.message} icon negative>
+    <Message className={style.message} icon error>
       <Icon name="remove" />
       <EmojiRenderer>
         <Message.Content>

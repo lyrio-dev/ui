@@ -112,7 +112,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
     setPending(false);
   }
 
-  const [editRawEditorValue, setEditRawEditorValue] = useState(yaml.safeDump(normalizeJudgeInfo(judgeInfo)));
+  const [editRawEditorValue, setEditRawEditorValue] = useState(yaml.dump(normalizeJudgeInfo(judgeInfo)));
   const [editRowEditorModified, setEditRowEditorModified] = useConfirmNavigation();
   const [editRawEditorErrorMessage, setEditRawEditorErrorMessage] = useState("");
   function closeEditRawDialog() {
@@ -160,7 +160,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
         content={_(".edit_raw.ok")}
         onClick={() => {
           try {
-            const parsed = parseJudgeInfo(yaml.safeLoad(editRawEditorValue));
+            const parsed = parseJudgeInfo(yaml.load(editRawEditorValue));
             setJudgeInfo(parsed);
             setModified(true);
             setEditorUuid(uuid());
@@ -236,7 +236,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
               <HighlightedCodeBox
                 className={style.yamlCodeBox}
                 segmentClassName={style.yamlSegment}
-                code={yaml.safeDump(normalizeJudgeInfo(judgeInfo))}
+                code={yaml.dump(normalizeJudgeInfo(judgeInfo))}
                 language="yaml"
               >
                 <Button
@@ -246,7 +246,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
                   content={_(".edit_raw.edit_raw")}
                   onClick={() => {
                     setEditRawEditorErrorMessage("");
-                    setEditRawEditorValue(yaml.safeDump(normalizeJudgeInfo(judgeInfo)));
+                    setEditRawEditorValue(yaml.dump(normalizeJudgeInfo(judgeInfo)));
                     editRawDialog.open();
                   }}
                 />

@@ -3,6 +3,11 @@ declare module "*.module.less" {
   export default classes;
 }
 
+declare module "*.url.css" {
+  const url: string;
+  export default url;
+}
+
 declare module "*.svg" {
   const src: string;
   export default src;
