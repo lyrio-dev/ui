@@ -351,7 +351,7 @@ const AuditView: React.FC<AuditViewProps> = props => {
                                 content: {
                                   content: (
                                     <HighlightedCodeBox
-                                      segmentClassName={style.codeboxSegment}
+                                      segmentClassName={style.codeboxSegment + " " + style.scrollableCodeBoxSegment}
                                       code={JSON.stringify(result.details, null, 2)}
                                       language="json"
                                     >

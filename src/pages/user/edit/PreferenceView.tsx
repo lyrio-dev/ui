@@ -147,39 +147,17 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
   const fontPreviewContent = `<h2>A Harmony of LIGHT</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. A scelerisque purus semper eget duis at tellus at. Adipiscing elit duis tristique sollicitudin nibh.</p><h2>Awaits You in a Lost WORLD</h2><p>Velit sed ullamcorper morbi tincidunt ornare. Suscipit tellus mauris a diam maecenas. Tellus integer feugiat scelerisque varius morbi enim nunc. Eget aliquet nibh praesent tristique. Interdum posuere lorem ipsum dolor sit. Sed sed risus pretium quam vulputate dignissim suspendisse in est.</p><p>Elementum sagittis vitae et leo duis. Neque convallis a cras semper auctor. Justo eget magna fermentum iaculis eu non diam.</p>`;
 
   // XD I write this because I'm studying the course -- Introduction to Database Systems
-  const fontPreviewCode = `puts("Tell me something about Menci~www");
-std::shared_ptr<Student> Menci = readRecord<Student>();
-if (Menci->age >= 0x14 && Menci->gender == "M" && Menci->major == "CS") {
-  puts("#### Test passed qwq. Orz %%");
-}`;
+  const fontPreviewCode = `// **Comments**
+if ((a->b <=> c++) >= 0xFF && f(d || e) != (g << h)) {
+    /* Do something */
+    int abcdefghijklmn = OPQRSTUVWXYZ;
+    int ABCDEFGHIJKLMN = opqrstuvwxyz;
+}
 
-  const formatPreviewCode = `#include<cstdio>
+return 1234567890;`;
 
-class OrangeCat : public Cat {
-public:
-  template <typename T, std::enable_if_t<std::is_base_of<Fish, T>, int> = 0>
-  void eat(T& fish) {
-    fish.destory ();
-  }
-
-  virtual bool isFat() const {return true;}
-}cat;
-
-int main(int argc,char**argv)
-{
-    switch(argc) {
-    case 1:
-        if(**argv==' ')
-            return 1;
-        else{
-            do
-                {std::cout << *argv << std::endl;}
-            while (1);
-        }
-        break;
-    }
-    return 0;
-}`;
+  const formatPreviewCode =
+    "#include<world.h>\n\nint main() {\n// ~ Switch on the power line / Remember to put on PROTECTION ~\nworld.start();\n\n// ~ Lay down your pieces / And let's begin OBJECT CREATION ~\n// ~ Fill in my data / Parameters INITIALIZATION ~\nauto*me = World::createObject(\"me\",world,parameters...);\nauto &you = *World::createObject(\"you\",world,parameters...);\n\n// ~ Set up our new world ~\nauto& world = World{me,you};\n\n// ~ And let's begin the SIMULATION ~\nworld.beginSimulation();\n\n      switch(me->type) {\n        case Object::SET_OF_POINTS:\n          // ~ If I'm a set of points / Then I will give you my DIMENSION ~\n        you << dynamic_cast<Set<Point>*>(me)->getDimension(); break;\n    case Object::CIRCLE:\n  // ~ If I'm a circle / Then I will give you my CIRCUMFERENCE ~\n  you << dynamic_cast<Circle* >(me)->getCircumference();\n  break;\n    case Object::SINE_WAVE:\n      // ~ If I'm a sine wave / Then you can sit on all my TANGENTS ~\n          for (auto&tangent:dynamic_cast<SineWave*>(me)->getTangents())\n        you.sitOn(tangent);\n      break;\n    default:\n  // ~ If I approach infinity / Then you can be my LIMITATIONS ~\n    you.limit()>>me->limit();\n}\n\n    // ~ Switch my current / To AC to DC ~\n    me->setCurrent(CurrentType::AC),me->setCurrent(CurrentType::DC);\n\n    // ~ And then blind my vision / So dizzy, so dizzy ~\n    delete me->vision;\n\n// ~ Oh, we can travel / From A.D to B.C ~\nworld.setTime(CommonEra::AD,2016y+6m+16d);\nworld.setTime(CommonEra::BC,-2016y+6m+16d);\n\n    // ~ And we can unite / So deeply, so deeply ~\n    world.unite(you, *me);\n\n    // ~ If I can, if I can, give you all THE SIMULATIONS ~\n    if (std::all_of(world.simulations.begin(), world.simulations.end(), [&] (auto &simulation) {\nreturn you << me->run(simulation);\n}))\n        // ~ Then I can, then I can, be your only SATISFACTION ~\n        you.satisfactions = std::vector{me};\n\n    // ~ If I can make you happy / Then I'll run the EXECUTION ~\n    try\n    {\n      me->execute(you.nextCommand());\n    } catch (const NotHappyException &e) {}\n\n    // ~ Though we are trapped in this strange, strange SIMULATION ~\n    world.trap(me);\n\n    // ~ EXECUTION / EXECUTION / EXECUTION / EXECUTION ~\n    // ~ EXECUTION / EXECUTION / EXECUTION / EXECUTION ~\n    // ~ EXECUTION / EXECUTION / EXECUTION / EXECUTION ~\n    for (size_t i = 0; i < 3; i++){\n      for (size_t j = 0; j < 4; j++) world.continueExecution();\n    }\n\n    // ~ EIN / DOS / TROIS / NE / FEM / LIU / EXECUTION ~\n    for (size_t i = 1; i <= 6; i++)\n        sleepms(500);\n    world.continueExecution();\n\n    // ~ If I can, if I can, give you all the EXECUTION ~\n    if (std::all_of(world.begin(), world.end(), [&] (auto &object) {\n      return me->execute(object);\n }))\n        // ~ Then I can, then I can, be your only EXECUTION ~\n        me->execute(you.nextCommand());\n\n    // ~ If I can, have you back ~\n    if (*me << you)\n        // ~ Then I will run the EXECUTION ~\n        me->execute(you.nextCommand());\n    \n// ~ Though we are trapped / We are trapped ah ~\nworld.trap(me);\n\n// ~ I've studied / I've studied how to properly / LO-O-OVE ~\nme->study(Knowledge::Love);\n// ~ Question me / Question me / I can answer all / LO-O-OVE ~\nyou.question(me, Knowledge::Love);\n// ~ I know the algebraic expression of / LO-O-OVE ~\nme->answer(you, Knowledge::Love);\n// ~ Though you are free / I am trapped, trapped in / LO-O-OVE ~\nworld.trap(me);\n\n// ~ EXECUTION ~\nworld.execute(me);\n}\n";
 
   const [formatPreviewSuccess, formattedPreviewCode] = CodeFormatter.format(
     formatPreviewCode,
@@ -461,6 +439,7 @@ int main(int argc,char**argv)
         content={_(formatPreviewSuccess ? ".code_formatter.preview" : ".code_formatter.error")}
       />
       <HighlightedCodeBox
+        segmentClassName={style.formatPreviewCodeBoxSegment + " " + style.scrollableCodeBoxSegment}
         segment={{
           color: formatPreviewSuccess ? "green" : "red"
         }}
