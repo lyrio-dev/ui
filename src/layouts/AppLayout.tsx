@@ -26,13 +26,13 @@ import api from "@/api";
 import formatDateTime from "@/utils/formatDateTime";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
 
-export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
+export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion" | "graph_editor";
 
 export const getAppLogo = () =>
   appState.serverPreference.misc.appLogo
     ? appState.serverPreference.misc.appLogo === "default"
-      ? `${window.publicPath}logo.svg`
-      : appState.serverPreference.misc.appLogo
+    ? `${window.publicPath}logo.svg`
+    : appState.serverPreference.misc.appLogo
     : null;
 
 let AppLayout: React.FC = props => {
@@ -83,12 +83,12 @@ let AppLayout: React.FC = props => {
     },
     ...(appState.serverPreference.misc.legacyContestsEntryUrl
       ? {
-          contests: {
-            icon: "calendar",
-            text: ".navbar.contests",
-            url: appState.serverPreference.misc.legacyContestsEntryUrl
-          }
+        contests: {
+          icon: "calendar",
+          text: ".navbar.contests",
+          url: appState.serverPreference.misc.legacyContestsEntryUrl
         }
+      }
       : {}),
     submissions: {
       icon: "hourglass",
@@ -104,6 +104,11 @@ let AppLayout: React.FC = props => {
       icon: "comments",
       text: ".navbar.discussion",
       url: "/d"
+    },
+    graph_editor: {
+      icon: "compass",
+      text: ".navbar.graph_editor",
+      url: "/graph-editor"
     }
   };
 
