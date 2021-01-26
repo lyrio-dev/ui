@@ -16,7 +16,6 @@ const icons: Record<SubmissionStatusAll, SemanticICONS> = {
   TimeLimitExceeded: "clock",
   MemoryLimitExceeded: "microchip",
   OutputLimitExceeded: "print",
-  InvalidInteraction: "ban",
   PartiallyCorrect: "minus",
   WrongAnswer: "remove",
   Accepted: "checkmark",

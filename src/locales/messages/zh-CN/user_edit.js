@@ -80,8 +80,23 @@ module.exports = {
       content_notes: "如果所选语言的内容不可用，则会为您展示默认语言版本的内容。",
       hide_unavailable_message: "隐藏「该内容没有您偏好的语言版本」信息"
     },
-    font: {
-      header: "字体",
+    appearance: {
+      header: "外观",
+      theme: "主题",
+      themes: {
+        auto: {
+          name: "自动",
+          description: "根据浏览器或系统设置自动选择亮色（PURE）或暗色（FAR）主题"
+        },
+        pure: {
+          name: "PURE",
+          description: "亮色主题"
+        },
+        far: {
+          name: "FAR",
+          description: "暗色主题"
+        }
+      },
       content_font_face: "正文字体",
       system_default_sans_serif: "sans-serif（浏览器默认）",
       system_default_serif: "serif（浏览器默认）",

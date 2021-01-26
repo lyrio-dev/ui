@@ -107,14 +107,14 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
     };
   }
 
-  const [hitokotoConfig, setHitokotoConfig] = useState(() => yaml.safeDump(props.settings.hitokoto));
-  const [countdownConfig, setCountdownConfig] = useState(() => yaml.safeDump(props.settings.countdown));
-  const [friendLinksConfig, setFriendLinksConfig] = useState(() => yaml.safeDump(props.settings.friendLinks));
+  const [hitokotoConfig, setHitokotoConfig] = useState(() => yaml.dump(props.settings.hitokoto));
+  const [countdownConfig, setCountdownConfig] = useState(() => yaml.dump(props.settings.countdown));
+  const [friendLinksConfig, setFriendLinksConfig] = useState(() => yaml.dump(props.settings.friendLinks));
 
   const [pending, onSubmit] = useAsyncCallbackPending(async () => {
-    const hitokoto = yaml.safeLoad(hitokotoConfig) as any;
-    const countdown = yaml.safeLoad(countdownConfig) as any;
-    const friendLinks = yaml.safeLoad(friendLinksConfig) as any;
+    const hitokoto = yaml.load(hitokotoConfig) as any;
+    const countdown = yaml.load(countdownConfig) as any;
+    const friendLinks = yaml.load(friendLinksConfig) as any;
     const annnouncementIds = Object.fromEntries(
       Object.entries(annnouncements).map(([locale, discussions]) => [locale, discussions.map(({ id }) => id)])
     );

@@ -5,6 +5,8 @@ import { create, persist } from "mobx-persist";
 import { Locale } from "./interfaces/Locale";
 import { NavButtonName } from "./layouts/AppLayout";
 
+import { defaultLightTheme, defaultDarkTheme, themeList } from "./themes";
+
 function getBrowserLocale(): Locale {
   const supportedLocales: string[] = Object.values(Locale);
   return (
@@ -17,6 +19,12 @@ function getBrowserLocale(): Locale {
 export const browserDefaultLocale = getBrowserLocale();
 
 export class AppState {
+  constructor() {
+    this.initializationThemeDetection();
+  }
+
+  /* Begin current page info */
+
   // The current page's title
   @observable
   title: string = "";
@@ -33,6 +41,10 @@ export class AppState {
     this.responsiveLayout = responsiveLayout;
     this.activeNavButton = activeNavButton;
   }
+
+  /* End current page info */
+
+  /* Begin localization info */
 
   // The locale set by user on the page footer, saved in current browser
   @persist
@@ -52,13 +64,65 @@ export class AppState {
     return (this.userPreference.locale?.content as Locale) || this.locale;
   }
 
-  @persist
-  @observable
-  token: string = "";
+  /* End localization info */
 
+  /* Begin theme info */
+
+  initializationThemeDetection() {
+    const mediaQueryList = window.matchMedia("only screen and (prefers-color-scheme: dark)");
+
+    const onChange = (e: { matches: boolean }) =>
+      (this.browserPreferredTheme = e.matches ? defaultDarkTheme : defaultLightTheme);
+    onChange(mediaQueryList);
+
+    if (mediaQueryList.addEventListener) mediaQueryList.addEventListener("change", onChange);
+    else mediaQueryList.addListener(onChange);
+  }
+
+  @observable
+  browserPreferredTheme: string;
+
+  // This is set if the user change theme but not saved yet
+  @observable
+  temporaryThemeOverride?: string;
+
+  @computed
+  get theme(): string {
+    const themeSelector = (this.temporaryThemeOverride ?? this.userPreference?.theme) || "auto";
+    return themeSelector !== "auto" && themeSelector in themeList ? themeSelector : this.browserPreferredTheme;
+  }
+
+  @computed
+  get appLogoThemed(): { src: string; style: React.CSSProperties } {
+    const logoSelector = this.serverPreference.misc.appLogoForTheme[this.theme] || "original";
+    const logoUrlSelector =
+      logoSelector === "original" || logoSelector === "inverted" ? this.serverPreference.misc.appLogo : logoSelector;
+    const logoUrl = logoUrlSelector === "default" ? `${window.publicPath}logo.svg` : logoUrlSelector;
+    const logoInverted = logoSelector === "inverted";
+    return logoUrl
+      ? {
+          src: logoUrl,
+          style: logoInverted
+            ? {
+                filter: "invert(1)"
+              }
+            : {}
+        }
+      : null;
+  }
+
+  /* End theme info */
+
+  // TODO: move it out of global app state
   @persist
   @observable
   showTagsInProblemSet: boolean = false;
+
+  /* Begin session info */
+
+  @persist
+  @observable
+  token: string = "";
 
   @persist
   @observable
@@ -83,11 +147,17 @@ export class AppState {
   @observable
   userPreference: ApiTypes.UserPreferenceDto = {};
 
+  /* End session info */
+
+  /* Begin server info */
+
   @observable
   serverPreference: ApiTypes.PreferenceConfig = null;
 
   @observable
   serverVersion: ApiTypes.ServerVersionDto = null;
+
+  /* End server info */
 }
 
 const hydrate = create({

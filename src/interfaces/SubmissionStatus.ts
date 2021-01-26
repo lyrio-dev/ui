@@ -9,7 +9,6 @@ export enum SubmissionStatus {
   CompilationError = "CompilationError",
   FileError = "FileError",
   OutputLimitExceeded = "OutputLimitExceeded",
-  InvalidInteraction = "InvalidInteraction",
   JudgementFailed = "JudgementFailed",
   ConfigurationError = "ConfigurationError",
   SystemError = "SystemError",
@@ -31,7 +30,6 @@ export enum SubmissionStatusAll {
   TimeLimitExceeded = "TimeLimitExceeded",
   MemoryLimitExceeded = "MemoryLimitExceeded",
   OutputLimitExceeded = "OutputLimitExceeded",
-  InvalidInteraction = "InvalidInteraction",
 
   PartiallyCorrect = "PartiallyCorrect",
   WrongAnswer = "WrongAnswer",

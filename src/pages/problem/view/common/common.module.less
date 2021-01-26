@@ -49,14 +49,13 @@
   }
 }
 
-.actionMenu {
+:global(#root) .actionMenu {
   min-height: 0 !important;
   margin-bottom: 0 !important;
 
   border-right: none !important;
   border-left-width: 2px !important;
   border-left-style: solid !important;
-  border-left-color: rgba(34, 36, 38, 0.15) !important;
 
   :global(.item) {
     border-right: none !important;
@@ -65,45 +64,40 @@
     margin: 0 0 0 -2px !important;
     border-left-width: 2px !important;
 
-    &.menuItemImportant {
-      background: #2185d0 !important;
-      color: #fff !important;
-      border-left-color: rgba(255, 255, 255, 0.6) !important;
+    & {
+      background: var(--theme-action-menu-item-background) !important;
+      color: var(--theme-action-menu-item-foreground) !important;
+      border-left-color: var(--theme-action-menu-item-side) !important;
 
       &:hover {
-        background: #1678c2 !important;
-        color: #fff !important;
-        border-left-color: rgba(255, 255, 255, 0.45) !important;
+        background: var(--theme-action-menu-item-background-hover) !important;
+        color: var(--theme-action-menu-item-foreground-hover) !important;
+        border-left-color: var(--theme-action-menu-item-side-hover) !important;
+      }
+    }
+
+    &.menuItemImportant {
+      background: var(--theme-action-menu-item-important-background) !important;
+      color: var(--theme-action-menu-item-important-foreground) !important;
+      border-left-color: var(--theme-action-menu-item-important-side) !important;
+
+      &:hover {
+        background: var(--theme-action-menu-item-important-background-hover) !important;
+        color: var(--theme-action-menu-item-important-foreground-hover) !important;
+        border-left-color: var(--theme-action-menu-item-important-side-hover) !important;
       }
     }
 
     &.menuItemDangerous {
-      color: #db2828 !important;
-      border-left-color: rgba(219, 40, 40, 0.5) !important;
+      background: var(--theme-action-menu-item-dangerous-background) !important;
+      color: var(--theme-action-menu-item-dangerous-foreground) !important;
+      border-left-color: var(--theme-action-menu-item-dangerous-side) !important;
 
       &:hover {
-        background: rgba(219, 40, 40, 0.03) !important;
-        color: #db2828 !important;
-        border-left-color: #db2828 !important
+        background: var(--theme-action-menu-item-dangerous-background-hover) !important;
+        color: var(--theme-action-menu-item-dangerous-foreground-hover) !important;
+        border-left-color: var(--theme-action-menu-item-dangerous-side-hover) !important;
       }
-    }
-
-    &.menuItemPrimary {
-      background: rgba(40, 110, 219, 0.03) !important;
-      color: #1678c2 !important;
-      border-left-color: rgba(40, 110, 219, 0.5) !important;
-
-      &:hover {
-        background: rgba(40, 110, 219, 0.07) !important;
-        color: #1678c2 !important;
-        border-left-color: #1678c2 !important
-      }
-    }
-
-    &:hover {
-      color: rgba(0, 0, 0, 0.95) !important;
-      border-color: rgba(0, 0, 0, 0.95) !important;
-      background-color: rgba(0, 0, 0, 0.03) !important;
     }
 
     > :global(.icon) {

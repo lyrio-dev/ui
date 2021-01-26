@@ -2,16 +2,15 @@ import React, { useEffect, useRef } from "react";
 import { observer } from "mobx-react";
 import ReactMonacoEditor from "react-monaco-editor";
 import * as Monaco from "monaco-editor";
-import { MonacoTreeSitter } from "monaco-tree-sitter";
 import { registerRulesForLanguage } from "monaco-ace-tokenizer";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 
 import style from "./CodeEditor.module.less";
 
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
-import { tryLoadTreeSitterLanguage } from "@/utils/CodeHighlighter";
 import { appState } from "@/appState";
-import { availableCodeFonts, generateCodeFontEditorOptions } from "@/misc/fonts";
+import { generateCodeFontEditorOptions } from "@/misc/fonts";
+import { themeList } from "@/themes";
 
 const isIE = navigator.userAgent.indexOf("Trident") !== -1;
 
@@ -20,6 +19,9 @@ function loadAceHighlights() {
   registerRulesForLanguage("haskell", new (require("monaco-ace-tokenizer/es/ace/definitions/haskell").default)());
 }
 if (!isIE) loadAceHighlights();
+
+Monaco.editor.defineTheme("tomorrow", require("@/assets/monaco-tomorrow.json"));
+Monaco.editor.defineTheme("tomorrow-night", require("@/assets/monaco-tomorrow-night.json"));
 
 export interface CodeEditorProps {
   editorDidMount?: (editor: Monaco.editor.IStandaloneCodeEditor) => void;
@@ -32,40 +34,14 @@ export interface CodeEditorProps {
 
 let CodeEditor: React.FC<CodeEditorProps> = props => {
   const refEditor = useRef<Monaco.editor.IStandaloneCodeEditor>();
-  const refLoadMtsOnEditorLoaded = useRef<() => void>();
   function editorDidMount(editor: Monaco.editor.IStandaloneCodeEditor) {
     editor.getModel().setEOL(Monaco.editor.EndOfLineSequence.LF);
 
     refEditor.current = editor;
     console.log("Monaco Editor:", editor);
-    if (refLoadMtsOnEditorLoaded.current) refLoadMtsOnEditorLoaded.current();
 
     if (props.editorDidMount) props.editorDidMount(editor);
   }
-
-  const refMts = useRef<MonacoTreeSitter>();
-  const refSetLanguageCount = useRef<number>(0);
-  useEffect(() => {
-    const i = ++refSetLanguageCount.current;
-    tryLoadTreeSitterLanguage(props.language as CodeLanguage).then(languageObject => {
-      if (i !== refSetLanguageCount.current) return;
-
-      function initialize() {
-        refMts.current = new MonacoTreeSitter(Monaco, refEditor.current, languageObject);
-      }
-
-      // Language loaded after editor loaded
-      if (refEditor.current) {
-        if (!refMts.current)
-          // MTS is not loaded or has been disposed
-          initialize();
-        // MTS presents
-        else refMts.current.changeLanguage(languageObject);
-      }
-      // Load it when on editor loaded
-      else refLoadMtsOnEditorLoaded.current = initialize;
-    });
-  }, [props.language]);
 
   // The Monaco Editor's automaticLayout option doesn't work on a initially hidden editor
   // So use ResizeSensor instead
@@ -105,6 +81,7 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
           )
         ) : (
           <ReactMonacoEditor
+            theme={themeList[appState.theme].editor}
             language={props.language}
             value={props.value}
             options={{

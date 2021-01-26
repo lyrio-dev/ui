@@ -555,7 +555,7 @@ export let DiscussionEditor = observer<DiscussionEditorProps, HTMLDivElement>(
             </Form>
             {preview && (
               <>
-                <MarkdownContent className={style.preview} content={props.content} />
+                <MarkdownContent className={style.preview} content={props.content} noOverflowCutFix />
               </>
             )}
             {!isRaw && (
@@ -640,7 +640,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
   // Load LoadMore's background
   useEffect(() => {
     const styleElement = document.createElement("style");
-    styleElement.innerHTML = `.${style.loadMore} { background-image: url(${loadMoreBackground}); }`;
+    styleElement.innerHTML = `.${style.loadMore}::before { mask-image: url(${loadMoreBackground}); -webkit-mask-image: url(${loadMoreBackground}); }`;
     document.head.appendChild(styleElement);
     return () => document.head.removeChild(styleElement);
   });

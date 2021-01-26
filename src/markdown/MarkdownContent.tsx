@@ -29,6 +29,7 @@ export interface MarkdownContentProps {
   noSanitize?: boolean;
   patcher?: MarkdownContentPatcher;
   dontUseContentFont?: boolean;
+  noOverflowCutFix?: boolean;
 }
 
 // Patch rendered-markdown's styles for semantic-ui
@@ -169,7 +170,8 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
       className={
         style.markdownContent +
         (props.className ? " " + props.className : "") +
-        (!props.dontUseContentFont ? " content-font" : "")
+        (!props.dontUseContentFont ? " content-font" : "") +
+        (props.noOverflowCutFix ? " " + style.noOverflowCutFix : "")
       }
       dangerouslySetInnerHTML={{ __html: html }}
       ref={setWrapperElement}

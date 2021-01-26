@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { observer } from "mobx-react";
 import { useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
@@ -27,13 +27,6 @@ import formatDateTime from "@/utils/formatDateTime";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
 
 export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion" | "graph_editor";
-
-export const getAppLogo = () =>
-  appState.serverPreference.misc.appLogo
-    ? appState.serverPreference.misc.appLogo === "default"
-    ? `${window.publicPath}logo.svg`
-    : appState.serverPreference.misc.appLogo
-    : null;
 
 let AppLayout: React.FC = props => {
   const navigation = useNavigationChecked();
@@ -180,9 +173,9 @@ let AppLayout: React.FC = props => {
   const logo = (
     <Menu.Item as={Link} href="/" className={style.logoItem}>
       <div className={style.content}>
-        {getAppLogo() && (
+        {appState.appLogoThemed && (
           <div className={style.logo}>
-            <img src={getAppLogo()} />
+            <img {...appState.appLogoThemed} />
           </div>
         )}
         <EmojiRenderer>

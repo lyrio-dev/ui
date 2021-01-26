@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Header, Segment, Message, Image, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
+import { Header, Segment, Message, Input, Button, Form, Icon, Ref } from "semantic-ui-react";
 import { route } from "navi";
 import { useCurrentRoute } from "react-navi";
 import { observer } from "mobx-react";
@@ -26,7 +26,6 @@ import {
 import { refreshSession } from "@/initApp";
 import PseudoLink from "@/components/PseudoLink";
 import { onEnterPress } from "@/utils/onEnterPress";
-import { getAppLogo } from "@/layouts/AppLayout";
 
 let RegisterPage: React.FC = () => {
   const _ = useLocalizer("register");
@@ -256,7 +255,7 @@ let RegisterPage: React.FC = () => {
     setEmailVerificationCode(stripInvalidCharactersInEmailVerificationCode(code));
   }
 
-  const logo = getAppLogo() && <img className={style.logo} src={getAppLogo()} />;
+  const logo = appState.appLogoThemed && <img className={style.logo} {...appState.appLogoThemed} />;
 
   return (
     <>

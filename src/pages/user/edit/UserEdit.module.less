@@ -48,7 +48,7 @@
   margin-left: auto;
   width: 240px;
   height: 240px;
-  border: 1px solid #e1e4e8;
+  border: 1px solid var(--theme-border);
   border-radius: 3px;
 }
 
@@ -73,7 +73,18 @@
   margin-top: 8px;
   font-size: 13px;
   white-space: pre-wrap;
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--theme-description-message-foreground);
+
+  &.selectOptionNotes {
+    margin-top: 10px;
+    font-size: 13.5px;
+    font-weight: normal;
+    display: none;
+
+    :global(.menu) & {
+      display: block;
+    }
+  }
 }
 
 .textarea {
@@ -117,7 +128,7 @@
   }
 
   &:not(.bottomAttached) {
-    border-bottom: 1px solid #ddd !important;
+    border-bottom: 1px solid var(--theme-border) !important;
   }
 
   &.bottomAttached {
@@ -145,6 +156,17 @@
   :global(.active.item) {
     font-weight: inherit !important;
   }
+}
+
+.scrollableCodeBoxSegment {
+  pre {
+    overflow-y: auto !important;
+    overflow-y: overlay !important;
+  }
+}
+
+.formatPreviewCodeBoxSegment {
+  height: 520px;
 }
 
 .privilegeRow {
@@ -195,10 +217,10 @@
     margin-right: 10px;
 
     :global(.icon) {
-      &:global(.terminal)         { color: rgba(0  , 0  , 0  , 0.4); }
-      &:global(.mobile.alternate) { color: rgba(0  , 0  , 0  , 0.4); }
-      &:global(.tablet.alternate) { color: rgba(0  , 0  , 0  , 0.4); }
-      &:global(.desktop)          { color: rgba(0  , 0  , 0  , 0.4); }
+      &:global(.terminal)         { color: var(--theme-os-icon-light); }
+      &:global(.mobile.alternate) { color: var(--theme-os-icon-light); }
+      &:global(.tablet.alternate) { color: var(--theme-os-icon-light); }
+      &:global(.desktop)          { color: var(--theme-os-icon-light); }
       &:global(.windows)          { color: rgba(0  , 173, 239     ); }
       &:global(.apple)            { color: rgba(125, 125, 125     ); }
       &:global(.ubuntu)           { color: rgba(221, 72 , 20      ); }
@@ -206,7 +228,7 @@
       &:global(.suse)             { color: rgba(115, 186, 37      ); }
       &:global(.fedora)           { color: rgba(60 , 110, 180     ); }
       &:global(.freebsd)          { color: rgba(176, 1  , 15      ); }
-      &:global(.linux)            { color: rgba(0  , 0  , 0  , 0.7); }
+      &:global(.linux)            { color: var(--theme-os-icon-heavy); }
     }
   }
 
@@ -327,8 +349,6 @@
 
       pre {
         max-height: 250px !important;
-        overflow-y: auto !important;
-        overflow-y: overlay !important;
       }
     }
 
@@ -338,7 +358,7 @@
       font-size: 1em !important;
 
       .item {
-        color: rgba(0, 0, 0, 0.4) !important;
+        color: var(--theme-description-message-foreground) !important;
         margin: 0 !important;
 
         &:not(:first-child) {

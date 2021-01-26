@@ -4,6 +4,7 @@ import { HelmetProvider, Helmet } from "react-helmet-async";
 
 import { appState } from "./appState";
 import { updateCodeFontCss, updateContentFontCss, updateUiFontCss } from "./misc/fonts";
+import { setGlobalTheme } from "./themes";
 
 import AppRouter from "./AppRouter";
 
@@ -13,6 +14,10 @@ const App: React.FC = () => {
     updateContentFontCss(appState.locale);
     updateUiFontCss(appState.locale);
   }, [appState.userPreference.font, appState.locale]);
+
+  useEffect(() => {
+    setGlobalTheme(appState.theme);
+  }, [appState.theme]);
 
   return (
     <>

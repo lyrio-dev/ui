@@ -81,8 +81,23 @@ module.exports = {
       content_notes: "選択した言語の問題文がない場合は、問題のデフォルト言語で表示します",
       hide_unavailable_message: '[TBT] Hide "this content is not available in your preferred language" message'
     },
-    font: {
-      header: "[TBT] Font",
+    appearance: {
+      header: "[TBT] Appearance",
+      theme: "[TBT] Theme",
+      themes: {
+        auto: {
+          name: "[TBT] Auto",
+          description: "[TBT] Use light (PURE) or dark (FAR) theme based on browser or system preference"
+        },
+        pure: {
+          name: "[TBT] PURE",
+          description: "[TBT] Light theme"
+        },
+        far: {
+          name: "[TBT] FAR",
+          description: "[TBT] Dark theme"
+        }
+      },
       content_font_face: "[TBT] Content Font",
       system_default_sans_serif: "[TBT] sans-serif (browser default)",
       system_default_serif: "[TBT] serif (browser default)",

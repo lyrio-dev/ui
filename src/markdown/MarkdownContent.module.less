@@ -4,8 +4,10 @@
   transform: translate3d(0, 0, 0);
 
   // Fix box-shadow get cut
-  padding: 2px;
-  margin: -2px;
+  &:not(.noOverflowCutFix) {
+    padding: 2px;
+    margin: -2px;
+  }
 
   p, blockquote, mjx-container[display="true"] {
     overflow: auto;
@@ -13,9 +15,9 @@
   }
 
   blockquote {
-    color: #777;
+    color: var(--theme-blockquote-foreground);
     padding: 0 0 0 1em;
-    border-left: 0.25em solid #dedede;
+    border-left: 0.25em solid var(--theme-blockquote-side);
     margin: 1em 0;
   }
 

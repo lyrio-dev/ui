@@ -116,6 +116,40 @@ const disableInlineChunk = () => config => {
   return config;
 };
 
+// fork-ts-checker-webpack-plugin take ALL my CPUs on my machine so my machine stucks every time
+const disableTsCheckerOnDevelopment = () => config => {
+  if (config.mode === "development")
+    config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== "ForkTsCheckerWebpackPlugin");
+  return config;
+};
+
+const addCssFileLoader = () => config => {
+  function findStlyeLoaders() {
+    const rules = config.module.rules;
+    for (const rule of rules) {
+      if (rule.oneOf) {
+        for (const one of rule.oneOf) {
+          if (one.test.toString() === /\.css$/.toString()) return [rule.oneOf, one.use];
+        }
+      }
+    }
+
+    throw new Error("Unable to find style loaders in Webpack configuration");
+  }
+
+  const [oneOf, styleLoaders] = findStlyeLoaders();
+
+  const newStyleLoaders = [...styleLoaders]; // Copy the array
+  newStyleLoaders.shift(); // Remove style-loader or MiniCssExtractPlugin.loader
+
+  oneOf.unshift({
+    test: /\.url.css/,
+    use: ["file-loader", "extract-loader", ...newStyleLoaders]
+  });
+
+  return config;
+};
+
 module.exports = override(
   disableEsLint(),
   addLessLoader(),
@@ -182,5 +216,7 @@ module.exports = override(
   useRelativePath(),
   fixChunkSplitting(),
   patchTerserOptions(),
-  disableInlineChunk()
+  disableInlineChunk(),
+  disableTsCheckerOnDevelopment(),
+  addCssFileLoader()
 );

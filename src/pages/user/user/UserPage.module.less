@@ -1,6 +1,6 @@
 .avatar {
   width: 100%;
-  border: 1px solid #e1e4e8;
+  border: 1px solid var(--theme-border);;
   border-radius: 3px;
 
   &::after {
@@ -28,7 +28,7 @@
   margin-top: 14px !important;
   margin-bottom: 14px !important;
   font-size: 1.538em;
-  color: #666;
+  color: var(--theme-secondary-title);
 }
 
 @media only screen and (min-width: 768px) {
@@ -88,7 +88,7 @@
   }
 
   > .socialIcon {
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--theme-foreground);
     opacity: 0.6 !important;
     font-size: 22px !important;
     margin-right: 12px !important;
@@ -140,11 +140,11 @@
         margin: 0 @subwayGraphMargin @subwayGraphMargin 0;
       }
     }
-    div[data-level="0"] > div { background-color: #ebedf0; }
-    div[data-level="1"] > div { background-color: #c6e48b; }
-    div[data-level="2"] > div { background-color: #7bc96f; }
-    div[data-level="3"] > div { background-color: #239a3b; }
-    div[data-level="4"] > div { background-color: #196127; }
+    div[data-level="0"] > div { background-color: var(--theme-subway-graph-level-0); }
+    div[data-level="1"] > div { background-color: var(--theme-subway-graph-level-1); }
+    div[data-level="2"] > div { background-color: var(--theme-subway-graph-level-2); }
+    div[data-level="3"] > div { background-color: var(--theme-subway-graph-level-3); }
+    div[data-level="4"] > div { background-color: var(--theme-subway-graph-level-4); }
 
     .graph {
       display: inline-flex;

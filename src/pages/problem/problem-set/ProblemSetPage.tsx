@@ -370,7 +370,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
         </Label>
       )}
       {props.searchQuery.nonpublic && (
-        <Label size="small" color="red">
+        <Label size="small" color="red" basic>
           <Icon name="eye slash" />
           {_(".non_public")}
           <Icon name="delete" onClick={() => onDelFilterNonpublic()} />
@@ -508,6 +508,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                       icon="eye slash"
                       size="small"
                       color="red"
+                      basic
                       content={_(".non_public")}
                       as="a"
                       // As long as a user can see the "nonpublic" label, it has the permission to filter the

@@ -7,7 +7,7 @@ import style from "./UserEdit.module.less";
 import api from "@/api";
 import { appState } from "@/appState";
 import toast from "@/utils/toast";
-import { useAsyncCallbackPending, useLocalizer } from "@/utils/hooks";
+import { useAsyncCallbackPending, useConfirmNavigation, useLocalizer } from "@/utils/hooks";
 import { RouteError } from "@/AppRouter";
 import { makeToBeLocalizedText } from "@/locales";
 
@@ -41,6 +41,8 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
     appState.enterNewPage(`${_(`.title`)} - ${props.meta.username}`, null, false);
   }, [appState.locale, props.meta]);
 
+  const [, setModified] = useConfirmNavigation();
+
   const [pending, onSubmit] = useAsyncCallbackPending(async () => {
     const { requestError, response } = await api.user.setUserPrivileges({
       userId: props.meta.id,
@@ -49,6 +51,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
     if (requestError) toast.error(requestError(_));
     else if (response.error) toast.error(_(`user_edit.errors.${response.error}`));
     else {
+      setModified(false);
       toast.success(_(".success"));
     }
   });
@@ -59,6 +62,7 @@ const PrevilegeView: React.FC<PrevilegeViewProps> = props => {
     if (has) newPrivileges.add(privilege);
     else newPrivileges.delete(privilege);
     setPrivileges(newPrivileges);
+    setModified(true);
   }
 
   const isAdmin = appState.currentUser.isAdmin;
