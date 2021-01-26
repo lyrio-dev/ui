@@ -5,7 +5,8 @@ module.exports = {
     contests: "比赛",
     submissions: "评测",
     members: "用户",
-    discussion: "讨论"
+    discussion: "讨论",
+    graph_editor: "图编辑器"
   },
   header: {
     user: {

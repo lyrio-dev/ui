@@ -19,7 +19,8 @@ export class RouteError implements ErrorPageProps {
       showRefresh?: true;
       showBack?: true;
     } = { showBack: true }
-  ) {}
+  ) {
+  }
 }
 
 export function defineRoute(getViewFunction: (request: NaviRequest) => Promise<React.ReactNode>) {
@@ -29,8 +30,8 @@ export function defineRoute(getViewFunction: (request: NaviRequest) => Promise<R
       return typeof result === "function"
         ? (result as Matcher<any, any>)
         : route({
-            view: result
-          });
+          view: result
+        });
     } catch (e) {
       if (e instanceof RouteError)
         return route({
@@ -123,6 +124,7 @@ const AppRouter: React.FC = () => {
           "/groups": getRoute(() => import("./pages/user"), "groups"),
           "/d": getRoute(() => import("./pages/discussion"), "d"),
           "/judge-machine": lazy(() => import("./pages/judge-machine")),
+          "/graph-editor": lazy(() => import("./pages/graph-editor")),
           ...legacyRoutes({
             "/problem": getRoute(() => import("./pages/problem"), "problem"),
             "/problems": getRoute(() => import("./pages/problem"), "problems"),
