@@ -125,6 +125,10 @@ class Graph<NodeDatum, EdgeDatum> {
     return [...this.edges];
   }
 
+  getEdgeCount() {
+    return this.edges.length;
+  }
+
   toAdjacencyMatrix() {
     let mat: number[][] = [];
     for (let i = 0; i < this.nodes.length; i++) {
@@ -159,10 +163,47 @@ class Graph<NodeDatum, EdgeDatum> {
         edges.push(new Edge<ED>(i, j, edge_mapper?.(mat[i][j])));
       }
     }
-    return new Graph<ND, ED>(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
+    return new Graph(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
   }
 
-
+  static fromRandom<ND, ED>(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => ND, edge_mapper?: (v: number) => ED): Graph<ND, ED> {
+    let edges: Edge<ED>[] = [];
+    let edge_set: Set<number>[] = [];
+    let randint = (limit: number) => Math.floor(Math.random() * limit);
+    let limit_edge_count = (ec: number, limit: number) => {
+      if (ec > limit) {
+        console.warn("Edge count is bigger than limit.");
+        return limit;
+      }
+      return ec;
+    };
+    let has_edge = (x: number, y: number) => {
+      if (edge_set[x]) return edge_set[x].has(y);
+      edge_set[x] = new Set<number>();
+      return false;
+    };
+    if (option & GraphOption.NoMultipleEdges) {
+      edge_count = limit_edge_count(edge_count,
+        ((option & GraphOption.NoSelfLoop) ? node_count * (node_count - 1) : node_count * (node_count + 1)) /
+        ((option & GraphOption.Directed) ? 1 : 2)
+      );
+    }
+    while (edge_count > 0) {
+      let x = randint(node_count), y = randint(node_count);
+      if ((option & GraphOption.NoSelfLoop) && x === y) continue;
+      if (!(option & GraphOption.Directed)) {
+        [x, y] = [Math.min(x, y), Math.max(x, y)];
+      }
+      if (option & GraphOption.NoMultipleEdges) {
+        if (has_edge(x, y)) continue;
+        edge_set[x].add(y);
+      }
+      let w = (option & GraphOption.Weighted) ? randint(max_weight) + 1 : 1;
+      edges.push(new Edge<ED>(x, y, edge_mapper?.(w)));
+      --edge_count;
+    }
+    return new Graph(node_count, node_data, edges, option, true);
+  }
 }
 
 export { Node, Edge, Graph, GraphOption, WeightedEdgeDatum, WeightedEdge };

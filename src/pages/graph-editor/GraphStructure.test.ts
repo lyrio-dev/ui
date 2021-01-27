@@ -46,3 +46,14 @@ test("from AdjMat", () => {
   ];
   expect(adjmat).toStrictEqual(Graph.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(adjmat, false, true, undefined, v => ({ weight: v }))?.toAdjacencyMatrix());
 });
+
+test("Random", () => {
+  let g = Graph.fromRandom(20, 150, GraphOption.NoMultipleEdges | GraphOption.NoSelfLoop);
+  expect(g.getNodeCount()).toEqual(20);
+  expect(g.getEdgeCount()).toEqual(150);
+  let adjmat = g.toAdjacencyMatrix();
+  console.table(adjmat);
+  let add = (x: number, y: number) => x + y;
+  let one_count = adjmat.map(line => line.reduce(add)).reduce(add);
+  expect(one_count).toEqual(300);
+})
