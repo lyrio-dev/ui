@@ -8,6 +8,7 @@ export enum CodeLanguage {
   Pascal = "pascal",
   Python = "python",
   Rust = "rust",
+  Swift = "swift",
   Go = "go",
   Haskell = "haskell",
   CSharp = "csharp",
@@ -17,9 +18,7 @@ export enum CodeLanguage {
 // For UI
 export enum CodeLanguageOptionType {
   Select = "Select"
-  // Input = "Input",
-  // Checkbox = "Checkbox",
-  // Radio = "Radio"
+  // Input = "Input"
 }
 
 export interface CodeLanguageOption {
@@ -37,6 +36,7 @@ const codeLanguageExtensions: Record<CodeLanguage, string[]> = {
   [CodeLanguage.Pascal]: [".pas"],
   [CodeLanguage.Python]: [".py"],
   [CodeLanguage.Rust]: [".rs"],
+  [CodeLanguage.Swift]: [".swift"],
   [CodeLanguage.Go]: [".go"],
   [CodeLanguage.Haskell]: [".hs"],
   [CodeLanguage.CSharp]: [".cs"],
@@ -143,6 +143,20 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
       type: CodeLanguageOptionType.Select,
       values: ["0", "1", "2", "3"],
       defaultValue: "3"
+    }
+  ],
+  [CodeLanguage.Swift]: [
+    {
+      name: "version",
+      type: CodeLanguageOptionType.Select,
+      values: ["4.2", "5"],
+      defaultValue: "5"
+    },
+    {
+      name: "optimize",
+      type: CodeLanguageOptionType.Select,
+      values: ["Onone", "O", "Ounchecked"],
+      defaultValue: "O"
     }
   ],
   [CodeLanguage.Go]: [

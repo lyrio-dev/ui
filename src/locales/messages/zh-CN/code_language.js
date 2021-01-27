@@ -138,6 +138,26 @@ module.exports = {
       }
     }
   },
+  swift: {
+    name: "Swift",
+    options: {
+      version: {
+        name: "版本",
+        values: {
+          4.2: "4.2",
+          5: "5"
+        }
+      },
+      optimize: {
+        name: "优化",
+        values: {
+          Onone: "关闭",
+          O: "开启",
+          Ounchecked: "开启（无安全检查）"
+        }
+      }
+    }
+  },
   rust: {
     name: "Rust",
     options: {
