@@ -149,26 +149,33 @@ class Graph<NodeDatum, EdgeDatum> {
     });
     return mat;
   }
+}
 
-  static fromAdjacencyMatrix<ND, ED>(mat: number[][], directed: boolean, weighted: boolean, node_data?: (idx: number) => ND, edge_mapper?: (v: number) => ED): Graph<ND, ED> | null {
+
+class GraphBuilder {
+
+  static fromAdjacencyMatrix<NodeDatum, EdgeDatum>(mat: number[][], directed: boolean, weighted: boolean, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
     let node_count = mat.length;
     for (let line of mat)
       if (line.length !== node_count)
-        return null;
-    let edges: Edge<ED>[] = [];
+        return GraphBuilder.Result.fail("Adjacency Matrix should be square.");
+    let edges: Edge<EdgeDatum>[] = [];
     for (let i = 0; i < node_count; i++) {
       for (let j = directed ? i : 0; j < node_count; j++) {
-        if (!directed && mat[i][j] !== mat[j][i]) return null;
+        if (!directed && mat[i][j] !== mat[j][i])
+          return GraphBuilder.Result.fail("The adjacency Matrix of undirected graph should be symmetric.");
         if (mat[i][j] === 0) continue;
-        edges.push(new Edge<ED>(i, j, edge_mapper?.(mat[i][j])));
+        edges.push(new Edge<EdgeDatum>(i, j, edge_mapper?.(mat[i][j])));
       }
     }
-    return new Graph(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
+    let graph = new Graph(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
+    return GraphBuilder.Result.ok(graph);
   }
 
-  static fromRandom<ND, ED>(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => ND, edge_mapper?: (v: number) => ED): Graph<ND, ED> {
-    let edges: Edge<ED>[] = [];
+  static fromRandom<NodeDatum, EdgeDatum>(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
+    let edges: Edge<EdgeDatum>[] = [];
     let edge_set: Set<number>[] = [];
+
     let randint = (limit: number) => Math.floor(Math.random() * limit);
     let limit_edge_count = (ec: number, limit: number) => {
       if (ec > limit) {
@@ -182,12 +189,14 @@ class Graph<NodeDatum, EdgeDatum> {
       edge_set[x] = new Set<number>();
       return false;
     };
+
     if (option & GraphOption.NoMultipleEdges) {
       edge_count = limit_edge_count(edge_count,
         ((option & GraphOption.NoSelfLoop) ? node_count * (node_count - 1) : node_count * (node_count + 1)) /
         ((option & GraphOption.Directed) ? 1 : 2)
       );
     }
+
     while (edge_count > 0) {
       let x = randint(node_count), y = randint(node_count);
       if ((option & GraphOption.NoSelfLoop) && x === y) continue;
@@ -199,11 +208,30 @@ class Graph<NodeDatum, EdgeDatum> {
         edge_set[x].add(y);
       }
       let w = (option & GraphOption.Weighted) ? randint(max_weight) + 1 : 1;
-      edges.push(new Edge<ED>(x, y, edge_mapper?.(w)));
+      edges.push(new Edge<EdgeDatum>(x, y, edge_mapper?.(w)));
       --edge_count;
     }
-    return new Graph(node_count, node_data, edges, option, true);
+    let graph =  new Graph(node_count, node_data, edges, option, true);
+    return GraphBuilder.Result.ok(graph);
   }
 }
 
-export { Node, Edge, Graph, GraphOption, WeightedEdgeDatum, WeightedEdge };
+namespace GraphBuilder {
+  export class Result<NodeDatum, EdgeDatum> {
+    private constructor(
+      public readonly graph?: Graph<NodeDatum, EdgeDatum>,
+      public readonly error?: string
+    ) {
+    }
+
+    public static ok<NodeDatum, EdgeDatum>(graph: Graph<NodeDatum, EdgeDatum>) {
+      return new Result(graph, undefined);
+    }
+
+    public static fail(error: string) {
+      return new Result<any, any>(undefined, error);
+    }
+  }
+}
+
+export { Node, Edge, Graph, GraphOption, WeightedEdgeDatum, WeightedEdge, GraphBuilder };

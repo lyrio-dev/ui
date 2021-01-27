@@ -1,4 +1,4 @@
-import { Edge, Graph, GraphOption, WeightedEdge, WeightedEdgeDatum } from "./GraphStructure";
+import { Edge, Graph, GraphOption, WeightedEdge, WeightedEdgeDatum, GraphBuilder } from "./GraphStructure";
 import * as GraphData from "./test.json";
 
 test("Graph node init", () => {
@@ -44,11 +44,11 @@ test("from AdjMat", () => {
     [0, 0, 32, 0, 18],
     [0, 10, 0, 18, 0]
   ];
-  expect(adjmat).toStrictEqual(Graph.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(adjmat, false, true, undefined, v => ({ weight: v }))?.toAdjacencyMatrix());
+  expect(adjmat).toStrictEqual(GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(adjmat, false, true, undefined, v => ({ weight: v }))?.toAdjacencyMatrix());
 });
 
 test("Random", () => {
-  let g = Graph.fromRandom(20, 150, GraphOption.NoMultipleEdges | GraphOption.NoSelfLoop);
+  let g = GraphBuilder.fromRandom(20, 150, GraphOption.NoMultipleEdges | GraphOption.NoSelfLoop);
   expect(g.getNodeCount()).toEqual(20);
   expect(g.getEdgeCount()).toEqual(150);
   let adjmat = g.toAdjacencyMatrix();
@@ -56,4 +56,4 @@ test("Random", () => {
   let add = (x: number, y: number) => x + y;
   let one_count = adjmat.map(line => line.reduce(add)).reduce(add);
   expect(one_count).toEqual(300);
-})
+});
