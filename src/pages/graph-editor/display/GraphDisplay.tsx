@@ -1,13 +1,14 @@
 import React from "react";
 import * as d3 from "d3";
 import * as GS from "../GraphStructure";
-import { Graph, GraphOption } from "../GraphStructure";
+import { Graph, GraphBuilder, GraphOption } from "../GraphStructure";
 import { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { Header, Segment } from "semantic-ui-react";
 
 interface GraphDisplayProp {
   width: number,
-  height: number
+  height: number,
+  graph: Graph<any, any>
 }
 
 function toD3NodeDatum(node: GS.Node<any>): SimulationNodeDatum {
@@ -35,7 +36,7 @@ class GraphDisplay extends React.Component<GraphDisplayProp> {
     if (this.canvas_context === null)
       return;
 
-    let g = Graph.fromRandom(20, 100, GraphOption.NoMultipleEdges);
+    let g = this.props.graph;
 
     const edges = g.getEdgeList();
     const nodes = g.getNodeList();
