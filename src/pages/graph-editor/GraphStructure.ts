@@ -158,18 +158,18 @@ class GraphBuilder {
     let node_count = mat.length;
     for (let line of mat)
       if (line.length !== node_count)
-        return GraphBuilder.Result.fail("Adjacency Matrix should be square.");
+        return GraphBuilder.fail("Adjacency Matrix should be square.");
     let edges: Edge<EdgeDatum>[] = [];
     for (let i = 0; i < node_count; i++) {
       for (let j = directed ? i : 0; j < node_count; j++) {
         if (!directed && mat[i][j] !== mat[j][i])
-          return GraphBuilder.Result.fail("The adjacency Matrix of undirected graph should be symmetric.");
+          return GraphBuilder.fail("The adjacency Matrix of undirected graph should be symmetric.");
         if (mat[i][j] === 0) continue;
         edges.push(new Edge<EdgeDatum>(i, j, edge_mapper?.(mat[i][j])));
       }
     }
     let graph = new Graph(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
-    return GraphBuilder.Result.ok(graph);
+    return GraphBuilder.ok(graph);
   }
 
   static fromRandom<NodeDatum, EdgeDatum>(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
@@ -211,26 +211,23 @@ class GraphBuilder {
       edges.push(new Edge<EdgeDatum>(x, y, edge_mapper?.(w)));
       --edge_count;
     }
-    let graph =  new Graph(node_count, node_data, edges, option, true);
-    return GraphBuilder.Result.ok(graph);
+    let graph = new Graph(node_count, node_data, edges, option, true);
+    return GraphBuilder.ok(graph);
+  }
+
+  static ok<NodeDatum, EdgeDatum>(graph: Graph<NodeDatum, EdgeDatum>): GraphBuilder.Result<NodeDatum, EdgeDatum> {
+    return { graph };
+  }
+
+  static fail(error: string): GraphBuilder.Result<any, any> {
+    return { error };
   }
 }
 
-namespace GraphBuilder {
-  export class Result<NodeDatum, EdgeDatum> {
-    private constructor(
-      public readonly graph?: Graph<NodeDatum, EdgeDatum>,
-      public readonly error?: string
-    ) {
-    }
-
-    public static ok<NodeDatum, EdgeDatum>(graph: Graph<NodeDatum, EdgeDatum>) {
-      return new Result(graph, undefined);
-    }
-
-    public static fail(error: string) {
-      return new Result<any, any>(undefined, error);
-    }
+declare namespace GraphBuilder {
+  export interface Result<NodeDatum, EdgeDatum> {
+    readonly graph?: Graph<NodeDatum, EdgeDatum>,
+    readonly error?: string
   }
 }
 

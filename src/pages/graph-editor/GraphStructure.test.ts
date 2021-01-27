@@ -44,11 +44,13 @@ test("from AdjMat", () => {
     [0, 0, 32, 0, 18],
     [0, 10, 0, 18, 0]
   ];
-  expect(adjmat).toStrictEqual(GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(adjmat, false, true, undefined, v => ({ weight: v }))?.toAdjacencyMatrix());
+  expect(adjmat).toStrictEqual(GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(adjmat, false, true, undefined, v => ({ weight: v })).graph?.toAdjacencyMatrix());
 });
 
 test("Random", () => {
-  let g = GraphBuilder.fromRandom(20, 150, GraphOption.NoMultipleEdges | GraphOption.NoSelfLoop);
+  let res = GraphBuilder.fromRandom(20, 150, GraphOption.NoMultipleEdges | GraphOption.NoSelfLoop);
+  if (res.error) throw new Error(res.error);
+  let g = res.graph;
   expect(g.getNodeCount()).toEqual(20);
   expect(g.getEdgeCount()).toEqual(150);
   let adjmat = g.toAdjacencyMatrix();
