@@ -67,7 +67,8 @@ module.exports = {
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "[TBT] Unknown error.",
       INVALID_EXTRA_SOURCE_FILES_DST: "[TBT] Extra source files {3}'s destination filename is invalid.",
       NO_SUCH_EXTRA_SOURCE_FILES_SRC: "[TBT] Extra source files {3} doesn't exist.",
-      CYCLICAL_SUBTASK_DEPENDENCY: "[TBT] Cyclical subtask dependency."
+      CYCLICAL_SUBTASK_DEPENDENCY: "[TBT] Cyclical subtask dependency.",
+      TOO_MANY_TESTCASES: "[TBT] Too many testcases, please contact the admin."
     }
   },
   edit_raw: {

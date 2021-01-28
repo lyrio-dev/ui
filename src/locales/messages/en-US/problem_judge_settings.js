@@ -63,7 +63,8 @@ module.exports = {
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "Unknown error.",
       INVALID_EXTRA_SOURCE_FILES_DST: "Extra source files {3}'s destination filename is invalid.",
       NO_SUCH_EXTRA_SOURCE_FILES_SRC: "Extra source files {3} doesn't exist.",
-      CYCLICAL_SUBTASK_DEPENDENCY: "Cyclical subtask dependency."
+      CYCLICAL_SUBTASK_DEPENDENCY: "Cyclical subtask dependency.",
+      TOO_MANY_TESTCASES: "Too many testcases, please contact the admin."
     }
   },
   edit_raw: {

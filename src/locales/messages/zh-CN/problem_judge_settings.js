@@ -61,7 +61,8 @@ module.exports = {
       INVALID_EXTRA_SOURCE_FILES_LANGUAGE: "未知错误。",
       INVALID_EXTRA_SOURCE_FILES_DST: "附加源文件 {3} 的目标文件名无效。",
       NO_SUCH_EXTRA_SOURCE_FILES_SRC: "附加源文件 {3} 不存在。",
-      CYCLICAL_SUBTASK_DEPENDENCY: "子任务依赖存在环。"
+      CYCLICAL_SUBTASK_DEPENDENCY: "子任务依赖存在环。",
+      TOO_MANY_TESTCASES: "测试点数量过多，请联系管理员。"
     }
   },
   edit_raw: {
