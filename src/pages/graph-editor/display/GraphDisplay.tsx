@@ -1,92 +1,149 @@
 import React from "react";
 import * as d3 from "d3";
-import * as GS from "../GraphStructure";
-import { Graph, GraphBuilder, GraphOption } from "../GraphStructure";
+import { Node, Edge, Graph } from "../GraphStructure";
 import { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { Header, Segment } from "semantic-ui-react";
 
-interface GraphDisplayProp {
+interface GraphDisplayProp<NodeDatum, EdgeDatum> {
   width: number,
   height: number,
-  graph: Graph<any, any>
+  graph: Graph<NodeDatum, EdgeDatum>,
+  generalRenderHint: GeneralRenderHint,
+  nodeRenderHint: NodeRenderHint<NodeDatum>,
+  edgeRenderHint: EdgeRenderHint<EdgeDatum>
 }
 
-function toD3NodeDatum(node: GS.Node<any>): SimulationNodeDatum {
-  return { index: node.id };
+interface GeneralRenderHint {
+  directed: boolean,
+  nodeRadius: number,
+  backgroundColor: string,
+  simulationForceManyBodyStrength: number,
 }
 
-function toD3EdgeDatum(edge: GS.Edge<any>): SimulationLinkDatum<any> {
-  return { source: edge.source, target: edge.target };
+interface NodeRenderHint<NodeDatum> {
+  borderThickness: (node: Node<NodeDatum>) => number,
+  borderColor: (node: Node<NodeDatum>) => string,
+  fillingColor: (node: Node<NodeDatum>) => string,
+  floatingData: (node: Node<NodeDatum>) => string,
+  popupData: (node: Node<NodeDatum>) => [string, string][]
 }
 
-interface DeterminedNode extends SimulationNodeDatum {
-  x: number;
-  y: number;
+interface EdgeRenderHint<EdgeDatum> {
+  thickness: (edge: Edge<EdgeDatum>) => number,
+  color: (edge: Edge<EdgeDatum>) => string,
+  floatingData: (edge: Edge<EdgeDatum>) => string,
 }
 
-let GraphDisplay: React.FC<GraphDisplayProp> = props => {
-  let { width, height, graph } = props;
+interface D3SimulationNode<NodeDatum> extends SimulationNodeDatum {
+  graphNode: Node<NodeDatum>
+}
+
+function toD3NodeDatum<NodeDatum>(node: Node<NodeDatum>): D3SimulationNode<NodeDatum> {
+  return { index: node.id, graphNode: node };
+}
+
+interface D3SimulationEdge<EdgeDatum> extends SimulationLinkDatum<any> {
+  graphEdge: Edge<EdgeDatum>
+}
+
+function toD3EdgeDatum<EdgeDatum>(edge: Edge<EdgeDatum>): D3SimulationEdge<EdgeDatum> {
+  return { source: edge.source, target: edge.target, graphEdge: edge };
+}
+
+let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
+  let { width, height, graph, generalRenderHint, nodeRenderHint, edgeRenderHint } = props;
 
   let onCanvasMount = (canvas: HTMLCanvasElement | null) => {
     let ctx = canvas?.getContext("2d");
     if (ctx == null)
       return;
 
-    const edges = graph.getEdgeList();
-    const nodes = graph.getNodeList();
-    const d3_links = [...edges].map(toD3EdgeDatum);
-    const d3_nodes = [...nodes].map(toD3NodeDatum);
+    const edges = graph.getEdgeList().map(toD3EdgeDatum);
+    const nodes = graph.getNodeList().map(toD3NodeDatum);
 
-    const simulation = d3.forceSimulation(d3_nodes)
-      .force("link", d3.forceLink(d3_links)) // default id implement may work
-      .force("charge", d3.forceManyBody().strength(() => -1000))
+    let {
+      nodeRadius,
+      backgroundColor,
+      simulationForceManyBodyStrength: manyBodyStrength
+    } = generalRenderHint;
+
+    const simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(edges)) // default id implement may work
+      .force("charge", d3.forceManyBody().strength(manyBodyStrength))
       .force("center", d3.forceCenter(width / 2, height / 2));
-    const color_scale = d3.scaleOrdinal(d3.schemeCategory10);
 
     let tick = () => {
       if (ctx == null)
         return;
 
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, width, height);
-
-      ctx.beginPath();
-      d3_links.forEach(l => {
-        let s = l.source as DeterminedNode, t = l.target as DeterminedNode;
-        ctx.moveTo(s.x, s.y);
-        ctx.lineTo(t.x, t.y);
-      });
-      ctx.strokeStyle = "#aaa";
-      ctx.lineWidth = 4;
-      ctx.stroke();
 
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.font = "15px Arial";
-      d3_nodes.forEach(n => {
+      ctx.font = "20px monospace";
+
+      edges.forEach(edge => {
+        let {
+          source: { x: sx, y: sy },
+          target: { x: tx, y: ty },
+          graphEdge
+        } = edge;
+        let { directed } = generalRenderHint;
+        let { color, thickness, floatingData } = edgeRenderHint;
+
         ctx.beginPath();
-        let d = n as DeterminedNode;
+        ctx.fillStyle = ctx.strokeStyle = color(graphEdge);
+        ctx.lineWidth = thickness(graphEdge);
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
 
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 1;
-        ctx.moveTo(d.x + 20, d.y);
-        ctx.arc(d.x, d.y, 20, 0, 2 * Math.PI);
+        if (directed) {
+          const dx = tx - sx, dy = ty - sy;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const sin = dy / distance, cos = dx / distance;
+          const a = 10; // TODO: Configurable arrow size
+          const px0 = tx - nodeRadius * cos, py0 = ty - nodeRadius * sin;
+          const px1 = px0 - a * cos + a * sin, px2 = px0 - a * cos - a * sin;
+          const py1 = py0 - a * sin - a * cos, py2 = py0 - a * sin + a * cos;
 
-        ctx.fillStyle = color_scale(String(d.index || 0));
+          ctx.beginPath();
+          ctx.moveTo(px0, py0);
+          ctx.lineTo(px1, py1);
+          ctx.lineTo(px2, py2);
+          ctx.fill();
+        }
+      });
+
+      nodes.forEach(node => {
+        let { borderThickness, borderColor, fillingColor, floatingData, popupData } = nodeRenderHint;
+        let { x, y, graphNode } = node;
+
+        ctx.beginPath();
+
+        ctx.strokeStyle = borderColor(graphNode);
+        ctx.lineWidth = borderThickness(graphNode);
+        ctx.moveTo(x + nodeRadius, y);
+        ctx.arc(x, y, nodeRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        ctx.fillStyle = fillingColor(graphNode);
         ctx.fill();
 
-        ctx.strokeStyle = "#fff";
+        // TODO: Configurable font style
+        ctx.fillStyle = "#000";
         ctx.lineWidth = 1;
-        ctx.strokeText(String(d.index || 0), d.x, d.y);
+        ctx.fillText(floatingData(graphNode), x, y);
 
-        ctx.stroke();
+        // TODO: Render popup data
       });
     };
 
     simulation.on("tick", tick);
 
     let drag = d3.drag<HTMLCanvasElement, SimulationNodeDatum | undefined>()
-      .subject(event => simulation.find(event.x, event.y, 30))
+      .subject(event => simulation.find(event.x, event.y))
       .on("start", event => {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
