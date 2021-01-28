@@ -161,7 +161,7 @@ class GraphBuilder {
         return GraphBuilder.fail("Adjacency Matrix should be square.");
     let edges: Edge<EdgeDatum>[] = [];
     for (let i = 0; i < node_count; i++) {
-      for (let j = directed ? i : 0; j < node_count; j++) {
+      for (let j = directed ? 0 : i; j < node_count; j++) {
         if (!directed && mat[i][j] !== mat[j][i])
           return GraphBuilder.fail("The adjacency Matrix of undirected graph should be symmetric.");
         if (mat[i][j] === 0) continue;

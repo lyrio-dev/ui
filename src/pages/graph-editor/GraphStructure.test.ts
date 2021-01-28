@@ -44,7 +44,26 @@ test("from AdjMat", () => {
     [0, 0, 32, 0, 18],
     [0, 10, 0, 18, 0]
   ];
-  expect(adjmat).toStrictEqual(GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(adjmat, false, true, undefined, v => ({ weight: v })).graph?.toAdjacencyMatrix());
+  expect(adjmat).toStrictEqual(
+    GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(
+      adjmat, false, true, undefined, v => ({ weight: v })
+    ).graph?.toAdjacencyMatrix()
+  );
+});
+
+test("from AdjMat directed", () => {
+  let adjmat = [
+    [1, 2, 3, 4, 0],
+    [0, 6, 0, 3, 0],
+    [9, 4, 2, 0, 5],
+    [2, 0, 6, 0, 4],
+    [0, 3, 0, 8, 9]
+  ];
+  expect(adjmat).toStrictEqual(
+    GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(
+      adjmat, true, true, undefined, v => ({ weight: v })
+    ).graph?.toAdjacencyMatrix()
+  );
 });
 
 test("Random", () => {
@@ -54,7 +73,6 @@ test("Random", () => {
   expect(g.getNodeCount()).toEqual(20);
   expect(g.getEdgeCount()).toEqual(150);
   let adjmat = g.toAdjacencyMatrix();
-  console.table(adjmat);
   let add = (x: number, y: number) => x + y;
   let one_count = adjmat.map(line => line.reduce(add)).reduce(add);
   expect(one_count).toEqual(300);
