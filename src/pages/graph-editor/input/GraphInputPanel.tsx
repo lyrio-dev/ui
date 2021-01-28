@@ -1,24 +1,24 @@
 import React from "react";
-import { Button, Form, Grid, Header, Menu, Message, Segment, TextArea } from "semantic-ui-react";
+import { Form, Header, Menu, Message, Segment} from "semantic-ui-react";
+import { Graph } from "@/pages/graph-editor/GraphStructure";
 
 interface GraphInputPanelProps {
-  inputMethods: [string, string][],
-  onInputChanged: (method: string, content: string) => string | undefined,
-  getGraphAs: (method: string) => string | undefined
+  inputMethods: [string, string, (graph: Graph<any, any>) => string | undefined][],
+  onInputChanged: (method: string, content: string) => void,
+  graph: Graph<any, any>,
+  error?: string
 }
 
 interface GraphInputPanelState {
   activeMethod: string,
   textAreaContent: string,
-  errorMessage?: string
 }
 
 export default class GraphInputPanel extends React.Component<GraphInputPanelProps, GraphInputPanelState> {
 
   state = {
     activeMethod: this.props.inputMethods[0][0],
-    textAreaContent: this.props.getGraphAs(this.props.inputMethods[0][0]),
-    errorMessage: undefined
+    textAreaContent: this.props.inputMethods[0][2](this.props.graph)
   };
 
   handleItemClick = (_, { name }) => this.setState({ activeMethod: name });
@@ -31,7 +31,6 @@ export default class GraphInputPanel extends React.Component<GraphInputPanelProp
   };
 
   render() {
-    console.log(this.state.textAreaContent);
     return (
       <>
         <Header as="h4" block attached="top" icon="edit" content="图的表示方法" />
@@ -53,12 +52,16 @@ export default class GraphInputPanel extends React.Component<GraphInputPanelProp
             }
           </Menu>
           <Segment attached="bottom">
-            <Form onSubmit={this.onFormSubmit}>
-              <Form.TextArea className={"monospace"} value={this.state.textAreaContent} onChange={this.onTextAreaChange} />
+            <Form onSubmit={this.onFormSubmit} error={this.props.error !== undefined}>
+              <Form.TextArea
+                style={{ "fontFamily": "monospace" }}
+                value={this.state.textAreaContent}
+                onChange={this.onTextAreaChange}
+              />
               {
-                this.state.errorMessage && (
+                this.props.error && (
                   <Message error>
-                    {this.state.errorMessage}
+                    {this.props.error}
                   </Message>
                 )
               }
