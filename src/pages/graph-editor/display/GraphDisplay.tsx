@@ -94,7 +94,7 @@ class GraphDisplay extends React.Component<GraphDisplayProp> {
     simulation.on("tick", tick);
 
     let drag = d3.drag<HTMLCanvasElement, SimulationNodeDatum | undefined>()
-      .subject(event => simulation.find(event.x, event.y))
+      .subject(event => simulation.find(event.x, event.y, 30))
       .on("start", event => {
         if (!event.active) simulation.alphaTarget(0.3).restart();
         event.subject.fx = event.subject.x;
