@@ -157,6 +157,8 @@ body[data-theme=pure] {
   --theme-footer-version: #c7c7c7;
   --theme-footer-icons: #999;
 
+  --theme-login-error-message: #9F3A38;
+
   --theme-secondary-title: #666;
 
   --theme-description-message-foreground: rgba(0, 0, 0, 0.4);

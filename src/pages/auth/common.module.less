@@ -1,4 +1,4 @@
-.wrapper {
+:global(#root) .wrapper {
   margin: 0 auto;
   max-width: 450px;
 
@@ -6,32 +6,24 @@
     position: relative;
 
     :global(.ui.label) {
-      position: absolute;
-      top: 5px;
       white-space: nowrap;
       text-align: left;
+      position: static;
+      margin-left: 0;
+      margin-top: 10px;
+      padding: 0;
+      border: none !important;
+      font-weight: normal;
+      background: none !important;
+      color: var(--theme-login-error-message) !important;
+      font-size: 12.5px;
 
-      &:global(.left.pointing) {
-        left: 444px;
+      &::before {
+        display: none;
       }
     }
 
-    @media only screen and (max-width: 1279px) {
-      :global(.ui.label) {
-        position: static;
-        margin-left: 0;
-        margin-top: 10px;
-        padding: 0;
-        border: none !important;
-        font-weight: normal;
-
-        &::before {
-          display: none;
-        }
-      }
-
-      margin-bottom: 10px;
-    }
+    margin-bottom: 10px;
   }
 }
 
