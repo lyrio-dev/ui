@@ -1,7 +1,7 @@
 import React from "react";
 import * as d3 from "d3";
 import { Node, Edge, Graph } from "../GraphStructure";
-import { SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
+import { Force, SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { Header, Segment } from "semantic-ui-react";
 
 interface GraphDisplayProp<NodeDatum, EdgeDatum> {
@@ -53,6 +53,12 @@ function toD3EdgeDatum<EdgeDatum>(edge: Edge<EdgeDatum>): D3SimulationEdge<EdgeD
 let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
   let { width, height, graph, generalRenderHint, nodeRenderHint, edgeRenderHint } = props;
 
+  const makeInRange = (x: number, a: number, b: number) => {
+    if (x < a) return a;
+    if (x > b) return b;
+    return x;
+  };
+
   let onCanvasMount = (canvas: HTMLCanvasElement | null) => {
     let ctx = canvas?.getContext("2d");
     if (ctx == null)
@@ -67,10 +73,21 @@ let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
       simulationForceManyBodyStrength: manyBodyStrength
     } = generalRenderHint;
 
+    const xInRange = (x: number) => makeInRange(x, nodeRadius, width - nodeRadius);
+    const yInRange = (y: number) => makeInRange(y, nodeRadius, height - nodeRadius);
+
+    const boxConstraint: Force<any, any> = () => {
+      nodes.forEach(node => {
+        node.x = xInRange(node.x);
+        node.y = yInRange(node.y);
+      });
+    };
+
     const simulation = d3.forceSimulation(nodes)
       .force("link", d3.forceLink(edges)) // default id implement may work
       .force("charge", d3.forceManyBody().strength(manyBodyStrength))
-      .force("center", d3.forceCenter(width / 2, height / 2));
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("box", boxConstraint);
 
     let tick = () => {
       if (ctx == null)
@@ -150,8 +167,8 @@ let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
         event.subject.fy = event.subject.y;
       })
       .on("drag", event => {
-        event.subject.fx = event.x;
-        event.subject.fy = event.y;
+        event.subject.fx = xInRange(event.x);
+        event.subject.fy = yInRange(event.y);
       })
       .on("end", event => {
         if (!event.active) simulation.alphaTarget(0);
