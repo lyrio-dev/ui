@@ -159,6 +159,26 @@ module.exports = {
       }
     }
   },
+  swift: {
+    name: "Swift",
+    options: {
+      version: {
+        name: "Version",
+        values: {
+          4.2: "4.2",
+          5: "5"
+        }
+      },
+      optimize: {
+        name: "Optimize",
+        values: {
+          Onone: "Disabled",
+          O: "Enabled",
+          Ounchecked: "Enabled (no safety checks)"
+        }
+      }
+    }
+  },
   go: {
     name: "Go",
     options: {

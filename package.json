@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "devDependencies": {
     "@fontsource/dm-mono": "^4.0.0",
     "@fontsource/fira-code": "^4.0.0",

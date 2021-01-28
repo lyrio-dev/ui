@@ -159,6 +159,26 @@ module.exports = {
       }
     }
   },
+  swift: {
+    name: "[TBT] Swift",
+    options: {
+      version: {
+        name: "[TBT] Version",
+        values: {
+          4.2: "[TBT] 4.2",
+          5: "[TBT] 5"
+        }
+      },
+      optimize: {
+        name: "[TBT] Optimize",
+        values: {
+          Onone: "[TBT] Disabled",
+          O: "[TBT] Enabled",
+          Ounchecked: "[TBT] Enabled (no safety checks)"
+        }
+      }
+    }
+  },
   go: {
     name: "[TBT] Go",
     options: {
