@@ -16,7 +16,7 @@ let GraphEditor: React.FC = props => {
 
   let onGraphInputPanelSync = (method: string, content: string) => {
     if (method === "adjmat") {
-      let adjmat = content.split("\n").map(line => line.split(/\s+/).map(parseInt));
+      let adjmat = content.split("\n").map(line => line.split(/\s+/).map(s => parseInt(s)));
       let { graph, error } = GraphBuilder.fromAdjacencyMatrix(
         adjmat, false, false, undefined, undefined
       );
