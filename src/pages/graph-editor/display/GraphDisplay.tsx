@@ -24,26 +24,18 @@ interface DeterminedNode extends SimulationNodeDatum {
   y: number;
 }
 
+let GraphDisplay: React.FC<GraphDisplayProp> = props => {
+  let { width, height, graph } = props;
 
-class GraphDisplay extends React.Component<GraphDisplayProp> {
-  private canvas: HTMLCanvasElement | null = null;
-  private canvas_context: CanvasRenderingContext2D | null = null;
-
-  componentDidMount() {
-    if (this.canvas === null)
-      return;
-    this.canvas_context = this.canvas.getContext("2d");
-    if (this.canvas_context === null)
+  let onCanvasMount = (canvas: HTMLCanvasElement | null) => {
+    let ctx = canvas?.getContext("2d");
+    if (ctx == null)
       return;
 
-    let g = this.props.graph;
-
-    const edges = g.getEdgeList();
-    const nodes = g.getNodeList();
+    const edges = graph.getEdgeList();
+    const nodes = graph.getNodeList();
     const d3_links = [...edges].map(toD3EdgeDatum);
     const d3_nodes = [...nodes].map(toD3NodeDatum);
-    const width = this.props.width;
-    const height = this.props.height;
 
     const simulation = d3.forceSimulation(d3_nodes)
       .force("link", d3.forceLink(d3_links)) // default id implement may work
@@ -52,8 +44,8 @@ class GraphDisplay extends React.Component<GraphDisplayProp> {
     const color_scale = d3.scaleOrdinal(d3.schemeCategory10);
 
     let tick = () => {
-      if (this.canvas_context === null) return;
-      let ctx = this.canvas_context;
+      if (ctx == null)
+        return;
 
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, width, height);
@@ -110,19 +102,17 @@ class GraphDisplay extends React.Component<GraphDisplayProp> {
         event.subject.fy = null;
       });
 
-    d3.select<HTMLCanvasElement, any>(this.canvas).call(drag);
-  }
+    d3.select<HTMLCanvasElement, any>(canvas).call(drag);
+  };
 
-  render() {
-    return (
-      <>
-        <Header as="h4" block attached="top" icon="search" content="editor" />
-        <Segment attached="bottom">
-          <canvas width={this.props.width} height={this.props.height} ref={c => this.canvas = c} />
-        </Segment>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <Header as="h4" block attached="top" icon="search" content="editor" />
+      <Segment attached="bottom">
+        <canvas width={width} height={height} ref={onCanvasMount} />
+      </Segment>
+    </>
+  );
+};
 
 export default GraphDisplay;
