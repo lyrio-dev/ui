@@ -16,6 +16,7 @@ interface GraphDisplayProp<NodeDatum, EdgeDatum> {
 interface GeneralRenderHint {
   directed: boolean,
   nodeRadius: number,
+  textColor: string,
   backgroundColor: string,
   simulationForceManyBodyStrength: number,
 }
@@ -68,6 +69,7 @@ let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
     const nodes = graph.getNodeList().map(toD3NodeDatum);
 
     let {
+      textColor,
       nodeRadius,
       backgroundColor,
       simulationForceManyBodyStrength: manyBodyStrength
@@ -148,8 +150,7 @@ let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
         ctx.fillStyle = fillingColor(graphNode);
         ctx.fill();
 
-        // TODO: Configurable font style
-        ctx.fillStyle = "#000";
+        ctx.fillStyle = textColor;
         ctx.lineWidth = 1;
         ctx.fillText(floatingData(graphNode), x, y);
 

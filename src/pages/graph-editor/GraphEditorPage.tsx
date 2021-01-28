@@ -32,6 +32,8 @@ let GraphEditor: React.FC = props => {
     appState.enterNewPage(_(".title"), "graph_editor");
   }, [appState.locale]);
 
+  let cssProp = (key: string) => getComputedStyle(document.body).getPropertyValue(key);
+
   return (
     <>
       <GraphInputPanel
@@ -45,19 +47,20 @@ let GraphEditor: React.FC = props => {
         generalRenderHint={{
           directed: true,
           nodeRadius: 15,
-          backgroundColor: "#fff",
+          textColor: cssProp("--theme-foreground"),
+          backgroundColor: cssProp("--theme-background"),
           simulationForceManyBodyStrength: -500
         }}
         nodeRenderHint={{
           borderThickness: () => 3,
-          borderColor: () => "#000",
-          fillingColor: () => "#fff",
+          borderColor: () => cssProp("--theme-border"),
+          fillingColor: () => cssProp("--theme-button-background"),
           floatingData: node => String(node.id),
           popupData: () => []
         }}
         edgeRenderHint={{
           thickness: () => 3,
-          color: () => "#aaa",
+          color: () => cssProp("--theme-hyperlink"),
           floatingData: () => ""
         }}
       />
