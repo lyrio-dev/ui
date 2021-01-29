@@ -10,18 +10,6 @@ class Node<NodeDatum = undefined> {
   }
 }
 
-enum BiregularSide {
-  Left = 0,
-  Right = 1
-}
-
-class BiregularNodeDatum {
-  constructor(
-    public readonly side: BiregularSide
-  ) {
-  }
-}
-
 class Edge<EdgeDatum = undefined> {
   public constructor(
     public readonly source: number,
@@ -56,30 +44,6 @@ enum GraphOption {
   NoSelfLoop = 1 << 2,
   NoMultipleEdges = 1 << 3,
   Simple = NoSelfLoop | NoMultipleEdges,
-}
-
-class AdjacencyEdges<EdgeDatum = any> {
-  public cnt: number[];
-  public dst: number[][];
-  public val?: EdgeDatum[][];
-
-  public constructor(nodeCount: number) {
-    this.cnt = [];
-    this.dst = [];
-    this.val = [];
-    for (let i = 0; i < nodeCount; ++i) {
-      this.cnt[i] = 0;
-      this.dst[i] = [];
-      this.val = [];
-    }
-  }
-
-  addEdge(e: Edge<EdgeDatum>) {
-    this.cnt[e.source] = this.dst[e.source].push(e.target);
-    if (e.datum)
-      this.val[e.source].push(e.datum);
-  }
-
 }
 
 class Graph<NodeDatum, EdgeDatum> {
@@ -185,34 +149,86 @@ class Graph<NodeDatum, EdgeDatum> {
     });
     return mat;
   }
+}
 
-  static fromAdjacencyMatrix<ND, ED>(mat: number[][], directed: boolean, weighted: boolean, node_data?: (idx: number) => ND, edge_mapper?: (v: number) => ED): Graph<ND, ED> | null {
+
+class GraphBuilder {
+
+  static fromAdjacencyMatrix<NodeDatum, EdgeDatum>(mat: number[][], directed: boolean, weighted: boolean, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
     let node_count = mat.length;
     for (let line of mat)
       if (line.length !== node_count)
-        return null;
-    let edges: Edge<ED>[] = [];
+        return GraphBuilder.fail("Adjacency Matrix should be square.");
+    let edges: Edge<EdgeDatum>[] = [];
     for (let i = 0; i < node_count; i++) {
-      for (let j = !directed ? i : 0; j < node_count; j++) {
-        if (!directed && mat[i][j] !== mat[j][i]) return null;
+      for (let j = directed ? 0 : i; j < node_count; j++) {
+        if (!directed && mat[i][j] !== mat[j][i])
+          return GraphBuilder.fail("The adjacency Matrix of undirected graph should be symmetric.");
         if (mat[i][j] === 0) continue;
-        edges.push(new Edge<ED>(i, j, edge_mapper?.(mat[i][j])));
+        edges.push(new Edge<EdgeDatum>(i, j, edge_mapper?.(mat[i][j])));
       }
     }
-    return new Graph<ND, ED>(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
+    let graph = new Graph(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
+    return GraphBuilder.ok(graph);
   }
 
+  static fromRandom<NodeDatum, EdgeDatum>(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
+    let edges: Edge<EdgeDatum>[] = [];
+    let edge_set: Set<number>[] = [];
 
+    let randint = (limit: number) => Math.floor(Math.random() * limit);
+    let limit_edge_count = (ec: number, limit: number) => {
+      if (ec > limit) {
+        console.warn("Edge count is bigger than limit.");
+        return limit;
+      }
+      return ec;
+    };
+    let has_edge = (x: number, y: number) => {
+      if (edge_set[x]) return edge_set[x].has(y);
+      edge_set[x] = new Set<number>();
+      return false;
+    };
+
+    if (option & GraphOption.NoMultipleEdges) {
+      edge_count = limit_edge_count(edge_count,
+        ((option & GraphOption.NoSelfLoop) ? node_count * (node_count - 1) : node_count * (node_count + 1)) /
+        ((option & GraphOption.Directed) ? 1 : 2)
+      );
+    }
+
+    while (edge_count > 0) {
+      let x = randint(node_count), y = randint(node_count);
+      if ((option & GraphOption.NoSelfLoop) && x === y) continue;
+      if (!(option & GraphOption.Directed)) {
+        [x, y] = [Math.min(x, y), Math.max(x, y)];
+      }
+      if (option & GraphOption.NoMultipleEdges) {
+        if (has_edge(x, y)) continue;
+        edge_set[x].add(y);
+      }
+      let w = (option & GraphOption.Weighted) ? randint(max_weight) + 1 : 1;
+      edges.push(new Edge<EdgeDatum>(x, y, edge_mapper?.(w)));
+      --edge_count;
+    }
+    let graph = new Graph(node_count, node_data, edges, option, true);
+    return GraphBuilder.ok(graph);
+  }
+
+  static ok<NodeDatum, EdgeDatum>(graph: Graph<NodeDatum, EdgeDatum>): GraphBuilder.Result<NodeDatum, EdgeDatum> {
+    return { graph };
+  }
+
+  static fail(error: string): GraphBuilder.Result<any, any> {
+    return { error };
+  }
 }
 
-export {
-  Node,
-  Edge,
-  Graph,
-  GraphOption,
-  BiregularSide,
-  BiregularNodeDatum,
-  WeightedEdgeDatum,
-  WeightedEdge,
-  AdjacencyEdges
-};
+declare namespace GraphBuilder {
+  export interface Result<NodeDatum, EdgeDatum> {
+    readonly graph?: Graph<NodeDatum, EdgeDatum>,
+    readonly error?: string
+  }
+}
+
+export { Node, Edge, Graph, GraphOption, WeightedEdgeDatum, WeightedEdge, GraphBuilder };
