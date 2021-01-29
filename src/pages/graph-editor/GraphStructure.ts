@@ -1,40 +1,17 @@
-class Node<NodeDatum = undefined> {
+class Node {
   public constructor(
     public readonly id: number,
-    public datum?: NodeDatum
+    public datum?: any
   ) {
-  }
-
-  public datumType() {
-    return typeof this.datum;
   }
 }
 
-class Edge<EdgeDatum = undefined> {
+class Edge {
   public constructor(
     public readonly source: number,
     public readonly target: number,
-    public datum?: EdgeDatum
+    public datum?: any
   ) {
-  }
-
-  public datumType() {
-    return typeof this.datum;
-  }
-}
-
-class WeightedEdgeDatum {
-  public constructor(public readonly weight: number) {
-  }
-}
-
-class WeightedEdge<EdgeDatum = undefined> extends Edge<EdgeDatum | WeightedEdgeDatum> {
-  public constructor(source: number, target: number, weight: number, datum?: EdgeDatum) {
-    super(source, target, { weight, ...datum });
-  }
-
-  public weight() {
-    return (this.datum as WeightedEdgeDatum).weight;
   }
 }
 
@@ -46,15 +23,13 @@ enum GraphOption {
   Simple = NoSelfLoop | NoMultipleEdges,
 }
 
-class Graph<NodeDatum, EdgeDatum> {
-  private nodes: Node<NodeDatum>[];
-  private edges: Edge<EdgeDatum>[];
+class Graph {
+  private nodes: Node[];
+  private edges: Edge[];
 
-  public constructor(node_count: number, node_data?: (idx: number) => NodeDatum, edges?: Edge<EdgeDatum>[], public readonly option: GraphOption = 0, unchecked: boolean = false) {
-    this.nodes = Array.from({ length: node_count }, (_, i) => new Node<NodeDatum>(i, node_data ? node_data(i) : undefined));
-
-    this.edges = edges ? [...edges] : [];
-
+  public constructor(node_count: number, edges: Edge[], node_data?: (idx: number) => Node, public readonly option: GraphOption = 0, unchecked: boolean = false) {
+    this.nodes = Array.from({ length: node_count }, (_, i) => new Node(i, node_data?.(i)));
+    this.edges = [...edges];
     if (unchecked) return;
 
     function isBetween(x: number, a: number, b: number) {
@@ -70,7 +45,7 @@ class Graph<NodeDatum, EdgeDatum> {
 
     // Undirected
     if ((option & GraphOption.Directed) === 0) {
-      this.edges.map(e => new Edge<EdgeDatum>(
+      this.edges.map(e => new Edge(
         Math.min(e.source, e.target),
         Math.max(e.source, e.target),
         e.datum
@@ -151,14 +126,14 @@ class Graph<NodeDatum, EdgeDatum> {
   }
 
   toAdjacencyList() {
-    let adjList: Edge<EdgeDatum>[][] = [];
+    let adjList: Edge[][] = [];
     for (let i = 0; i < this.getNodeCount(); i++) {
       adjList[i] = [];
     }
-    this.edges.forEach(({ source, target, datum }) => {
-      adjList[source].push(new Edge<EdgeDatum>(source, target, datum));
+    this.edges.forEach(({ source: s, target: t, datum: d }) => {
+      adjList[s].push(new Edge(s, t, d));
       if (!(this.option & GraphOption.Directed))
-        adjList[target].push(new Edge<EdgeDatum>(target, source, datum));
+        adjList[t].push(new Edge(t, s, d));
     });
     return adjList;
   }
@@ -167,26 +142,26 @@ class Graph<NodeDatum, EdgeDatum> {
 
 class GraphBuilder {
 
-  static fromAdjacencyMatrix<NodeDatum, EdgeDatum>(mat: number[][], directed: boolean, weighted: boolean, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
+  static fromAdjacencyMatrix(mat: number[][], directed: boolean, weighted: boolean, node_data?: (idx: number) => any, edge_mapper?: (v: number) => any): GraphBuilder.Result {
     let node_count = mat.length;
     for (let line of mat)
       if (line.length !== node_count)
         return GraphBuilder.fail("Adjacency Matrix should be square.");
-    let edges: Edge<EdgeDatum>[] = [];
+    let edges: Edge[] = [];
     for (let i = 0; i < node_count; i++) {
       for (let j = directed ? 0 : i; j < node_count; j++) {
         if (!directed && mat[i][j] !== mat[j][i])
           return GraphBuilder.fail("The adjacency Matrix of undirected graph should be symmetric.");
         if (mat[i][j] === 0) continue;
-        edges.push(new Edge<EdgeDatum>(i, j, edge_mapper?.(mat[i][j])));
+        edges.push(new Edge(i, j, edge_mapper?.(mat[i][j])));
       }
     }
-    let graph = new Graph(node_count, node_data, edges, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
+    let graph = new Graph(node_count, edges, node_data, GraphOption.NoMultipleEdges | (directed ? GraphOption.Directed : 0) | (weighted ? GraphOption.Weighted : 0), true);
     return GraphBuilder.ok(graph);
   }
 
-  static fromRandom<NodeDatum, EdgeDatum>(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => NodeDatum, edge_mapper?: (v: number) => EdgeDatum): GraphBuilder.Result<NodeDatum, EdgeDatum> {
-    let edges: Edge<EdgeDatum>[] = [];
+  static fromRandom(node_count: number, edge_count: number, option: GraphOption, max_weight: number = 0, node_data?: (idx: number) => any, edge_mapper?: (v: number) => any): GraphBuilder.Result {
+    let edges: Edge[] = [];
     let edge_set: Set<number>[] = [];
 
     let randint = (limit: number) => Math.floor(Math.random() * limit);
@@ -221,27 +196,27 @@ class GraphBuilder {
         edge_set[x].add(y);
       }
       let w = (option & GraphOption.Weighted) ? randint(max_weight) + 1 : 1;
-      edges.push(new Edge<EdgeDatum>(x, y, edge_mapper?.(w)));
+      edges.push(new Edge(x, y, edge_mapper?.(w)));
       --edge_count;
     }
-    let graph = new Graph(node_count, node_data, edges, option, true);
+    let graph = new Graph(node_count, edges, node_data, option, true);
     return GraphBuilder.ok(graph);
   }
 
-  static ok<NodeDatum, EdgeDatum>(graph: Graph<NodeDatum, EdgeDatum>): GraphBuilder.Result<NodeDatum, EdgeDatum> {
+  static ok(graph: Graph): GraphBuilder.Result {
     return { graph };
   }
 
-  static fail(error: string): GraphBuilder.Result<any, any> {
+  static fail(error: string): GraphBuilder.Result {
     return { error };
   }
 }
 
 declare namespace GraphBuilder {
-  export interface Result<NodeDatum, EdgeDatum> {
-    readonly graph?: Graph<NodeDatum, EdgeDatum>,
+  export interface Result {
+    readonly graph?: Graph,
     readonly error?: string
   }
 }
 
-export { Node, Edge, Graph, GraphOption, WeightedEdgeDatum, WeightedEdge, GraphBuilder };
+export { Node, Edge, Graph, GraphOption, GraphBuilder };

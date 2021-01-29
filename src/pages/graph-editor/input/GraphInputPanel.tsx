@@ -1,11 +1,11 @@
 import React from "react";
-import { Form, Header, Menu, Message, Segment} from "semantic-ui-react";
+import { Form, Header, Menu, Message, Segment } from "semantic-ui-react";
 import { Graph } from "@/pages/graph-editor/GraphStructure";
 
 interface GraphInputPanelProps {
-  inputMethods: [string, string, (graph: Graph<any, any>) => string | undefined][],
+  inputMethods: [string, string, (graph: Graph) => string | undefined][],
   onInputChanged: (method: string, content: string) => void,
-  graph: Graph<any, any>,
+  graph: Graph,
   error?: string
 }
 

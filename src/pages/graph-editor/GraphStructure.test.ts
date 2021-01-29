@@ -1,8 +1,8 @@
-import { Edge, Graph, GraphOption, WeightedEdge, WeightedEdgeDatum, GraphBuilder } from "./GraphStructure";
+import { Edge, Graph, GraphOption, GraphBuilder } from "./GraphStructure";
 import * as GraphData from "./test.json";
 
 test("Graph node init", () => {
-  let g = new Graph(GraphData.nc, undefined, GraphData.edges.map<Edge>(e => new Edge(e.source, e.target)));
+  let g = new Graph(GraphData.nc, GraphData.edges.map<Edge>(e => new Edge(e.source, e.target)));
   g.getNodeList().forEach((n, i) => expect(n.id).toEqual(i));
 });
 
@@ -17,14 +17,14 @@ test("AdjMat", () => {
     [0, 0, 1, 0, 1],
     [0, 1, 0, 1, 0]
   ];
-  let g = new Graph(5, undefined, edges);
+  let g = new Graph(5, edges);
   expect(g.toAdjacencyMatrix()).toStrictEqual(expected);
 });
 
 test("AdjMat weighted", () => {
   let edges = [
     [0, 1, 10], [1, 2, 12], [2, 3, 32], [3, 4, 18], [0, 2, 92], [1, 4, 10]
-  ].map(e => new WeightedEdge(e[0], e[1], e[2]));
+  ].map(e => new Edge(e[0], e[1], { weight: e[2] }));
   let expected = [
     [0, 10, 92, 0, 0],
     [10, 0, 12, 0, 10],
@@ -32,7 +32,7 @@ test("AdjMat weighted", () => {
     [0, 0, 32, 0, 18],
     [0, 10, 0, 18, 0]
   ];
-  let g = new Graph(5, undefined, edges, GraphOption.Weighted | GraphOption.NoMultipleEdges);
+  let g = new Graph(5, edges, undefined, GraphOption.Weighted | GraphOption.NoMultipleEdges);
   expect(g.toAdjacencyMatrix()).toStrictEqual(expected);
 });
 
@@ -45,7 +45,7 @@ test("from AdjMat", () => {
     [0, 10, 0, 18, 0]
   ];
   expect(adjmat).toStrictEqual(
-    GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(
+    GraphBuilder.fromAdjacencyMatrix(
       adjmat, false, true, undefined, v => ({ weight: v })
     ).graph?.toAdjacencyMatrix()
   );
@@ -60,7 +60,7 @@ test("from AdjMat directed", () => {
     [0, 3, 0, 8, 9]
   ];
   expect(adjmat).toStrictEqual(
-    GraphBuilder.fromAdjacencyMatrix<undefined, WeightedEdgeDatum>(
+    GraphBuilder.fromAdjacencyMatrix(
       adjmat, true, true, undefined, v => ({ weight: v })
     ).graph?.toAdjacencyMatrix()
   );
@@ -90,6 +90,6 @@ test("to Adj list", () => {
     [E(3, 2), E(3, 4)],
     [E(4, 3), E(4, 1)]
   ];
-  let g = new Graph(5, undefined, edges);
+  let g = new Graph(5, edges);
   expect(g.toAdjacencyList()).toStrictEqual(expected);
 });
