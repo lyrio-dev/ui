@@ -1,24 +1,16 @@
 import { GraphAlgorithm, Step } from "../GraphAlgorithm";
-import { Graph, WeightedEdgeDatum } from "../GraphStructure";
+import { Graph, GraphBuilder } from "../GraphStructure";
 
-class DFSNodeDatum {
-  constructor(
-    public readonly dist: number,
-    public readonly prev: number
-  ) {
-  }
-}
+export type DFSStep = Step;
 
-export type DFSStep = Step<DFSNodeDatum, WeightedEdgeDatum>;
-
-class DFS extends GraphAlgorithm<DFSNodeDatum, WeightedEdgeDatum, undefined> {
+export class DFS extends GraphAlgorithm {
   constructor() {
     super("DFS", "Depth First Search");
   }
 
   * dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<DFSStep> {
     // Yield step
-    let graph = Graph.fromAdjacencyMatrix<DFSNodeDatum, WeightedEdgeDatum>(
+    let { graph, error } = GraphBuilder.fromAdjacencyMatrix(
       mat,
       true, true,
       i => ({
@@ -27,8 +19,8 @@ class DFS extends GraphAlgorithm<DFSNodeDatum, WeightedEdgeDatum, undefined> {
       }),
       v => ({ weight: v })
     );
+    if (error) throw new Error(error);
     if (graph) yield new Step(graph);
-    else throw new Error();
 
     // Normal dfs
     for (let i = 0; i < nc; i++) {
@@ -42,7 +34,7 @@ class DFS extends GraphAlgorithm<DFSNodeDatum, WeightedEdgeDatum, undefined> {
     }
   }
 
-  run(graph: Graph<any, any>, start_point: number) {
+  run(graph: Graph, start_point: number) {
     let adjmat = graph.toAdjacencyMatrix();
     let dist: number[] = [], prev: number[] = [], nc = graph.getNodeCount();
     for (let i = 0; i < nc; i++) {
@@ -53,5 +45,3 @@ class DFS extends GraphAlgorithm<DFSNodeDatum, WeightedEdgeDatum, undefined> {
     return this.dfs(nc, adjmat, start_point, dist, prev);
   }
 }
-
-export { DFSNodeDatum, DFS };
