@@ -3,8 +3,8 @@ import { Graph, WeightedEdgeDatum } from "../GraphStructure";
 
 class DFSNodeDatum {
   constructor(
-    public readonly dist: number,
-    public readonly prev: number
+    public readonly sequence: number,
+    public readonly visited: boolean
   ) {
   }
 }
@@ -16,41 +16,34 @@ class DFS extends GraphAlgorithm<DFSNodeDatum, WeightedEdgeDatum, undefined> {
     super("DFS", "Depth First Search");
   }
 
-  * dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<DFSStep> {
-    // Yield step
-    let graph = Graph.fromAdjacencyMatrix<DFSNodeDatum, WeightedEdgeDatum>(
+  * dfs(dfn: number, nc: number, mat: number[][], this_node: number, sequence: number[], visited: boolean[]): Generator<DFSStep> {
+    visited[this_node] = true;
+    sequence[this_node] = dfn;
+    
+    // yield step
+    let graph = Graph.fromAdjacencyMatrix<DFSNodeDatum, any>(
       mat,
       true, true,
-      i => ({
-        dist: dist[i],
-        prev: prev[i]
-      }),
-      v => ({ weight: v })
+      i => ({ sequence: sequence[i], visited: visited[i] }),
     );
     if (graph) yield new Step(graph);
     else throw new Error();
 
-    // Normal dfs
+    // dfs
     for (let i = 0; i < nc; i++) {
-      if (i === this_node) continue;
-      let new_dist = dist[this_node] + (mat[this_node][i] === 0 ? +Infinity : mat[this_node][i]);
-      if (new_dist < dist[i]) {
-        dist[i] = new_dist;
-        prev[i] = this_node;
-        yield* this.dfs(nc, mat, i, dist, prev);
+      if (visited[i] == false && mat[this_node][i] != 0) {
+        yield* this.dfs(dfn + 1, nc, mat, i, sequence, visited);
       }
     }
   }
 
   run(graph: Graph<any, any>, start_point: number) {
     let adjmat = graph.toAdjacencyMatrix();
-    let dist: number[] = [], prev: number[] = [], nc = graph.getNodeCount();
+    let sequence: number[] = [], visited: boolean[] = [], nc = graph.getNodeCount();
     for (let i = 0; i < nc; i++) {
-      dist[i] = +Infinity;
-      prev[i] = i;
+      visited[i] = false;
     }
-    dist[start_point] = 0;
-    return this.dfs(nc, adjmat, start_point, dist, prev);
+    return this.dfs(0, nc, adjmat, start_point, sequence, visited);
   }
 }
 
