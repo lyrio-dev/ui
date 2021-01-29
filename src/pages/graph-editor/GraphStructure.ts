@@ -149,6 +149,19 @@ class Graph<NodeDatum, EdgeDatum> {
     });
     return mat;
   }
+
+  toAdjacencyList() {
+    let adjList: Edge<EdgeDatum>[][] = [];
+    for (let i = 0; i < this.getNodeCount(); i++) {
+      adjList[i] = [];
+    }
+    this.edges.forEach(({ source, target, datum }) => {
+      adjList[source].push(new Edge<EdgeDatum>(source, target, datum));
+      if (!(this.option & GraphOption.Directed))
+        adjList[target].push(new Edge<EdgeDatum>(target, source, datum));
+    });
+    return adjList;
+  }
 }
 
 

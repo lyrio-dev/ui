@@ -77,3 +77,19 @@ test("Random", () => {
   let one_count = adjmat.map(line => line.reduce(add)).reduce(add);
   expect(one_count).toEqual(300);
 });
+
+test("to Adj list", () => {
+  let edges = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [0, 2], [1, 4]
+  ].map<Edge>(e => new Edge(e[0], e[1]));
+  let E = (s: number, t: number) => new Edge(s, t);
+  let expected = [
+    [E(0, 1), E(0, 2)],
+    [E(1, 0), E(1, 2), E(1, 4)],
+    [E(2, 1), E(2, 3), E(2, 0)],
+    [E(3, 2), E(3, 4)],
+    [E(4, 3), E(4, 1)]
+  ];
+  let g = new Graph(5, undefined, edges);
+  expect(g.toAdjacencyList()).toStrictEqual(expected);
+});
