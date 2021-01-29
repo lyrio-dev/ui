@@ -35,7 +35,6 @@
     "@types/object-path": "^0.11.0",
     "@types/prismjs": "^1.16.2",
     "@types/react": "^17.0.0",
-    "@types/react-chartjs-2": "^2.5.7",
     "@types/react-dom": "^17.0.0",
     "@types/socket.io-client": "^1.4.35",
     "@types/streamsaver": "^2.0.0",
