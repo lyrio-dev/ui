@@ -90,18 +90,23 @@ function getFallbackFontList(locale: Locale) {
 }
 
 function generateFontFamily(preferredFont: string, locale: Locale, fallbackFont?: string) {
+  const systemSans = "sans-serif";
+  const systemSerif = "serif";
+  const systemMono = "monospace";
+  const systemFonts = [systemSans, systemSerif, systemMono];
+
   if (!fallbackFont) {
     const normalizedFontName = preferredFont.toLowerCase();
-    if (normalizedFontName.indexOf("sans") !== -1) fallbackFont = "sans-serif";
+    if (normalizedFontName.indexOf("sans") !== -1) fallbackFont = systemSans;
     else if (normalizedFontName.indexOf("serif") !== -1 || normalizedFontName.indexOf(" slab") !== -1)
-      fallbackFont = "serif";
-    else fallbackFont = "sans-serif";
+      fallbackFont = systemSerif;
+    else fallbackFont = systemSans;
   }
 
   const fontList = [...getFallbackFontList(locale), fallbackFont];
-  if (preferredFont && !["sans-serif", "serif", "monospace"].includes(preferredFont)) fontList.unshift(preferredFont);
+  if (preferredFont && !systemFonts.includes(preferredFont)) fontList.unshift(preferredFont);
 
-  return fontList.map(font => JSON.stringify(font)).join(", ");
+  return fontList.map(font => (systemFonts.includes(font) ? font : JSON.stringify(font))).join(", ");
 }
 
 function updateFontCss(id: string, css: string) {
