@@ -1,39 +1,58 @@
-import { Edge, Graph, GraphOption, GraphBuilder } from "./GraphStructure";
-import * as GraphData from "./test.json";
-
-test("Graph node init", () => {
-  let g = new Graph(GraphData.nc, GraphData.edges.map<Edge>(e => new Edge(e.source, e.target)));
-  g.getNodeList().forEach((n, i) => expect(n.id).toEqual(i));
-});
+import {
+  Node,
+  Edge,
+  Graph,
+  NodeEdgeList,
+  AdjacencyList,
+  AdjacencyMatrix,
+  BipartiteGraph,
+  hasSelfLoop, hasMultipleEdges, fromRandom, EdgeList
+} from "./GraphStructure";
 
 test("AdjMat", () => {
   let edges = [
     [0, 1], [1, 2], [2, 3], [3, 4], [0, 2], [1, 4]
-  ].map<Edge>(e => new Edge(e[0], e[1]));
-  let expected = [
+  ].map<Edge>(([source, target]) => ({ source, target }));
+  let expected1 = [
     [0, 1, 1, 0, 0],
     [1, 0, 1, 0, 1],
     [1, 1, 0, 1, 0],
     [0, 0, 1, 0, 1],
     [0, 1, 0, 1, 0]
   ];
-  let g = new Graph(5, edges);
-  expect(g.toAdjacencyMatrix()).toStrictEqual(expected);
+  let expected2 = [
+    [0, 1, 1, 0, 0],
+    [0, 0, 1, 0, 1],
+    [0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0]
+  ];
+  let g = new EdgeList(5, edges);
+  expect(AdjacencyMatrix.from(g, false).mat).toStrictEqual(expected1);
+  expect(AdjacencyMatrix.from(g, true).mat).toStrictEqual(expected2);
 });
 
 test("AdjMat weighted", () => {
   let edges = [
     [0, 1, 10], [1, 2, 12], [2, 3, 32], [3, 4, 18], [0, 2, 92], [1, 4, 10]
-  ].map(e => new Edge(e[0], e[1], { weight: e[2] }));
-  let expected = [
+  ].map(([s, t, d]) => ({ source: s, target: t, datum: d }));
+  let expected1 = [
     [0, 10, 92, 0, 0],
     [10, 0, 12, 0, 10],
     [92, 12, 0, 32, 0],
     [0, 0, 32, 0, 18],
     [0, 10, 0, 18, 0]
   ];
-  let g = new Graph(5, edges, undefined, GraphOption.Weighted | GraphOption.NoMultipleEdges);
-  expect(g.toAdjacencyMatrix()).toStrictEqual(expected);
+  let expected2 = [
+    [0, 10, 92, 0, 0],
+    [0, 0, 12, 0, 10],
+    [0, 0, 0, 32, 0],
+    [0, 0, 0, 0, 18],
+    [0, 0, 0, 0, 0]
+  ];
+  let g = new EdgeList(5, edges);
+  expect(AdjacencyMatrix.from(g, false).mat).toStrictEqual(expected1);
+  expect(AdjacencyMatrix.from(g, true).mat).toStrictEqual(expected2);
 });
 
 test("from AdjMat", () => {
@@ -44,52 +63,66 @@ test("from AdjMat", () => {
     [0, 0, 32, 0, 18],
     [0, 10, 0, 18, 0]
   ];
-  expect(adjmat).toStrictEqual(
-    GraphBuilder.fromAdjacencyMatrix(
-      adjmat, false, true, undefined, v => ({ weight: v })
-    ).graph?.toAdjacencyMatrix()
-  );
+  let expect1 = [
+    [0, 1, 10], [0, 2, 92], [1, 2, 12], [1, 4, 10], [2, 3, 32], [3, 4, 18]
+  ];
+  let expect2 = [
+    [0, 1, 10], [0, 2, 92], [1, 0, 10], [1, 2, 12], [1, 4, 10], [2, 0, 92],
+    [2, 1, 12], [2, 3, 32], [3, 2, 32], [3, 4, 18], [4, 1, 10], [4, 3, 18]
+  ];
+  let g1 = new AdjacencyMatrix(adjmat, false);
+  let g2 = new AdjacencyMatrix(adjmat, true);
+  expect(g1.edges().map(({ source: s, target: t, datum: d }) => [s, t, d])).toStrictEqual(expect1);
+  expect(g2.edges().map(({ source: s, target: t, datum: d }) => [s, t, d])).toStrictEqual(expect2);
 });
 
-test("from AdjMat directed", () => {
-  let adjmat = [
-    [1, 2, 3, 4, 0],
-    [0, 6, 0, 3, 0],
-    [9, 4, 2, 0, 5],
-    [2, 0, 6, 0, 4],
-    [0, 3, 0, 8, 9]
+test("hasSelfLoop", () => {
+  let data: [[number, number][], boolean][] = [
+    [[[0, 0], [1, 2], [3, 4], [0, 1], [0, 4], [2, 3]], true],
+    [[[0, 1], [1, 2], [3, 4], [0, 1], [0, 4], [2, 3]], false],
+    [[[0, 3], [1, 2], [3, 4], [0, 1], [0, 4], [2, 3]], false],
+    [[[0, 3], [1, 1], [3, 4], [0, 1], [0, 4], [2, 3]], true],
+    [[[0, 4], [1, 2], [3, 4], [0, 1], [4, 0], [2, 3]], false]
   ];
-  expect(adjmat).toStrictEqual(
-    GraphBuilder.fromAdjacencyMatrix(
-      adjmat, true, true, undefined, v => ({ weight: v })
-    ).graph?.toAdjacencyMatrix()
-  );
+  for (let datum of data) {
+    let g = new EdgeList(5, datum[0].map(([s, t]) => ({ source: s, target: t })));
+    expect(hasSelfLoop(g)).toEqual(datum[1]);
+  }
+});
+
+test("hasMultipleEdges", () => {
+  let data: [[number, number][], boolean][] = [
+    [[[0, 0], [1, 2], [3, 4], [0, 1], [0, 4], [2, 3]], false],
+    [[[0, 1], [1, 2], [3, 4], [0, 1], [0, 4], [2, 3]], true],
+    [[[0, 3], [1, 2], [3, 4], [0, 1], [0, 4], [2, 3]], false],
+    [[[0, 3], [1, 1], [3, 4], [1, 1], [0, 4], [2, 3]], true],
+    [[[0, 4], [1, 2], [3, 4], [0, 1], [4, 0], [2, 3]], false]
+  ];
+  for (let datum of data) {
+    let g = new EdgeList(5, datum[0].map(([s, t]) => ({ source: s, target: t })));
+    expect(hasMultipleEdges(g)).toEqual(datum[1]);
+  }
 });
 
 test("Random", () => {
-  let res = GraphBuilder.fromRandom(20, 150, GraphOption.NoMultipleEdges | GraphOption.NoSelfLoop);
-  if (res.error) throw new Error(res.error);
-  let g = res.graph;
-  expect(g.getNodeCount()).toEqual(20);
-  expect(g.getEdgeCount()).toEqual(150);
-  let adjmat = g.toAdjacencyMatrix();
-  let add = (x: number, y: number) => x + y;
-  let one_count = adjmat.map(line => line.reduce(add)).reduce(add);
-  expect(one_count).toEqual(300);
+  let g = fromRandom(10, 30, true, false, true);
+  expect(!hasMultipleEdges(g));
+  expect(g.nodes().length).toBe(10);
+  expect(g.edges().length).toBe(30);
+  console.table(AdjacencyMatrix.from(g, true).mat);
 });
 
 test("to Adj list", () => {
   let edges = [
     [0, 1], [1, 2], [2, 3], [3, 4], [0, 2], [1, 4]
-  ].map<Edge>(e => new Edge(e[0], e[1]));
-  let E = (s: number, t: number) => new Edge(s, t);
+  ].map<Edge>(e => ({ source: e[0], target: e[1] }));
   let expected = [
-    [E(0, 1), E(0, 2)],
-    [E(1, 0), E(1, 2), E(1, 4)],
-    [E(2, 1), E(2, 3), E(2, 0)],
-    [E(3, 2), E(3, 4)],
-    [E(4, 3), E(4, 1)]
+    [1, 2], [0, 2, 4], [1, 3, 0], [2, 4], [3, 1]
   ];
-  let g = new Graph(5, edges);
-  expect(g.toAdjacencyList()).toStrictEqual(expected);
+  expect(AdjacencyList
+    .from(new EdgeList(5, edges), false)
+    .adjlist.map(
+      line => line.map(
+        ([t, _]) => t
+      ))).toStrictEqual(expected);
 });
