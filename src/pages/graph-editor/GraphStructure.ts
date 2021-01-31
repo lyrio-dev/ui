@@ -24,6 +24,8 @@ export function hasMultipleEdges(g: Graph) {
   return g.edges().some(({ source: s, target: t }) => edgeSet[s].size === edgeSet[s].add(t).size);
 }
 
+const emptyObject = () => ({});
+
 /**
  * Generate random graph
  * @param random The random number generator for EDGES. By default it will generate positive integers smaller than 100.
@@ -33,11 +35,12 @@ export function hasMultipleEdges(g: Graph) {
 export function fromRandom(
   node_count: number, edge_count: number,
   directed: boolean, allow_multiple_edge: boolean, weighted: boolean,
-  node_mapper?: (id: number) => any, random?: () => number, edge_mapper?: (s: number, t: number, v: number) => any): Graph {
+  node_mapper: (id: number) => Object = emptyObject, random?: () => number,
+  edge_mapper: (s: number, t: number, v: number) => Object = emptyObject): Graph {
   let randint: (limit: number) => number = limit => Math.floor(Math.random() * limit);
   if (!random) random = randint.bind(this, 100);
-  if (!edge_mapper && weighted) edge_mapper = (s, t, v) => v;
-  let nodes = Array.from<any, Node>({ length: node_count }, (_, i) => ({ id: i, datum: node_mapper?.(i) }));
+  if (weighted) edge_mapper = (s, t, v) => ({ weight: v });
+  let nodes = Array.from<any, Node>({ length: node_count }, (_, i) => ({ id: i, datum: node_mapper(i) }));
   let edgeCache = allow_multiple_edge || Array.from({ length: node_count }, () => new Set<number>());
   let edges = [];
   while (edge_count > 0) {
@@ -47,7 +50,7 @@ export function fromRandom(
       t = Math.max(s, t);
     }
     if (!allow_multiple_edge && edgeCache[s].has(t)) continue;
-    let v = random(), edge_datum = edge_mapper?.(s, t, v);
+    let v = random(), edge_datum = edge_mapper(s, t, v);
     edges.push({ source: s, target: t, datum: edge_datum });
     edgeCache[s].add(t);
     --edge_count;
@@ -73,9 +76,9 @@ export class NodeEdgeList implements Graph {
 }
 
 export class EdgeList extends NodeEdgeList implements Graph {
-  constructor(public nodeCount: number, edges: Edge[], node_data?: (index: number) => any) {
+  constructor(public nodeCount: number, edges: Edge[], node_data: (index: number) => Object = emptyObject) {
     super(
-      Array.from({ length: nodeCount }, (_, id) => ({ id, datum: node_data?.(id) })),
+      Array.from({ length: nodeCount }, (_, id) => ({ id, datum: node_data(id) })),
       edges
     );
   }
@@ -86,7 +89,7 @@ export class AdjacencyMatrix implements Graph {
   private readonly _nodes: Node[];
   private _edges: Edge[];
 
-  constructor(public mat: any[][], public directed: boolean, node_generator?: (index: number) => any) {
+  constructor(public mat: any[][], public directed: boolean, node_generator: (index: number) => Object = emptyObject) {
     this.node_count = mat.length;
     if (mat.some(line => line.length !== this.node_count)) {
       throw new Error();
@@ -96,7 +99,7 @@ export class AdjacencyMatrix implements Graph {
         (edge, j) => edge !== mat[j][i]))) {
       throw new Error();
     }
-    this._nodes = Array.from({ length: this.node_count }, (_, id) => ({ id, datum: node_generator?.(id) }));
+    this._nodes = Array.from({ length: this.node_count }, (_, id) => ({ id, datum: node_generator(id) }));
   }
 
   edges(): Edge[] {
@@ -145,11 +148,11 @@ export class AdjacencyList implements Graph {
   private readonly _nodes;
   private readonly adjacencyList: Edge[][];
 
-  constructor(public adjlist: [number, any][][], node_generator?: (index: number) => Node) {
+  constructor(public adjlist: [number, any][][], node_generator: (index: number) => Object = emptyObject) {
     this.adjacencyList = adjlist.map(
       (line, source) => line.map<Edge>(
         ([target, datum]) => ({ source, target, datum })));
-    this._nodes = Array.from({ length: adjlist.length }, (_, i) => node_generator?.(i));
+    this._nodes = Array.from({ length: adjlist.length }, (_, id) => ({ id, datum: node_generator(id) }));
   }
 
   edges(): Edge[] {
@@ -179,19 +182,29 @@ export class AdjacencyList implements Graph {
   }
 }
 
+/**
+ * Node: BipartiteGraph can guarantee that the "side" property of node's datum is "left" or "right".
+ */
 export class BipartiteGraph implements Graph {
   public leftSide: Node[];
   public rightSide: Node[];
 
   constructor(
     left_side_count: number, right_side_count: number, private _edges: Edge[],
-    left_side_generator?: (index: number) => any, right_side_generator?: (index: number) => any) {
+    left_side_generator: (index: number) => Object = emptyObject,
+    right_side_generator: (index: number) => Object = emptyObject) {
     if (this._edges.some(({ source, target }) =>
       (source < left_side_count && target < left_side_count) || (source >= left_side_count && target >= left_side_count))) {
       throw new Error();
     }
-    this.leftSide = Array.from({ length: left_side_count }, (_, i) => left_side_generator(i));
-    this.rightSide = Array.from({ length: right_side_count }, (_, i) => right_side_generator(i));
+    this.leftSide = Array.from({ length: left_side_count }, (_, i) => ({
+      id: i,
+      datum: Object.assign(left_side_generator(i), { side: "left" })
+    }));
+    this.rightSide = Array.from({ length: right_side_count }, (_, i) => ({
+      id: i + left_side_count,
+      datum: Object.assign(right_side_generator(i), { side: "right" })
+    }));
   }
 
   edges(): Edge[] {
@@ -209,9 +222,7 @@ export class BipartiteGraph implements Graph {
       else prev[1].push(node);
       return prev;
     }, [[], []]);
-    return new BipartiteGraph(
-      left.length, right.length, edges,
-      i => left[i].datum, i => right[i].datum
-    );
+    return new BipartiteGraph(left.length, right.length, edges,
+      i => left[i].datum, i => right[i].datum);
   }
 }
