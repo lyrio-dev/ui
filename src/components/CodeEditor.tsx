@@ -12,13 +12,11 @@ import { appState } from "@/appState";
 import { generateCodeFontEditorOptions } from "@/misc/fonts";
 import { themeList } from "@/themes";
 
-const isIE = navigator.userAgent.indexOf("Trident") !== -1;
-
 function loadAceHighlights() {
   Monaco.languages.register({ id: "haskell" });
   registerRulesForLanguage("haskell", new (require("monaco-ace-tokenizer/es/ace/definitions/haskell").default)());
 }
-if (!isIE) loadAceHighlights();
+loadAceHighlights();
 
 Monaco.editor.defineTheme("tomorrow", require("@/assets/monaco-tomorrow.json"));
 Monaco.editor.defineTheme("tomorrow-night", require("@/assets/monaco-tomorrow-night.json"));
@@ -63,37 +61,21 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
 
   return (
     <div
-      ref={isIE ? undefined : initializeResizeSensor}
+      ref={initializeResizeSensor}
       className={props.className ? `${style.editorContainer} ${props.className}` : style.editorContainer}
     >
-      {
-        // Monaco editor doesn't support IE
-        isIE ? (
-          props.editorDidMount ? (
-            <>Editor not supported on IE</>
-          ) : (
-            // Fallback to <textarea>
-            <textarea
-              className={`monospace ${style.fallbackTextArea}`}
-              value={props.value}
-              onChange={e => props.onChange(e.target.value)}
-            />
-          )
-        ) : (
-          <ReactMonacoEditor
-            theme={themeList[appState.theme].editor}
-            language={props.language}
-            value={props.value}
-            options={{
-              lineNumbersMinChars: 4,
-              ...generateCodeFontEditorOptions(appState.locale),
-              ...props.options
-            }}
-            editorDidMount={editorDidMount}
-            onChange={props.onChange}
-          />
-        )
-      }
+      <ReactMonacoEditor
+        theme={themeList[appState.theme].editor}
+        language={props.language}
+        value={props.value}
+        options={{
+          lineNumbersMinChars: 4,
+          ...generateCodeFontEditorOptions(appState.locale),
+          ...props.options
+        }}
+        editorDidMount={editorDidMount}
+        onChange={props.onChange}
+      />
     </div>
   );
 };

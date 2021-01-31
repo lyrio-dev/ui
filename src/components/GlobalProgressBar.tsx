@@ -16,7 +16,6 @@ const GlobalProgressBar: React.FC<GlobalProgressBarProps> = ({ isAnimating }) =>
     <div
       style={{
         opacity: isFinished ? 0 : 1,
-        position: "relative",
         pointerEvents: "none",
         transition: `opacity ${animationDuration}ms linear`
       }}

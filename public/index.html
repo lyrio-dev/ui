@@ -44,7 +44,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 
     var addLinkTag = (function () {
       function normalizePath(path) {
-        while (path.slice(-1) === "/") path = path.slice(0, -1);
+        while (path.endsWith("/")) path = path.slice(0, -1);
         return path + "/";
       }
 
@@ -361,9 +361,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       // Check for cross-origin API endpoint.
       var apiEndpoint = window.apiEndpoint;
       function isCrossOrigin(url) {
-        // IE doesn't support parsing urls with `window.URL`. We just check if the url is absolute.
-        // Please do NOT use a absolute url if your API server is on the same server
-        return /^(https?:\/\/|\/\/)/i.test(url);
+        return new URL(url, location).origin !== location.origin;
       }
       if (isCrossOrigin(apiEndpoint)) {
         // Load xdomain library from API host.
@@ -394,7 +392,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
             <% throw new Error(`Couldn't handle this body tag: ${JSON.stringify(tag)}`); %>
           <% } %>
         <% } %>
-      };
+      }
     })();
   </script>
 </body>
