@@ -99,7 +99,6 @@ module.exports = {
           description: "Dark theme"
         }
       },
-      header: "Font",
       content_font_face: "Content Font",
       system_default_sans_serif: "sans-serif (browser default)",
       system_default_serif: "serif (browser default)",
