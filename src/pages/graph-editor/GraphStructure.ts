@@ -47,7 +47,7 @@ export function fromRandom(
       t = Math.max(s, t);
     }
     if (!allow_multiple_edge && edgeCache[s].has(t)) continue;
-    let v = random(), edge_datum = edge_mapper(s, t, v);
+    let v = random(), edge_datum = edge_mapper?.(s, t, v);
     edges.push({ source: s, target: t, datum: edge_datum });
     edgeCache[s].add(t);
     --edge_count;

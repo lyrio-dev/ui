@@ -1,5 +1,5 @@
 import { DFS } from "./DFS";
-import { GraphBuilder } from "../GraphStructure";
+import { AdjacencyMatrix } from "../GraphStructure";
 
 test("dfs", () => {
   let mat = [
@@ -9,16 +9,12 @@ test("dfs", () => {
     [3, 0, 7, 0, 8],
     [0, 5, 0, 0, 0]
   ];
-  let { graph, error } = GraphBuilder.fromAdjacencyMatrix(mat, true, true, undefined, v => ({ weight: v }));
-  if (error) {
-    throw new Error(error);
-  }
-
+  let graph = new AdjacencyMatrix(mat, true);
   let dfs = new DFS();
   let steps = Array
     .from(dfs.run(graph, 0))
-    .map(s => s.graph.getNodeList())
-    .map(nl => nl.map(n => n.datum?.dist));
+    .map(s => s.graph.nodes())
+    .map(nl => nl.map(n => n.datum.dist));
   let inf = Infinity;
   let expected = [
     [0, inf, inf, inf, inf],

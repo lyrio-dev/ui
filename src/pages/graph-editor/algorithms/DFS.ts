@@ -1,28 +1,13 @@
 import { GraphAlgorithm, Step } from "../GraphAlgorithm";
-import { Graph, GraphBuilder } from "../GraphStructure";
-
-export type DFSStep = Step;
+import { AdjacencyMatrix, Graph } from "../GraphStructure";
 
 export class DFS extends GraphAlgorithm {
   constructor() {
     super("DFS", "Depth First Search");
   }
 
-  * dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<DFSStep> {
-    // Yield step
-    let { graph, error } = GraphBuilder.fromAdjacencyMatrix(
-      mat,
-      true, true,
-      i => ({
-        dist: dist[i],
-        prev: prev[i]
-      }),
-      v => ({ weight: v })
-    );
-    if (error) throw new Error(error);
-    if (graph) yield new Step(graph);
-
-    // Normal dfs
+  * dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<Step> {
+    yield { graph: new AdjacencyMatrix(mat, true, i => ({ dist: dist[i], prev: prev[i] })) };
     for (let i = 0; i < nc; i++) {
       if (i === this_node) continue;
       let new_dist = dist[this_node] + (mat[this_node][i] === 0 ? +Infinity : mat[this_node][i]);
@@ -35,8 +20,8 @@ export class DFS extends GraphAlgorithm {
   }
 
   run(graph: Graph, start_point: number) {
-    let adjmat = graph.toAdjacencyMatrix();
-    let dist: number[] = [], prev: number[] = [], nc = graph.getNodeCount();
+    let adjmat = AdjacencyMatrix.from(graph, true).mat;
+    let dist: number[] = [], prev: number[] = [], nc = adjmat.length;
     for (let i = 0; i < nc; i++) {
       dist[i] = +Infinity;
       prev[i] = i;

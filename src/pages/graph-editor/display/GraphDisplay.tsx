@@ -65,8 +65,8 @@ let GraphDisplay: React.FC<GraphDisplayProp> = props => {
     if (ctx == null)
       return;
 
-    const edges = graph.getEdgeList().map(toD3EdgeDatum);
-    const nodes = graph.getNodeList().map(toD3NodeDatum);
+    const edges = graph.edges().map(toD3EdgeDatum);
+    const nodes = graph.nodes().map(toD3NodeDatum);
 
     let {
       textColor,

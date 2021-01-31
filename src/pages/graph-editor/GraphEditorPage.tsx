@@ -4,26 +4,24 @@ import { useLocalizer } from "@/utils/hooks";
 import { appState } from "@/appState";
 import GraphDisplay from "./display/GraphDisplay";
 import GraphInputPanel from "./input/GraphInputPanel";
-import { GraphBuilder, GraphOption } from "@/pages/graph-editor/GraphStructure";
+import { AdjacencyMatrix, fromRandom } from "@/pages/graph-editor/GraphStructure";
 
 let GraphEditor: React.FC = props => {
-  let res = GraphBuilder.fromRandom(10, 15, GraphOption.Simple | GraphOption.Directed);
-  if (res.error) throw new Error("Cannot generate graph");
+  let g = fromRandom(10, 15, true, false, false);
 
-  const [graph, setGraph] = useState(res.graph);
+  const [graph, setGraph] = useState(g);
   const [error, setError] = useState<string>();
   const _ = useLocalizer("graph_editor");
 
   let onGraphInputPanelSync = (method: string, content: string) => {
     if (method === "adjmat") {
       let adjmat = content.split("\n").map(line => line.split(/\s+/).map(s => parseInt(s)));
-      let { graph, error } = GraphBuilder.fromAdjacencyMatrix(
-        adjmat, true, false, undefined, undefined
-      );
-      if (error) setError(error);
-      else {
+      try {
+        let graph = new AdjacencyMatrix(adjmat, true);
         setGraph(graph);
         setError(undefined);
+      } catch (e) {
+        setError(e.message);
       }
     }
   };
@@ -37,7 +35,7 @@ let GraphEditor: React.FC = props => {
   return (
     <>
       <GraphInputPanel
-        inputMethods={[["adjmat", "邻接矩阵", graph => graph.toAdjacencyMatrix().map(l => l.join(" ")).join("\n")]]}
+        inputMethods={[["adjmat", "邻接矩阵", graph => AdjacencyMatrix.from(graph, true).mat.map(l => l.join(" ")).join("\n")]]}
         onInputChanged={onGraphInputPanelSync}
         graph={graph}
         error={error}
