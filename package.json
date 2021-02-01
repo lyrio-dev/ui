@@ -1,6 +1,6 @@
 {
   "name": "syzoj-ng-app",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "devDependencies": {
     "@fontsource/dm-mono": "^4.0.0",
     "@fontsource/fira-code": "^4.0.0",
@@ -39,7 +39,6 @@
     "@types/object-path": "^0.11.0",
     "@types/prismjs": "^1.16.2",
     "@types/react": "^17.0.0",
-    "@types/react-chartjs-2": "^2.5.7",
     "@types/react-dom": "^17.0.0",
     "@types/socket.io-client": "^1.4.35",
     "@types/streamsaver": "^2.0.0",
@@ -142,6 +141,7 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "format": "prettier --write \"*.js\" \"scripts/**/*.js\" \"src/**/*.ts\" \"src/**/*.js\" \"src/**/*.tsx\"",
+    "check-style": "prettier --check \"*.js\" \"scripts/**/*.js\" \"src/**/*.ts\" \"src/**/*.js\" \"src/**/*.tsx\"",
     "generate-api": "node scripts/generate-api.js $API_HOST/docs-json && prettier --write \"src/api-generated/**/*.ts\"",
     "postinstall": "patch-package",
     "test": "react-scripts test"

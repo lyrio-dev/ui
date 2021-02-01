@@ -101,7 +101,7 @@ body {
   @selector-not-colored: ~':not(.red):not(.orange):not(.yellow):not(.olive):not(.green):not(.teal):not(.blue):not(.violet):not(.purple):not(.pink):not(.brown):not(.grey):not(.black)';
 
   #root,
-  .ui.popup, .ui.popup::before,
+  .ui.popup:not(.inverted), .ui.popup:not(.inverted)::before,
   .ui.modal:not(.basic),
   // menu
   .ui.menu:not(.tabular),
@@ -164,7 +164,7 @@ body {
   .ui.segment@{selector-not-colored},
   .ui.dropdown,
   .header, .content,
-  .ui.popup, .ui.popup::before,
+  .ui.popup:not(.inverted), .ui.popup:not(.inverted)::before,
   // menu
   .ui.menu,
   // input
@@ -338,7 +338,7 @@ body {
     box-shadow: 0 1px 2px 0 var(--theme-shadow);
   }
 
-  .ui.popup {
+  .ui.popup:not(.inverted) {
     &::before {
       box-shadow: 1px 1px 0 0 var(--theme-border) !important;
     }
