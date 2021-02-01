@@ -1,9 +1,9 @@
 import { GraphAlgorithm, Step } from "../GraphAlgorithm";
 import { AdjacencyMatrix, Graph } from "../GraphStructure";
 
-export class DFS extends GraphAlgorithm {
+export class DfsSssp extends GraphAlgorithm {
   constructor() {
-    super("DFS", "Depth First Search");
+    super("DFS Single-Source Shortest Path", "Depth-first search for Single-Source Shortest Path");
   }
 
   * dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<Step> {

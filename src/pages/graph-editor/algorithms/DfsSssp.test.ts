@@ -1,4 +1,4 @@
-import { DFS } from "./DFS";
+import { DfsSssp } from "./DfsSssp";
 import { AdjacencyMatrix } from "../GraphStructure";
 
 test("dfs", () => {
@@ -10,7 +10,7 @@ test("dfs", () => {
     [0, 5, 0, 0, 0]
   ];
   let graph = new AdjacencyMatrix(mat, true);
-  let dfs = new DFS();
+  let dfs = new DfsSssp();
   let steps = Array
     .from(dfs.run(graph, 0))
     .map(s => s.graph.nodes())
