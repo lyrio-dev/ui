@@ -108,7 +108,7 @@ export class AdjacencyMatrix implements Graph {
       this._edges = [];
       for (let i = 0; i < nc; i++)
         for (let j = this.directed ? 0 : i; j < nc; j++)
-          if (this.mat[i][j] !== 0)
+          if (this.mat[i][j])
             this._edges.push({ source: i, target: j, datum: this.mat[i][j] });
     }
     return this._edges;
@@ -128,12 +128,10 @@ export class AdjacencyMatrix implements Graph {
 
   static from(g: Graph, directed: boolean) {
     let nodes = g.nodes(), edges = g.edges();
-    let mat: any[][] = Array.from({ length: nodes.length },
-      () => Array.from({ length: nodes.length },
-        () => 0));
+    let mat: any[][] = Array.from({ length: nodes.length }, () => new Array(nodes.length));
     let trySet: (x: number, y: number, d: any) => void = (x, y, d) => {
-      if (mat[x][y] !== 0) throw new Error();
-      mat[x][y] = d || 1;
+      if (mat[x][y]) throw new Error();
+      mat[x][y] = d;
     };
     for (let edge of edges) {
       let { source: s, target: t, datum: d } = edge;
