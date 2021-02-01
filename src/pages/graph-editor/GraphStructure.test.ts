@@ -1,12 +1,11 @@
 import {
-  Node,
-  Edge,
-  Graph,
-  NodeEdgeList,
   AdjacencyList,
   AdjacencyMatrix,
-  BipartiteGraph,
-  hasSelfLoop, hasMultipleEdges, fromRandom, EdgeList
+  Edge,
+  EdgeList,
+  fromRandom,
+  hasMultipleEdges,
+  hasSelfLoop
 } from "./GraphStructure";
 
 test("AdjMat", () => {
@@ -28,14 +27,14 @@ test("AdjMat", () => {
     [0, 0, 0, 0, 0]
   ];
   let g = new EdgeList(5, edges);
-  expect(AdjacencyMatrix.from(g, false).mat).toStrictEqual(expected1);
-  expect(AdjacencyMatrix.from(g, true).mat).toStrictEqual(expected2);
+  expect(AdjacencyMatrix.from(g, false).mat.map(line => line.map(e => e ? 1 : 0))).toStrictEqual(expected1);
+  expect(AdjacencyMatrix.from(g, true).mat.map(line => line.map(e => e ? 1 : 0))).toStrictEqual(expected2);
 });
 
 test("AdjMat weighted", () => {
   let edges = [
     [0, 1, 10], [1, 2, 12], [2, 3, 32], [3, 4, 18], [0, 2, 92], [1, 4, 10]
-  ].map(([s, t, d]) => ({ source: s, target: t, datum: d }));
+  ].map(([s, t, d]) => ({ source: s, target: t, datum: { weight: d } }));
   let expected1 = [
     [0, 10, 92, 0, 0],
     [10, 0, 12, 0, 10],
@@ -51,8 +50,8 @@ test("AdjMat weighted", () => {
     [0, 0, 0, 0, 0]
   ];
   let g = new EdgeList(5, edges);
-  expect(AdjacencyMatrix.from(g, false).mat).toStrictEqual(expected1);
-  expect(AdjacencyMatrix.from(g, true).mat).toStrictEqual(expected2);
+  expect(AdjacencyMatrix.from(g, false).mat.map(line => line.map(e => e ? e.weight : 0))).toStrictEqual(expected1);
+  expect(AdjacencyMatrix.from(g, true).mat.map(line => line.map(e => e ? e.weight : 0))).toStrictEqual(expected2);
 });
 
 test("from AdjMat", () => {

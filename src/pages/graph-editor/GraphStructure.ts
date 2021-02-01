@@ -128,7 +128,7 @@ export class AdjacencyMatrix implements Graph {
 
   static from(g: Graph, directed: boolean) {
     let nodes = g.nodes(), edges = g.edges();
-    let mat: any[][] = Array.from({ length: nodes.length }, () => new Array(nodes.length));
+    let mat: any[][] = Array.from({ length: nodes.length }, () => Array.from({ length: nodes.length }, () => undefined));
     let trySet: (x: number, y: number, d: any) => void = (x, y, d) => {
       if (mat[x][y]) throw new Error();
       mat[x][y] = d;
