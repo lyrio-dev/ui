@@ -1,15 +1,14 @@
 import { Graph } from "./GraphStructure";
 
-class Step<NodeDatum, EdgeDatum> {
+class Step {
   constructor(
-    public readonly graph: Graph<NodeDatum, EdgeDatum>,
+    public readonly graph: Graph,
     public readonly dcPosition?: Map<string, number>
   ) {
   }
 }
 
-abstract class GraphAlgorithm<NodeDatum, EdgeDatum, ResultType> {
-  protected result?: ResultType;
+abstract class GraphAlgorithm {
 
   protected constructor(
     public readonly name: string,
@@ -18,11 +17,7 @@ abstract class GraphAlgorithm<NodeDatum, EdgeDatum, ResultType> {
   ) {
   }
 
-  abstract run(graph: Graph<any, any>, ...args: any[]): Generator<Step<NodeDatum, EdgeDatum>>;
-
-  getResult() {
-    return this.result;
-  }
+  abstract run(graph: Graph, ...args: any[]): Generator<Step>;
 }
 
 export { Step, GraphAlgorithm };

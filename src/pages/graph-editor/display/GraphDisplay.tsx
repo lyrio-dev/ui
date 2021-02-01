@@ -4,13 +4,13 @@ import { Node, Edge, Graph } from "../GraphStructure";
 import { Force, SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { Header, Segment } from "semantic-ui-react";
 
-interface GraphDisplayProp<NodeDatum, EdgeDatum> {
+interface GraphDisplayProp {
   width: number,
   height: number,
-  graph: Graph<NodeDatum, EdgeDatum>,
+  graph: Graph,
   generalRenderHint: GeneralRenderHint,
-  nodeRenderHint: NodeRenderHint<NodeDatum>,
-  edgeRenderHint: EdgeRenderHint<EdgeDatum>
+  nodeRenderHint: NodeRenderHint,
+  edgeRenderHint: EdgeRenderHint
 }
 
 interface GeneralRenderHint {
@@ -21,37 +21,37 @@ interface GeneralRenderHint {
   simulationForceManyBodyStrength: number,
 }
 
-interface NodeRenderHint<NodeDatum> {
-  borderThickness: (node: Node<NodeDatum>) => number,
-  borderColor: (node: Node<NodeDatum>) => string,
-  fillingColor: (node: Node<NodeDatum>) => string,
-  floatingData: (node: Node<NodeDatum>) => string,
-  popupData: (node: Node<NodeDatum>) => [string, string][]
+interface NodeRenderHint {
+  borderThickness: (node: Node) => number,
+  borderColor: (node: Node) => string,
+  fillingColor: (node: Node) => string,
+  floatingData: (node: Node) => string,
+  popupData: (node: Node) => [string, string][]
 }
 
-interface EdgeRenderHint<EdgeDatum> {
-  thickness: (edge: Edge<EdgeDatum>) => number,
-  color: (edge: Edge<EdgeDatum>) => string,
-  floatingData: (edge: Edge<EdgeDatum>) => string,
+interface EdgeRenderHint {
+  thickness: (edge: Edge) => number,
+  color: (edge: Edge) => string,
+  floatingData: (edge: Edge) => string,
 }
 
-interface D3SimulationNode<NodeDatum> extends SimulationNodeDatum {
-  graphNode: Node<NodeDatum>
+interface D3SimulationNode extends SimulationNodeDatum {
+  graphNode: Node
 }
 
-function toD3NodeDatum<NodeDatum>(node: Node<NodeDatum>): D3SimulationNode<NodeDatum> {
+function toD3NodeDatum(node: Node): D3SimulationNode {
   return { index: node.id, graphNode: node };
 }
 
-interface D3SimulationEdge<EdgeDatum> extends SimulationLinkDatum<any> {
-  graphEdge: Edge<EdgeDatum>
+interface D3SimulationEdge extends SimulationLinkDatum<any> {
+  graphEdge: Edge
 }
 
-function toD3EdgeDatum<EdgeDatum>(edge: Edge<EdgeDatum>): D3SimulationEdge<EdgeDatum> {
+function toD3EdgeDatum(edge: Edge): D3SimulationEdge {
   return { source: edge.source, target: edge.target, graphEdge: edge };
 }
 
-let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
+let GraphDisplay: React.FC<GraphDisplayProp> = props => {
   let { width, height, graph, generalRenderHint, nodeRenderHint, edgeRenderHint } = props;
 
   const makeInRange = (x: number, a: number, b: number) => {
@@ -65,8 +65,8 @@ let GraphDisplay: React.FC<GraphDisplayProp<any, any>> = props => {
     if (ctx == null)
       return;
 
-    const edges = graph.getEdgeList().map(toD3EdgeDatum);
-    const nodes = graph.getNodeList().map(toD3NodeDatum);
+    const edges = graph.edges().map(toD3EdgeDatum);
+    const nodes = graph.nodes().map(toD3NodeDatum);
 
     let {
       textColor,
