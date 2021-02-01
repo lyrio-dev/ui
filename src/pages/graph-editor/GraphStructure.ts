@@ -62,16 +62,16 @@ export class NodeEdgeList implements Graph {
   constructor(private _nodes: Node[], private _edges: Edge[]) {
   }
 
+  static from(g: Graph) {
+    return new NodeEdgeList(g.nodes(), g.edges());
+  }
+
   edges(): Edge[] {
     return this._edges;
   }
 
   nodes(): Node[] {
     return this._nodes;
-  }
-
-  static from(g: Graph) {
-    return new NodeEdgeList(g.nodes(), g.edges());
   }
 }
 
@@ -102,6 +102,21 @@ export class AdjacencyMatrix implements Graph {
     this._nodes = Array.from({ length: this.node_count }, (_, id) => ({ id, datum: node_generator(id) }));
   }
 
+  static from(g: Graph, directed: boolean) {
+    let nodes = g.nodes(), edges = g.edges();
+    let mat: any[][] = Array.from({ length: nodes.length }, () => Array.from({ length: nodes.length }, () => undefined));
+    let trySet: (x: number, y: number, d: any) => void = (x, y, d) => {
+      if (mat[x][y]) throw new Error();
+      mat[x][y] = d;
+    };
+    for (let edge of edges) {
+      let { source: s, target: t, datum: d } = edge;
+      trySet(s, t, d);
+      if (!directed) trySet(t, s, d);
+    }
+    return new AdjacencyMatrix(mat, directed, i => nodes[i].datum);
+  }
+
   edges(): Edge[] {
     if (!this._edges) {
       let nc = this.node_count;
@@ -125,21 +140,6 @@ export class AdjacencyMatrix implements Graph {
   set(x: number, y: number, a: any) {
     this.mat[x][y] = a;
   }
-
-  static from(g: Graph, directed: boolean) {
-    let nodes = g.nodes(), edges = g.edges();
-    let mat: any[][] = Array.from({ length: nodes.length }, () => Array.from({ length: nodes.length }, () => undefined));
-    let trySet: (x: number, y: number, d: any) => void = (x, y, d) => {
-      if (mat[x][y]) throw new Error();
-      mat[x][y] = d;
-    };
-    for (let edge of edges) {
-      let { source: s, target: t, datum: d } = edge;
-      trySet(s, t, d);
-      if (!directed) trySet(t, s, d);
-    }
-    return new AdjacencyMatrix(mat, directed, i => nodes[i].datum);
-  }
 }
 
 export class AdjacencyList implements Graph {
@@ -151,6 +151,18 @@ export class AdjacencyList implements Graph {
       (line, source) => line.map<Edge>(
         ([target, datum]) => ({ source, target, datum })));
     this._nodes = Array.from({ length: adjlist.length }, (_, id) => ({ id, datum: node_generator(id) }));
+  }
+
+  static from(g: Graph, directed: boolean) {
+    let nodes = g.nodes(), edges = g.edges();
+    let adjlist = edges.reduce((prev, { source: s, target: t, datum: d }) => {
+        prev[s].push([t, d]);
+        if (!directed) prev[t].push([s, d]);
+        return prev;
+      },
+      Array.from<any, [number, any][]>({ length: nodes.length }, () => [])
+    );
+    return new AdjacencyList(adjlist, i => nodes[i].datum);
   }
 
   edges(): Edge[] {
@@ -165,18 +177,6 @@ export class AdjacencyList implements Graph {
 
   adjacentEdges(node: number) {
     return this.adjacencyList[node];
-  }
-
-  static from(g: Graph, directed: boolean) {
-    let nodes = g.nodes(), edges = g.edges();
-    let adjlist = edges.reduce((prev, { source: s, target: t, datum: d }) => {
-        prev[s].push([t, d]);
-        if (!directed) prev[t].push([s, d]);
-        return prev;
-      },
-      Array.from<any, [number, any][]>({ length: nodes.length }, () => [])
-    );
-    return new AdjacencyList(adjlist, i => nodes[i].datum);
   }
 }
 
@@ -205,14 +205,6 @@ export class BipartiteGraph implements Graph {
     }));
   }
 
-  edges(): Edge[] {
-    return this._edges;
-  }
-
-  nodes(): Node[] {
-    return this.leftSide.concat(this.rightSide);
-  }
-
   static from(g: Graph, is_left_side: (node: Node) => boolean) {
     let nodes = g.nodes(), edges = g.edges();
     let [left, right] = nodes.reduce((prev, node) => {
@@ -222,5 +214,13 @@ export class BipartiteGraph implements Graph {
     }, [[], []]);
     return new BipartiteGraph(left.length, right.length, edges,
       i => left[i].datum, i => right[i].datum);
+  }
+
+  edges(): Edge[] {
+    return this._edges;
+  }
+
+  nodes(): Node[] {
+    return this.leftSide.concat(this.rightSide);
   }
 }

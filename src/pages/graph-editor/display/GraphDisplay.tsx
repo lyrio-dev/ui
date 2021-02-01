@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from "d3";
-import { Node, Edge, Graph } from "../GraphStructure";
+import { Edge, Graph, Node } from "../GraphStructure";
 import { Force, SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { Header, Segment } from "semantic-ui-react";
 

@@ -1,5 +1,5 @@
 import { DfsFindPath } from "./DfsFindPath";
-import { AdjacencyMatrix, Graph } from "../GraphStructure";
+import { AdjacencyMatrix } from "../GraphStructure";
 
 test("DfsFindPath", () => {
   let mat = [
