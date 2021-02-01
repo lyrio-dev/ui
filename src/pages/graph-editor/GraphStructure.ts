@@ -1,12 +1,12 @@
 export interface Node {
   readonly id: number,
-  datum?: any
+  datum: any
 }
 
 export interface Edge {
   readonly source: number,
   readonly target: number,
-  datum?: any
+  datum: any
 }
 
 export interface Graph {

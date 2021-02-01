@@ -12,7 +12,7 @@ import {
 test("AdjMat", () => {
   let edges = [
     [0, 1], [1, 2], [2, 3], [3, 4], [0, 2], [1, 4]
-  ].map<Edge>(([source, target]) => ({ source, target }));
+  ].map<Edge>(([source, target]) => ({ source, target, datum: {} }));
   let expected1 = [
     [0, 1, 1, 0, 0],
     [1, 0, 1, 0, 1],
@@ -85,7 +85,7 @@ test("hasSelfLoop", () => {
     [[[0, 4], [1, 2], [3, 4], [0, 1], [4, 0], [2, 3]], false]
   ];
   for (let datum of data) {
-    let g = new EdgeList(5, datum[0].map(([s, t]) => ({ source: s, target: t })));
+    let g = new EdgeList(5, datum[0].map(([s, t]) => ({ source: s, target: t, datum: {} })));
     expect(hasSelfLoop(g)).toEqual(datum[1]);
   }
 });
@@ -99,7 +99,7 @@ test("hasMultipleEdges", () => {
     [[[0, 4], [1, 2], [3, 4], [0, 1], [4, 0], [2, 3]], false]
   ];
   for (let datum of data) {
-    let g = new EdgeList(5, datum[0].map(([s, t]) => ({ source: s, target: t })));
+    let g = new EdgeList(5, datum[0].map(([s, t]) => ({ source: s, target: t, datum: {} })));
     expect(hasMultipleEdges(g)).toEqual(datum[1]);
   }
 });
@@ -115,7 +115,7 @@ test("Random", () => {
 test("to Adj list", () => {
   let edges = [
     [0, 1], [1, 2], [2, 3], [3, 4], [0, 2], [1, 4]
-  ].map<Edge>(e => ({ source: e[0], target: e[1] }));
+  ].map<Edge>(e => ({ source: e[0], target: e[1], datum: {} }));
   let expected = [
     [1, 2], [0, 2, 4], [1, 3, 0], [2, 4], [3, 1]
   ];
