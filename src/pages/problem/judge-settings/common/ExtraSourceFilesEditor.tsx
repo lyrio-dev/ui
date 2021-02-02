@@ -51,7 +51,6 @@ let ExtraSourceFilesEditor: React.FC<ExtraSourceFilesEditorProps> = props => {
       )
     });
   }
-  useEffect(() => props.judgeInfo.extraSourceFiles && updateJudgeInfo(extraSourceFiles, true), []);
 
   // Update both a local copy and judge info
   function updateExtraSourceFiles(newExtraSourceFiles: ExtraSourceFiles) {
@@ -213,7 +212,23 @@ ExtraSourceFilesEditor = observer(ExtraSourceFilesEditor);
 const judgeInfoProcessor: JudgeInfoProcessor<JudgeInfoWithExtraSourceFiles> = {
   parseJudgeInfo(raw) {
     return {
-      extraSourceFiles: raw.extraSourceFiles
+      extraSourceFiles:
+        raw.extraSourceFiles && typeof raw.extraSourceFiles === "object"
+          ? Object.fromEntries(
+              Object.entries(raw.extraSourceFiles)
+                .filter(
+                  ([language, fileMap]) =>
+                    Object.values(CodeLanguage).includes(language as CodeLanguage) &&
+                    fileMap &&
+                    typeof fileMap === "object"
+                )
+                .map(([language, fileMap]) => [
+                  language,
+                  Object.fromEntries(Object.entries(fileMap).filter(([dst, src]) => typeof src === "string"))
+                ])
+                .filter(([language, fileMap]) => Object.keys(fileMap).length > 0)
+            )
+          : null
     };
   },
   normalizeJudgeInfo(judgeInfo) {

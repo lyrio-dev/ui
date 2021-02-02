@@ -866,8 +866,8 @@ let SubtasksEditor: React.FC<SubtasksEditorProps> = props => {
       props.options.enableInputFile === true ||
       (props.options.enableInputFile === "optional" && props.options.enableOutputFile !== true)
     )
-      return detectTestcasesByMatchingInputToOutput(props.testData, props.options.enableOutputFile === "optional");
-    else return detectTestcasesByMatchingOutputToInput(props.testData, props.options.enableInputFile === "optional");
+      return detectTestcasesByMatchingInputToOutput(props.testData, props.options.enableOutputFile !== true);
+    else return detectTestcasesByMatchingOutputToInput(props.testData, true);
   }, [props.testData]);
 
   // Prevent losing subtasks by toggling "auto detect testcases"
