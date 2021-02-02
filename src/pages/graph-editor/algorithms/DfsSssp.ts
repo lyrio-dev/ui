@@ -6,7 +6,7 @@ export class DfsSssp extends GraphAlgorithm {
     super("DFS Single-Source Shortest Path", "Depth-first search for Single-Source Shortest Path");
   }
 
-  * dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<Step> {
+  *dfs(nc: number, mat: number[][], this_node: number, dist: number[], prev: number[]): Generator<Step> {
     yield { graph: new AdjacencyMatrix(mat, true, i => ({ dist: dist[i], prev: prev[i] })) };
     for (let i = 0; i < nc; i++) {
       if (i === this_node) continue;
@@ -21,7 +21,9 @@ export class DfsSssp extends GraphAlgorithm {
 
   run(graph: Graph, start_point: number) {
     let adjmat = AdjacencyMatrix.from(graph, true).mat;
-    let dist: number[] = [], prev: number[] = [], nc = adjmat.length;
+    let dist: number[] = [],
+      prev: number[] = [],
+      nc = adjmat.length;
     for (let i = 0; i < nc; i++) {
       dist[i] = +Infinity;
       prev[i] = i;

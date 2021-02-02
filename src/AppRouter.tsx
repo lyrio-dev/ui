@@ -19,8 +19,7 @@ export class RouteError implements ErrorPageProps {
       showRefresh?: true;
       showBack?: true;
     } = { showBack: true }
-  ) {
-  }
+  ) {}
 }
 
 export function defineRoute(getViewFunction: (request: NaviRequest) => Promise<React.ReactNode>) {
@@ -30,8 +29,8 @@ export function defineRoute(getViewFunction: (request: NaviRequest) => Promise<R
       return typeof result === "function"
         ? (result as Matcher<any, any>)
         : route({
-          view: result
-        });
+            view: result
+          });
     } catch (e) {
       if (e instanceof RouteError)
         return route({

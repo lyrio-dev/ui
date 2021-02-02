@@ -35,13 +35,24 @@ let GraphEditor: React.FC = props => {
   return (
     <>
       <GraphInputPanel
-        inputMethods={[["adjmat", "邻接矩阵", graph => AdjacencyMatrix.from(graph, true).mat.map(l => l.join(" ")).join("\n")]]}
+        inputMethods={[
+          [
+            "adjmat",
+            "邻接矩阵",
+            graph =>
+              AdjacencyMatrix.from(graph, true)
+                .mat.map(l => l.join(" "))
+                .join("\n")
+          ]
+        ]}
         onInputChanged={onGraphInputPanelSync}
         graph={graph}
         error={error}
       />
       <GraphDisplay
-        width={500} height={500} graph={graph}
+        width={500}
+        height={500}
+        graph={graph}
         generalRenderHint={{
           directed: true,
           nodeRadius: 15,
@@ -64,7 +75,6 @@ let GraphEditor: React.FC = props => {
       />
     </>
   );
-
 };
 
 export default route({ view: <GraphEditor /> });
