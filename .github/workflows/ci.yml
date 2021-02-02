@@ -1,8 +1,10 @@
 name: CI
 
 on:
-- push
-- pull_request
+  push:
+    branches:
+      - gtdh
+  pull_request:
 
 env:
   CI: true
@@ -23,3 +25,14 @@ jobs:
       run: yarn build
     - name: Check style
       run: yarn check-style
+    - name: Deploy
+#      if: github.ref == 'refs/heads/gtdh'
+      uses: burnett01/rsync-deployments@4.1
+      with:
+        switches: -avzr --delete
+        path: build/
+        remote_path: /home/xsun2001/syzoj/syzoj-ng-frontend/
+        remote_host: ${{ secrets.DEPLOY_HOST }}
+        remote_port: ${{ secrets.DEPLOY_PORT }}
+        remote_user: ${{ secrets.DEPLOY_USER }}
+        remote_key: ${{ secrets.DEPLOY_KEY }}
