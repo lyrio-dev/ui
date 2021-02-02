@@ -11,8 +11,7 @@ test("dfs", () => {
   ];
   let graph = new AdjacencyMatrix(mat, true);
   let dfs = new DfsSssp();
-  let steps = Array
-    .from(dfs.run(graph, 0))
+  let steps = Array.from(dfs.run(graph, 0))
     .map(s => s.graph.nodes())
     .map(nl => nl.map(n => n.datum.dist));
   let inf = Infinity;

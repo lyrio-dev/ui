@@ -5,38 +5,38 @@ import { Force, SimulationLinkDatum, SimulationNodeDatum } from "d3-force";
 import { Header, Segment } from "semantic-ui-react";
 
 interface GraphDisplayProp {
-  width: number,
-  height: number,
-  graph: Graph,
-  generalRenderHint: GeneralRenderHint,
-  nodeRenderHint: NodeRenderHint,
-  edgeRenderHint: EdgeRenderHint
+  width: number;
+  height: number;
+  graph: Graph;
+  generalRenderHint: GeneralRenderHint;
+  nodeRenderHint: NodeRenderHint;
+  edgeRenderHint: EdgeRenderHint;
 }
 
 interface GeneralRenderHint {
-  directed: boolean,
-  nodeRadius: number,
-  textColor: string,
-  backgroundColor: string,
-  simulationForceManyBodyStrength: number,
+  directed: boolean;
+  nodeRadius: number;
+  textColor: string;
+  backgroundColor: string;
+  simulationForceManyBodyStrength: number;
 }
 
 interface NodeRenderHint {
-  borderThickness: (node: Node) => number,
-  borderColor: (node: Node) => string,
-  fillingColor: (node: Node) => string,
-  floatingData: (node: Node) => string,
-  popupData: (node: Node) => [string, string][]
+  borderThickness: (node: Node) => number;
+  borderColor: (node: Node) => string;
+  fillingColor: (node: Node) => string;
+  floatingData: (node: Node) => string;
+  popupData: (node: Node) => [string, string][];
 }
 
 interface EdgeRenderHint {
-  thickness: (edge: Edge) => number,
-  color: (edge: Edge) => string,
-  floatingData: (edge: Edge) => string,
+  thickness: (edge: Edge) => number;
+  color: (edge: Edge) => string;
+  floatingData: (edge: Edge) => string;
 }
 
 interface D3SimulationNode extends SimulationNodeDatum {
-  graphNode: Node
+  graphNode: Node;
 }
 
 function toD3NodeDatum(node: Node): D3SimulationNode {
@@ -44,7 +44,7 @@ function toD3NodeDatum(node: Node): D3SimulationNode {
 }
 
 interface D3SimulationEdge extends SimulationLinkDatum<any> {
-  graphEdge: Edge
+  graphEdge: Edge;
 }
 
 function toD3EdgeDatum(edge: Edge): D3SimulationEdge {
@@ -62,8 +62,7 @@ let GraphDisplay: React.FC<GraphDisplayProp> = props => {
 
   let onCanvasMount = (canvas: HTMLCanvasElement | null) => {
     let ctx = canvas?.getContext("2d");
-    if (ctx == null)
-      return;
+    if (ctx == null) return;
 
     const edges = graph.edges().map(toD3EdgeDatum);
     const nodes = graph.nodes().map(toD3NodeDatum);
@@ -85,15 +84,15 @@ let GraphDisplay: React.FC<GraphDisplayProp> = props => {
       });
     };
 
-    const simulation = d3.forceSimulation(nodes)
+    const simulation = d3
+      .forceSimulation(nodes)
       .force("link", d3.forceLink(edges)) // default id implement may work
       .force("charge", d3.forceManyBody().strength(manyBodyStrength))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force("box", boxConstraint);
 
     let tick = () => {
-      if (ctx == null)
-        return;
+      if (ctx == null) return;
 
       ctx.fillStyle = backgroundColor;
       ctx.fillRect(0, 0, width, height);
@@ -119,13 +118,18 @@ let GraphDisplay: React.FC<GraphDisplayProp> = props => {
         ctx.stroke();
 
         if (directed) {
-          const dx = tx - sx, dy = ty - sy;
+          const dx = tx - sx,
+            dy = ty - sy;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          const sin = dy / distance, cos = dx / distance;
+          const sin = dy / distance,
+            cos = dx / distance;
           const a = 10; // TODO: Configurable arrow size
-          const px0 = tx - nodeRadius * cos, py0 = ty - nodeRadius * sin;
-          const px1 = px0 - a * cos + a * sin, px2 = px0 - a * cos - a * sin;
-          const py1 = py0 - a * sin - a * cos, py2 = py0 - a * sin + a * cos;
+          const px0 = tx - nodeRadius * cos,
+            py0 = ty - nodeRadius * sin;
+          const px1 = px0 - a * cos + a * sin,
+            px2 = px0 - a * cos - a * sin;
+          const py1 = py0 - a * sin - a * cos,
+            py2 = py0 - a * sin + a * cos;
 
           ctx.beginPath();
           ctx.moveTo(px0, py0);
@@ -160,7 +164,8 @@ let GraphDisplay: React.FC<GraphDisplayProp> = props => {
 
     simulation.on("tick", tick);
 
-    let drag = d3.drag<HTMLCanvasElement, SimulationNodeDatum | undefined>()
+    let drag = d3
+      .drag<HTMLCanvasElement, SimulationNodeDatum | undefined>()
       .subject(event => simulation.find(event.x, event.y))
       .on("start", event => {
         if (!event.active) simulation.alphaTarget(0.3).restart();
