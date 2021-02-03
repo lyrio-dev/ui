@@ -55,7 +55,7 @@ export function fromRandom(
       t = Math.max(s, t);
     }
     if (!allow_multiple_edge && edgeCache[s].has(t)) continue;
-    edges.push({ source: s, target: t, datum: weighted ? edge_mapper(s, t, random()) : ({}) });
+    edges.push({ source: s, target: t, datum: weighted ? edge_mapper(s, t, random()) : {} });
     edgeCache[s].add(t);
     --edge_count;
   }
@@ -63,8 +63,7 @@ export function fromRandom(
 }
 
 export class NodeEdgeList implements Graph {
-  constructor(private _nodes: Node[], private _edges: Edge[]) {
-  }
+  constructor(private _nodes: Node[], private _edges: Edge[]) {}
 
   static from(g: Graph) {
     return new NodeEdgeList(g.nodes(), g.edges());
