@@ -41,7 +41,7 @@ let GraphEditor: React.FC = props => {
             "邻接矩阵",
             graph =>
               AdjacencyMatrix.from(graph, true)
-                .mat.map(l => l.join(" "))
+                .mat.map(l => l.map(e => e ? "1" : "0").join(" "))
                 .join("\n")
           ]
         ]}

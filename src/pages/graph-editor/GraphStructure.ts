@@ -40,11 +40,10 @@ export function fromRandom(
   weighted: boolean,
   node_mapper: (id: number) => Object = emptyObject,
   random?: () => number,
-  edge_mapper: (s: number, t: number, v: number) => Object = emptyObject
+  edge_mapper: (s: number, t: number, v: number) => Object = (s, t, v) => ({ weight: v })
 ): Graph {
   let randint: (limit: number) => number = limit => Math.floor(Math.random() * limit);
   if (!random) random = randint.bind(this, 100);
-  if (weighted) edge_mapper = (s, t, v) => ({ weight: v });
   let nodes = Array.from<any, Node>({ length: node_count }, (_, i) => ({ id: i, datum: node_mapper(i) }));
   let edgeCache = allow_multiple_edge || Array.from({ length: node_count }, () => new Set<number>());
   let edges = [];
@@ -56,9 +55,7 @@ export function fromRandom(
       t = Math.max(s, t);
     }
     if (!allow_multiple_edge && edgeCache[s].has(t)) continue;
-    let v = random(),
-      edge_datum = edge_mapper(s, t, v);
-    edges.push({ source: s, target: t, datum: edge_datum });
+    edges.push({ source: s, target: t, datum: weighted ? edge_mapper(s, t, random()) : ({}) });
     edgeCache[s].add(t);
     --edge_count;
   }
@@ -66,7 +63,8 @@ export function fromRandom(
 }
 
 export class NodeEdgeList implements Graph {
-  constructor(private _nodes: Node[], private _edges: Edge[]) {}
+  constructor(private _nodes: Node[], private _edges: Edge[]) {
+  }
 
   static from(g: Graph) {
     return new NodeEdgeList(g.nodes(), g.edges());
