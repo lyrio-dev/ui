@@ -3,7 +3,7 @@ import { AdjacencyList, BipartiteGraph, Graph, Node, NodeEdgeList } from "../Gra
 
 class HungarianDFS extends GraphAlgorithm {
   constructor() {
-    super("HungarianDFS", "DFS version of Hungarian algorithm for Biregular Graph Match");
+    super("HungarianDFS", "DFS version of Hungarian algorithm for Bipartite Graph Match");
   }
 
   dfs(node: Node, edges: AdjacencyList): boolean {
@@ -22,7 +22,7 @@ class HungarianDFS extends GraphAlgorithm {
     });
   }
 
-  *run(graph: Graph): Generator<Step> {
+  * run(graph: Graph): Generator<Step> {
     if (!(graph instanceof BipartiteGraph)) throw new Error();
     let adjlist = AdjacencyList.from(graph, false);
     let nodes = graph.nodes(),
@@ -35,10 +35,10 @@ class HungarianDFS extends GraphAlgorithm {
       nodes[edge.source].datum.side === "left"
         ? edge
         : {
-            source: edge.target,
-            target: edge.source,
-            datum: edge.datum
-          }
+          source: edge.target,
+          target: edge.source,
+          datum: edge.datum
+        }
     );
 
     for (let leftNode of left) {
