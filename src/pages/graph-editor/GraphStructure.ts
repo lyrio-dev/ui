@@ -234,6 +234,23 @@ export class BipartiteGraph implements Graph {
       i => left[i].datum,
       i => right[i].datum
     );
+    let nodes = g.nodes(),
+      edges = g.edges();
+    let [left, right] = nodes.reduce(
+      (prev, node) => {
+        if (is_left_side(node)) prev[0].push(node);
+        else prev[1].push(node);
+        return prev;
+      },
+      [[], []]
+    );
+    return new BipartiteGraph(
+      left.length,
+      right.length,
+      edges,
+      i => left[i].datum,
+      i => right[i].datum
+    );
   }
 
   edges(): Edge[] {
@@ -242,5 +259,56 @@ export class BipartiteGraph implements Graph {
 
   nodes(): Node[] {
     return this.leftSide.concat(this.rightSide);
+  }
+}
+
+export class BipartiteMatrix implements Graph {
+  public leftSide: Node[];
+  public rightSide: Node[];
+  private _edges: Edge[];
+
+  constructor(
+    public mat: any[][],
+    left_side_generator: (index: number) => Object = emptyObject,
+    right_side_generator: (index: number) => Object = emptyObject
+  ) {
+    let left_side_count = mat.length;
+    let right_side_count = mat[0].length;
+    if (mat.some(line => line.length !== right_side_count)) {
+      throw new Error();
+    }
+    this.leftSide = Array.from({ length: left_side_count }, (_, i) => ({
+      id: i,
+      datum: Object.assign(left_side_generator(i), { side: "left" })
+    }));
+    this.rightSide = Array.from({ length: right_side_count }, (_, i) => ({
+      id: i + left_side_count,
+      datum: Object.assign(right_side_generator(i), { side: "right" })
+    }));
+  }
+
+  edges(): Edge[] {
+    if (!this._edges) {
+      this._edges = [];
+      let lc = this.mat.length;
+      this.mat.forEach((line, pl) => {
+        line.forEach((val, pr) => {
+          this._edges.push({ source: pl, target: pr + lc, datum: val });
+        });
+      });
+    }
+    return this._edges;
+  }
+
+  nodes(): Node[] {
+    return this.leftSide.concat(this.rightSide);
+  }
+
+  get(x: number, y: number) {
+    return this.mat[x][y];
+  }
+
+  set(x: number, y: number, a: any) {
+    this.mat[x][y] = a;
   }
 }
