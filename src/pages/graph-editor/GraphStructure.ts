@@ -193,7 +193,7 @@ export class BipartiteGraph implements Graph {
   constructor(
     left_side_count: number,
     right_side_count: number,
-    private _edges: Edge[],
+    protected _edges: Edge[],
     left_side_generator: (index: number) => Object = emptyObject,
     right_side_generator: (index: number) => Object = emptyObject
   ) {
@@ -245,46 +245,22 @@ export class BipartiteGraph implements Graph {
   }
 }
 
-export class BipartiteMatrix implements Graph {
-  public leftSide: Node[];
-  public rightSide: Node[];
-  private _edges: Edge[];
-
+export class BipartiteMatrix extends BipartiteGraph implements Graph {
   constructor(
     public mat: any[][],
     left_side_generator: (index: number) => Object = emptyObject,
     right_side_generator: (index: number) => Object = emptyObject
   ) {
-    let left_side_count = mat.length;
-    let right_side_count = mat[0].length;
-    if (mat.some(line => line.length !== right_side_count)) {
+    super(mat.length, mat[0].length, [], left_side_generator, right_side_generator);
+    if (mat.some(line => line.length !== mat.length)) {
       throw new Error();
     }
-    this.leftSide = Array.from({ length: left_side_count }, (_, i) => ({
-      id: i,
-      datum: Object.assign(left_side_generator(i), { side: "left" })
-    }));
-    this.rightSide = Array.from({ length: right_side_count }, (_, i) => ({
-      id: i + left_side_count,
-      datum: Object.assign(right_side_generator(i), { side: "right" })
-    }));
-  }
-
-  edges(): Edge[] {
-    if (!this._edges) {
-      this._edges = [];
-      let lc = this.mat.length;
-      this.mat.forEach((line, pl) => {
-        line.forEach((val, pr) => {
-          this._edges.push({ source: pl, target: pr + lc, datum: val });
-        });
+    let lc = this.mat.length;
+    this.mat.forEach((line, pl) => {
+      line.forEach((val, pr) => {
+        this._edges.push({ source: pl, target: pr + lc, datum: val });
       });
-    }
-    return this._edges;
-  }
-
-  nodes(): Node[] {
-    return this.leftSide.concat(this.rightSide);
+    });
   }
 
   get(x: number, y: number) {

@@ -1,5 +1,5 @@
 import { GraphAlgorithm, Step } from "../GraphAlgorithm";
-import { AdjacencyList, BipartiteMatrix, Graph, Node, Edge, NodeEdgeList } from "../GraphStructure";
+import { BipartiteMatrix, Edge, Graph, NodeEdgeList } from "../GraphStructure";
 
 function max<type>(x: type, y: type): type {
   if (x >= y) return x;
@@ -126,7 +126,7 @@ class KuhnMunkres extends GraphAlgorithm {
     if (!(graph instanceof BipartiteMatrix)) throw new Error();
     this.n = graph.mat.length;
     if (this.n !== graph.mat[0].length) throw new Error("|X| != |Y|");
-    this.w = graph.mat;
+    this.w = graph.mat.map(line => line.map(e => e.weight));
     this.lx = Array.from({ length: this.n }, (_, x) => {
       let res = -Infinity;
       for (let y = 0; y < this.n; ++y) res = max(res, this.w[x][y]);
