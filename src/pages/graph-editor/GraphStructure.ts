@@ -234,23 +234,6 @@ export class BipartiteGraph implements Graph {
       i => left[i].datum,
       i => right[i].datum
     );
-    let nodes = g.nodes(),
-      edges = g.edges();
-    let [left, right] = nodes.reduce(
-      (prev, node) => {
-        if (is_left_side(node)) prev[0].push(node);
-        else prev[1].push(node);
-        return prev;
-      },
-      [[], []]
-    );
-    return new BipartiteGraph(
-      left.length,
-      right.length,
-      edges,
-      i => left[i].datum,
-      i => right[i].datum
-    );
   }
 
   edges(): Edge[] {
