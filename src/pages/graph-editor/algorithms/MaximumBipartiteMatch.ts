@@ -76,14 +76,13 @@ class KuhnMunkres extends GraphAlgorithm {
 
   flip(y: number) {
     if (this.matchx[this.slackx[y]] !== -1) this.flip(this.matchx[this.slackx[y]]);
-    this.matchy[y] = this.slackx[y], this.matchx[this.slackx[y]] = y;
+    (this.matchy[y] = this.slackx[y]), (this.matchx[this.slackx[y]] = y);
   }
 
   assert() {
     for (let x = 0; x < this.n; ++x)
       for (let y = 0; y < this.n; ++y)
-        if (this.lx[x] + this.ly[y] < this.w[x][y])
-          throw new Error(`algo KM : assertion failed (x = ${x}, y = ${y})`);
+        if (this.lx[x] + this.ly[y] < this.w[x][y]) throw new Error(`algo KM : assertion failed (x = ${x}, y = ${y})`);
   }
 
   valid(x: number, y: number): boolean {
@@ -102,8 +101,7 @@ class KuhnMunkres extends GraphAlgorithm {
           this.flip(y);
           return true;
         }
-        if (!this.inS[this.matchy[y]])
-          this.addToS(this.matchy[y]);
+        if (!this.inS[this.matchy[y]]) this.addToS(this.matchy[y]);
       }
     }
     return false;
@@ -124,19 +122,17 @@ class KuhnMunkres extends GraphAlgorithm {
     return new NodeEdgeList(X.concat(Y), edges);
   }
 
-  * run(graph: Graph): Generator<Step> {
+  *run(graph: Graph): Generator<Step> {
     if (!(graph instanceof BipartiteMatrix)) throw new Error();
     this.n = graph.mat.length;
     if (this.n !== graph.mat[0].length) throw new Error("|X| != |Y|");
     this.w = graph.mat;
     this.lx = Array.from({ length: this.n }, (_, x) => {
       let res = -Infinity;
-      for (let y = 0; y < this.n; ++y)
-        res = max(res, this.w[x][y]);
+      for (let y = 0; y < this.n; ++y) res = max(res, this.w[x][y]);
       return res;
     });
     this.ly = Array.from({ length: this.n }, () => 0);
-
 
     for (let i = 0; i < this.n; ++i) {
       this.matchx[i] = this.matchy[i] = -1;
@@ -144,16 +140,14 @@ class KuhnMunkres extends GraphAlgorithm {
 
     for (let x = 0; x < this.n; ++x) {
       for (let i = 0; i < this.n; ++i) {
-        this.slackx[i] = -1, this.slackv[i] = Infinity;
+        (this.slackx[i] = -1), (this.slackv[i] = Infinity);
         this.inS[i] = this.inT[i] = false;
       }
       this.que.clear();
       this.addToS(x);
       while (!this.extand()) {
         let delta: number = Infinity;
-        for (let y = 0; y < this.n; ++y)
-          if (!this.inT[y])
-            delta = min(delta, this.slackv[y]);
+        for (let y = 0; y < this.n; ++y) if (!this.inT[y]) delta = min(delta, this.slackv[y]);
         for (let i = 0; i < this.n; ++i) {
           if (this.inS[i]) this.lx[i] -= delta;
           if (this.inT[i]) this.ly[i] += delta;
