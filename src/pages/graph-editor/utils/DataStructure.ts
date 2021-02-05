@@ -52,7 +52,7 @@ export class Stack<type = any> {
   }
 
   pop() {
-    if (this.empty()) throw new Error("ds Queue : cannot pop() from an empty Stack!");
+    if (this.empty()) throw new Error("ds Stack : cannot pop() from an empty Stack!");
     this.count--, this.values.pop();
   }
 
