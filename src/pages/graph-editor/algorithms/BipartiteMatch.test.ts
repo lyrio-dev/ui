@@ -1,4 +1,4 @@
-import { HungarianDFS } from "./BiregularMatch";
+import { HungarianDFS } from "./BipartiteMatch";
 import { BipartiteGraph } from "../GraphStructure";
 
 test("HungarianDFS", () => {

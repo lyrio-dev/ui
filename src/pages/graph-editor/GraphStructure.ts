@@ -193,7 +193,7 @@ export class BipartiteGraph implements Graph {
   constructor(
     left_side_count: number,
     right_side_count: number,
-    private _edges: Edge[],
+    protected _edges: Edge[],
     left_side_generator: (index: number) => Object = emptyObject,
     right_side_generator: (index: number) => Object = emptyObject
   ) {
@@ -242,5 +242,32 @@ export class BipartiteGraph implements Graph {
 
   nodes(): Node[] {
     return this.leftSide.concat(this.rightSide);
+  }
+}
+
+export class BipartiteMatrix extends BipartiteGraph implements Graph {
+  constructor(
+    public mat: any[][],
+    left_side_generator: (index: number) => Object = emptyObject,
+    right_side_generator: (index: number) => Object = emptyObject
+  ) {
+    super(mat.length, mat[0].length, [], left_side_generator, right_side_generator);
+    if (mat.some(line => line.length !== mat.length)) {
+      throw new Error();
+    }
+    let lc = this.mat.length;
+    this.mat.forEach((line, pl) => {
+      line.forEach((val, pr) => {
+        this._edges.push({ source: pl, target: pr + lc, datum: val });
+      });
+    });
+  }
+
+  get(x: number, y: number) {
+    return this.mat[x][y];
+  }
+
+  set(x: number, y: number, a: any) {
+    this.mat[x][y] = a;
   }
 }

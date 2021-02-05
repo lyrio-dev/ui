@@ -3,7 +3,7 @@ import { AdjacencyList, BipartiteGraph, Graph, Node, NodeEdgeList } from "../Gra
 
 class HungarianDFS extends GraphAlgorithm {
   constructor() {
-    super("HungarianDFS", "DFS version of Hungarian algorithm for Biregular Graph Match");
+    super("HungarianDFS", "DFS version of Hungarian algorithm for Bipartite Graph Match");
   }
 
   dfs(node: Node, edges: AdjacencyList): boolean {
