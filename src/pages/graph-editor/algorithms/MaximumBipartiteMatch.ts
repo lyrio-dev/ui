@@ -1,5 +1,6 @@
+import { Queue } from "../utils/DataStructure";
 import { GraphAlgorithm, Step } from "../GraphAlgorithm";
-import { BipartiteMatrix, Edge, Graph, NodeEdgeList } from "../GraphStructure";
+import { BipartiteMatrix, Node, Edge, Graph, NodeEdgeList } from "../GraphStructure";
 
 function max<type>(x: type, y: type): type {
   if (x >= y) return x;
@@ -9,39 +10,6 @@ function max<type>(x: type, y: type): type {
 function min<type>(x: type, y: type): type {
   if (x <= y) return x;
   return y;
-}
-
-class Queue<type = any> {
-  private values: type[] = [];
-  private head: number = 0;
-  private tail: number = 0;
-
-  push(value: type) {
-    this.tail = this.values.push(value);
-  }
-
-  empty(): boolean {
-    return this.head == this.tail;
-  }
-
-  clear(): void {
-    this.head = this.tail = 0;
-    this.values = [];
-  }
-
-  front(): type {
-    if (this.empty()) throw new Error("ds Queue : cannot query front() of an empty queue!");
-    return this.values[this.head];
-  }
-
-  pop() {
-    if (this.empty()) throw new Error("ds Queue : cannot pop() from an empty queue!");
-    ++this.head;
-  }
-
-  size(): number {
-    return this.tail - this.head;
-  }
 }
 
 class KuhnMunkres extends GraphAlgorithm {
@@ -61,6 +29,15 @@ class KuhnMunkres extends GraphAlgorithm {
   private matchy: number[] = [];
   private slackv: number[] = [];
   private slackx: number[] = [];
+  private markx: number[] = [];
+
+  private X: Node[];
+  private Y: Node[];
+  private edges: Edge[];
+
+  clear(buf: any[], val: any = -1, cnt: number = this.n) {
+    for (let _ = 0; _ < cnt; ++_) buf[_] = val;
+  }
 
   addToS(x: number) {
     this.que.push(x);
@@ -74,52 +51,76 @@ class KuhnMunkres extends GraphAlgorithm {
     }
   }
 
-  flip(y: number) {
-    if (this.matchx[this.slackx[y]] !== -1) this.flip(this.matchx[this.slackx[y]]);
-    (this.matchy[y] = this.slackx[y]), (this.matchx[this.slackx[y]] = y);
-  }
-
   assert() {
     for (let x = 0; x < this.n; ++x)
       for (let y = 0; y < this.n; ++y)
         if (this.lx[x] + this.ly[y] < this.w[x][y]) throw new Error(`algo KM : assertion failed (x = ${x}, y = ${y})`);
   }
 
-  valid(x: number, y: number): boolean {
-    return this.lx[x] + this.ly[y] == this.w[x][y];
-  }
-
-  extand(): boolean {
-    while (!this.que.empty()) {
-      let x = this.que.front();
-      this.que.pop();
-      for (let y = 0; y < this.n; ++y) {
-        if (!this.valid(x, y) || this.inT[y]) continue;
-        this.inT[y] = true;
-        this.slackx[y] = x;
-        if (this.matchy[y] === -1) {
-          this.flip(y);
-          return true;
-        }
-        if (!this.inS[this.matchy[y]]) this.addToS(this.matchy[y]);
-      }
-    }
-    return false;
+  is_valid(x: number, y: number): boolean {
+    return this.lx[x] + this.ly[y] === this.w[x][y];
   }
 
   is_matched(e: Edge): boolean {
     return this.matchx[e.source] === e.target - this.n;
   }
 
-  report(base: BipartiteMatrix): NodeEdgeList {
-    let X = base.leftSide;
-    let Y = base.rightSide;
-    let edges = base.edges();
-    edges.forEach(e => Object.assign(e.datum, { matched: this.is_matched(e) }));
-    X.forEach((n, i) => Object.assign(n.datum, { match: this.matchx[i], in: this.inS[i], l: this.lx[i] }));
-    Y.forEach((n, i) => Object.assign(n.datum, { match: this.matchy[i], in: this.inT[i], l: this.ly[i] }));
+  is_marked(e: Edge): boolean {
+    return this.markx[e.source] === e.target - this.n;
+  }
 
-    return new NodeEdgeList(X.concat(Y), edges);
+  report(): NodeEdgeList {
+    this.assert();
+
+    this.edges.forEach(e =>
+      Object.assign(e.datum, {
+        matched: this.is_matched(e), // used currently
+        marked: this.is_marked(e), // to be used
+        valid: this.is_valid(e.source, e.target - this.n) // satisfing l[x] + l[y] = w[x][y]
+      })
+    );
+    this.X.forEach((n, i) =>
+      Object.assign(n.datum, {
+        match: this.matchx[i] === -1 ? -1 : this.matchx[i] + this.n,
+        in: this.inS[i],
+        l: this.lx[i]
+      })
+    );
+    this.Y.forEach((n, i) =>
+      Object.assign(n.datum, {
+        match: this.matchy[i],
+        in: this.inT[i],
+        l: this.ly[i]
+      })
+    );
+    this.clear(this.markx);
+
+    return new NodeEdgeList(this.X.concat(this.Y), this.edges);
+  }
+
+  *flip(y: number) {
+    this.markx[this.slackx[y]] = y;
+    if (this.matchx[this.slackx[y]] !== -1) yield* this.flip(this.matchx[this.slackx[y]]);
+    else yield { graph: this.report() }; // Yield before flipping Edges
+    (this.matchy[y] = this.slackx[y]), (this.matchx[this.slackx[y]] = y);
+  }
+
+  *extand() {
+    while (!this.que.empty()) {
+      let x = this.que.front();
+      this.que.pop();
+      for (let y = 0; y < this.n; ++y) {
+        if (!this.is_valid(x, y) || this.inT[y]) continue;
+        this.inT[y] = true;
+        this.slackx[y] = x;
+        if (this.matchy[y] === -1) {
+          yield* this.flip(y);
+          return true;
+        }
+        if (!this.inS[this.matchy[y]]) this.addToS(this.matchy[y]);
+      }
+    }
+    return false;
   }
 
   *run(graph: Graph): Generator<Step> {
@@ -134,18 +135,17 @@ class KuhnMunkres extends GraphAlgorithm {
     });
     this.ly = Array.from({ length: this.n }, () => 0);
 
-    for (let i = 0; i < this.n; ++i) {
-      this.matchx[i] = this.matchy[i] = -1;
-    }
+    (this.X = graph.leftSide), (this.Y = graph.rightSide), (this.edges = graph.edges());
+
+    this.clear(this.matchx), this.clear(this.matchy), this.clear(this.markx);
 
     for (let x = 0; x < this.n; ++x) {
-      for (let i = 0; i < this.n; ++i) {
-        (this.slackx[i] = -1), (this.slackv[i] = Infinity);
-        this.inS[i] = this.inT[i] = false;
-      }
+      this.clear(this.slackx), this.clear(this.slackv, Infinity);
+      this.clear(this.inS, false), this.clear(this.inT, false);
       this.que.clear();
+
       this.addToS(x);
-      while (!this.extand()) {
+      while (!(yield* this.extand())) {
         let delta: number = Infinity;
         for (let y = 0; y < this.n; ++y) if (!this.inT[y]) delta = min(delta, this.slackv[y]);
         for (let i = 0; i < this.n; ++i) {
@@ -153,13 +153,16 @@ class KuhnMunkres extends GraphAlgorithm {
           if (this.inT[i]) this.ly[i] += delta;
           else this.slackv[i] -= delta;
         }
-        this.assert();
+
+        // Yield after adjusting lx[], ly[], slackv[]
+        yield { graph: this.report() };
+
         let break_flag: boolean = false;
         for (let y = 0; y < this.n; ++y) {
           if (!this.inT[y] && this.slackv[y] === 0) {
             this.inT[y] = true;
             if (this.matchy[y] === -1) {
-              this.flip(y);
+              yield* this.flip(y);
               break_flag = true;
               break;
             }
@@ -169,36 +172,9 @@ class KuhnMunkres extends GraphAlgorithm {
         if (break_flag) break;
       }
 
-      // Yeild Step
-      yield { graph: this.report(graph) };
+      // Yeild after matching Xi
+      yield { graph: this.report() };
     }
-
-    // let adjlist = AdjacencyList.from(graph, false);
-    // let nodes = graph.nodes(),
-    //     edges = graph.edges(),
-    //     nc = nodes.length;
-    // let left = graph.leftSide,
-    //     right = graph.rightSide;
-    // nodes.forEach(node => Object.assign(node.datum, { tag: 0, match: -1 }));
-    // edges.map(edge =>
-    //     nodes[edge.source].datum.side === "left"
-    //         ? edge
-    //         : {
-    //             source: edge.target,
-    //             target: edge.source,
-    //             datum: edge.datum
-    //         }
-    // );
-    //
-    // for (let leftNode of left) {
-    //     edges.forEach(edge => (edge.datum.matched = nodes[edge.source].datum.match === edge.target));
-    //     yield { graph: new NodeEdgeList(nodes, edges) };
-    //
-    //     right.forEach(node => (node.datum.visited = false));
-    //     if (!this.dfs(leftNode, adjlist)) {
-    //         leftNode.datum.tag = 2;
-    //     }
-    // }
   }
 }
 
