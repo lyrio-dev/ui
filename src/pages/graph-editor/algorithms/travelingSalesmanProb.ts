@@ -84,7 +84,7 @@ class SalesmanPath extends GraphAlgorithm {
       });
 
       //判断选择是否合法
-      let judRes = (now >= boundary) ? 1 : this.judge(graph, edges);
+      let judRes = now >= boundary ? 1 : this.judge(graph, edges);
       //更新答案
       if (judRes == 2) {
         if (now < boundary) {

@@ -19,8 +19,8 @@ test("SalesmanCheaperAlgo", () => {
         tmp.push([e.source + 1, e.target + 1]);
       }
     });
-    while(tmp.length < graph.nodes().length) {
-        tmp.push('/');
+    while (tmp.length < graph.nodes().length) {
+      tmp.push("/");
     }
     tmp.push(step.answer);
     output.push(tmp);
