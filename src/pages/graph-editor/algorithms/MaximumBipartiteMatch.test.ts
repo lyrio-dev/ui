@@ -15,14 +15,12 @@ test("KuhnMunkres", () => {
   let resEdge: any[][] = [];
   for (let step of new KuhnMunkres().run(graph)) {
     res.push(step.graph.nodes().map(n => n.datum.match));
-    resNode.push(step.graph.nodes().map(n => (
-      n.datum.l
-    )));
-    resEdge.push(step.graph.edges().map(e => (
-      (e.datum.valid ? "v" : " ") +
-      (e.datum.marked ? "m" : " ") +
-      (e.datum.matched ? "M" : " ")
-    )));
+    resNode.push(step.graph.nodes().map(n => n.datum.l));
+    resEdge.push(
+      step.graph
+        .edges()
+        .map(e => (e.datum.valid ? "v" : " ") + (e.datum.marked ? "m" : " ") + (e.datum.matched ? "M" : " "))
+    );
   }
   console.table(res);
   console.table(resNode);

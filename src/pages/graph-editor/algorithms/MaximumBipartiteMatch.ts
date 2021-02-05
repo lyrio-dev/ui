@@ -1,3 +1,4 @@
+import { Queue } from "../utils/DataStructure";
 import { GraphAlgorithm, Step } from "../GraphAlgorithm";
 import { BipartiteMatrix, Node, Edge, Graph, NodeEdgeList } from "../GraphStructure";
 
@@ -9,39 +10,6 @@ function max<type>(x: type, y: type): type {
 function min<type>(x: type, y: type): type {
   if (x <= y) return x;
   return y;
-}
-
-class Queue<type = any> {
-  private values: type[] = [];
-  private head: number = 0;
-  private tail: number = 0;
-
-  push(value: type) {
-    this.tail = this.values.push(value);
-  }
-
-  empty(): boolean {
-    return this.head == this.tail;
-  }
-
-  clear(): void {
-    this.head = this.tail = 0;
-    this.values = [];
-  }
-
-  front(): type {
-    if (this.empty()) throw new Error("ds Queue : cannot query front() of an empty queue!");
-    return this.values[this.head];
-  }
-
-  pop() {
-    if (this.empty()) throw new Error("ds Queue : cannot pop() from an empty queue!");
-    ++this.head;
-  }
-
-  size(): number {
-    return this.tail - this.head;
-  }
 }
 
 class KuhnMunkres extends GraphAlgorithm {
@@ -104,21 +72,27 @@ class KuhnMunkres extends GraphAlgorithm {
   report(): NodeEdgeList {
     this.assert();
 
-    this.edges.forEach(e => Object.assign(e.datum, {
-      matched: this.is_matched(e),  // used currently
-      marked: this.is_marked(e),    // to be used
-      valid: this.is_valid(e.source, e.target - this.n) // satisfing l[x] + l[y] = w[x][y]
-    }));
-    this.X.forEach((n, i) => Object.assign(n.datum, {
-      match: this.matchx[i] === -1 ? -1 : this.matchx[i] + this.n,
-      in: this.inS[i],
-      l: this.lx[i]
-    }));
-    this.Y.forEach((n, i) => Object.assign(n.datum, {
-      match: this.matchy[i],
-      in: this.inT[i],
-      l: this.ly[i]
-    }));
+    this.edges.forEach(e =>
+      Object.assign(e.datum, {
+        matched: this.is_matched(e), // used currently
+        marked: this.is_marked(e), // to be used
+        valid: this.is_valid(e.source, e.target - this.n) // satisfing l[x] + l[y] = w[x][y]
+      })
+    );
+    this.X.forEach((n, i) =>
+      Object.assign(n.datum, {
+        match: this.matchx[i] === -1 ? -1 : this.matchx[i] + this.n,
+        in: this.inS[i],
+        l: this.lx[i]
+      })
+    );
+    this.Y.forEach((n, i) =>
+      Object.assign(n.datum, {
+        match: this.matchy[i],
+        in: this.inT[i],
+        l: this.ly[i]
+      })
+    );
     this.clear(this.markx);
 
     return new NodeEdgeList(this.X.concat(this.Y), this.edges);
@@ -127,7 +101,7 @@ class KuhnMunkres extends GraphAlgorithm {
   *flip(y: number) {
     this.markx[this.slackx[y]] = y;
     if (this.matchx[this.slackx[y]] !== -1) yield* this.flip(this.matchx[this.slackx[y]]);
-    else yield { graph: this.report() };  // Yield before flipping Edges
+    else yield { graph: this.report() }; // Yield before flipping Edges
     (this.matchy[y] = this.slackx[y]), (this.matchx[this.slackx[y]] = y);
   }
 
@@ -161,7 +135,7 @@ class KuhnMunkres extends GraphAlgorithm {
     });
     this.ly = Array.from({ length: this.n }, () => 0);
 
-    this.X = graph.leftSide, this.Y = graph.rightSide, this.edges = graph.edges();
+    (this.X = graph.leftSide), (this.Y = graph.rightSide), (this.edges = graph.edges());
 
     this.clear(this.matchx), this.clear(this.matchy), this.clear(this.markx);
 
