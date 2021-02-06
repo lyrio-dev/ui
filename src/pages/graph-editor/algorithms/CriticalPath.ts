@@ -24,7 +24,7 @@ class CriticalPath extends GraphAlgorithm {
     }
 
     yield { graph };
-    
+
     for (let t = 0; t < graph.nodes().length; t++) {
       for (let i = 0; i < graph.nodes().length; i++) {
         if (graph.nodes()[i].datum.topoSequence == -1 && graph.nodes()[i].datum.degree == 0) {
@@ -40,7 +40,7 @@ class CriticalPath extends GraphAlgorithm {
               });
             }
           }
-          
+
           yield { graph };
         }
       }
