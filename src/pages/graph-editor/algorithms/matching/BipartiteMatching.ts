@@ -1,9 +1,9 @@
-import { GraphAlgorithm, Step } from "../GraphAlgorithm";
-import { AdjacencyList, BipartiteGraph, Edge, Graph, Node, NodeEdgeList } from "../GraphStructure";
+import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
+import { AdjacencyList, BipartiteGraph, Edge, Graph, Node, NodeEdgeList } from "../../GraphStructure";
 
 class HungarianDFS extends GraphAlgorithm {
   constructor() {
-    super("HungarianDFS", "DFS version of Hungarian algorithm for Bipartite Graph Match");
+    super("HungarianDFS", "DFS version of Hungarian algorithm for Maximum Matching in Bipartite Graph");
   }
 
   private edges: Edge[] = [];

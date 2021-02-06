@@ -1,5 +1,5 @@
-import { HungarianDFS } from "./BipartiteMatch";
-import { BipartiteGraph } from "../GraphStructure";
+import { HungarianDFS } from "./BipartiteMatching";
+import { BipartiteGraph } from "../../GraphStructure";
 
 test("HungarianDFS", () => {
   let edges = [
