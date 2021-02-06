@@ -1,5 +1,5 @@
-import { KuhnMunkres } from "./MaximumBipartiteMatch";
-import { BipartiteMatrix } from "../GraphStructure";
+import { KuhnMunkres } from "./WeightedBipartiteMatching";
+import { BipartiteMatrix } from "../../GraphStructure";
 
 test("KuhnMunkres", () => {
   let mat = [

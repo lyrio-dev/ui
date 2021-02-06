@@ -1,6 +1,6 @@
-import { Queue } from "../utils/DataStructure";
-import { GraphAlgorithm, Step } from "../GraphAlgorithm";
-import { BipartiteMatrix, Node, Edge, Graph, NodeEdgeList } from "../GraphStructure";
+import { Queue } from "../../utils/DataStructure";
+import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
+import { BipartiteMatrix, Node, Edge, Graph, NodeEdgeList } from "../../GraphStructure";
 
 function max<type>(x: type, y: type): type {
   if (x >= y) return x;
