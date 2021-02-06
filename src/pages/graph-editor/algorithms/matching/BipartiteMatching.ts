@@ -3,7 +3,7 @@ import { AdjacencyList, BipartiteGraph, Edge, Graph, Node, NodeEdgeList } from "
 
 class HungarianDFS extends GraphAlgorithm {
   constructor() {
-    super("HungarianDFS", "DFS version of Hungarian algorithm for Maximum Match in Bipartite Graph");
+    super("HungarianDFS", "DFS version of Hungarian algorithm for Maximum Matching in Bipartite Graph");
   }
 
   private edges: Edge[] = [];

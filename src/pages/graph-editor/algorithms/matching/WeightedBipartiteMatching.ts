@@ -14,7 +14,7 @@ function min<type>(x: type, y: type): type {
 
 class KuhnMunkres extends GraphAlgorithm {
   constructor() {
-    super("KuhnMunkres Algorithm", "Kuhn-Munkres algorithm for Maximum Bipartite Graph Match");
+    super("KuhnMunkres Algorithm", "Kuhn-Munkres algorithm for Maximum Weighted Matching in Bipartite Graph");
   }
 
   private que: Queue<number> = new Queue<number>();
