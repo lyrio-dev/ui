@@ -87,7 +87,7 @@ class MinCostFlow extends GraphAlgorithm {
 
     let flow = 0,
       cost = 0;
-    while (this.spfa()) {
+    while (limit > 0 && this.spfa()) {
       let delta = limit;
       let e: _Edge;
       for (let pos = this.T; pos !== this.S; pos = this.pre[pos]) {
