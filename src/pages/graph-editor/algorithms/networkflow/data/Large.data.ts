@@ -1,6 +1,6 @@
-import { EdgeList } from "../../GraphStructure";
+import { EdgeList } from "../../../GraphStructure";
 
-let edges = [
+let E = [
   [2, 42, Infinity, 33],
   [1, 42, 1, 33],
   [2, 68, Infinity, 30],
@@ -2151,9 +2151,11 @@ let edges = [
   [76, 77, 21, 0],
   [76, 2, Infinity, 0]
 ].map(([s, t, f, c]) => ({ source: s - 1, target: t - 1, datum: { flow: f, cost: c } }));
-let graph = new EdgeList(77, edges);
-let Spos = 0,
-  Tpos = 76,
-  limit = Infinity;
+let G = new EdgeList(77, E);
+let S = 0;
+let T = 76;
+let L = Infinity;
+let Af = { flow: 1000 };
+let Afc = { flow: 1000, cost: 74606 };
 
-export { graph, limit, Tpos, Spos };
+export { E, G, S, T, L, Af, Afc };

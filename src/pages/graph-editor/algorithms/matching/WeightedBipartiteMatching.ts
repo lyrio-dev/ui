@@ -175,6 +175,11 @@ class KuhnMunkres extends GraphAlgorithm {
       // Yeild after matching Xi
       yield { graph: this.report() };
     }
+
+    let res = 0;
+    for (let i = 0; i < this.n; ++i) res += this.lx[i] + this.ly[i];
+    console.log(`algo KuhnMunkres : {weight: ${res}}`);
+    return { weight: res };
   }
 }
 

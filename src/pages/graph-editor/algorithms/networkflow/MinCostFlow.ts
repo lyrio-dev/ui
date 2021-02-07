@@ -111,7 +111,8 @@ class MinCostFlow extends GraphAlgorithm {
       yield { graph: this.report() };
     }
 
-    console.log(`algo MCMF : flow = ${flow} , cost = ${cost}`);
+    console.log(`algo MinCostFlow : {flow: ${flow}, cost: ${cost}`);
+    return { flow, cost };
   }
 }
 

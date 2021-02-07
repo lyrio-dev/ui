@@ -58,7 +58,8 @@ class FordFulkerson extends GraphAlgorithm {
       yield { graph: new EdgeList(this.n, this.E.edges()) };
     } while (delta > 0);
 
-    console.log(`algo FordFulkerson : flow = ${flow}`);
+    console.log(`algo FordFulkerson : {flow: ${flow}}`);
+    return { flow };
   }
 }
 

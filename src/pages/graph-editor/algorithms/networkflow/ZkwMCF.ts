@@ -5,7 +5,7 @@ import { NetworkFlowBase, min, max, _Edge } from "./Common";
 
 class ZkwMCF extends GraphAlgorithm {
   constructor() {
-    super("ZkwMCF", "Zkw‘s algorithm for Minimum-Cost Network Flow");
+    super("ZkwMCF", "Zkw's algorithm for Minimum-Cost Network Flow");
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -120,7 +120,8 @@ class ZkwMCF extends GraphAlgorithm {
       } while (this.vis[this.T]);
     }
 
-    console.log(`algo ZkwMCF : flow = ${flow} , cost = ${cost}`);
+    console.log(`algo ZkwMCF : {flow: ${flow}, cost: ${cost}`);
+    return { flow, cost };
   }
 }
 
