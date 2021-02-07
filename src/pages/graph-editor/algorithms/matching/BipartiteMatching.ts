@@ -52,15 +52,20 @@ class HungarianDFS extends GraphAlgorithm {
     );
     this.edges.forEach(e => Object.assign(e.datum, { marked: false, matched: false }));
 
+    let res = 0;
     for (let leftnode of left) {
       right.forEach(rightnode => (this.nodes[rightnode.id].datum.visit = false));
       this.nodes.forEach(node => (node.datum.mark = -1));
       if (!(yield* this.dfs(leftnode.id))) this.nodes[leftnode.id].datum.tag = 2;
+      else ++res;
 
       this.edges.forEach(edge => (edge.datum.matched = this.nodes[edge.source].datum.match === edge.target));
       this.edges.forEach(edge => (edge.datum.marked = false));
       yield { graph: new NodeEdgeList(this.nodes, this.edges) };
     }
+
+    console.log(`algo HungarianDFS : {matched: ${res}}`);
+    return { matched: res };
   }
 }
 

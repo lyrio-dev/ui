@@ -120,7 +120,8 @@ class ZkwMCF extends GraphAlgorithm {
       } while (this.vis[this.T]);
     }
 
-    console.log(`algo ZkwMCF : flow = ${flow} , cost = ${cost}`);
+    console.log(`algo ZkwMCF : {flow: ${flow}, cost: ${cost}`);
+    return { flow, cost };
   }
 }
 

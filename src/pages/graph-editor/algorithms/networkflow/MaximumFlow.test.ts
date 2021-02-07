@@ -1,10 +1,11 @@
 import { FordFulkerson } from "./FordFulkerson";
 import { EdmondsKarp } from "./EdmondsKarp";
 import { Dinic } from "./Dinic";
-import { EdgeList } from "../../GraphStructure";
+import { EdgeList, Graph } from "../../GraphStructure";
 
-import { graph, Tpos, Spos, limit } from "./LargeGraph.data";
-// let edges = [
+import { G, S, T, Af } from "./data/Large.data";
+
+// let E = [
 //   [0,1,3],
 //   [0,3,4],
 //   [1,2,4],
@@ -16,9 +17,12 @@ import { graph, Tpos, Spos, limit } from "./LargeGraph.data";
 //   [4,2,3],
 //   [4,5,6]
 // ].map(([s, t, f]) => ({ source: s, target: t, datum: {flow: f} }));
-// let graph = new EdgeList(6, edges);
+// let G = new EdgeList(6, E);
+// let S = 0;
+// let T = 5;
+// let A = ({flow: 5});
 
-// let edges = [
+// let E = [
 //   [0, 1, 1],
 //   [0, 3, 1],
 //   [1, 4, 1],
@@ -27,42 +31,77 @@ import { graph, Tpos, Spos, limit } from "./LargeGraph.data";
 //   [3, 4, 1],
 //   [4, 5, 1]
 // ].map(([s, t, f]) => ({ source: s, target: t, datum: { flow: f } }));
-// let graph = new EdgeList(6, edges);
-// let Spos = 0,
-//   Tpos = 5;
+// let G = new EdgeList(6, E);
+// let S = 0;
+// let T = 5;
+// let A = ({flow: 2});
 
 test("FordFulkerson", () => {
-  let resEdge: any[][] = [];
+  let algo = new FordFulkerson().run(G, S, T);
+  let step: any;
+
+  let resG: Graph;
+  let resV: any[][] = [];
+  let resE: any[][] = [];
   let count = 0;
-  for (let step of new FordFulkerson().run(graph, Spos, Tpos)) {
+
+  while (!(step = algo.next()).done) {
     ++count;
-    //resEdge.push(step.graph.edges().map(e => `[${e.datum.mark}](${e.datum.used}/${e.datum.flow})`));
+    resG = step.value.graph;
+    //resE.push(resG.edges().map(e => `[${e.datum.mark}](${e.datum.used}/${e.datum.flow})`));
   }
+
   console.log(`algo FordFulkerson : step count = ${count}`);
-  //console.table(resEdge);
+  //console.table(resV);
+  //console.table(resE);
+
+  let R = step.value;
+  expect(R).toEqual(Af);
 });
 
 test("EdmondsKarp", () => {
-  let resEdge: any[][] = [];
+  let algo = new EdmondsKarp().run(G, S, T);
+  let step: any;
+
+  let resG: Graph;
+  let resV: any[][] = [];
+  let resE: any[][] = [];
   let count = 0;
-  for (let step of new EdmondsKarp().run(graph, Spos, Tpos)) {
+
+  while (!(step = algo.next()).done) {
     ++count;
-    //resEdge.push(step.graph.edges().map(e => `[${e.datum.mark}](${e.datum.used}/${e.datum.flow})`));
+    resG = step.value.graph;
+    //resE.push(resG.edges().map(e => `[${e.datum.mark}](${e.datum.used}/${e.datum.flow})`));
   }
+
   console.log(`algo EdmondsKarp : step count = ${count}`);
-  //console.table(resEdge);
+  //console.table(resV);
+  //console.table(resE);
+
+  let R = step.value;
+  expect(R).toEqual(Af);
 });
 
 test("Dinic", () => {
-  let resEdge: any[][] = [];
-  let res: number[][] = [];
+  let algo = new Dinic().run(G, S, T);
+  let step: any;
+
+  let resG: Graph;
+  let resV: any[][] = [];
+  let resE: any[][] = [];
   let count = 0;
-  for (let step of new Dinic().run(graph, Spos, Tpos)) {
+
+  while (!(step = algo.next()).done) {
     ++count;
-    //res.push(step.graph.nodes().map(n => n.datum.depth));
-    //resEdge.push(step.graph.edges().map(e => `[${e.datum.valid}/${e.datum.mark}](${e.datum.used}/${e.datum.flow})`));
+    resG = step.value.graph;
+    //resV.push(resG.nodes().map(n => n.datum.depth));
+    //resE.push(resG.edges().map(e => `[${e.datum.valid}/${e.datum.mark}](${e.datum.used}/${e.datum.flow})`));
   }
+
   console.log(`algo Dinic : step count = ${count}`);
-  //console.table(res);
-  //console.table(resEdge);
+  //console.table(resV);
+  //console.table(resE);
+
+  let R = step.value;
+  expect(R).toEqual(Af);
 });

@@ -179,7 +179,8 @@ class Gabow extends GraphAlgorithm {
       yield { graph: this.report() };
     }
 
-    console.log(`algo Gabow : res = ${res}`);
+    console.log(`algo Gabow : {matched: ${res}}`);
+    return { matched: res };
   }
 }
 

@@ -111,7 +111,8 @@ class Dinic extends GraphAlgorithm {
       yield { graph: this.report() };
     }
 
-    console.log(`algo Dinic : flow = ${flow}`);
+    console.log(`algo Dinic : {flow: ${flow}}`);
+    return { flow };
   }
 }
 

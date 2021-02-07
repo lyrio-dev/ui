@@ -83,7 +83,8 @@ class EdmondsKarp extends GraphAlgorithm {
       yield { graph: new EdgeList(this.n, this.E.edges()) };
     }
 
-    console.log(`algo EdmondsKarp : flow = ${flow}`);
+    console.log(`algo EdmondsKarp : {flow: ${flow}}`);
+    return { flow };
   }
 }
 
