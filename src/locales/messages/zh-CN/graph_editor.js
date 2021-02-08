@@ -1,3 +1,40 @@
 module.exports = {
-  title: "图编辑器"
+  title: "图编辑器",
+  graph: {
+    random: {
+      name: "随机图"
+    },
+    edge_list: {
+      name: "边列表"
+    },
+    adjmat: {
+      name: "邻接矩阵",
+      error: {
+        non_square: "邻接矩阵应为方阵",
+        asymmetric: "无向图的邻接矩阵应对称",
+        multiple_edges: "邻接矩阵不允许有重边"
+      }
+    },
+    adjlist: {
+      name: "邻接链表"
+    },
+    bipartite: {
+      name: "二分图",
+      error: {
+        not_bipartite: "非二分图"
+      }
+    },
+    bipmat: {
+      name: "二分图矩阵",
+      error: {
+        multiple_edges: "边矩阵不允许有重边"
+      }
+    }
+  },
+  input: {
+    error: {
+      nan: "输入并不能转化为数字",
+      zero_or_one: "无向图的边中只允许0或1"
+    }
+  }
 };
