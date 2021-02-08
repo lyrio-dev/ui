@@ -34,10 +34,7 @@ let GraphEditor: React.FC = props => {
 
   return (
     <>
-      <GraphInputPanel
-        graph={graph}
-        error={error}
-        setGraph={g => setGraph(g)} />
+      <GraphInputPanel graph={graph} error={error} setGraph={g => setGraph(g)} />
       <GraphDisplay
         width={500}
         height={500}

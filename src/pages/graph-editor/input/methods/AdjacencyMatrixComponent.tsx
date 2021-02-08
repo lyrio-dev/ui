@@ -16,15 +16,17 @@ let AdjacencyMatrixComponent: MethodComponent = props => {
   const toString = (g: Graph) => {
     try {
       let graph = AdjacencyMatrix.from(g, directed);
-      return graph.mat.map(
-        line => line.map(
-          datum => {
-            if (datum === undefined) return "0";
-            if (datum.weight === undefined) return "1";
-            return String(datum.weight);
-          }
-        ).join(" ")
-      ).join("\n");
+      return graph.mat
+        .map(line =>
+          line
+            .map(datum => {
+              if (datum === undefined) return "0";
+              if (datum.weight === undefined) return "1";
+              return String(datum.weight);
+            })
+            .join(" ")
+        )
+        .join("\n");
     } catch (e) {
       setError(e.message);
     }
@@ -43,18 +45,21 @@ let AdjacencyMatrixComponent: MethodComponent = props => {
   const onTextAreaChange = (_, { value }) => setContent(String(value));
   const onFormSubmit = () => {
     try {
-      let mat: any[][] = content.trim().split("\n")
-        .map(line => line
-          .trim()
-          .split(/\s+/)
-          .map(s => parseInt(s))
-          .map(v => {
-            if (isNaN(v)) throw new Error(".input.error.nan");
-            if (v === 0) return undefined;
-            if (weighted) return ({ weight: v });
-            if (v !== 1) throw new Error(".input.error.zero_or_one");
-            return ({});
-          })
+      let mat: any[][] = content
+        .trim()
+        .split("\n")
+        .map(line =>
+          line
+            .trim()
+            .split(/\s+/)
+            .map(s => parseInt(s))
+            .map(v => {
+              if (isNaN(v)) throw new Error(".input.error.nan");
+              if (v === 0) return undefined;
+              if (weighted) return { weight: v };
+              if (v !== 1) throw new Error(".input.error.zero_or_one");
+              return {};
+            })
         );
       let graph = new AdjacencyMatrix(mat, directed);
       setGraph(graph);
@@ -66,11 +71,7 @@ let AdjacencyMatrixComponent: MethodComponent = props => {
 
   return (
     <Form onSubmit={onFormSubmit} error={error !== undefined}>
-      <Form.TextArea
-        style={{ fontFamily: "monospace" }}
-        value={content}
-        onChange={onTextAreaChange}
-      />
+      <Form.TextArea style={{ fontFamily: "monospace" }} value={content} onChange={onTextAreaChange} />
       <Form.Group inline>
         <Form.Checkbox label={"Directed?"} checked={directed} onChange={onDirectedChanged} />
         <Form.Checkbox label={"Weighted?"} checked={weighted} onChange={onWeightedChanged} />

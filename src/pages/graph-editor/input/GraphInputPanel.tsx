@@ -1,15 +1,14 @@
-import React from "react";
-import { Header, Segment } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Header, Menu, Segment } from "semantic-ui-react";
 import { Graph } from "@/pages/graph-editor/GraphStructure";
-import AdjacencyMatrixComponent from "@/pages/graph-editor/input/methods/AdjacencyMatrixComponent";
+import methods from "@/pages/graph-editor/input/methods";
 
 export interface MethodComponentProps {
   graph: Graph;
   setGraph: (g: Graph) => void;
 }
 
-export interface MethodComponent extends React.FC<MethodComponentProps> {
-}
+export interface MethodComponent extends React.FC<MethodComponentProps> {}
 
 interface GraphInputPanelProps {
   graph: Graph;
@@ -18,23 +17,33 @@ interface GraphInputPanelProps {
 }
 
 let GraphInputPanel: React.FC<GraphInputPanelProps> = props => {
-
+  const [selectedMethod, setSelectedMethods] = useState("random");
+  const onMenuItemClicked = (_, { name }) => {
+    setSelectedMethods(name);
+  };
   return (
     <>
       <Header as="h4" block attached="top" icon="edit" content="图的表示方法" />
-      {/*<Segment attached="bottom">*/}
-      {/*  <Menu attached="top" tabular>*/}
-      {/*    <Menu.Item>hello</Menu.Item>*/}
-      {/*{this.props.inputMethods.map(([id, name]) => (*/}
-      {/*  <Menu.Item key={id} name={id} active={this.state.activeMethod === id} onClick={this.handleItemClick}>*/}
-      {/*    {name}*/}
-      {/*  </Menu.Item>*/}
-      {/*))}*/}
-      {/*</Menu>*/}
       <Segment attached="bottom">
-        <AdjacencyMatrixComponent graph={props.graph} setGraph={(g) => props.setGraph(g)} />
+        <Menu attached="top" tabular>
+          {Array.from(methods.keys(), methodName => (
+            <Menu.Item
+              key={methodName}
+              name={methodName}
+              active={selectedMethod === methodName}
+              onClick={onMenuItemClicked}
+            >
+              {methodName}
+            </Menu.Item>
+          ))}
+        </Menu>
+        <Segment attached="bottom">
+          {React.createElement(methods.get(selectedMethod), {
+            graph: props.graph,
+            setGraph: g => props.setGraph(g)
+          })}
+        </Segment>
       </Segment>
-      {/*</Segment>*/}
     </>
   );
 };
