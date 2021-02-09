@@ -63,7 +63,7 @@ export function fromRandom(
 }
 
 export class NodeEdgeList implements Graph {
-  constructor(private _nodes: Node[], private _edges: Edge[]) {}
+  constructor(protected _nodes: Node[], protected _edges: Edge[]) {}
 
   static from(g: Graph) {
     return new NodeEdgeList(g.nodes(), g.edges());
