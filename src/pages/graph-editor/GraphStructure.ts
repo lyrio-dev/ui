@@ -68,7 +68,7 @@ export function fromRandom(
 }
 
 export class NodeEdgeList implements Graph {
-  constructor(private _nodes: Node[], private _edges: Edge[]) {}
+  constructor(protected _nodes: Node[], protected _edges: Edge[]) {}
 
   static from(g: Graph) {
     return new NodeEdgeList(g.nodes(), g.edges());
@@ -188,6 +188,50 @@ export class AdjacencyList implements Graph {
 
   adjacentEdges(node: number) {
     return this.adjacencyList[node];
+  }
+}
+
+export class IncidenceMatrix extends EdgeList implements Graph {
+  constructor(public incmat: number[][], directed: boolean, node_generator: (index: number) => Object = emptyObject) {
+    super(incmat.length, [], node_generator);
+    let nodeCount = incmat.length,
+      edgeCount = incmat[0].length;
+    this._nodes = Array.from({ length: nodeCount }, (_, id) => ({ id, datum: node_generator(id) }));
+    if (incmat.some(line => line.length !== edgeCount)) throw new Error();
+    for (let i = 0; i < edgeCount; i++) {
+      let s, t;
+      for (let j = 0; j < nodeCount; j++) {
+        let v = incmat[j][i];
+        if (v === 1) {
+          if (directed) {
+            if (t === undefined) t = j;
+            else throw new Error();
+          } else {
+            if (s === undefined) s = j;
+            else if (t === undefined) t = j;
+            else throw new Error();
+          }
+        } else if (v === -1) {
+          if (!directed) throw new Error();
+          if (s === undefined) s = j;
+          else throw new Error();
+        } else if (v !== 0) {
+          throw new Error();
+        }
+      }
+      this._edges.push({ source: s, target: t, datum: {} });
+    }
+  }
+
+  static from(g: Graph, directed: boolean = false) {
+    let incmat: number[][] = Array.from({ length: g.nodes().length }, () =>
+      Array.from({ length: g.edges().length }, () => 0)
+    );
+    g.edges().forEach(({ source: s, target: t }, i) => {
+      incmat[s][i] = directed ? -1 : 1;
+      incmat[t][i] = 1;
+    });
+    return new IncidenceMatrix(incmat, directed, i => g.nodes()[i].datum);
   }
 }
 
