@@ -12,7 +12,7 @@ test("CriticalPath", () => {
   let graph = new AdjacencyMatrix(mat, false);
   let res = [];
   for (let step of new Prim().run(graph)) {
-    res.push(step.graph.edges().map(e => e.source + ', ' + e.target + ', ' + e.datum.chosen));
+    res.push(step.graph.edges().map(e => e.source + ", " + e.target + ", " + e.datum.chosen));
   }
   console.table(res);
 });
