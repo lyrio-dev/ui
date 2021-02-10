@@ -197,7 +197,10 @@ export class IncidenceMatrix extends EdgeList implements Graph {
     let nodeCount = incmat.length,
       edgeCount = incmat[0].length;
     this._nodes = Array.from({ length: nodeCount }, (_, id) => ({ id, datum: node_generator(id) }));
-    if (incmat.some(line => line.length !== edgeCount)) throw new Error();
+    if (incmat.some(line => line.length !== edgeCount)) throw new Error(".graph.incmat.error.non_matrix");
+    const invalidEdge = () => {
+      throw new Error(".graph.incmat.error.invalid_edge_" + (directed ? "directed" : "undirected"));
+    };
     for (let i = 0; i < edgeCount; i++) {
       let s, t;
       for (let j = 0; j < nodeCount; j++) {
@@ -205,19 +208,22 @@ export class IncidenceMatrix extends EdgeList implements Graph {
         if (v === 1) {
           if (directed) {
             if (t === undefined) t = j;
-            else throw new Error();
+            else invalidEdge();
           } else {
             if (s === undefined) s = j;
             else if (t === undefined) t = j;
-            else throw new Error();
+            else invalidEdge();
           }
         } else if (v === -1) {
-          if (!directed) throw new Error();
+          if (!directed) invalidEdge();
           if (s === undefined) s = j;
-          else throw new Error();
+          else invalidEdge();
         } else if (v !== 0) {
-          throw new Error();
+          invalidEdge();
         }
+      }
+      if (s === undefined || t === undefined) {
+        invalidEdge();
       }
       this._edges.push({ source: s, target: t, datum: {} });
     }

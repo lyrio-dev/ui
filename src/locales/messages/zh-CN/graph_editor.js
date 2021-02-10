@@ -29,6 +29,14 @@ module.exports = {
       error: {
         multiple_edges: "边矩阵不允许有重边"
       }
+    },
+    incmat: {
+      name: "关联矩阵",
+      error: {
+        non_matrix: "输入非矩阵",
+        invalid_edge_directed: "有向图中，每一列应有且只有一个1和-1",
+        invalid_edge_undirected: "无向图中，每一列应有且只有两个1"
+      }
     }
   },
   input: {
