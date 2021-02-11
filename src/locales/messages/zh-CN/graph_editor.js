@@ -43,6 +43,15 @@ module.exports = {
     error: {
       nan: "输入并不能转化为数字",
       zero_or_one: "无向图的边中只允许0或1"
+    },
+    props: {
+      node_count: "节点数",
+      edge_count: "边数",
+      max_weight: "最大边权",
+      directed: "有向图？",
+      weighted: "加权图？",
+      self_loop: "允许自环？",
+      multiple_edges: "允许重边？"
     }
   }
 };

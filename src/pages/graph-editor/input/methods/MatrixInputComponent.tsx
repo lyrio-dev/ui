@@ -60,7 +60,7 @@ let MatrixInputComponent: React.FC<MatrixInputProps> = props => {
       <Form.TextArea style={{ fontFamily: "monospace" }} value={content} onChange={onTextAreaChange} />
       <Form.Group inline>
         {optionStates.map(([name, option, setter]) => (
-          <Form.Checkbox key={name} label={name} checked={option} onChange={setter} />
+          <Form.Checkbox key={name} label={_(`.input.props.${name}`)} checked={option} onChange={setter} />
         ))}
       </Form.Group>
       {error && <Message error>{_(error)}</Message>}

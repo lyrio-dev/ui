@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Header, Menu, Segment } from "semantic-ui-react";
 import { Graph } from "@/pages/graph-editor/GraphStructure";
 import methods from "@/pages/graph-editor/input/methods";
+import { useLocalizer } from "@/utils/hooks";
 
 export interface MethodComponentProps {
   graph: Graph;
@@ -17,6 +18,7 @@ interface GraphInputPanelProps {
 }
 
 let GraphInputPanel: React.FC<GraphInputPanelProps> = props => {
+  const _ = useLocalizer("graph_editor");
   const [selectedMethod, setSelectedMethods] = useState("random");
   const onMenuItemClicked = (_, { name }) => {
     setSelectedMethods(name);
@@ -33,7 +35,7 @@ let GraphInputPanel: React.FC<GraphInputPanelProps> = props => {
               active={selectedMethod === methodName}
               onClick={onMenuItemClicked}
             >
-              {methodName}
+              {_(`.graph.${methodName}.name`)}
             </Menu.Item>
           ))}
         </Menu>

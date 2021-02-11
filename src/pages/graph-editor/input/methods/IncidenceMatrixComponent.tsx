@@ -5,7 +5,7 @@ import React from "react";
 
 let IncidenceMatrixComponent: MethodComponent = props => {
   let { graph, setGraph } = props;
-  let options: [string, boolean][] = [["directed?", true]];
+  let options: [string, boolean][] = [["directed", true]];
   const toString = (g: Graph) => {
     let graph = IncidenceMatrix.from(g, options[0][1]);
     return graph.incmat.map(line => line.map(v => String(v)).join(" ")).join("\n");

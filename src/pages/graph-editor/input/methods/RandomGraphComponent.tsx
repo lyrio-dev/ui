@@ -34,15 +34,15 @@ let RandomGraphComponent: MethodComponent = props => {
     ];
   };
   const firstLine: [string, number, (_, data) => void][] = ([
-    ["Node Count", 10],
-    ["Edge Count", 20],
-    ["Max Weight", 100]
+    ["node_count", 10],
+    ["edge_count", 20],
+    ["max_weight", 100]
   ] as [string, number][]).map(([name, init]) => [name, ...useNumberState(init)]);
   const secondLine: [string, boolean, (_, data) => void][] = ([
-    ["Directed?", true],
-    ["MultipleEdges?", false],
-    ["SelfLoop?", false],
-    ["Weighted?", false]
+    ["directed", true],
+    ["multiple_edges", false],
+    ["self_loop", false],
+    ["weighted", false]
   ] as [string, boolean][]).map(([name, init]) => [name, ...useBooleanState(init)]);
 
   const onFormSubmit = () => {
@@ -64,12 +64,12 @@ let RandomGraphComponent: MethodComponent = props => {
     <Form onSubmit={onFormSubmit} error={error !== undefined}>
       <Form.Group widths={"equal"}>
         {firstLine.map(([name, state, setter]) => (
-          <Form.Input key={name} label={name} value={String(state)} onChange={setter} />
+          <Form.Input key={name} label={_(`.input.props.${name}`)} value={String(state)} onChange={setter} />
         ))}
       </Form.Group>
       <Form.Group inline>
         {secondLine.map(([name, state, setter]) => (
-          <Form.Checkbox key={name} label={name} checked={state} onChange={setter} />
+          <Form.Checkbox key={name} label={_(`.input.props.${name}`)} checked={state} onChange={setter} />
         ))}
       </Form.Group>
       {error && <Message error>{_(error)}</Message>}

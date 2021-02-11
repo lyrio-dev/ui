@@ -6,8 +6,8 @@ import MatrixInputComponent from "@/pages/graph-editor/input/methods/MatrixInput
 let AdjacencyMatrixComponent: MethodComponent = props => {
   let { graph, setGraph } = props;
   let options: [string, boolean][] = [
-    ["directed?", true],
-    ["weighted?", false]
+    ["directed", true],
+    ["weighted", false]
   ];
   const toString = (g: Graph) => {
     let graph = AdjacencyMatrix.from(g, options[0][1]);
