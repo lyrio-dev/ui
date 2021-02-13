@@ -61,7 +61,7 @@ let SubmitViewFrame: React.FC<SubmitViewFrameProps> = props => {
               <StatusText status={props.lastSubmission.lastSubmission.status} />
             </Link>
             <Link className={style.scoreText} href={`/s/${props.lastSubmission.lastSubmission.id}`}>
-              <ScoreText score={props.lastSubmission.lastSubmission.score} />
+              <ScoreText score={props.lastSubmission.lastSubmission.score || 0} />
             </Link>
           </div>
         )}
