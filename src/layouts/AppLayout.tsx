@@ -271,9 +271,9 @@ let AppLayout: React.FC = props => {
           {wide ? topBarItemsForWideScreen : topBarItemsForNarrowScreen}
         </Container>
       </Menu>
+      {getFooter(style.footer + " " + style.real)}
       <Container id={style.mainUiContainer}>{props.children}</Container>
       {getFooter(style.footer + " " + style.placeholder)}
-      {getFooter(style.footer + " " + style.real)}
       {!wide && (
         <>
           <div className={style.sidebarDimmer + sidebarOpenStatusClassName} onClick={() => setSidebarOpen(false)}></div>
