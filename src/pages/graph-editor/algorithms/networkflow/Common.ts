@@ -6,16 +6,6 @@ export class _Edge {
   constructor(public to: number, public next: number, public flow: number, public cost?: number) {}
 }
 
-export function max<type>(x: type, y: type): type {
-  if (x >= y) return x;
-  return y;
-}
-
-export function min<type>(x: type, y: type): type {
-  if (x <= y) return x;
-  return y;
-}
-
 export class NetworkFlowBase {
   head: number[] = [];
   edge: _Edge[] = [];

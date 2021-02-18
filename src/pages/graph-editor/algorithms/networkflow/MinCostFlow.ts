@@ -1,7 +1,7 @@
-import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
+import { GraphAlgorithm, ParameterDescriptor, parseRangedInt, Step } from "../../GraphAlgorithm";
 import { Edge, EdgeList, Graph, Node } from "../../GraphStructure";
 import { Queue } from "../../utils/DataStructure";
-import { NetworkFlowBase, min, max, _Edge } from "./Common";
+import { NetworkFlowBase, _Edge } from "./Common";
 
 class MinCostFlow extends GraphAlgorithm {
   // constructor() {
@@ -10,6 +10,30 @@ class MinCostFlow extends GraphAlgorithm {
 
   id() {
     return "classic_mcf";
+  }
+
+  parameters(): ParameterDescriptor[] {
+    return [
+      {
+        name: "source_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      },
+      {
+        name: "target_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      },
+      {
+        name: "flow_limit",
+        parser: (text, _) => {
+          if (text === undefined || text === "") return undefined;
+          if (["inf", "infty", "infinity"].includes(text)) return Infinity;
+          let res = Number(text);
+          if (isNaN(res)) throw new Error(`parameter: Not a number`);
+          if (res < 0) throw new Error(`parameter: Out of Valid Range`);
+          return res;
+        }
+      }
+    ];
   }
 
   requiredParameter(): string[] {
@@ -35,10 +59,6 @@ class MinCostFlow extends GraphAlgorithm {
 
   nodedatum = (i: number) => ({ dist: this.dis[i] });
 
-  _valid(pos: number, e: _Edge): boolean {
-    return this.dis[pos] + e.cost === this.dis[e.to] && e.flow > 0;
-  }
-
   is_valid(e: Edge, eid: number): number {
     if (this.dis[e.source] + this.E.edge[eid * 2].cost === this.dis[e.target]) return 1;
     return 0;
@@ -58,7 +78,7 @@ class MinCostFlow extends GraphAlgorithm {
   getStep(lineId: number): Step {
     return {
       graph: this.report(),
-      dcPosition: new Map<string, number>([["pseudo", lineId]])
+      codePosition: new Map<string, number>([["pseudo", lineId]])
     };
   }
 
@@ -109,7 +129,7 @@ class MinCostFlow extends GraphAlgorithm {
       let e: _Edge;
       for (let pos = this.T; pos !== this.S; pos = this.pre[pos]) {
         e = this.E.edge[this.eid[pos]];
-        delta = min(delta, e.flow);
+        delta = Math.min(delta, e.flow);
         e.mark = true;
       }
 

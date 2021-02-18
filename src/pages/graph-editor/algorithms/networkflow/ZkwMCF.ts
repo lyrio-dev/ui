@@ -1,7 +1,7 @@
-import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
+import { GraphAlgorithm, ParameterDescriptor, parseRangedInt, Step } from "../../GraphAlgorithm";
 import { Edge, EdgeList, Graph, Node } from "../../GraphStructure";
 import { Queue } from "../../utils/DataStructure";
-import { NetworkFlowBase, min, max, _Edge } from "./Common";
+import { NetworkFlowBase, _Edge } from "./Common";
 
 class ZkwMCF extends GraphAlgorithm {
   // constructor() {
@@ -12,8 +12,28 @@ class ZkwMCF extends GraphAlgorithm {
     return "zkw_mcf";
   }
 
-  requiredParameter(): string[] {
-    return ["source_vertex", "target_vertex", "flow_limit"];
+  parameters(): ParameterDescriptor[] {
+    return [
+      {
+        name: "source_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      },
+      {
+        name: "target_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      },
+      {
+        name: "flow_limit",
+        parser: (text, _) => {
+          if (text === undefined || text === "") return undefined;
+          if (["inf", "infty", "infinity"].includes(text)) return Infinity;
+          let res = Number(text);
+          if (isNaN(res)) throw new Error(`parameter: Not a number`);
+          if (res < 0) throw new Error(`parameter: Out of Valid Range`);
+          return res;
+        }
+      }
+    ];
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -44,7 +64,7 @@ class ZkwMCF extends GraphAlgorithm {
 
   report(): Graph {
     let rE = this.E.edges();
-    rE.forEach((e, i) =>
+    rE.forEach((e) =>
       Object.assign(e.datum, {
         valid: this.is_valid(e)
       })
@@ -56,7 +76,7 @@ class ZkwMCF extends GraphAlgorithm {
   getStep(lineId: number): Step {
     return {
       graph: this.report(),
-      dcPosition: new Map<string, number>([["pseudo", lineId]])
+      codePosition: new Map<string, number>([["pseudo", lineId]])
     };
   }
 
@@ -104,7 +124,7 @@ class ZkwMCF extends GraphAlgorithm {
       re = this.E.edge[i ^ 1];
       if (this._valid(pos, e)) {
         e.mark = true;
-        let tmp = yield* this.dfs(e.to, min(lim, e.flow));
+        let tmp = yield* this.dfs(e.to, Math.min(lim, e.flow));
         (e.flow -= tmp), (re.flow += tmp);
         (lim -= tmp), (res += tmp);
         e.mark = false;

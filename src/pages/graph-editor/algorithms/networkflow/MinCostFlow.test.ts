@@ -1,6 +1,6 @@
 import { MinCostFlow } from "./MinCostFlow";
 import { ZkwMCF } from "./ZkwMCF";
-import { EdgeList, Graph } from "../../GraphStructure";
+import { Graph } from "../../GraphStructure";
 
 import { G, S, T, Afc } from "./data/Large.data";
 

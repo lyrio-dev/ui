@@ -1,7 +1,7 @@
-import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
+import { GraphAlgorithm, ParameterDescriptor, parseRangedInt, Step } from "../../GraphAlgorithm";
 import { EdgeList, Graph, Node } from "../../GraphStructure";
 import { Queue } from "../../utils/DataStructure";
-import { NetworkFlowBase, min, max, _Edge } from "./Common";
+import { NetworkFlowBase, _Edge } from "./Common";
 
 class EdmondsKarp extends GraphAlgorithm {
   // constructor() {
@@ -12,8 +12,17 @@ class EdmondsKarp extends GraphAlgorithm {
     return "ek_mf";
   }
 
-  requiredParameter(): string[] {
-    return ["source_vertex", "target_vertex"];
+  parameters(): ParameterDescriptor[] {
+    return [
+      {
+        name: "source_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      },
+      {
+        name: "target_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      }
+    ];
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -35,7 +44,7 @@ class EdmondsKarp extends GraphAlgorithm {
   getStep(lineId: number): Step {
     return {
       graph: new EdgeList(this.n, this.E.edges()),
-      dcPosition: new Map<string, number>([["pseudo", lineId]])
+      codePosition: new Map<string, number>([["pseudo", lineId]])
     };
   }
 
@@ -71,7 +80,7 @@ class EdmondsKarp extends GraphAlgorithm {
           this.que.push(e.to);
           this.pre[e.to] = pos;
           this.eid[e.to] = i;
-          this.flw[e.to] = min(this.flw[pos], e.flow);
+          this.flw[e.to] = Math.min(this.flw[pos], e.flow);
         }
       }
     }

@@ -1,7 +1,7 @@
 import { FordFulkerson } from "./FordFulkerson";
 import { EdmondsKarp } from "./EdmondsKarp";
 import { Dinic } from "./Dinic";
-import { EdgeList, Graph } from "../../GraphStructure";
+import { Graph } from "../../GraphStructure";
 
 import { G, S, T, Af } from "./data/Large.data";
 

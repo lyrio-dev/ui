@@ -1,6 +1,18 @@
 import { Graph } from "./GraphStructure";
 
-interface ParameterDescriptor{
+export function isInteger(v: number): boolean {
+  return Math.floor(v) === v;
+}
+
+// check if res = Number(text) is an integer and res \in [lowerbound, upperbound)
+export function parseRangedInt(text: string, lowerbound: number, upperbound: number): number {
+  let res = Number(text);
+  if (isNaN(res) || !isInteger(res)) throw new Error(`parameter: Not an Integer`);
+  if (res < lowerbound || res >= upperbound) throw new Error(`parameter: Out of Range`);
+  return res;
+}
+
+export interface ParameterDescriptor {
   readonly name: string;
   readonly parser: (text: string, graph: Graph) => any;
 }
@@ -19,4 +31,4 @@ abstract class GraphAlgorithm {
   abstract run(graph: Graph, ...args: any[]): Generator<Step>;
 }
 
-export { Step, GraphAlgorithm };
+export { GraphAlgorithm, Step };

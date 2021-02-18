@@ -1,6 +1,6 @@
-import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
+import { GraphAlgorithm, Step, ParameterDescriptor, parseRangedInt } from "../../GraphAlgorithm";
 import { Edge, EdgeList, Graph, Node } from "../../GraphStructure";
-import { NetworkFlowBase, min, max, _Edge } from "./Common";
+import { NetworkFlowBase, _Edge } from "./Common";
 
 class FordFulkerson extends GraphAlgorithm {
   // constructor() {
@@ -11,8 +11,17 @@ class FordFulkerson extends GraphAlgorithm {
     return "ff_mf";
   }
 
-  requiredParameter(): string[] {
-    return ["source_vertex", "target_vertex"];
+  parameters(): ParameterDescriptor[] {
+    return [
+      {
+        name: "source_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      },
+      {
+        name: "target_vertex",
+        parser: (text, graph) => parseRangedInt(text, 0, graph.nodes().length)
+      }
+    ];
   }
 
   private E: NetworkFlowBase;
@@ -30,7 +39,7 @@ class FordFulkerson extends GraphAlgorithm {
   getStep(lineId: number): Step {
     return {
       graph: new EdgeList(this.n, this.E.edges()),
-      dcPosition: new Map<string, number>([["pseudo", lineId]])
+      codePosition: new Map<string, number>([["pseudo", lineId]])
     };
   }
 
@@ -46,7 +55,7 @@ class FordFulkerson extends GraphAlgorithm {
       (e = this.E.edge[i]), (re = this.E.edge[i ^ 1]);
       e.mark = true;
       if (!this.visit[e.to] && e.flow > 0) {
-        let res = yield* this.dfs(e.to, min(lim, e.flow));
+        let res = yield* this.dfs(e.to, Math.min(lim, e.flow));
         if (res > 0) {
           (e.flow -= res), (re.flow += res);
           return res;
