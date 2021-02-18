@@ -53,5 +53,16 @@ module.exports = {
       self_loop: "允许自环？",
       multiple_edges: "允许重边？"
     }
+  },
+  algo: {
+    dijkstra: {
+      name: "Dijkstra算法",
+      para: {
+        start_point: "起始点"
+      }
+    },
+    code_type: {
+      pseudo: "伪代码"
+    }
   }
 };

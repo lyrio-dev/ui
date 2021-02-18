@@ -2,8 +2,12 @@ import { GraphAlgorithm } from "../GraphAlgorithm";
 import { AdjacencyMatrix, Graph } from "../GraphStructure";
 
 class Dijkstra extends GraphAlgorithm {
-  constructor() {
-    super("Dijkstra", "Dijkstra Single Source Shortest Path");
+  id() {
+    return "dijkstra";
+  }
+
+  requiredParameter(): string[] {
+    return ["start_point"];
   }
 
   *run(graph: Graph, startPoint: number) {

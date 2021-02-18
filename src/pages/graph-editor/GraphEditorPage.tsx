@@ -5,6 +5,7 @@ import { appState } from "@/appState";
 import GraphDisplay from "./display/GraphDisplay";
 import GraphInputPanel from "./input/GraphInputPanel";
 import { AdjacencyMatrix, fromRandom } from "@/pages/graph-editor/GraphStructure";
+import AlgorithmControl from "@/pages/graph-editor/control/AlgorithmControl";
 
 let GraphEditor: React.FC = props => {
   let g = fromRandom(10, 15, true, false, false, false);
@@ -59,6 +60,7 @@ let GraphEditor: React.FC = props => {
           floatingData: () => ""
         }}
       />
+      <AlgorithmControl />
     </>
   );
 };
