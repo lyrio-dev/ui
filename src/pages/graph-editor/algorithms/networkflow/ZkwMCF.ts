@@ -4,8 +4,16 @@ import { Queue } from "../../utils/DataStructure";
 import { NetworkFlowBase, min, max, _Edge } from "./Common";
 
 class ZkwMCF extends GraphAlgorithm {
-  constructor() {
-    super("ZkwMCF", "Zkw's algorithm for Minimum-Cost Network Flow");
+  // constructor() {
+  //   super("ZkwMCF", "Zkw's algorithm for Minimum-Cost Network Flow");
+  // }
+
+  id() {
+    return "zkw_mcf";
+  }
+
+  requiredParameter(): string[] {
+    return ["source_vertex", "target_vertex", "flow_limit"];
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -45,6 +53,13 @@ class ZkwMCF extends GraphAlgorithm {
     return new EdgeList(this.n, rE, this.nodedatum);
   }
 
+  getStep(lineId: number): Step {
+    return {
+      graph: this.report(),
+      dcPosition: new Map<string, number>([["pseudo", lineId]])
+    };
+  }
+
   spfa(): boolean {
     this.clear(this.dis, Infinity);
     this.clear(this.vis, false);
@@ -78,8 +93,8 @@ class ZkwMCF extends GraphAlgorithm {
   *dfs(pos: number, lim: number) {
     this.vis[pos] = true;
     if (pos === this.T) {
-      // Yield before augment flow
-      yield { graph: this.report() };
+      // **for each** *augmenting path* ($\mathrm{P}_i$) in $\mathrm{SG}$ (using **DFS**)
+      yield this.getStep(4);
       return lim;
     }
     let e: _Edge, re: _Edge;
@@ -104,23 +119,28 @@ class ZkwMCF extends GraphAlgorithm {
     this.n = this.V.length;
     this.E = new NetworkFlowBase(G, this.n);
     (this.S = Spos), (this.T = Tpos);
+    // initialize the *weighted network flow graph*
+    yield this.getStep(0);
 
     let flow = 0,
       cost = 0;
     while (limit > 0 && this.spfa()) {
+      // find the *SSSP graph* ($\mathrm{SG}$) using **SPFA**, get the *minimum cost* ($cost$) from $\mathrm{S}$ to $\mathrm{T}$
+      yield this.getStep(2);
       do {
         this.clear(this.vis, false);
         let delta = yield* this.dfs(this.S, limit);
         limit -= delta;
         flow += delta;
         cost += delta * this.dis[this.S];
-
-        // Yield after augment flow
-        yield { graph: this.report() };
+        // increase <u>*maxflow*</u> by $sumlimit$, increase <u>*mincost*</u> by $sumlimit\cdot cost$, decrease *flow_limit* by $sumlimit$
+        yield this.getStep(7);
       } while (this.vis[this.T]);
     }
 
-    console.log(`algo ZkwMCF : {flow: ${flow}, cost: ${cost}`);
+    //console.log(`algo ZkwMCF : {flow: ${flow}, cost: ${cost}`);
+    // **return** {<u>*maxflow*</u>, <u>*mincost*</u>}
+    yield this.getStep(8);
     return { flow, cost };
   }
 }

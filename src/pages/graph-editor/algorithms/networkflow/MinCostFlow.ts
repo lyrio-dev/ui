@@ -4,8 +4,16 @@ import { Queue } from "../../utils/DataStructure";
 import { NetworkFlowBase, min, max, _Edge } from "./Common";
 
 class MinCostFlow extends GraphAlgorithm {
-  constructor() {
-    super("MinCostFlow", "classic algorithm for Minimum-Cost Network Flow");
+  // constructor() {
+  //   super("MinCostFlow", "classic algorithm for Minimum-Cost Network Flow");
+  // }
+
+  id() {
+    return "classic_mcf";
+  }
+
+  requiredParameter(): string[] {
+    return ["source_vertex", "target_vertex", "flow_limit"];
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -47,6 +55,13 @@ class MinCostFlow extends GraphAlgorithm {
     return new EdgeList(this.n, rE, this.nodedatum);
   }
 
+  getStep(lineId: number): Step {
+    return {
+      graph: this.report(),
+      dcPosition: new Map<string, number>([["pseudo", lineId]])
+    };
+  }
+
   spfa(): boolean {
     this.clear(this.dis, Infinity);
     this.clear(this.pre), this.clear(this.eid);
@@ -84,6 +99,8 @@ class MinCostFlow extends GraphAlgorithm {
     this.n = this.V.length;
     this.E = new NetworkFlowBase(G, this.n);
     (this.S = Spos), (this.T = Tpos);
+    // initialize the *weighted network flow graph*:
+    yield this.getStep(0);
 
     let flow = 0,
       cost = 0;
@@ -96,8 +113,8 @@ class MinCostFlow extends GraphAlgorithm {
         e.mark = true;
       }
 
-      // Yield before augment flow
-      yield { graph: this.report() };
+      // find an *augmenting path* ($\mathrm{P}$) with *minimum total cost* ($cost$) using **SPFA**
+      yield this.getStep(5);
 
       limit -= delta;
       flow += delta;
@@ -107,11 +124,13 @@ class MinCostFlow extends GraphAlgorithm {
         this.E.edge[this.eid[pos] ^ 1].flow += delta;
       }
 
-      // Yield after augment flow
-      yield { graph: this.report() };
+      // update the *capacity* of **each** *edge* in $\mathrm{P}$ by $limit$
+      yield this.getStep(7);
     }
 
-    console.log(`algo MinCostFlow : {flow: ${flow}, cost: ${cost}`);
+    //console.log(`algo MinCostFlow : {flow: ${flow}, cost: ${cost}`);
+    // **return** {<u>*maxflow*</u>, <u>*mincost*</u>}
+    yield this.getStep(9);
     return { flow, cost };
   }
 }
