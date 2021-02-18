@@ -1,3 +1,5 @@
+import isEqual from "lodash.isequal";
+
 export interface Node {
   readonly id: number;
   datum: any;
@@ -37,6 +39,7 @@ export function fromRandom(
   edge_count: number,
   directed: boolean,
   allow_multiple_edge: boolean,
+  allow_self_loop: boolean,
   weighted: boolean,
   node_mapper: (id: number) => Object = emptyObject,
   random?: () => number,
@@ -50,9 +53,11 @@ export function fromRandom(
   while (edge_count > 0) {
     let s = randint(node_count),
       t = randint(node_count);
+    if (!allow_self_loop && s === t) continue;
     if (!directed) {
-      s = Math.min(s, t);
-      t = Math.max(s, t);
+      let as = Math.min(s, t);
+      let at = Math.max(s, t);
+      [s, t] = [as, at];
     }
     if (!allow_multiple_edge && edgeCache[s].has(t)) continue;
     edges.push({ source: s, target: t, datum: weighted ? edge_mapper(s, t, random()) : {} });
@@ -95,22 +100,25 @@ export class AdjacencyMatrix implements Graph {
   constructor(public mat: any[][], public directed: boolean, node_generator: (index: number) => Object = emptyObject) {
     this.node_count = mat.length;
     if (mat.some(line => line.length !== this.node_count)) {
-      throw new Error();
+      throw new Error(".graph.adjmat.error.non_square");
     }
-    if (!directed && mat.some((line, i) => line.some((edge, j) => edge !== mat[j][i]))) {
-      throw new Error();
+    if (!directed && mat.some((line, i) => line.some((edge, j) => !isEqual(edge, mat[j][i])))) {
+      throw new Error(".graph.adjmat.error.asymmetric");
     }
     this._nodes = Array.from({ length: this.node_count }, (_, id) => ({ id, datum: node_generator(id) }));
   }
 
   static from(g: Graph, directed: boolean) {
+    if (g instanceof AdjacencyMatrix) return g;
     let nodes = g.nodes(),
       edges = g.edges();
     let mat: any[][] = Array.from({ length: nodes.length }, () =>
       Array.from({ length: nodes.length }, () => undefined)
     );
     let trySet: (x: number, y: number, d: any) => void = (x, y, d) => {
-      if (mat[x][y]) throw new Error();
+      if (mat[x][y]) {
+        throw new Error(".graph.adjmat.error.multiple_edges");
+      }
       mat[x][y] = d;
     };
     for (let edge of edges) {
@@ -183,6 +191,56 @@ export class AdjacencyList implements Graph {
   }
 }
 
+export class IncidenceMatrix extends EdgeList implements Graph {
+  constructor(public incmat: number[][], directed: boolean, node_generator: (index: number) => Object = emptyObject) {
+    super(incmat.length, [], node_generator);
+    let nodeCount = incmat.length,
+      edgeCount = incmat[0].length;
+    this._nodes = Array.from({ length: nodeCount }, (_, id) => ({ id, datum: node_generator(id) }));
+    if (incmat.some(line => line.length !== edgeCount)) throw new Error(".graph.incmat.error.non_matrix");
+    const invalidEdge = () => {
+      throw new Error(".graph.incmat.error.invalid_edge_" + (directed ? "directed" : "undirected"));
+    };
+    for (let i = 0; i < edgeCount; i++) {
+      let s, t;
+      for (let j = 0; j < nodeCount; j++) {
+        let v = incmat[j][i];
+        if (v === 1) {
+          if (directed) {
+            if (t === undefined) t = j;
+            else invalidEdge();
+          } else {
+            if (s === undefined) s = j;
+            else if (t === undefined) t = j;
+            else invalidEdge();
+          }
+        } else if (v === -1) {
+          if (!directed) invalidEdge();
+          if (s === undefined) s = j;
+          else invalidEdge();
+        } else if (v !== 0) {
+          invalidEdge();
+        }
+      }
+      if (s === undefined || t === undefined) {
+        invalidEdge();
+      }
+      this._edges.push({ source: s, target: t, datum: {} });
+    }
+  }
+
+  static from(g: Graph, directed: boolean = false) {
+    let incmat: number[][] = Array.from({ length: g.nodes().length }, () =>
+      Array.from({ length: g.edges().length }, () => 0)
+    );
+    g.edges().forEach(({ source: s, target: t }, i) => {
+      incmat[s][i] = directed ? -1 : 1;
+      incmat[t][i] = 1;
+    });
+    return new IncidenceMatrix(incmat, directed, i => g.nodes()[i].datum);
+  }
+}
+
 /**
  * Node: BipartiteGraph can guarantee that the "side" property of node's datum is "left" or "right".
  */
@@ -204,7 +262,7 @@ export class BipartiteGraph implements Graph {
           (source >= left_side_count && target >= left_side_count)
       )
     ) {
-      throw new Error();
+      throw new Error(".graph.bipartite.error.not_bipartite");
     }
     this.leftSide = Array.from({ length: left_side_count }, (_, i) => ({
       id: i,
@@ -253,7 +311,7 @@ export class BipartiteMatrix extends BipartiteGraph implements Graph {
   ) {
     super(mat.length, mat[0].length, [], left_side_generator, right_side_generator);
     if (mat.some(line => line.length !== mat.length)) {
-      throw new Error();
+      throw new Error(".graph.bipmat.error.multiple_edges");
     }
     let lc = this.mat.length;
     this.mat.forEach((line, pl) => {

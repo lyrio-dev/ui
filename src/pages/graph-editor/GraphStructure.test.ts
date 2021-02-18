@@ -5,7 +5,8 @@ import {
   EdgeList,
   fromRandom,
   hasMultipleEdges,
-  hasSelfLoop
+  hasSelfLoop,
+  IncidenceMatrix
 } from "./GraphStructure";
 
 test("AdjMat", () => {
@@ -235,7 +236,7 @@ test("hasMultipleEdges", () => {
 });
 
 test("Random", () => {
-  let g = fromRandom(10, 30, true, false, true);
+  let g = fromRandom(10, 30, true, false, false, true);
   expect(!hasMultipleEdges(g));
   expect(g.nodes().length).toBe(10);
   expect(g.edges().length).toBe(30);
@@ -261,4 +262,74 @@ test("to Adj list", () => {
   expect(AdjacencyList.from(new EdgeList(5, edges), false).adjlist.map(line => line.map(([t, _]) => t))).toStrictEqual(
     expected
   );
+});
+
+test("incmat directed", () => {
+  let edges = [
+    [1, 0],
+    [0, 2],
+    [4, 0],
+    [4, 1],
+    [2, 1],
+    [2, 1],
+    [1, 2],
+    [2, 3],
+    [3, 4]
+  ];
+  let incmat = [
+    [1, -1, 1, 0, 0, 0, 0, 0, 0],
+    [-1, 0, 0, 1, 1, 1, -1, 0, 0],
+    [0, 1, 0, 0, -1, -1, 1, -1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 1, -1],
+    [0, 0, -1, -1, 0, 0, 0, 0, 1]
+  ];
+  let incmatEdges = new IncidenceMatrix(incmat, true).edges().map(({ source: s, target: t }) => [s, t]);
+  let incmatGen = IncidenceMatrix.from(
+    new EdgeList(
+      5,
+      edges.map(([s, t]) => ({
+        source: s,
+        target: t,
+        datum: {}
+      }))
+    ),
+    true
+  ).incmat;
+  expect(incmatEdges).toStrictEqual(edges);
+  expect(incmatGen).toStrictEqual(incmat);
+});
+
+test("incmat", () => {
+  let edges = [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+    [0, 4],
+    [1, 4],
+    [1, 2],
+    [1, 2],
+    [2, 3],
+    [3, 4]
+  ];
+  let incmat = [
+    [1, 1, 1, 1, 0, 0, 0, 0, 0],
+    [1, 0, 0, 0, 1, 1, 1, 0, 0],
+    [0, 1, 0, 0, 0, 1, 1, 1, 0],
+    [0, 0, 1, 0, 0, 0, 0, 1, 1],
+    [0, 0, 0, 1, 1, 0, 0, 0, 1]
+  ];
+  let incmatEdges = new IncidenceMatrix(incmat, false).edges().map(({ source: s, target: t }) => [s, t]);
+  let incmatGen = IncidenceMatrix.from(
+    new EdgeList(
+      5,
+      edges.map(([s, t]) => ({
+        source: s,
+        target: t,
+        datum: {}
+      }))
+    ),
+    false
+  ).incmat;
+  expect(incmatEdges).toStrictEqual(edges);
+  expect(incmatGen).toStrictEqual(incmat);
 });

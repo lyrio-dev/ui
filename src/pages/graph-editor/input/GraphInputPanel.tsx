@@ -1,59 +1,53 @@
-import React from "react";
-import { Form, Header, Menu, Message, Segment } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Header, Menu, Segment } from "semantic-ui-react";
 import { Graph } from "@/pages/graph-editor/GraphStructure";
+import methods from "@/pages/graph-editor/input/methods";
+import { useLocalizer } from "@/utils/hooks";
+
+export interface MethodComponentProps {
+  graph: Graph;
+  setGraph: (g: Graph) => void;
+}
+
+export interface MethodComponent extends React.FC<MethodComponentProps> {}
 
 interface GraphInputPanelProps {
-  inputMethods: [string, string, (graph: Graph) => string | undefined][];
-  onInputChanged: (method: string, content: string) => void;
   graph: Graph;
+  setGraph: (g: Graph) => void;
   error?: string;
 }
 
-interface GraphInputPanelState {
-  activeMethod: string;
-  textAreaContent: string;
-}
-
-export default class GraphInputPanel extends React.Component<GraphInputPanelProps, GraphInputPanelState> {
-  state = {
-    activeMethod: this.props.inputMethods[0][0],
-    textAreaContent: this.props.inputMethods[0][2](this.props.graph)
+let GraphInputPanel: React.FC<GraphInputPanelProps> = props => {
+  const _ = useLocalizer("graph_editor");
+  const [selectedMethod, setSelectedMethods] = useState("random");
+  const onMenuItemClicked = (_, { name }) => {
+    setSelectedMethods(name);
   };
-
-  handleItemClick = (_, { name }) => this.setState({ activeMethod: name });
-
-  onTextAreaChange = (_, { value }) => this.setState({ textAreaContent: String(value) });
-
-  onFormSubmit = () => {
-    let { activeMethod, textAreaContent } = this.state;
-    this.props.onInputChanged(activeMethod, textAreaContent);
-  };
-
-  render() {
-    return (
-      <>
-        <Header as="h4" block attached="top" icon="edit" content="图的表示方法" />
+  return (
+    <>
+      <Header as="h4" block attached="top" icon="edit" content="图的表示方法" />
+      <Segment attached="bottom">
+        <Menu attached="top" tabular>
+          {Array.from(methods.keys(), methodName => (
+            <Menu.Item
+              key={methodName}
+              name={methodName}
+              active={selectedMethod === methodName}
+              onClick={onMenuItemClicked}
+            >
+              {_(`.graph.${methodName}.name`)}
+            </Menu.Item>
+          ))}
+        </Menu>
         <Segment attached="bottom">
-          <Menu attached="top" tabular>
-            {this.props.inputMethods.map(([id, name]) => (
-              <Menu.Item key={id} name={id} active={this.state.activeMethod === id} onClick={this.handleItemClick}>
-                {name}
-              </Menu.Item>
-            ))}
-          </Menu>
-          <Segment attached="bottom">
-            <Form onSubmit={this.onFormSubmit} error={this.props.error !== undefined}>
-              <Form.TextArea
-                style={{ fontFamily: "monospace" }}
-                value={this.state.textAreaContent}
-                onChange={this.onTextAreaChange}
-              />
-              {this.props.error && <Message error>{this.props.error}</Message>}
-              <Form.Button positive>Sync</Form.Button>
-            </Form>
-          </Segment>
+          {React.createElement(methods.get(selectedMethod), {
+            graph: props.graph,
+            setGraph: g => props.setGraph(g)
+          })}
         </Segment>
-      </>
-    );
-  }
-}
+      </Segment>
+    </>
+  );
+};
+
+export default GraphInputPanel;

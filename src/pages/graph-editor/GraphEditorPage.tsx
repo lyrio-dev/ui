@@ -5,9 +5,10 @@ import { appState } from "@/appState";
 import GraphDisplay from "./display/GraphDisplay";
 import GraphInputPanel from "./input/GraphInputPanel";
 import { AdjacencyMatrix, fromRandom } from "@/pages/graph-editor/GraphStructure";
+import AlgorithmControl from "@/pages/graph-editor/control/AlgorithmControl";
 
 let GraphEditor: React.FC = props => {
-  let g = fromRandom(10, 15, true, false, false);
+  let g = fromRandom(10, 15, true, false, false, false);
 
   const [graph, setGraph] = useState(g);
   const [error, setError] = useState<string>();
@@ -34,21 +35,7 @@ let GraphEditor: React.FC = props => {
 
   return (
     <>
-      <GraphInputPanel
-        inputMethods={[
-          [
-            "adjmat",
-            "邻接矩阵",
-            graph =>
-              AdjacencyMatrix.from(graph, true)
-                .mat.map(l => l.map(e => (e ? "1" : "0")).join(" "))
-                .join("\n")
-          ]
-        ]}
-        onInputChanged={onGraphInputPanelSync}
-        graph={graph}
-        error={error}
-      />
+      <GraphInputPanel graph={graph} error={error} setGraph={g => setGraph(g)} />
       <GraphDisplay
         width={500}
         height={500}
@@ -73,6 +60,7 @@ let GraphEditor: React.FC = props => {
           floatingData: () => ""
         }}
       />
+      <AlgorithmControl />
     </>
   );
 };
