@@ -1,11 +1,19 @@
 import { GraphAlgorithm, Step } from "../../GraphAlgorithm";
-import { Edge, EdgeList, Graph, Node } from "../../GraphStructure";
+import { EdgeList, Graph, Node } from "../../GraphStructure";
 import { Queue } from "../../utils/DataStructure";
 import { NetworkFlowBase, min, max, _Edge } from "./Common";
 
 class EdmondsKarp extends GraphAlgorithm {
-  constructor() {
-    super("EdmondsKarp", "Edmonds-Karp algorithm for Maximum Network Flow");
+  // constructor() {
+  //   super("EdmondsKarp", "Edmonds-Karp algorithm for Maximum Network Flow");
+  // }
+
+  id() {
+    return "ek_mf";
+  }
+
+  requiredParameter(): string[] {
+    return ["source_vertex", "target_vertex"];
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -22,6 +30,13 @@ class EdmondsKarp extends GraphAlgorithm {
 
   clear(buf: any[], val: any = -1, cnt: number = this.n) {
     for (let _ = 0; _ < cnt; ++_) buf[_] = val;
+  }
+
+  getStep(lineId: number): Step {
+    return {
+      graph: new EdgeList(this.n, this.E.edges()),
+      dcPosition: new Map<string, number>([["pseudo", lineId]])
+    };
   }
 
   mark() {
@@ -69,21 +84,25 @@ class EdmondsKarp extends GraphAlgorithm {
     this.n = this.V.length;
     this.E = new NetworkFlowBase(G, this.n);
     (this.S = Spos), (this.T = Tpos);
+    // initialize the *network flow graph*:
+    yield this.getStep(0);
 
     let flow = 0,
       delta = 0;
     while (this.bfs()) {
-      // Yield before augment flow
-      yield { graph: new EdgeList(this.n, this.E.edges()) };
+      // find an *augmenting path* ($\mathrm{P}$) using **BFS**
+      yield this.getStep(2);
 
       delta = this.flip();
       flow += delta;
 
-      // Yield after augment flow
-      yield { graph: new EdgeList(this.n, this.E.edges()) };
+      // update the *capacity* of **each** *edge* in $\mathrm{P}$ by $limit$
+      yield this.getStep(4);
     }
 
-    console.log(`algo EdmondsKarp : {flow: ${flow}}`);
+    //console.log(`algo EdmondsKarp : {flow: ${flow}}`);
+    // **return** {<u>*maxflow*</u>}
+    yield this.getStep(6);
     return { flow };
   }
 }

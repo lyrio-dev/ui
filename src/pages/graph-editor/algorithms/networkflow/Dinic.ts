@@ -4,8 +4,16 @@ import { Queue } from "../../utils/DataStructure";
 import { NetworkFlowBase, min, max, _Edge } from "./Common";
 
 class Dinic extends GraphAlgorithm {
-  constructor() {
-    super("Dinic", "Dinic algorithm for Maximum Network Flow");
+  // constructor() {
+  //   super("Dinic", "Dinic algorithm for Maximum Network Flow");
+  // }
+
+  id() {
+    return "dinic_mf";
+  }
+
+  requiredParameter(): string[] {
+    return ["source_vertex", "target_vertex"];
   }
 
   private que: Queue<number> = new Queue<number>();
@@ -50,6 +58,13 @@ class Dinic extends GraphAlgorithm {
     return new EdgeList(this.n, rE, this.nodedatum);
   }
 
+  getStep(lineId: number): Step {
+    return {
+      graph: this.report(),
+      dcPosition: new Map<string, number>([["pseudo", lineId]])
+    };
+  }
+
   bfs(): boolean {
     this.copy(this.cur, this.E.head);
     this.clear(this.dep);
@@ -76,8 +91,8 @@ class Dinic extends GraphAlgorithm {
 
   *dfs(pos: number, lim: number) {
     if (pos === this.T) {
-      // Yield before augment flow
-      yield { graph: this.report() };
+      // **for each** *augmenting path* ($\mathrm{P}_i$) in $\mathrm{LG}$ (using **DFS**)
+      yield this.getStep(3);
       return lim;
     }
     let e: _Edge, re: _Edge;
@@ -101,17 +116,23 @@ class Dinic extends GraphAlgorithm {
     this.n = this.V.length;
     this.E = new NetworkFlowBase(G, this.n);
     (this.S = Spos), (this.T = Tpos);
+    // initialize the *network flow graph*
+    yield this.getStep(0);
 
     let flow = 0,
       delta = 0;
     while (this.bfs()) {
+      // find the *level graph* ($\mathrm{LG}$) using **BFS**
+      yield this.getStep(2);
       delta = yield* this.dfs(this.S, Infinity);
       flow += delta;
-      // Yield after augment flow
-      yield { graph: this.report() };
+      // increase <u>*maxflow*</u> by the sum of **each** $limit_i$
+      yield this.getStep(6);
     }
 
-    console.log(`algo Dinic : {flow: ${flow}}`);
+    //console.log(`algo Dinic : {flow: ${flow}}`);
+    // **return** {<u>*maxflow*</u>}
+    yield this.getStep(7);
     return { flow };
   }
 }
