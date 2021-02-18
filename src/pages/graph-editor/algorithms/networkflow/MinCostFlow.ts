@@ -28,8 +28,8 @@ class MinCostFlow extends GraphAlgorithm {
           if (text === undefined || text === "") return undefined;
           if (["inf", "infty", "infinity"].includes(text)) return Infinity;
           let res = Number(text);
-          if (isNaN(res)) throw new Error(`parameter: Not a number`);
-          if (res < 0) throw new Error(`parameter: Out of Valid Range`);
+          if (isNaN(res)) throw new Error(".input.error.nan");
+          if (res < 0) throw new Error(".input.error.out_of_range");
           return res;
         }
       }
