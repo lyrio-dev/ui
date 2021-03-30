@@ -111,6 +111,11 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
   </script>
 
   <style id="initial-style">
+    :root {
+      --error-color: rgb(0, 0, 0, 0.5);
+      --error-title-color: rgba(0, 0, 0, 0.87);
+      --error-footer-color: rgba(0, 0, 0, 0.4);
+    }
     /* Styles for error screen */
     #error {
       position: fixed;
@@ -123,7 +128,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: rgba(0, 0, 0, 0.5);
+      color: var(--error-color);
       font-family: "Helvetica Neue", Helvetica, Roboto, "Segoe", Tahoma, sans-serif;
       overflow: auto;
     }
@@ -142,7 +147,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
     #error-title {
       display: flex;
       align-items: center;
-      color: rgba(0, 0, 0, 0.87);
+      color: var(--error-title-color);
       margin: 32px 0 25px 0;
     }
 
@@ -151,7 +156,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       position: relative;
       height: 50px;
       border-radius: 50%;
-      border: 2px solid rgba(0, 0, 0, 0.5);
+      border: 2px solid var(--error-color);
       margin-right: 20px;
     }
 
@@ -163,7 +168,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       left: 47.5%;
       top: 15%;
       height: 70%;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: var(--error-color);
       transform: rotate(-45deg);
     }
 
@@ -195,7 +200,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 
     #error-footer {
       font-size: 13px;
-      color: rgba(0, 0, 0, 0.4);
+      color: var(--error-footer-color);
       margin: 25px 0 25px 0;
       text-align: center;
       line-height: 1.4;
@@ -229,6 +234,12 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
     @media only screen and (prefers-color-scheme: dark) {
       body {
         background: var(--theme-background, #222) !important;
+      }
+
+      :root {
+        --error-color: rgb(255, 255, 255, 0.5);
+        --error-title-color: rgba(255, 255, 255, 0.87);
+        --error-footer-color: rgba(255, 255, 255, 0.4);
       }
     }
   </style>
