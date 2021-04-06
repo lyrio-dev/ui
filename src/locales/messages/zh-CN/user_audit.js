@@ -1,4 +1,4 @@
-module.exports = {
+return {
   "auth.login_failed.wrong_password": "登录失败：密码错误",
   "auth.login": "登录",
   "auth.logout": "注销",

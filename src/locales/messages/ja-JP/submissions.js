@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "提出一覧",
   query: {
     problem_id: "問題",

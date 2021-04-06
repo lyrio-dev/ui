@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "統計",
   error: {
     NO_SUCH_PROBLEM: "問題がありません。",

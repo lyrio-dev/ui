@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "登录",
   login_to_your_account: "登录你的账户",
   username_or_email: "用户名 / 邮箱",

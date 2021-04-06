@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Problem",
   meta_labels: {
     non_public: "Non-Public",

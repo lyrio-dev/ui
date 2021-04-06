@@ -1,4 +1,4 @@
-module.exports = {
+return {
   menu: {
     profile: "个人资料",
     preference: "偏好设置",

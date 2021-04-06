@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Home",
   annnouncements: {
     header: "Annnouncement",

@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "评测设置",
   header: "评测设置",
   back_to_problem: "返回",

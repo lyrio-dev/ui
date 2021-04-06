@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Reset password",
   reset_your_password: "Reset your password",
   email: "Email",

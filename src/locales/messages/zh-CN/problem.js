@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "题目",
   meta_labels: {
     non_public: "未公开",

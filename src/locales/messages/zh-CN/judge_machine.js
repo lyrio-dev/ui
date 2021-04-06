@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "评测机",
   header: "评测机",
   refresh: "刷新",

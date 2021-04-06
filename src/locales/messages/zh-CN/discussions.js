@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "讨论",
   error: {
     PERMISSION_DENIED: "权限不足。",

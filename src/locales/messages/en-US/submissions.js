@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Submissions",
   query: {
     problem_id: "Problem",

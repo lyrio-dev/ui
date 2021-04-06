@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "统计",
   error: {
     NO_SUCH_PROBLEM: "无此题目。",

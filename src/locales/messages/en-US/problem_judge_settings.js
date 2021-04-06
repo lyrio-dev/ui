@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Judge Settings",
   header: "Settings",
   back_to_problem: "Back",

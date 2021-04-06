@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "提交记录",
   query: {
     problem_id: "题目",

@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Groups",
   header: "Groups",
   not_logged_in: "Not logged in.",
