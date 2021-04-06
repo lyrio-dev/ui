@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "ジャッジ設定",
   header: "ジャッジ設定",
   back_to_problem: "戻る",

@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Error",
   error: "Error",
   unexpected_error: "Unexpected Error",

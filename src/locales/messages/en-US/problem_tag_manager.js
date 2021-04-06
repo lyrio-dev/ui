@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Tags Manage",
   tag_count: "{count} Tags",
   error: {

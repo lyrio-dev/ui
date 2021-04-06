@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title_edit: "编辑题目",
   title_new: "新建题目",
   header_edit: "编辑题目 {idString}",

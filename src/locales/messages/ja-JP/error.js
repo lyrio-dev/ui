@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "エラー",
   error: "エラーが発生しました",
   unexpected_error: "予期せぬエラーが発生しました",

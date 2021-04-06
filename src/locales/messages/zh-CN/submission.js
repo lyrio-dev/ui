@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "提交记录",
   cancel: "取消",
   confirm_cancel: "确认取消",

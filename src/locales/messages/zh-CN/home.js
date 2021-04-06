@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "首页",
   annnouncements: {
     header: "公告",

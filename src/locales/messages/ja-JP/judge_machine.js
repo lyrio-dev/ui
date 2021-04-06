@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "ジャッジサーバー",
   header: "ジャッジサーバー",
   refresh: "更新",

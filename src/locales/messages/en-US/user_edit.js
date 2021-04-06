@@ -1,4 +1,4 @@
-module.exports = {
+return {
   menu: {
     profile: "Profile",
     preference: "Preference",

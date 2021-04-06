@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Submission",
   cancel: "Cancel",
   confirm_cancel: "Confirm cancel",

@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "[TBT] Discussions",
   error: {
     PERMISSION_DENIED: "[TBT] Permission denied.",

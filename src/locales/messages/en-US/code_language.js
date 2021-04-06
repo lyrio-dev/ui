@@ -1,4 +1,4 @@
-module.exports = {
+return {
   code_language: "Language",
   cpp: {
     name: "C++",

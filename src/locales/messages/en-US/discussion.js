@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Discussion",
   errors: {
     PERMISSION_DENIED: "Permission denied.",

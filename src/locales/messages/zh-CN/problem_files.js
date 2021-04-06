@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "题目文件",
   header_testdata: "测试数据",
   header_additional_files: "附加文件",

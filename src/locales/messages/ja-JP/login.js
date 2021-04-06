@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "ログイン",
   login_to_your_account: "ログイン",
   username_or_email: "ユーザ名 / メールアドレス",

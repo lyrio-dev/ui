@@ -1,4 +1,4 @@
-module.exports = {
+return {
   code_language: "[TBT] Language",
   cpp: {
     name: "[TBT] C++",

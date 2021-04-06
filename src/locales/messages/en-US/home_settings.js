@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Homepage Settings",
   errors: {
     PERMISSION_DENIED: "Permission denied.",

@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "标签管理",
   tag_count: "共 {count} 个标签",
   error: {
