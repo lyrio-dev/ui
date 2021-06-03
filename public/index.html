@@ -115,6 +115,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       --error-color: rgb(0, 0, 0, 0.5);
       --error-title-color: rgba(0, 0, 0, 0.87);
       --error-footer-color: rgba(0, 0, 0, 0.4);
+      --error-background-color: #f3f3f3;
     }
     /* Styles for error screen */
     #error {
@@ -192,7 +193,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       max-width: 100%;
       overflow: auto;
       margin: 25px 0 0 0;
-      background: #f3f3f3;
+      background: var(--error-background-color, #f3f3f3);
       padding: 13px;
       font-size: 13px;
       flex-shrink: 1;
@@ -240,6 +241,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         --error-color: rgb(255, 255, 255, 0.5);
         --error-title-color: rgba(255, 255, 255, 0.87);
         --error-footer-color: rgba(255, 255, 255, 0.4);
+        --error-background-color: #0c0c0c;
       }
     }
   </style>
