@@ -5,7 +5,7 @@ module.exports = {
     contests: "Contests",
     submissions: "Submissions",
     members: "Members",
-    discussion: "Discussion"
+    discussion: "Discussions"
   },
   header: {
     user: {
@@ -17,7 +17,7 @@ module.exports = {
       discussions: "My discussions",
       groups: "My groups",
       edit_profile: "Edit profile",
-      preference: "Preference",
+      preference: "Preferences",
       logout: "Logout"
     }
   },
@@ -28,11 +28,11 @@ module.exports = {
     error: "Error"
   },
   localized_content_unavailable:
-    "This content is not available in your preferred language, here is the {display_locale} version.",
+    "This content is unavailable in your preferred language. Below is the content written in {display_locale}.",
   footer: {
-    judge_machine: "Judge Machine",
+    judge_machine: "Judge Machines",
     locale: "Language",
-    github: "Open source"
+    github: "Open Source"
   },
   invalid_url: "Invalid URL.",
   request_error: {
@@ -45,7 +45,7 @@ module.exports = {
     504: "Timeout connecting to the server. Please try again later.",
     unknown: "Request error: {text}"
   },
-  confirm_navigation: "Be sure to leave this page? Your changes will not be saved.",
+  confirm_navigation: "Are you sure to leave this page? Your changes will not be saved.",
   recaptcha: {
     copyright:
       'This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer noopener">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noreferrer noopener">Terms of Service</a> apply.'
