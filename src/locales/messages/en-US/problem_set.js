@@ -8,7 +8,7 @@ module.exports = {
   search_icon: {
     tag: "Tag",
     user: "Owner",
-    nonpublic: "Nonpublic"
+    nonpublic: "Private"
   },
   search_filters: "Search filters",
   no_matching_tags: "No matching tags",
@@ -27,6 +27,6 @@ module.exports = {
   column_title: "Problem",
   column_submission_count: "Submissions",
   column_accepted_rate: "Acceptance",
-  non_public: "Non-Public",
+  non_public: "Private",
   no_title: "(No title)"
 };
