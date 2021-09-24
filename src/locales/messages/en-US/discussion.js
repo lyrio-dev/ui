@@ -14,7 +14,7 @@ module.exports = {
     commented_on: "commented ",
     edited: "Edited",
     label: {
-      nonpublic: "Nonpublic",
+      nonpublic: "Private",
       problem_owner: "Problem owner",
       discussion_publisher: "Initiator"
     },
@@ -22,14 +22,14 @@ module.exports = {
       edit: "Edit",
       quote: "Quote",
       permission_manage: "Manage Permission",
-      set_non_public: "Make non-public",
+      set_non_public: "Make private",
       set_public: "Make public",
-      confirm_set_non_public: "Confirm make non-public",
+      confirm_set_non_public: "Confirm make private",
       confirm_set_public: "Confirm make public",
       delete: "Delete",
       confirm_delete: "Confirm delete",
       confirm_delete_dialog_title: "Delete discussion",
-      confirm_delete_dialog_content: "Are you sure to delete the discussion? ALL its replies will also be deleted.",
+      confirm_delete_dialog_content: "Are you sure to delete the discussion? All its replies will also be deleted.",
       confirm_delete_dialog_confirm: "Confirm delete",
       confirm_delete_dialog_cancel: "Cancel"
     }
@@ -40,7 +40,7 @@ module.exports = {
       add_reply: "Add reply ...",
       add_discussion: "New discussion ...",
       update_reply: "Edit reply ...",
-      update_discussion: "Edit discussion …"
+      update_discussion: "Edit discussion ..."
     },
     tabs: {
       edit: "Edit",
@@ -65,6 +65,6 @@ module.exports = {
   permission_manager_description: "Discussion #{id}",
   permission_level: {
     read: "Read Only",
-    write: "Read/Write"
+    write: "Read / Write"
   }
 };
