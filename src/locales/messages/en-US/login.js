@@ -1,7 +1,7 @@
 module.exports = {
   title: "Login",
   login_to_your_account: "Login to your account",
-  username_or_email: "Username / E-mail",
+  username_or_email: "Username / Email",
   password: "Password",
   forgot_password: "Forgot password",
   remember: "Remember me",
