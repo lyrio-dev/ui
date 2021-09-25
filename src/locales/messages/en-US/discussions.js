@@ -11,14 +11,14 @@ module.exports = {
     general: "General",
     problem: "Problem"
   },
-  add_discussion: "Add discussion",
+  add_discussion: "New discussion",
   search_discussion: {
     placeholder: "Title ...",
     no_result: "No matching discussions."
   },
   search_icon: {
     user: "Publisher",
-    nonpublic: "Nonpublic"
+    nonpublic: "Private"
   },
   search_filters: "Search filters",
   no_discussions: {
@@ -32,7 +32,7 @@ module.exports = {
   column_problem: "Problem",
   column_publisher: "Publisher",
   column_reply_count: "Replies",
-  column_sort_time: "Last updated",
-  non_public: "Nonpublic",
-  no_title: "(No title)"
+  column_sort_time: "Last Updated",
+  non_public: "Private",
+  no_title: "(Untitled)"
 };
