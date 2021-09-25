@@ -1,14 +1,14 @@
 module.exports = {
   menu: {
     profile: "Profile",
-    preference: "Preference",
+    preference: "Preferences",
     security: "Security",
     privilege: "Privileges",
     audit: "Audit log"
   },
   back_to_profile: "Back to profile",
-  back_to_profile_of_user: "Bask to the user's profile",
-  admin_warning: "You're viewing and editing another user with your privilege.",
+  back_to_profile_of_user: "Back to the user's profile",
+  admin_warning: "You're viewing and editing another user with your privileges.",
   errors: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_USER: "No such user.",
@@ -53,13 +53,13 @@ module.exports = {
     url_placeholder: "Your personal page or blog.",
     qq: "QQ",
     qq_placeholder: "e.g. 12345678",
-    qq_notes: "Your QQ link is: ",
+    qq_notes: "Your QQ link: ",
     telegram: "Telegram",
     telegram_placeholder: "Not including '@'",
-    telegram_notes: "Your Telegram link is: ",
+    telegram_notes: "Your Telegram link: ",
     github: "GitHub",
     github_placeholder: "Not including '@'",
-    github_notes: "Your GitHub link is: ",
+    github_notes: "Your GitHub link: ",
     submit: "Submit",
     error_invalid_username: "Invalid username.",
     error_invalid_email: "Invalid email address.",
@@ -67,20 +67,20 @@ module.exports = {
     success: "Profile updated successfully."
   },
   preference: {
-    title: "Preference",
+    title: "Preferences",
     locale: {
       header: "Language",
       system: "Preferred system language",
       system_default: "Browser default",
       system_default_name: "Browser default ({name})",
       system_notes:
-        "Changing language in the page footer only affects your local browser. Changing here will affect your account's logins everywhere.",
+        "Changing language in the page footer will only affect your local browser, while changing it here will affect your account logins anywhere.",
       content: "Preferred content language",
       content_default: "Same as system language",
       content_default_name: "Same as system language ({name})",
       content_notes:
-        "If the selected language is not available for some contents, we'll display the default language versions of them.",
-      hide_unavailable_message: 'Hide "this content is not available in your preferred language" message'
+        "Your preferred language might not be available in some contents, which we'll display in their default language.",
+      hide_unavailable_message: 'Hide "this content is unavailable in your preferred language" message'
     },
     appearance: {
       header: "Appearance",
@@ -88,7 +88,7 @@ module.exports = {
       themes: {
         auto: {
           name: "Auto",
-          description: "Use light (PURE) or dark (FAR) theme based on browser or system preference"
+          description: "Choose light (PURE) or dark (FAR) theme depending on your browser or the system preferences"
         },
         pure: {
           name: "PURE",
@@ -109,7 +109,7 @@ module.exports = {
       code_line_height: "Code Line Height",
       code_font_ligatures: "Enable Ligatures",
       code_font_ligatures_notes:
-        "Ligatures could display some combining symbols in a more readable form. Only several fonts support this feature.",
+        "Ligatures can display some combining symbols in a more readable form, but is only supported by some fonts.",
       code_preview: "Preview",
       markdown_editor_font: {
         markdown_editor: "Markdown Editor",
@@ -133,7 +133,7 @@ module.exports = {
       error: "Invalid options"
     },
     submit: "Submit",
-    success: "Preference updated successfully."
+    success: "Preferences updated successfully."
   },
   security: {
     title: "Security",
@@ -178,7 +178,7 @@ module.exports = {
       no_sessions: "This user has no sessions",
       unknown_os_browser: "Unknown browser and OS",
       notes_current_user:
-        'All logged-in sessions of your account are above. If you see a session used by others, logout it and change your password immediately.\nChanging your password in "Reset your password" page will logout ALL your sessions automatically.'
+        'Above are all logged-in sessions of your account. If you see a session used by others, log it out and change your password immediately.\nChanging your password in "Reset your password" page will logout ALL your sessions automatically.'
     }
   },
   privilege: {
@@ -187,35 +187,35 @@ module.exports = {
     privileges: {
       EditHomepage: {
         name: "Edit Homepage",
-        notes: "Modify the configuration and contents of homepage. e.g. notice and annnouncements."
+        notes: "Modify the configuration and contents of homepage, such as notice and announcements."
       },
       ManageUser: {
-        name: "Manage user",
-        notes: "Modify other user's profile, preference and security settings."
+        name: "Manage users",
+        notes: "Modify other users' profile, preferences and security settings."
       },
       ManageUserGroup: {
-        name: "Manage user group",
+        name: "Manage user groups",
         notes: "Create, edit and delete user groups. Manage user groups' members."
       },
       ManageProblem: {
-        name: "Manage problem",
+        name: "Manage problems",
         notes: "View, edit all problems and submissions, manage problems' permissions and delete problems."
       },
       ManageContest: {
-        name: "Manage contest",
+        name: "Manage contests",
         notes: "Placeholder."
       },
       ManageDiscussion: {
-        name: "Manage discussion",
+        name: "Manage discussions",
         notes:
-          "View, edit all discussions and replies, manage discussions' permissions and delete discussions or replies."
+          "View, edit all discussions and replies, manage discussions' permissions and delete discussions & replies."
       },
       SkipRecaptcha: {
         name: "Skip reCAPTCHA",
-        notes: "Submit any requests without verifying reCAPTCHA (if enabled). Useful for robots and virtual judge."
+        notes: "Submit any requests without being verified by reCAPTCHA (if enabled). Useful for robots and virtual judge."
       }
     },
-    admin_only: "Only admins can change user's privileges.",
+    admin_only: "Only admins can change users' privileges.",
     submit: "Submit",
     success: "Privileges updated successfully"
   },
@@ -230,7 +230,7 @@ module.exports = {
       filter: "Filter"
     },
     no_audit_log: "No audit log",
-    no_matched_audit_log: "No matched audit log",
+    no_matched_audit_log: "No matching audit log",
     copy_details: "Copy details",
     goback: "Go back"
   }
