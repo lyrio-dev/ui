@@ -2,9 +2,9 @@ module.exports = {
   title: "Judge Settings",
   header: "Settings",
   back_to_problem: "Back",
-  confirm_back_to_problem: "Discard Changes and Back",
+  confirm_back_to_problem: "Discard changes and go back",
   submit: "Submit",
-  no_submit_permission: "No Permission",
+  no_submit_permission: "No permission",
   submit_success: "Successfully submitted.",
   error: {
     NO_SUCH_PROBLEM: "No such problem.",
