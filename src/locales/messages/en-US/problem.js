@@ -1,7 +1,7 @@
 module.exports = {
   title: "Problem",
   meta_labels: {
-    non_public: "Non-Public",
+    non_public: "Private",
     no_display_id: "No ID"
   },
   fileio: {
@@ -25,7 +25,7 @@ module.exports = {
     login_to_submit: "Login to submit",
     submission: "Submissions",
     statistics: "Statistics",
-    discussion: "Discussion",
+    discussion: "Discussions",
     files: "Files",
     edit: "Edit",
     judge_settings: "Judge Settings",
@@ -34,14 +34,14 @@ module.exports = {
     set_display_id: "Set ID",
     set_display_id_new: "New ID (empty or 0 to clear ID)",
     set_display_id_submit: "Set",
-    set_public: "Make Public",
-    set_non_public: "Make non-public",
+    set_public: "Make public",
+    set_non_public: "Make private",
     set_public_confirm: "Confirm make public",
-    set_non_public_confirm: "Confirm make non-public",
+    set_non_public_confirm: "Confirm make private",
     delete: "Delete",
     delete_confirm_title: "Delete Problem",
     delete_confirm_content:
-      "Are you sure to delete the problem? The submissions, discussions and files of the problem will also be deleted. It may take some time.",
+      "Are you sure to delete the problem? Submissions, discussions and files of the problem will also be deleted. It may take some time.",
     delete_confirm: "Confirm delete",
     delete_cancel: "Cancel",
     delete_success: "Successfully deleted."
@@ -52,7 +52,7 @@ module.exports = {
     NO_DISPLAY_ID: "Please set ID first.",
     INVALID_DISPLAY_ID: "ID must be an integer.",
     PUBLIC_PROBLEM_MUST_HAVE_DISPLAY_ID: "A public problem must have an ID.",
-    DUPLICATE_DISPLAY_ID: "ID {displayId} has already used."
+    DUPLICATE_DISPLAY_ID: "ID {displayId} has been already used."
   },
   upload_error: "Failed to upload file: {error}",
   submit: {
@@ -61,7 +61,7 @@ module.exports = {
     skip_samples: "Skip Samples",
     upload_files: "Upload files",
     choose_files: "Choose ...",
-    selected_archive: "Selected a archive file.",
+    selected_archive: "Selected an archive file.",
     selected_valid_files: "Selected {all} file(s). {valid} of them are valid.",
     selected_files: "Selected {all} file(s).",
     cancel_select_files: "Cancel selected files",
@@ -73,7 +73,7 @@ module.exports = {
   },
   permission_level: {
     read: "Read Only",
-    write: "Read/Write"
+    write: "Read / Write"
   },
   sample: {
     input: "Input",
