@@ -19,7 +19,7 @@ module.exports = {
     refresh: "Refresh"
   },
   countdown: {
-    header: "Countdown",
+    header: "Countdowns",
     display_time_first: "1",
     before_time: "",
     after_time_before_event: " before ",
@@ -28,14 +28,14 @@ module.exports = {
     completed_before_event: "",
     completed_after_event: " has started"
   },
-  search_problem: "Search Problem",
+  search_problem: "Problem Search",
   top_users: {
     header: "Top Users",
     username: "Username",
     bio: "Bio",
     rating: "Rating",
     accepted_problem_count: "AC. Count",
-    no_users: "No Users"
+    no_users: "No users"
   },
-  friend_links: "Friend Links"
+  friend_links: "Links"
 };
