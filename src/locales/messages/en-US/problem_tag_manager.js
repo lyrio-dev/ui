@@ -1,13 +1,13 @@
 module.exports = {
-  title: "Tags Manage",
+  title: "Tag Manager",
   tag_count: "{count} Tags",
   error: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_PROBLEM_TAG: "No such problem tag."
   },
-  no_tags: "No Tags",
-  new_tag: "New Tag",
-  edit_tag: "Edit Tag",
+  no_tags: "No tags",
+  new_tag: "New tag",
+  edit_tag: "Edit tag",
   name_placeholder: "Tag name",
   default_language: "Default",
   add_language: "Add language",
