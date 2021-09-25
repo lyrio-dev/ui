@@ -11,7 +11,7 @@ module.exports = {
     USER_NOT_IN_GROUP: "This user is not in the group.",
     USER_ALREADY_IN_GROUP: "This user is already in the group.",
     DUPLICATE_GROUP_NAME: "The group name has been taken.",
-    GROUP_ADMIN_CAN_NOT_BE_REMOVED: "Group admin can not be removed."
+    GROUP_ADMIN_CAN_NOT_BE_REMOVED: "Group admin cannot be removed."
   },
   create_group: "Create group",
   create_group_name: "Group name",
