@@ -8,7 +8,7 @@ module.exports = {
     status: "Status",
     status_all: "All",
     filter: "Filter",
-    my_submissions: "My submissions"
+    my_submissions: "My Submissions"
   },
   query_error: {
     INVALID_PROBLEM_ID: "Invalid problem ID.",
