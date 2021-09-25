@@ -21,7 +21,7 @@ module.exports = {
   },
   hitokoto: "Hitokoto",
   countdown: "Countdown",
-  friend_links: "Friend Links",
+  friend_links: "Links",
   submit: "Submit",
   success: "Successfully updated."
 };
