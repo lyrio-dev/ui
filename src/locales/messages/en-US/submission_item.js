@@ -7,6 +7,6 @@ module.exports = {
     memory: "Memory",
     answer: "Answer",
     submitter: "Submitter",
-    submit_time: "Submit Time"
+    submit_time: "Submission Time"
   }
 };
