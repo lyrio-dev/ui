@@ -9,7 +9,7 @@ module.exports = {
   header: "Accepted Submissions",
   type: {
     Fastest: "Fastest",
-    MinMemory: "Min Memory",
+    MinMemory: "Least Memory",
     MinAnswerSize: "Shortest",
     Earliest: "Earliest"
   },
