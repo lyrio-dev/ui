@@ -5,7 +5,7 @@ module.exports = {
   edit_profile: "Edit profile",
   joined: "Joined ",
   social: {
-    email: "E-mail",
+    email: "Email",
     qq: "QQ",
     telegram: "Telegram",
     github: "GitHub"
