@@ -1,5 +1,5 @@
 module.exports = {
-  title_new: "Add discussion",
+  title_new: "New discussion",
   title_update: "Edit discussion",
   errors: {
     PERMISSION_DENIED: "Permission denied.",
@@ -7,7 +7,7 @@ module.exports = {
     NO_SUCH_DISCUSSION: "No such discussion."
   },
   header: {
-    add: "Add discussion",
+    add: "New discussion",
     update: "Edit discussion"
   }
 };
