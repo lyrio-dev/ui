@@ -1,5 +1,5 @@
 module.exports = {
-  header: "Permission Manage",
+  header: "Permission Manager",
   owner: "Owner",
   permission_for_users: "Users",
   search_users: "Search username to add users ...",
@@ -9,7 +9,7 @@ module.exports = {
   search_groups: "Search group name to add groups ...",
   search_groups_no_result: "No matching groups.",
   submit: "Submit",
-  no_submit_permission: "No Permission",
+  no_submit_permission: "No permission",
   cancel: "Cancel",
   confirm_cancel: "Confirm canel",
   submit_error: {
