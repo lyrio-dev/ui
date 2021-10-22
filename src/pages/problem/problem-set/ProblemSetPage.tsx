@@ -500,7 +500,7 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                 </Table.Cell>
                 <Table.Cell textAlign="left" className={style.problemTitleCell}>
                   <EmojiRenderer>
-                    <Link href={getProblemUrl(problem.meta)}>{getProblemDisplayName(null, problem.title, _)}</Link>
+                    <Link href={getProblemUrl(problem.meta)}>{getProblemDisplayName(problem.meta, _)}</Link>
                   </EmojiRenderer>
                   {!problem.meta.isPublic && (
                     <Label
@@ -520,10 +520,10 @@ let ProblemSetPage: React.FC<ProblemSetPageProps> = props => {
                     {problem.tags.map(tag => getTagLabel(tag))}
                   </div>
                 </Table.Cell>
-                <Table.Cell>{problem.meta.submissionCount}</Table.Cell>
+                <Table.Cell>{problem.meta.statisticsSubmitted}</Table.Cell>
                 {!isVeryNarrowScreen && (
                   <Table.Cell>
-                    {((problem.meta.acceptedSubmissionCount / problem.meta.submissionCount) * 100 || 0).toFixed(1)}%
+                    {((problem.meta.statisticsAccepted / problem.meta.statisticsSubmitted) * 100 || 0).toFixed(1)}%
                   </Table.Cell>
                 )}
               </Table.Row>

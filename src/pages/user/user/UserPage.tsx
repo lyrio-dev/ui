@@ -15,6 +15,7 @@ import { isValidUsername } from "@/utils/validators";
 import { makeToBeLocalizedText } from "@/locales";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
 import MarkdownContent from "@/markdown/MarkdownContent";
+import IconLinkButton from "@/components/IconLinkButton";
 
 function getTimeZone() {
   try {
@@ -119,18 +120,16 @@ const SubwayGraph: React.FC<SubwayGraphProps> = props => {
           ))}
         </div>
         <div className={style.footer}>
-          <Link
-            className={style.link}
+          <IconLinkButton
+            icon="search"
             href={{
               pathname: "/s",
               query: {
                 submitter: props.username
               }
             }}
-          >
-            <Icon name="search" />
-            {_(".subway_graph.link")}
-          </Link>
+            text={_(".subway_graph.link")}
+          />
           <div className={style.legend}>
             <span>{_(".subway_graph.legend.less")}</span>
             <div data-level="0">

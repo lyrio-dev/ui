@@ -167,8 +167,8 @@ const AuditView: React.FC<AuditViewProps> = props => {
         return wrap(<PseudoLink>{group.name}</PseudoLink>);
       }
       case "Problem": {
-        const [problem, title] = object as [ApiTypes.ProblemMetaDto, string];
-        return wrap(<Link href={getProblemUrl(problem)}>{getProblemDisplayName(problem, title, _)}</Link>);
+        const problem = object as ApiTypes.ProblemMetaDto;
+        return wrap(<Link href={getProblemUrl(problem)}>{getProblemDisplayName(problem, _)}</Link>);
       }
       case "ProblemTag": {
         const problemTag = object as ApiTypes.LocalizedProblemTagDto;

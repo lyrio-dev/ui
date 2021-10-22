@@ -10,3 +10,4 @@ export * from "./useAsyncCallbackPending";
 export * from "./useFocusWithin";
 export * from "./useRecaptcha";
 export * from "./useNavigation";
+export * from "./useSensitiveState";

@@ -30,7 +30,7 @@ export function getNewDiscussionUrl(problemId: number): Partial<URLDescriptor> {
 }
 
 export function getBreadcrumb(
-  problem: { meta: ApiTypes.ProblemMetaDto; title: string },
+  problem: ApiTypes.ProblemMetaDto,
   _: Localizer,
   inTopLevelList?: "general" | "allProblems",
   extra?: React.ReactNode
@@ -63,8 +63,8 @@ export function getBreadcrumb(
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="right angle" />
           <EmojiRenderer>
-            <Breadcrumb.Section active as={Link} href={getProblemUrl(problem.meta)}>
-              {getProblemDisplayName(problem.meta, problem.title, _, "all")}
+            <Breadcrumb.Section active as={Link} href={getProblemUrl(problem)}>
+              {getProblemDisplayName(problem, _, "all")}
             </Breadcrumb.Section>
           </EmojiRenderer>
         </>
@@ -326,7 +326,7 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
           icon="plus"
           content={isMobileOrPad ? "" : _(".add_discussion")}
           as={Link}
-          href={getNewDiscussionUrl(props.response.filterProblem?.meta?.id)}
+          href={getNewDiscussionUrl(props.response.filterProblem?.id)}
         />
       )}
     </div>
@@ -392,7 +392,7 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
             </Header>
             {props.response.permissions.createDiscussion && (
               <Segment.Inline>
-                <Button primary as={Link} href={getNewDiscussionUrl(props.response.filterProblem?.meta?.id)}>
+                <Button primary as={Link} href={getNewDiscussionUrl(props.response.filterProblem?.id)}>
                   {_(".no_discussions.create")}
                 </Button>
               </Segment.Inline>
@@ -461,8 +461,8 @@ let DiscussionsPage: React.FC<DiscussionsPageProps> = props => {
                     <>
                       {discussion.problem && (
                         <EmojiRenderer>
-                          <Link href={getProblemUrl(discussion.problem.meta)}>
-                            {getProblemDisplayName(discussion.problem.meta, discussion.problem.title, _, "all")}
+                          <Link href={getProblemUrl(discussion.problem)}>
+                            {getProblemDisplayName(discussion.problem, _, "all")}
                           </Link>
                         </EmojiRenderer>
                       )}

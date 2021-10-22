@@ -118,7 +118,7 @@ const disableInlineChunk = () => config => {
 
 // fork-ts-checker-webpack-plugin take ALL my CPUs on my machine so my machine stucks every time
 const disableTsCheckerOnDevelopment = () => config => {
-  if (config.mode === "development")
+  if (config.mode === "development" && process.env.SYZOJ_NG_APP_NO_TS_CHECKER)
     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== "ForkTsCheckerWebpackPlugin");
   return config;
 };

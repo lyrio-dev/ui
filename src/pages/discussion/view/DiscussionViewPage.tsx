@@ -298,7 +298,7 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
 
   const label = !props.isPublic ? (
     <Label className={style.label} icon="eye slash" color="red" content={_(".label.nonpublic")} basic />
-  ) : props.publisher.id === props.discussion.problem?.meta?.ownerId ? (
+  ) : props.publisher.id === props.discussion.problem?.ownerId ? (
     <Label className={style.label} content={_(".label.problem_owner")} basic />
   ) : props.publisher.id === props.discussion.publisher.id && props.type === "Reply" ? (
     <Label className={style.label} content={_(".label.discussion_publisher")} basic />
@@ -864,7 +864,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
           pathname: "/d",
           query: discussion.problem
             ? {
-                problemId: String(discussion.problem.meta.id)
+                problemId: String(discussion.problem.id)
               }
             : null
         });
@@ -970,8 +970,8 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         }
       }}
       refOpen={refOpenPermissionManager}
-      onGetInitialPermissions={async () => {
-        const { requestError, response } = await api.discussion.getDiscussionPermissions({
+      onGetInitialData={async () => {
+        const { requestError, response } = await api.discussion.getDiscussionAccessControlList({
           id: discussion.meta.id
         });
         if (requestError) toast.error(requestError(_));
@@ -979,18 +979,15 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
         else {
           return {
             owner: discussion.publisher,
-            userPermissions: response.permissions.userPermissions,
-            groupPermissions: response.permissions.groupPermissions,
-            haveSubmitPermission: response.haveManagePermissionsPermission
+            ...response
           };
         }
         return null;
       }}
-      onSubmitPermissions={async (userPermissions, groupPermissions) => {
-        const { requestError, response } = await api.discussion.setDiscussionPermissions({
+      onSubmit={async accessControlList => {
+        const { requestError, response } = await api.discussion.setDiscussionAccessControlList({
           discussionId: discussion.meta.id,
-          userPermissions: userPermissions as any,
-          groupPermissions: groupPermissions as any
+          accessControlList
         });
         if (requestError) toast.error(requestError(_));
         else if (response.error === "NO_SUCH_DISCUSSION") toast.error(_(".errors.NO_SUCH_DISCUSSION"));
@@ -1007,7 +1004,7 @@ let DiscussionViewPage: React.FC<DiscussionViewPageProps> = props => {
       icon="plus"
       content={_(".add_discussion")}
       as={Link}
-      href={getNewDiscussionUrl(discussion.problem?.meta?.id)}
+      href={getNewDiscussionUrl(discussion.problem?.id)}
     />
   );
 

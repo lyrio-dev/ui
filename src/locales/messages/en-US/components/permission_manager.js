@@ -2,6 +2,7 @@ return {
   header: "Permission Manage",
   owner: "Owner",
   permission_for_users: "Users",
+  no_user_granted: "No users granted yet.",
   search_users: "Search username to add users ...",
   search_users_no_result: "No matching users.",
   permission_for_groups: "Groups",

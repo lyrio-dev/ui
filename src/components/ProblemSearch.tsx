@@ -16,6 +16,7 @@ interface ProblemSearchProps {
     ApiTypes.QueryProblemSetRequestDto,
     "locale" | "keyword" | "titleOnly" | "skipCount" | "takeCount"
   >;
+  onFilterResult?: (problem: ApiTypes.QueryProblemSetResponseItemDto) => boolean;
   onResultSelect: (problem: ApiTypes.QueryProblemSetResponseItemDto) => void;
   onEnterPress?: (searchKeyword: string) => void;
 }
@@ -51,9 +52,10 @@ let ProblemSearch: React.FC<ProblemSearchProps> = props => {
 
         return [];
       }}
+      onFilterResult={props.onFilterResult}
       onRenderResult={result => (
         <EmojiRenderer>
-          <div className="title">{getProblemDisplayName(result.meta, result.title, _)}</div>
+          <div className="title">{getProblemDisplayName(result.meta, _)}</div>
         </EmojiRenderer>
       )}
       onResultSelect={props.onResultSelect}

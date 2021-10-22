@@ -20,10 +20,10 @@ export const queryDiscussions = createPostApi<
   ApiTypes.QueryDiscussionsRequestDto,
   ApiTypes.QueryDiscussionsResponseDto
 >("discussion/queryDiscussion", false);
-export const getDiscussionPermissions = createPostApi<
-  ApiTypes.GetDiscussionPermissionsRequestDto,
-  ApiTypes.GetDiscussionPermissionsResponseDto
->("discussion/getDiscussionPermissions", false);
+export const getDiscussionAccessControlList = createPostApi<
+  ApiTypes.GetDiscussionAccessControlListRequestDto,
+  ApiTypes.GetDiscussionAccessControlListResponseDto
+>("discussion/getDiscussionAccessControlList", false);
 export const getDiscussionAndReplies = createPostApi<
   ApiTypes.GetDiscussionAndRepliesRequestDto,
   ApiTypes.GetDiscussionAndRepliesResponseDto
@@ -52,7 +52,7 @@ export const setDiscussionReplyPublic = createPostApi<
   ApiTypes.SetDiscussionReplyPublicRequestDto,
   ApiTypes.SetDiscussionReplyPublicResponseDto
 >("discussion/setDiscussionReplyPublic", false);
-export const setDiscussionPermissions = createPostApi<
-  ApiTypes.SetDiscussionPermissionsRequestDto,
-  ApiTypes.SetDiscussionPermissionsResponseDto
->("discussion/setDiscussionPermissions", false);
+export const setDiscussionAccessControlList = createPostApi<
+  ApiTypes.SetDiscussionAccessControlListRequestDto,
+  ApiTypes.SetDiscussionAccessControlListResponseDto
+>("discussion/setDiscussionAccessControlList", false);

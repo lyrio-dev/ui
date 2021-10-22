@@ -2,6 +2,7 @@ return {
   header: "権限管理",
   owner: "オーナー",
   permission_for_users: "ユーザ",
+  no_user_granted: "[TBT] No users granted yet.",
   search_users: "ユーザ名を検索して権限を与える …",
   search_users_no_result: "制限を満たすユーザがいません。",
   permission_for_groups: "ユーザ グループ",

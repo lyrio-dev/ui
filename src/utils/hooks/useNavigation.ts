@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { observable } from "mobx";
 import { useNavigation, Link as NaviLink } from "react-navi";
 import { LinkProps } from "react-navi/dist/types/Link";
@@ -62,16 +62,18 @@ export function useConfirmNavigation(): [boolean, (confirm: boolean) => void] {
 
   useEffect(() => () => refConfirm.current && confirmNavigationState.count--, []);
 
+  const setModified = useCallback((confirm: boolean) => {
+    if (confirm != refConfirm.current) {
+      refConfirm.current = confirm;
+      setStateConfirm(confirm);
+
+      confirmNavigationState.count += confirm ? 1 : -1;
+    }
+  }, []);
+
   return [
     stateConfirm,
-    (confirm: boolean) => {
-      if (confirm != refConfirm.current) {
-        refConfirm.current = confirm;
-        setStateConfirm(confirm);
-
-        confirmNavigationState.count += confirm ? 1 : -1;
-      }
-    }
+    setModified
   ];
 }
 
@@ -81,7 +83,8 @@ export const Link: React.FC<LinkProps> = props => {
   return React.createElement(NaviLink, {
     ...props,
     onClick: e => {
-      if (!confirmNavigation()) e.preventDefault();
+      // If target="_blank" is both set, it's always allowed to click
+      if (props.target !== "_blank" && !confirmNavigation()) e.preventDefault();
       if (props.onClick) return props.onClick(e);
     }
   });

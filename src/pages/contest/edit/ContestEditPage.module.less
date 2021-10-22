@@ -1,0 +1,183 @@
+.left {
+  position: sticky !important;
+  align-self: flex-start;
+  top: calc(49px + 14px + 0px);
+
+  input[type="datetime-local"] {
+    height: 38px;
+  }
+
+  .checkbox {
+    margin-top: 22px;
+  }
+
+  .participantDurationMinutes {
+    margin-top: 11px;
+  }
+
+  .radios {
+    > * {
+      display: block;
+      
+      &:not(:first-child) {
+        margin-top: 7px;
+      }
+    }
+  }
+
+  .notes {
+    margin-top: 8px;
+    white-space: pre-wrap;
+
+    &, * {
+      font-size: 13px !important;
+      color: var(--theme-description-message-foreground) !important;
+    }
+  }
+  
+  .buttons {
+    margin-top: 22px;
+
+    :global(.ui.button) {
+      margin-right: 0 !important;
+
+      &:not(:last-child) {
+        margin-right: 10px !important;
+      }
+    }
+  }
+}
+
+.fieldHeader {
+  &:not(:first-child) {
+    margin-top: 22px !important;
+  }
+
+  margin-bottom: 8px !important;
+}
+
+.nameEditor {
+  margin-bottom: 14px;
+  display: flex;
+
+  > :global(.ui.input) {
+    flex-grow: 1;
+  }
+
+  > :global(.ui.button) {
+    margin-left: 7px !important;
+    margin-right: 0 !important;
+  }
+}
+
+.nowrap, .minWidth {
+  white-space: nowrap;
+}
+
+.minWidth {
+  width: 0 !important;
+}
+
+.problems {
+  .placeholder {
+    opacity: 0.5;
+    height: calc(33.5px * 1.5);
+  }
+
+  .columnAlias {
+    > div::after, :global(.ui.input) > input {
+      font-weight: bold;
+    }
+  }
+  
+  .autoGrowInputColumn {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    white-space: nowrap;
+    width: 0 !important;
+  
+    > div {
+      display: inline-grid;
+      vertical-align: top;
+      align-items: center;
+      position: relative;
+      width: 100%;
+
+      &::after, > :global(.ui.input) {
+        grid-area: 1 / 1;
+        width: auto;
+        max-width: 120px;
+      }
+    
+      &::after {
+        content: attr(data-value) ' ';
+        visibility: hidden;
+        white-space: pre-wrap;
+      }
+
+      > :global(.ui.input) {
+        > input {
+          text-align: center;
+        }
+    
+        min-width: 20px;
+      }
+    }
+  }
+  
+  .columnOperations {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  
+    > :global(.ui.button) {
+      &:not(:last-child) {
+        margin-right: 5px;
+      }
+  
+      &:last-child {
+        margin-right: -6px;
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+
+    > :global(.header) {
+      margin: 0 13px 0 0;
+    }  
+
+    .space {
+      flex-grow: 1;
+    }
+  }
+}
+
+.rightIcon {
+  margin-right: 0 !important;
+  margin-left: 3.5px !important;
+}
+
+.optionList(@vmargin; @hmargin; @margin-after; @grid) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  > * {
+    width: calc(100% / @grid - @hmargin);
+    margin-bottom: @vmargin !important;
+    margin-right: @hmargin !important;
+  }
+
+  margin-bottom: @margin-after - @vmargin;
+  margin-right: -@hmargin;
+}
+
+.checkboxes {
+  .optionList(11px; 14px; 16px; 3);
+}
+
+.inputs {
+  .optionList(16px; 14px; 0; 3);
+}

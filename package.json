@@ -166,5 +166,6 @@
   "files": [
     "/build"
   ],
-  "jsdelivr": "build/index.html"
+  "jsdelivr": "build/index.html",
+  "dependencies": {}
 }

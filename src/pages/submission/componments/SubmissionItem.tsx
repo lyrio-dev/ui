@@ -100,7 +100,7 @@ export const SubmissionItem: React.FC<SubmissionItemProps> = props => {
       <Table.Cell className={style.columnProblemAndSubmitter} textAlign="left">
         <div className={style.problem}>
           <EmojiRenderer>
-            <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
+            <Link href={problemUrl}>{getProblemDisplayName(submission.problem, _)}</Link>
           </EmojiRenderer>
         </div>
         <div className={style.submitter}>
@@ -238,7 +238,7 @@ export const SubmissionItemMobile: React.FC<SubmissionItemMobileProps> = props =
           <div>
             <div>
               <EmojiRenderer>
-                <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
+                <Link href={problemUrl}>{getProblemDisplayName(submission.problem, _)}</Link>
               </EmojiRenderer>
             </div>
             <div>
@@ -302,7 +302,7 @@ export const SubmissionItemExtraRows: React.FC<SubmissionItemExtraRowsProps> = p
   const columnProblem = (
     <div className={style.extraRowsColumnProblem}>
       <Icon name="book" />
-      <Link href={problemUrl}>{getProblemDisplayName(submission.problem, submission.problemTitle, _)}</Link>
+      <Link href={problemUrl}>{getProblemDisplayName(submission.problem, _)}</Link>
     </div>
   );
 

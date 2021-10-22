@@ -50,7 +50,6 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
         ? { [appState.locale]: "" }
         : props.settings.notice.contents) as Record<Locale, string>
   );
-  const [noticeActiveLocale, setNoticeActiveLocale] = useState(Object.keys(notice)[0] as Locale);
 
   const [annnouncements, setAnnnouncements] = useState(
     () =>
@@ -63,49 +62,6 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
             ])
           )) as Record<Locale, ApiTypes.DiscussionMetaDto[]>
   );
-  const [annnouncementsActiveLocale, setAnnnouncementsActiveLocale] = useState(
-    Object.keys(annnouncements)[0] as Locale
-  );
-
-  function getOnAddLocale<T>(
-    setter: React.Dispatch<React.SetStateAction<Record<Locale, T>>>,
-    activeLocaleSetter: React.Dispatch<React.SetStateAction<Locale>>,
-    defaultValue: T
-  ) {
-    return (locale: Locale) => {
-      setModified(true);
-      setter(original => ({ ...original, [locale]: defaultValue }));
-      activeLocaleSetter(locale);
-    };
-  }
-
-  function getOnSetDefaultLocale<T>(setter: React.Dispatch<React.SetStateAction<Record<Locale, T>>>, locale: Locale) {
-    return () => {
-      setter(original => {
-        const entries = Object.entries(original);
-        return Object.fromEntries([
-          entries.find(([l]) => l === locale),
-          ...entries.filter(([l]) => l !== locale)
-        ]) as typeof original;
-      });
-    };
-  }
-
-  function getOnDeleteLocale<T>(
-    setter: React.Dispatch<React.SetStateAction<Record<Locale, T>>>,
-    activeLocaleSetter: React.Dispatch<React.SetStateAction<Locale>>,
-    locale: Locale
-  ) {
-    return () => {
-      setter(original => {
-        const locales = Object.keys(original) as Locale[];
-        const i = locales.indexOf(locale);
-        if (i === locales.length - 1) activeLocaleSetter(locales[i - 1]);
-        else activeLocaleSetter(locales[i + 1]);
-        return Object.fromEntries(Object.entries(original).filter(([l]) => l !== locale)) as typeof original;
-      });
-    };
-  }
 
   const [hitokotoConfig, setHitokotoConfig] = useState(() => yaml.dump(props.settings.hitokoto));
   const [countdownConfig, setCountdownConfig] = useState(() => yaml.dump(props.settings.countdown));
@@ -160,26 +116,17 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
       />
       <LocalizeTab
         className={style.noticeLocalizeTab + (!noticeEnabled ? " " + style.disabled : "")}
-        locales={Object.keys(notice) as Locale[]}
-        activeLocale={noticeActiveLocale}
-        onSetActiveLocale={setNoticeActiveLocale}
-        onAddLocale={getOnAddLocale(setNotice, setNoticeActiveLocale, "")}
-        item={(locale, isDefault, isOnly) => (
+        localizedContents={notice}
+        setLocalizedContents={setNotice}
+        setModified={setModified}
+        item={(locale, content, setDefaultLocale, deleteLocale) => (
           <div className={style.noticeTab}>
             <div className={style.buttons}>
-              {!isDefault && (
-                <Button content={_(".set_default_locale")} onClick={getOnSetDefaultLocale(setNotice, locale)} />
-              )}
-              {!isOnly && (
+              {setDefaultLocale && <Button content={_(".set_default_locale")} onClick={setDefaultLocale} />}
+              {deleteLocale && (
                 <Popup
                   trigger={<Button negative content={_(".delete_locale")} />}
-                  content={
-                    <Button
-                      negative
-                      content={_(".confirm_delete_locale")}
-                      onClick={getOnDeleteLocale(setNotice, setNoticeActiveLocale, locale)}
-                    />
-                  }
+                  content={<Button negative content={_(".confirm_delete_locale")} onClick={deleteLocale} />}
                   on="click"
                   position="top center"
                 />
@@ -188,7 +135,7 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
             <div>
               <DiscussionEditor
                 type="RawEditor"
-                content={notice[locale]}
+                content={content}
                 onChangeContent={content => {
                   setModified(true);
                   setNotice(notice => ({
@@ -201,14 +148,14 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
             </div>
           </div>
         )}
+        defaultLocalizedContent=""
       />
       <Header as="h3" content={_(".annnouncements.header")} />
       <LocalizeTab
-        locales={Object.keys(annnouncements) as Locale[]}
-        activeLocale={annnouncementsActiveLocale}
-        onSetActiveLocale={setAnnnouncementsActiveLocale}
-        onAddLocale={getOnAddLocale(setAnnnouncements, setAnnnouncementsActiveLocale, [])}
-        item={(locale, isDefault, isOnly) => (
+        localizedContents={annnouncements}
+        setLocalizedContents={setAnnnouncements}
+        setModified={setModified}
+        item={(locale, content, setDefaultLocale, deleteLocale) => (
           <>
             <Table unstackable className={style.table} basic>
               <Table.Header>
@@ -226,7 +173,7 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {annnouncements[locale].map(annnouncement => (
+                {content.map(annnouncement => (
                   <Table.Row key={annnouncement.id}>
                     <Table.Cell textAlign="center" className={style.noWrap}>
                       {annnouncement.id}
@@ -249,7 +196,7 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
                           setModified(true);
                           setAnnnouncements(annnouncements => ({
                             ...annnouncements,
-                            [locale]: annnouncements[locale].filter(x => x.id !== annnouncement.id)
+                            [locale]: content.filter(x => x.id !== annnouncement.id)
                           }));
                         }}
                       />
@@ -264,32 +211,21 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
                         onResultSelect={({ meta }) => {
                           setModified(true);
                           setAnnnouncements(annnouncements =>
-                            annnouncements[locale].some(x => x.id === meta.id)
+                            content.some(x => x.id === meta.id)
                               ? annnouncements
                               : {
                                   ...annnouncements,
-                                  [locale]: [...annnouncements[locale], meta].sort((a, b) => b.id - a.id)
+                                  [locale]: [...content, meta].sort((a, b) => b.id - a.id)
                                 }
                           );
                         }}
                       />
                       <div className={style.space} />
-                      {!isDefault && (
-                        <Button
-                          content={_(".set_default_locale")}
-                          onClick={getOnSetDefaultLocale(setAnnnouncements, locale)}
-                        />
-                      )}
-                      {!isOnly && (
+                      {setDefaultLocale && <Button content={_(".set_default_locale")} onClick={setDefaultLocale} />}
+                      {deleteLocale && (
                         <Popup
                           trigger={<Button negative content={_(".delete_locale")} />}
-                          content={
-                            <Button
-                              negative
-                              content={_(".confirm_delete_locale")}
-                              onClick={getOnDeleteLocale(setAnnnouncements, setAnnnouncementsActiveLocale, locale)}
-                            />
-                          }
+                          content={<Button negative content={_(".confirm_delete_locale")} onClick={deleteLocale} />}
                           on="click"
                           position="top center"
                         />
@@ -301,6 +237,7 @@ let HomeSettingsPage: React.FC<HomeSettingsPageProps> = props => {
             </Table>
           </>
         )}
+        defaultLocalizedContent={[]}
       />
       <Header as="h3" content={_(".hitokoto")} />
       <LazyCodeEditor

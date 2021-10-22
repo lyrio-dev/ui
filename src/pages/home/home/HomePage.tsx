@@ -162,7 +162,7 @@ let HomePage: React.FC<HomePageProps> = props => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {props.latestUpdatedProblems.map(({ meta, title, submission }) => (
+              {props.latestUpdatedProblems.map(({ meta, submission }) => (
                 <Table.Row key={meta.id}>
                   {appState.currentUser && (
                     <Table.Cell textAlign="center">
@@ -175,7 +175,7 @@ let HomePage: React.FC<HomePageProps> = props => {
                   )}
                   <Table.Cell textAlign={inMainView ? "left" : "center"}>
                     <EmojiRenderer>
-                      <Link href={getProblemUrl(meta)}>{getProblemDisplayName(meta, title, _, "all")}</Link>
+                      <Link href={getProblemUrl(meta)}>{getProblemDisplayName(meta, _, "all")}</Link>
                     </EmojiRenderer>
                   </Table.Cell>
                   <Table.Cell className={style.latestProblemsDate + " " + style.noWrap} textAlign="center">

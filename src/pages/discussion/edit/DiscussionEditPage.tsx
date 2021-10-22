@@ -15,10 +15,7 @@ import toast from "@/utils/toast";
 import { makeToBeLocalizedText } from "@/locales";
 
 interface DiscussionEditPageProps {
-  problem?: {
-    meta: ApiTypes.ProblemMetaDto;
-    title: string;
-  };
+  problem?: ApiTypes.ProblemMetaDto;
   discussion?: ApiTypes.DiscussionDto;
 }
 
@@ -44,7 +41,7 @@ let DiscussionEditPage: React.FC<DiscussionEditPageProps> = props => {
         })
       : await api.discussion.createDiscussion(
           {
-            problemId: props.problem?.meta?.id,
+            problemId: props.problem?.id,
             title,
             content
           },
@@ -118,10 +115,7 @@ export default {
       if (requestError) throw new RouteError(requestError, { showRefresh: true, showBack: true });
       else if (response.error) throw new RouteError(makeToBeLocalizedText(`discussion_edit.errors.${response.error}`));
 
-      return {
-        meta: response.meta,
-        title: response.localizedContentsOfLocale.title
-      };
+      return response.meta;
     })();
 
     return <DiscussionEditPage key={uuid()} problem={problem} />;

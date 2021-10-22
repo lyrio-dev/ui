@@ -117,6 +117,7 @@ const AppRouter: React.FC = () => {
           "/register": lazy(() => import("./pages/auth/register")),
           "/forgot": lazy(() => import("./pages/auth/forgot")),
           "/p": getRoute(() => import("./pages/problem"), "p"),
+          "/c": lazy(() => import("./pages/contest")),
           "/s": getRoute(() => import("./pages/submission"), "s"),
           "/u": getRoute(() => import("./pages/user"), "u"),
           "/user": getRoute(() => import("./pages/user"), "user"),

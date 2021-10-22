@@ -153,6 +153,10 @@ body[data-theme=pure] {
   --theme-discussion-load-more-text: #555;
   --theme-discussion-load-more: #e8e8e8;
 
+  --theme-contest-operation-ended: grey;
+  --theme-contest-operation-registered: #01bab2;
+  --theme-contest-operation-register: #25ad40;
+
   --theme-footer: #888;
   --theme-footer-version: #c7c7c7;
   --theme-footer-icons: #999;

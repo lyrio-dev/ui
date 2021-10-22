@@ -21,41 +21,47 @@ import UserAvatar from "./UserAvatar";
 
 type PermissionLevelDetails = Record<number, { title: string /* description: string; */ }>;
 
-interface UserPermissionDtoForRequest {
-  userId: number;
-  permissionLevel: number;
+export interface AccessControlList<PermissionLevel extends number = number> {
+  userPermissions: {
+    userId: number;
+    permissionLevel: PermissionLevel;
+  }[];
+  groupPermissions: {
+    groupId: number;
+    permissionLevel: PermissionLevel;
+  }[];
 }
 
-interface GroupPermissionDtoForRequest {
-  groupId: number;
-  permissionLevel: number;
+export interface AccessControlListWithSubjectMeta<PermissionLevel extends number = number> {
+  userPermissions: {
+    user: ApiTypes.UserMetaDto;
+    permissionLevel: PermissionLevel;
+  }[];
+  groupPermissions: {
+    group: ApiTypes.GroupMetaDto;
+    permissionLevel: PermissionLevel;
+  }[];
 }
 
-interface UserPermissionDtoForResponse {
-  user: UserMeta;
-  permissionLevel: number;
+export interface PermissionManagerData<PermissionLevel extends number = number> {
+  accessControlList: AccessControlListWithSubjectMeta<PermissionLevel>;
+  owner?: ApiTypes.UserMetaDto;
+  haveManagePermissionsPermission: boolean;
 }
 
-interface GroupPermissionDtoForResponse {
-  group: GroupMeta;
-  permissionLevel: number;
-}
-
-interface PermissionsForResponse {
-  owner: UserMeta;
-  userPermissions: UserPermissionDtoForResponse[];
-  groupPermissions: GroupPermissionDtoForResponse[];
-  haveSubmitPermission: boolean;
+export interface PermissionManagerDataFromResponse {
+  accessControlList?: unknown;
+  owner?: ApiTypes.UserMetaDto;
+  haveManagePermissionsPermission?: boolean;
 }
 
 export interface PermissionManagerProps {
   objectDescription: string; // e.g. "Problem #1"
   permissionsLevelDetails: PermissionLevelDetails;
   refOpen: React.Ref<() => Promise<boolean>>;
-  onGetInitialPermissions: () => Promise<PermissionsForResponse>;
-  onSubmitPermissions: (
-    userPermissions: UserPermissionDtoForRequest[],
-    groupPermissions: GroupPermissionDtoForRequest[]
+  onGetInitialData: () => Promise<PermissionManagerDataFromResponse>;
+  onSubmit: (
+    accessControlList: AccessControlList
   ) => Promise<
     | {
         error?: "PERMISSION_DENIED" | "NO_SUCH_USER" | "NO_SUCH_GROUP" | string;
@@ -74,7 +80,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   const [opened, setOpened] = useState(false);
 
-  const [permissions, setPermissions] = useState<PermissionsForResponse>(null);
+  const [data, setData] = useState<PermissionManagerData>(null);
 
   const isMobile = useScreenWidthWithin(0, 768);
 
@@ -120,21 +126,23 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   }
 
   function addUser(user: UserMeta) {
-    if (permissions.owner.id === user.id) return;
-    for (const userPermission of permissions.userPermissions) {
+    if (data.owner?.id === user.id) return;
+    for (const userPermission of data.accessControlList.userPermissions) {
       if (userPermission.user.id === user.id) return;
     }
 
     setModified(true);
-    setPermissions(
-      update(permissions, {
-        userPermissions: {
-          $push: [
-            {
-              user,
-              permissionLevel: defaultPermissionLevel
-            }
-          ]
+    setData(
+      update(data, {
+        accessControlList: {
+          userPermissions: {
+            $push: [
+              {
+                user,
+                permissionLevel: defaultPermissionLevel
+              }
+            ]
+          }
         }
       })
     );
@@ -142,12 +150,14 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   function changeUserPermission(index: number, permissionLevel: number) {
     setModified(true);
-    setPermissions(
-      update(permissions, {
-        userPermissions: {
-          [index]: {
-            permissionLevel: {
-              $set: permissionLevel
+    setData(
+      update(data, {
+        accessControlList: {
+          userPermissions: {
+            [index]: {
+              permissionLevel: {
+                $set: permissionLevel
+              }
             }
           }
         }
@@ -157,10 +167,12 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   function deleteUser(index: number) {
     setModified(true);
-    setPermissions(
-      update(permissions, {
-        userPermissions: {
-          $splice: [[index, 1]]
+    setData(
+      update(data, {
+        accessControlList: {
+          userPermissions: {
+            $splice: [[index, 1]]
+          }
         }
       })
     );
@@ -189,20 +201,22 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   }
 
   function addGroup(group: GroupMeta) {
-    for (const groupPermission of permissions.groupPermissions) {
+    for (const groupPermission of data.accessControlList.groupPermissions) {
       if (groupPermission.group.id === group.id) return;
     }
 
     setModified(true);
-    setPermissions(
-      update(permissions, {
-        groupPermissions: {
-          $push: [
-            {
-              group,
-              permissionLevel: defaultPermissionLevel
-            }
-          ]
+    setData(
+      update(data, {
+        accessControlList: {
+          groupPermissions: {
+            $push: [
+              {
+                group,
+                permissionLevel: defaultPermissionLevel
+              }
+            ]
+          }
         }
       })
     );
@@ -210,12 +224,14 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   function changeGroupPermission(index: number, permissionLevel: number) {
     setModified(true);
-    setPermissions(
-      update(permissions, {
-        groupPermissions: {
-          [index]: {
-            permissionLevel: {
-              $set: permissionLevel
+    setData(
+      update(data, {
+        accessControlList: {
+          groupPermissions: {
+            [index]: {
+              permissionLevel: {
+                $set: permissionLevel
+              }
             }
           }
         }
@@ -225,10 +241,12 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
   function deleteGroup(index: number) {
     setModified(true);
-    setPermissions(
-      update(permissions, {
-        groupPermissions: {
-          $splice: [[index, 1]]
+    setData(
+      update(data, {
+        accessControlList: {
+          groupPermissions: {
+            $splice: [[index, 1]]
+          }
         }
       })
     );
@@ -241,16 +259,16 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
   }
 
   const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
-    const response = await props.onSubmitPermissions(
-      permissions.userPermissions.map(({ user, permissionLevel }) => ({
+    const response = await props.onSubmit({
+      userPermissions: data.accessControlList.userPermissions.map(({ user, permissionLevel }) => ({
         userId: user.id,
         permissionLevel
       })),
-      permissions.groupPermissions.map(({ group, permissionLevel }) => ({
+      groupPermissions: data.accessControlList.groupPermissions.map(({ group, permissionLevel }) => ({
         groupId: group.id,
         permissionLevel
       }))
-    );
+    });
 
     if (response === true) {
       onClose();
@@ -303,36 +321,57 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         <Header as="h4">{_(".permission_for_users")}</Header>
         <Table fixed unstackable>
           <Table.Body>
-            <Table.Row>
-              {getUsernameAndEmailColumns(permissions.owner)}
-              <Table.Cell width={isMobile ? 6 : 4}>{_(".owner")}</Table.Cell>
-              <Table.Cell width={2} textAlign="right">
-                <Icon disabled name="delete" />
-              </Table.Cell>
-            </Table.Row>
-            {permissions.userPermissions.map((userPermission, index) => (
-              <Table.Row key={userPermission.user.id}>
-                {getUsernameAndEmailColumns(userPermission.user)}
-                <Table.Cell className={style.columnDropdown}>
-                  <Dropdown
-                    value={userPermission.permissionLevel.toString()}
-                    options={Object.keys(props.permissionsLevelDetails).map(permissionLevel => ({
-                      key: permissionLevel,
-                      value: permissionLevel,
-                      text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
-                      disabled:
-                        !permissions.haveSubmitPermission && Number(permissionLevel) !== userPermission.permissionLevel
-                    }))}
-                    onChange={(e, { value }) => changeUserPermission(index, Number(value))}
-                  />
-                </Table.Cell>
-                <Table.Cell textAlign="right">
-                  <Icon name="delete" disabled={!permissions.haveSubmitPermission} onClick={() => deleteUser(index)} />
-                </Table.Cell>
-              </Table.Row>
-            ))}
+            {
+              data.accessControlList.userPermissions.length === 0 && !data.owner ? (
+                <Table.Row>
+                  <Table.HeaderCell colSpan={4} textAlign="center" className={style.noGranted}>
+                    {_(".no_user_granted")}
+                  </Table.HeaderCell>
+                </Table.Row>
+              ) : (
+                <>
+                  {
+                    data.owner && (
+                      <Table.Row>
+                        {getUsernameAndEmailColumns(data.owner)}
+                        <Table.Cell width={isMobile ? 6 : 4}>{_(".owner")}</Table.Cell>
+                        <Table.Cell width={2} textAlign="right">
+                          <Icon disabled name="delete" />
+                        </Table.Cell>
+                      </Table.Row>
+                    )
+                  }
+                  {data.accessControlList.userPermissions.map((userPermission, index) => (
+                    <Table.Row key={userPermission.user.id}>
+                      {getUsernameAndEmailColumns(userPermission.user)}
+                      <Table.Cell className={style.columnDropdown}>
+                        <Dropdown
+                          value={userPermission.permissionLevel.toString()}
+                          options={Object.keys(props.permissionsLevelDetails).map(permissionLevel => ({
+                            key: permissionLevel,
+                            value: permissionLevel,
+                            text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
+                            disabled:
+                              !data.haveManagePermissionsPermission &&
+                              Number(permissionLevel) !== userPermission.permissionLevel
+                          }))}
+                          onChange={(e, { value }) => changeUserPermission(index, Number(value))}
+                        />
+                      </Table.Cell>
+                      <Table.Cell textAlign="right">
+                        <Icon
+                          name="delete"
+                          disabled={!data.haveManagePermissionsPermission}
+                          onClick={() => deleteUser(index)}
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </>
+              )
+            }
           </Table.Body>
-          {permissions.haveSubmitPermission && (
+          {data.haveManagePermissionsPermission && (
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell colSpan={4} className={style.columnDropdown}>
@@ -350,14 +389,14 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         <Header as="h4">{_(".permission_for_groups")}</Header>
         <Table compact fixed unstackable>
           <Table.Body>
-            {permissions.groupPermissions.length === 0 ? (
+            {data.accessControlList.groupPermissions.length === 0 ? (
               <Table.Row>
-                <Table.HeaderCell colSpan={3} textAlign="center" className={style.noGroupGranted}>
+                <Table.HeaderCell colSpan={3} textAlign="center" className={style.noGranted}>
                   {_(".no_group_granted")}
                 </Table.HeaderCell>
               </Table.Row>
             ) : (
-              permissions.groupPermissions.map((groupPermission, index) => (
+              data.accessControlList.groupPermissions.map((groupPermission, index) => (
                 <Table.Row key={groupPermission.group.id}>
                   <Table.Cell className={style.columnGroupName} width={7}>
                     <Icon className={style.groupIcon} name="group" />
@@ -371,7 +410,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                         value: permissionLevel,
                         text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
                         disabled:
-                          !permissions.haveSubmitPermission &&
+                          !data.haveManagePermissionsPermission &&
                           Number(permissionLevel) !== groupPermission.permissionLevel
                       }))}
                       onChange={(e, { value }) => changeGroupPermission(index, Number(value))}
@@ -380,7 +419,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                   <Table.Cell width={5} textAlign="right">
                     <Icon
                       name="delete"
-                      disabled={!permissions.haveSubmitPermission}
+                      disabled={!data.haveManagePermissionsPermission}
                       onClick={() => deleteGroup(index)}
                     />
                   </Table.Cell>
@@ -388,7 +427,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
               ))
             )}
           </Table.Body>
-          {permissions.haveSubmitPermission && (
+          {data.haveManagePermissionsPermission && (
             <Table.Footer>
               <Table.Row>
                 <Table.HeaderCell colSpan={3} className={style.columnDropdown}>
@@ -417,9 +456,9 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
         />
         <Button
           positive
-          content={permissions.haveSubmitPermission ? _(".submit") : _(".no_submit_permission")}
+          content={data.haveManagePermissionsPermission ? _(".submit") : _(".no_submit_permission")}
           loading={pendingSubmit}
-          disabled={!permissions.haveSubmitPermission}
+          disabled={!data.haveManagePermissionsPermission}
           onClick={() => onSubmit()}
         />
       </>
@@ -432,13 +471,13 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
       if (opened || pendingOpen) return;
 
       setPendingOpen(true);
-      const initialPermissions = await props.onGetInitialPermissions();
+      const initialData = (await props.onGetInitialData()) as PermissionManagerData;
       setPendingOpen(false);
 
-      if (!initialPermissions) return false;
+      if (!initialData) return false;
 
       setOpened(true);
-      setPermissions(initialPermissions);
+      setData(initialData);
 
       dialog.open();
       return true;
@@ -446,7 +485,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
 
     if (typeof props.refOpen === "function") props.refOpen(open);
     else (props.refOpen as React.MutableRefObject<() => Promise<boolean>>).current = open;
-  }, [props.refOpen, props.onGetInitialPermissions, opened, pendingOpen, dialog]);
+  }, [props.refOpen, props.onGetInitialData, opened, pendingOpen, dialog]);
 
   return dialog.element;
 };

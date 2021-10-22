@@ -334,7 +334,6 @@ interface LocalizedContentEditorProps {
   samples: Sample[];
 
   isOnly: boolean;
-  isDefault: boolean;
   onMakeDefault: () => void;
   onAddDefaultSections: () => void;
   onDelete: () => void;
@@ -383,7 +382,7 @@ const LocalizedContentEditor: React.FC<LocalizedContentEditorProps> = props => {
               <Menu.Item>
                 <Radio
                   label={_(".content_editor.default")}
-                  checked={props.isDefault}
+                  checked={!props.onMakeDefault}
                   onChange={(e, { checked }) => checked && props.onMakeDefault()}
                 />
               </Menu.Item>
@@ -606,7 +605,7 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
 
   const [localizedContents, setLocalizedContents] = useState(
     (() => {
-      const converted: Partial<Record<Locale, LocalizedContent>> = {};
+      const converted: Record<Locale, LocalizedContent> = {} as any;
       if (!props.new) {
         for (const content of props.problem.localizedContentsOfAllLocales) {
           converted[content.locale] = {
@@ -633,32 +632,26 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
   const [modified, setModified] = useConfirmNavigation();
   const [pendingSubmit, onSubmit] = useAsyncCallbackPending(async () => {
     // Swap the default locale to the first of the array.
-    const localizedContentsPayload = Object.keys(localizedContents)
-      .map((locale: Locale, index, locales: Locale[]) => {
-        if (index === 0) return defaultLocale;
-        if (locale === defaultLocale) return locales[0];
-        return locale;
+    const localizedContentsPayload = Object.keys(localizedContents).map(
+      (locale): ApiTypes.ProblemLocalizedContentDto => ({
+        locale: locale as Locale,
+        title: localizedContents[locale].title,
+        contentSections: localizedContents[locale].contentSections.map(section =>
+          section.type === "Text"
+            ? {
+                sectionTitle: section.sectionTitle,
+                type: "Text",
+                text: section.text
+              }
+            : {
+                sectionTitle: section.sectionTitle,
+                type: "Sample",
+                sampleId: section.sampleId,
+                text: section.text
+              }
+        )
       })
-      .map(
-        (locale): ApiTypes.ProblemLocalizedContentDto => ({
-          locale: locale,
-          title: localizedContents[locale].title,
-          contentSections: localizedContents[locale].contentSections.map(section =>
-            section.type === "Text"
-              ? {
-                  sectionTitle: section.sectionTitle,
-                  type: "Text",
-                  text: section.text
-                }
-              : {
-                  sectionTitle: section.sectionTitle,
-                  type: "Sample",
-                  sampleId: section.sampleId,
-                  text: section.text
-                }
-          )
-        })
-      );
+    );
 
     const hasEmpty = localizedContentsPayload.some(
       locaizedContents =>
@@ -751,60 +744,6 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         }
       })
     );
-  }
-
-  function onDeleteLocale(locale: Locale) {
-    if (pendingSubmit) return;
-    setModified(true);
-
-    const locales = Object.keys(localizedContents) as Locale[];
-
-    // Select first non-deleting locale as default
-    locales.some((nextLocale: Locale) => {
-      if (nextLocale !== locale) {
-        setDefaultLocale(nextLocale);
-        return true;
-      }
-    });
-
-    // Select the one next to the deleting as active
-    const deleteingIndex = locales.indexOf(locale);
-    if (deleteingIndex === locales.length - 1) {
-      setActiveLocale(locales[deleteingIndex - 1]);
-    } else {
-      setActiveLocale(locales[deleteingIndex + 1]);
-    }
-
-    setLocalizedContents(
-      update(localizedContents, {
-        $unset: [locale]
-      })
-    );
-  }
-
-  function onAddLocale(locale: Locale) {
-    if (pendingSubmit) return;
-    setModified(true);
-
-    setLocalizedContents(
-      update(localizedContents, {
-        [locale]: {
-          $set: {
-            title: "",
-            contentSections: [
-              {
-                uuid: uuid(),
-                sectionTitle: "",
-                type: "Text",
-                text: ""
-              }
-            ]
-          }
-        }
-      })
-    );
-
-    setActiveLocale(locale);
   }
 
   function onAddSample() {
@@ -1081,11 +1020,6 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         }))
   );
 
-  const [activeLocale, setActiveLocale] = useState(() => {
-    const locale = props.requestedLocale || appState.locale;
-    return locale in localizedContents ? locale : (Object.keys(localizedContents)[0] as Locale);
-  });
-
   const [tagIds, setTagIds] = useState(
     !props.problem ? [] : props.problem.tagsOfLocale.map(problemTag => problemTag.id)
   );
@@ -1100,10 +1034,6 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
       ...result.filter(option => !option.text.toLowerCase().startsWith(query))
     ];
   }
-
-  const [defaultLocale, setDefaultLocale] = useState(
-    props.new ? appState.locale : (props.problem.meta.locales[0] as Locale)
-  );
 
   const haveSubmitPermission = props.new ? true : props.problem.permissionOfCurrentUser.includes("Modify");
 
@@ -1156,18 +1086,19 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
         <Grid.Row className={style.row}>
           <Grid.Column width={11}>
             <LocalizeTab
-              locales={Object.keys(localizedContents) as Locale[]}
-              activeLocale={activeLocale}
-              item={locale => (
+              defaultActiveLocale={props.requestedLocale || appState.locale}
+              localizedContents={localizedContents}
+              setLocalizedContents={setLocalizedContents}
+              setModified={setModified}
+              item={(locale, content, setDefaultLocale, deleteLocale) => (
                 <LocalizedContentEditor
                   problemId={props.problem?.meta?.id}
-                  localizedContent={localizedContents[locale]}
+                  localizedContent={content}
                   samples={samples}
                   isOnly={Object.keys(localizedContents).length === 1}
-                  isDefault={defaultLocale === locale}
-                  onMakeDefault={() => setDefaultLocale(locale)}
+                  onMakeDefault={setDefaultLocale}
                   onAddDefaultSections={() => onAddDefaultSectionsToLocale(locale)}
-                  onDelete={() => onDeleteLocale(locale)}
+                  onDelete={deleteLocale}
                   onChangeTitle={title => onChangeTitle(locale, title)}
                   onChangeSectionValue={(index, type, newValue) => onChangeSectionValue(locale, index, type, newValue)}
                   onChangeSectionType={(index, newType) => onChangeSectionType(locale, index, newType)}
@@ -1178,8 +1109,17 @@ let ProblemEditPage: React.FC<ProblemEditPageProps> = props => {
                   onMoveSection={(index, direction) => onMoveSection(locale, index, direction)}
                 />
               )}
-              onAddLocale={onAddLocale}
-              onSetActiveLocale={setActiveLocale}
+              defaultLocalizedContent={() => ({
+                title: "",
+                contentSections: [
+                  {
+                    uuid: uuid(),
+                    sectionTitle: "",
+                    type: "Text" as const,
+                    text: ""
+                  }
+                ]
+              })}
             />
           </Grid.Column>
           <Grid.Column width={5}>

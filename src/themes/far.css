@@ -157,6 +157,10 @@ body[data-theme=far] {
   --theme-footer-version: #666;
   --theme-footer-icons: #a7a7a7;
 
+  --theme-contest-operation-ended: grey;
+  --theme-contest-operation-registered: #01bab2;
+  --theme-contest-operation-register: #25ad40;
+
   --theme-login-error-message: #c54f4d;
 
   --theme-secondary-title: #999;

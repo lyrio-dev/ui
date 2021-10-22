@@ -26,7 +26,7 @@ import api from "@/api";
 import formatDateTime from "@/utils/formatDateTime";
 import { EmojiRenderer } from "@/components/EmojiRenderer";
 
-export type NavButtonName = "home" | "problem_set" | "submissions" | "members" | "discussion";
+export type NavButtonName = "home" | "problem_set" | "contests" | "submissions" | "members" | "discussion";
 
 let AppLayout: React.FC = props => {
   const navigation = useNavigationChecked();
@@ -74,15 +74,11 @@ let AppLayout: React.FC = props => {
       text: ".navbar.problem_set",
       url: "/p"
     },
-    ...(appState.serverPreference.misc.legacyContestsEntryUrl
-      ? {
-          contests: {
-            icon: "calendar",
-            text: ".navbar.contests",
-            url: appState.serverPreference.misc.legacyContestsEntryUrl
-          }
-        }
-      : {}),
+    contests: {
+      icon: "calendar",
+      text: ".navbar.contests",
+      url: "/c"
+    },
     submissions: {
       icon: "hourglass",
       text: ".navbar.submissions",

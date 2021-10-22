@@ -82,7 +82,7 @@
 
 @header-one-row-height: 42px;
 
-:global(#root) .item {
+:global(#body) .item {
   display: flex;
   position: relative;
 
@@ -397,7 +397,6 @@
 
     > .mainSegment {
       padding: 0;
-      overflow: hidden;
 
       .editor {
         border-top: none;
@@ -474,7 +473,7 @@
     }
   }
 
-  &:not(.new), .items.mobile & {
+  &:not(.new):not(.raw), .items.mobile & {
     // &:not(.edit.discussion)
     &:not(.edit), &:not(.discussion) {
       &:not(:first-child)::before, &:not(:last-child)::after {

@@ -20,10 +20,10 @@ export const getProblem = createPostApi<ApiTypes.GetProblemRequestDto, ApiTypes.
   "problem/getProblem",
   false
 );
-export const setProblemPermissions = createPostApi<
-  ApiTypes.SetProblemPermissionsRequestDto,
-  ApiTypes.SetProblemPermissionsResponseDto
->("problem/setProblemPermissions", false);
+export const setProblemAccessControlList = createPostApi<
+  ApiTypes.SetProblemAccessControlListRequestDto,
+  ApiTypes.SetProblemAccessControlListResponseDto
+>("problem/setProblemAccessControlList", false);
 export const setProblemDisplayId = createPostApi<
   ApiTypes.SetProblemDisplayIdRequestDto,
   ApiTypes.SetProblemDisplayIdResponseDto

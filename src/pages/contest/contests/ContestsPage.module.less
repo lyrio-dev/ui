@@ -1,0 +1,90 @@
+.header {
+  display: flex;
+  align-items: center;
+
+  &.mobile:not(:first-child) {
+    margin-top: 14px !important;
+  }
+
+  > :global(.button) {
+    margin-top: -10px;
+    margin-bottom: -10px;
+    margin-left: auto !important;
+  }
+}
+
+.linkButtons {
+  width: 120px;
+
+  &.privileged {
+    width: 190px;
+  }
+
+  > div {
+    display: flex;
+
+    > * {
+      flex: 1 1 0;
+    }
+  }
+}
+
+.linkButtonsMobile > div > *:not(last-child) {
+  margin-right: 14px;
+}
+
+.operationRegistered {
+  color: var(--theme-contest-operation-registered) !important;
+}
+
+.operationEnded {
+  color: var(--theme-contest-operation-ended) !important;
+}
+
+.operationRegister {
+  color: var(--theme-contest-operation-register) !important;
+}
+
+.participants {
+  .mulSign {
+    margin-right: 5px;
+  }
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.mobileRow {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    display: flex;
+
+    > div:first-child {
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    > div:nth-child(2) {
+      text-align: right;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.pagination:not(:empty) {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 18px;
+
+  @media only screen and (max-width: 767px) {
+    margin-top: 14px;
+  }
+}

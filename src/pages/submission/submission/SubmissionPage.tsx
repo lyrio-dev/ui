@@ -185,10 +185,7 @@ interface SubmissionPageProps {
   content: unknown;
   progress: SubmissionProgress;
   progressSubscriptionKey?: string;
-  permissionRejudge: boolean;
-  permissionCancel: boolean;
-  permissionSetPublic: boolean;
-  permissionDelete: boolean;
+  permissions: ("Rejudge" | "Cancel" | "SetPublic" | "Delete")[];
   ProblemTypeSubmissionView: ProblemTypeSubmissionView;
 }
 
@@ -205,7 +202,7 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   // score and status are in this meta, but we still use them in full info
   const meta: Pick<
     ApiTypes.SubmissionMetaDto,
-    "id" | "problem" | "isPublic" | "codeLanguage" | "answerSize" | "submitTime" | "problemTitle" | "submitter"
+    "id" | "problem" | "isPublic" | "codeLanguage" | "answerSize" | "submitTime" | "submitter"
   > = props.meta;
 
   const [progress, setProgress] = useState(props.progress);
@@ -793,10 +790,10 @@ let SubmissionPage: React.FC<SubmissionPageProps> = props => {
   const [togglePublicPopupOpen, setTogglePublicPopupOpen] = useState(false);
   const [deletePopupOpen, setDeletePopupOpen] = useState(false);
 
-  const showRejudge = props.permissionRejudge;
-  const showCancel = props.permissionCancel && progressMeta.pending;
-  const showTogglePublic = props.permissionSetPublic;
-  const showDelete = props.permissionDelete;
+  const showRejudge = props.permissions.includes("Rejudge");
+  const showCancel = props.permissions.includes("Cancel") && progressMeta.pending;
+  const showTogglePublic = props.permissions.includes("SetPublic");
+  const showDelete = props.permissions.includes("Delete");
 
   const statusPopup = (statusNode: JSX.Element) =>
     !showRejudge && !showCancel ? (

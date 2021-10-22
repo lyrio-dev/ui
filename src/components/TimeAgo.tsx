@@ -6,7 +6,7 @@ import formatDateTime from "@/utils/formatDateTime";
 import { appState } from "@/appState";
 
 interface TimeAgoProps {
-  time: Date;
+  time: Date | string | number;
   dateOnly?: boolean;
 }
 
@@ -25,7 +25,8 @@ let TimeAgo: React.FC<TimeAgoProps> = props => {
 
   const [relativeDate, setRelativeDate] = useState(new Date());
 
-  const getUseTimeAgo = () => +relativeDate - +props.time <= MAX_TIME_AGO;
+  const time = new Date(props.time);
+  const getUseTimeAgo = () => +relativeDate - +time <= MAX_TIME_AGO;
   const [useTimeAgo, setUseTimeAgo] = useState(getUseTimeAgo());
 
   useEffect(() => {
@@ -37,15 +38,15 @@ let TimeAgo: React.FC<TimeAgoProps> = props => {
 
   useEffect(() => {
     if (getUseTimeAgo() !== useTimeAgo) setUseTimeAgo(!useTimeAgo);
-  }, [relativeDate, props.time]);
+  }, [relativeDate, time]);
 
-  const fullDateTime = formatDateTime(props.time, props.dateOnly)[1];
+  const fullDateTime = formatDateTime(time, props.dateOnly)[1];
 
   return (
     <>
       {useTimeAgo ? (
         <span title={fullDateTime}>
-          {timeago.format(fixLater(props.time, relativeDate), appState.locale, {
+          {timeago.format(fixLater(time, relativeDate), appState.locale, {
             relativeDate: relativeDate
           })}
         </span>

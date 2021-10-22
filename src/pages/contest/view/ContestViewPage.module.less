@@ -1,0 +1,212 @@
+.nowrap, .minWidth {
+  white-space: nowrap;
+}
+
+.minWidth {
+  width: 0 !important;
+}
+
+.container {
+  display: flex;
+
+  @rightContentWidth: 260px;
+  @rightWidth: calc(@rightContentWidth + 1rem);
+
+  .left {
+    width: calc(100% - @rightWidth);
+    padding-right: 1rem;
+  }
+
+  .right {
+    align-self: start;
+    position: sticky;
+    top: calc(49px + 28px + 0px);
+  }
+
+  .right {
+    width: @rightWidth;
+    padding-left: 1rem;
+  }
+
+  @media only screen and (max-width: 767px) {
+    flex-direction: column;
+
+    .left {
+      width: 100%;
+      padding-right: 0 !important;
+    }
+
+    .right {
+      margin-top: 26px;
+      padding-left: 0 !important;
+      position: static !important;
+      width: 100%;
+    }
+  }
+}
+
+.progress {
+  margin-top: 14px;
+  margin-bottom: 16px !important;
+  
+  .time {
+    display: flex;
+
+    .space {
+      flex-grow: 1;
+    }
+  }
+}
+
+.countdownSegment {
+  padding: 24px 0 !important;
+
+  > :global(.header) {
+    font-weight: normal !important;
+  }
+
+  .countdown {
+    font-size: 24px;
+    margin: 12px auto 0 auto;
+    width: fit-content;
+  }
+}
+
+.headerWrapper {
+  display: flex;
+  align-items: center;
+  margin: calc(2rem - 0.1428571428571429em) 0 1rem;
+
+  :global(.ui.header) {
+    margin: 0 !important;
+  }
+
+  .rightButton {
+    margin: -100px 0 -100px auto !important;
+  }
+}
+
+.dialogMessage {
+  white-space: pre-wrap;
+  line-height: 1.5 !important;
+  margin-bottom: 21px !important;
+}
+
+.replyingIssue {
+  margin-bottom: 18px;
+}
+
+.issueSegment {
+  position: relative;
+
+  .replyButton {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0 !important;
+  }
+}
+
+.issue, .announcement {
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+
+    .text {
+      color: var(--theme-discussion-header-foreground);
+    }
+
+    .avatar {
+      @size: 25px;
+      width: @size;
+      height: @size;
+      margin-right: 6px;
+    }
+    
+    .username {
+      margin-right: 5px;
+    }
+
+    .divider {
+      flex-grow: 1;
+    }
+
+    .icon {
+      width: 25px;
+      height: 25px;
+      font-size: 18px;
+      text-align: center;
+      line-height: 25px;
+      cursor: pointer;
+      margin-left: 5px;
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+
+      .dropdown {
+        position: absolute;
+
+        > :global(.icon) {
+          font-size: 28px;
+          visibility: hidden;
+        }
+
+        > :global(.menu) {
+          transform: translate(-42px, calc(-50% + 25px));
+          top: 50%;
+        }
+      }
+      
+      > :global(.icon) {
+        opacity: 0.4;
+      }
+
+      &:hover > :global(.icon) {
+        opacity: 0.6;
+      }
+
+      &:active > :global(.icon), &.active > :global(.icon) {
+        opacity: 0.8;
+      }
+
+      &[data-disabled=true] {
+        > :global(.icon) {
+          opacity: 0.25 !important;
+        }
+
+        cursor: initial;
+      }
+    }
+  }
+}
+
+.localizeTab {
+  position: relative;
+
+  .buttons {
+    position: absolute;
+    right: 11px;
+    top: 7px;
+    z-index: 1;
+  }
+}
+
+.buttonGroup {
+  > :global(.button) {
+    width: 50% !important;
+  }
+}
+
+.manageActions {
+  margin-left: 8px;
+  font-size: 23px !important;
+  vertical-align: top;
+
+  .delete {
+    color: var(--theme-discussion-delete) !important;
+  }
+}

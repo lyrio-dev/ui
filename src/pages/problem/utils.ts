@@ -47,26 +47,23 @@ export function getProblemIdString(
 
 export function getProblemDisplayName(
   meta: ApiTypes.ProblemMetaDto,
-  title: string,
   _: Localizer,
   returnType: "tuple"
 ): [string, string, string];
 
 export function getProblemDisplayName(
   meta: ApiTypes.ProblemMetaDto,
-  title: string,
   _: Localizer,
   returnType?: "all" | "titleOnly"
 ): string;
 
 export function getProblemDisplayName(
   meta: ApiTypes.ProblemMetaDto,
-  title: string,
   _: Localizer,
   returnType?: "all" | "tuple" | "titleOnly"
 ): string | [string, string, string] {
   const idString = meta && (meta.displayId ? `#${meta.displayId}` : `P${meta.id}`);
-  const titleString = title.trim() || _("problem_set.no_title");
+  const titleString = meta.title.trim() || _("problem_set.no_title");
   const all = idString ? `${idString}. ${titleString}` : titleString;
   switch (returnType) {
     case "tuple":

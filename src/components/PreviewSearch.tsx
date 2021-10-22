@@ -13,6 +13,7 @@ interface PreviewSearchProps<T> {
   noResultsMessage: string;
   onGetResultKey: (result: T) => React.Key;
   onSearch: (input: string) => Promise<T[]>;
+  onFilterResult?: (result: T) => boolean;
   onRenderResult: (result: T) => React.ReactNode;
   onResultSelect: (item: T) => void;
   onEnterPress?: (searchKeyword: string) => void;
@@ -68,7 +69,7 @@ const PreviewSearch = <T extends {}>(props: PropsWithChildren<PreviewSearchProps
       results={
         hideResults
           ? []
-          : results.map(result => ({
+          : results.filter(props.onFilterResult || (() => true)).map(result => ({
               key: props.onGetResultKey(result),
               title: "",
               data: result

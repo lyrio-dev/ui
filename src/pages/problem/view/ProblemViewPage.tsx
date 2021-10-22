@@ -136,12 +136,7 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
 
   const isMobile = useScreenWidthWithin(0, 768);
 
-  const [idString, title, all] = getProblemDisplayName(
-    props.problem.meta,
-    props.problem.localizedContentsOfLocale.title,
-    _,
-    "tuple"
-  );
+  const [idString, title, all] = getProblemDisplayName(props.problem.meta, _, "tuple");
 
   useEffect(() => {
     appState.enterNewPage(`${all} - ${_(".title")}`, "problem_set");
@@ -227,39 +222,6 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   // Begin Permission Manager
   const refOpenPermissionManager = useRef<() => Promise<boolean>>();
   const [permissionManagerLoading, setPermissionManagerLoading] = useState(false);
-  async function onGetInitialPermissions() {
-    const { requestError, response } = await api.problem.getProblem({
-      id: props.problem.meta.id,
-      owner: true,
-      permissions: true
-    });
-    if (requestError) toast.error(requestError(_));
-    else if (response.error) toast.error(_(`.error.${response.error}`));
-    else {
-      return {
-        owner: response.owner,
-        userPermissions: response.permissions.userPermissions,
-        groupPermissions: response.permissions.groupPermissions,
-        haveSubmitPermission: props.problem.permissionOfCurrentUser.includes("ManagePermission")
-      };
-    }
-    return null;
-  }
-
-  async function onSubmitPermissions(
-    userPermissions: { userId: number; permissionLevel: number }[],
-    groupPermissions: { groupId: number; permissionLevel: number }[]
-  ) {
-    const { requestError, response } = await api.problem.setProblemPermissions({
-      problemId: props.problem.meta.id,
-      userPermissions: userPermissions as any,
-      groupPermissions: groupPermissions as any
-    });
-    if (requestError) toast.error(requestError(_));
-    else if (response.error === "NO_SUCH_PROBLEM") toast.error(_(".error.NO_SUCH_PROBLEM"));
-    else if (response.error) return response;
-    return true;
-  }
 
   async function onClickPermissionManage() {
     if (permissionManagerLoading) return;
@@ -280,8 +242,33 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
         }
       }}
       refOpen={refOpenPermissionManager}
-      onGetInitialPermissions={onGetInitialPermissions}
-      onSubmitPermissions={onSubmitPermissions}
+      onGetInitialData={async () => {
+        const { requestError, response } = await api.problem.getProblem({
+          id: props.problem.meta.id,
+          owner: true,
+          accessControlList: true
+        });
+        if (requestError) toast.error(requestError(_));
+        else if (response.error) toast.error(_(`.error.${response.error}`));
+        else {
+          return {
+            owner: response.owner,
+            accessControlList: response.accessControlList,
+            haveManagePermissionsPermission: props.problem.permissionOfCurrentUser.includes("ManagePermission")
+          };
+        }
+        return null;
+      }}
+      onSubmit={async accessControlList => {
+        const { requestError, response } = await api.problem.setProblemAccessControlList({
+          problemId: props.problem.meta.id,
+          accessControlList
+        });
+        if (requestError) toast.error(requestError(_));
+        else if (response.error === "NO_SUCH_PROBLEM") toast.error(_(".error.NO_SUCH_PROBLEM"));
+        else if (response.error) return response;
+        return true;
+      }}
     />
   );
   // End Permission Manager
@@ -396,11 +383,11 @@ let ProblemViewPage: React.FC<ProblemViewPageProps> = props => {
   const statistic = (
     <Statistic.Group size="small" className={style.statistic}>
       <Statistic>
-        <Statistic.Value>{props.problem.meta.acceptedSubmissionCount}</Statistic.Value>
+        <Statistic.Value>{props.problem.meta.statisticsAccepted}</Statistic.Value>
         <Statistic.Label>{_(".statistic.accepted")}</Statistic.Label>
       </Statistic>
       <Statistic>
-        <Statistic.Value>{props.problem.meta.submissionCount}</Statistic.Value>
+        <Statistic.Value>{props.problem.meta.statisticsSubmitted}</Statistic.Value>
         <Statistic.Label>{_(".statistic.submissions")}</Statistic.Label>
       </Statistic>
     </Statistic.Group>

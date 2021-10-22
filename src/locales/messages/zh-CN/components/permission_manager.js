@@ -2,6 +2,7 @@ return {
   header: "权限管理",
   owner: "所有者",
   permission_for_users: "用户",
+  no_user_granted: "暂无用户被授权",
   search_users: "搜索用户名以添加用户 …",
   search_users_no_result: "没有符合条件的用户。",
   permission_for_groups: "用户组",
