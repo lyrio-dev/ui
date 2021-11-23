@@ -135,8 +135,8 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "version",
       type: CodeLanguageOptionType.Select,
-      values: ["2015", "2018"],
-      defaultValue: "2018"
+      values: ["2015", "2018", "2021"],
+      defaultValue: "2021"
     },
     {
       name: "optimize",

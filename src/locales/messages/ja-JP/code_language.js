@@ -145,7 +145,8 @@ return {
         name: "[TBT] Version",
         values: {
           2015: "[TBT] 2015",
-          2018: "[TBT] 2018"
+          2018: "[TBT] 2018",
+          2021: "[TBT] 2021"
         }
       },
       optimize: {
