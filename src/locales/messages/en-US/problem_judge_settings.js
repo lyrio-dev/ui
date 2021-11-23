@@ -110,7 +110,7 @@ return {
         interface: "Interface",
         interfaces: {
           testlib: "Testlib",
-          legacy: "Old SYZOJ",
+          legacy: "SYZOJ 2",
           lemon: "Lemon",
           hustoj: "HustOJ",
           qduoj: "QDUOJ",

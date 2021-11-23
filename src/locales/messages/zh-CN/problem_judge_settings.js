@@ -107,7 +107,7 @@ return {
         interface: "接口",
         interfaces: {
           testlib: "Testlib",
-          legacy: "旧版 SYZOJ",
+          legacy: "SYZOJ 2",
           lemon: "Lemon",
           hustoj: "HustOJ",
           qduoj: "QDUOJ",

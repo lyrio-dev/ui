@@ -97,7 +97,7 @@ export class AppState {
     const logoSelector = this.serverPreference.misc.appLogoForTheme[this.theme] || "original";
     const logoUrlSelector =
       logoSelector === "original" || logoSelector === "inverted" ? this.serverPreference.misc.appLogo : logoSelector;
-    const logoUrl = logoUrlSelector === "default" ? `${window.publicPath}logo.svg` : logoUrlSelector;
+    const logoUrl = logoUrlSelector === "default" ? null : logoUrlSelector;
     const logoInverted = logoSelector === "inverted";
     return logoUrl
       ? {

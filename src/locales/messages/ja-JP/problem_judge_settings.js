@@ -115,7 +115,7 @@ return {
         interface: "[TBT] Interface",
         interfaces: {
           testlib: "[TBT] Testlib",
-          legacy: "[TBT] Old SYZOJ",
+          legacy: "[TBT] SYZOJ 2",
           lemon: "[TBT] Lemon",
           hustoj: "[TBT] HustOJ",
           qduoj: "[TBT] QDUOJ",
