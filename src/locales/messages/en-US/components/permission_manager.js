@@ -1,4 +1,4 @@
-module.exports = {
+return {
   header: "Permission Manager",
   owner: "Owner",
   permission_for_users: "Users",
