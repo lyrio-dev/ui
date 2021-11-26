@@ -1,5 +1,5 @@
 return {
-  title_new: "New discussion",
+  title_new: "Add discussion",
   title_update: "Edit discussion",
   errors: {
     PERMISSION_DENIED: "Permission denied.",
