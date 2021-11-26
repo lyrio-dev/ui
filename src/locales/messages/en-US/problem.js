@@ -1,7 +1,7 @@
 module.exports = {
   title: "Problem",
   meta_labels: {
-    non_public: "Private",
+    non_public: "Non-public",
     no_display_id: "No ID"
   },
   fileio: {
@@ -35,9 +35,9 @@ module.exports = {
     set_display_id_new: "New ID (empty or 0 to clear ID)",
     set_display_id_submit: "Set",
     set_public: "Make public",
-    set_non_public: "Make private",
+    set_non_public: "Make non-public",
     set_public_confirm: "Confirm make public",
-    set_non_public_confirm: "Confirm make private",
+    set_non_public_confirm: "Confirm make non-public",
     delete: "Delete",
     delete_confirm_title: "Delete Problem",
     delete_confirm_content:
