@@ -1,5 +1,5 @@
 return {
-  header: "Permission Manager",
+  header: "Permission Manage",
   owner: "Owner",
   permission_for_users: "Users",
   search_users: "Search username to add users ...",
