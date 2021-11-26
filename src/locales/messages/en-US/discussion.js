@@ -1,5 +1,5 @@
 return {
-  title: "Discussions",
+  title: "Discussion",
   errors: {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_DISCUSSION: "No such discussion.",
