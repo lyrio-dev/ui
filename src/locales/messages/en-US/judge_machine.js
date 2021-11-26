@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Judge Machines",
   header: "Judge Machines",
   refresh: "Refresh",
