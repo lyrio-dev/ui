@@ -5,7 +5,7 @@ import style from "./SubmissionItem.module.less";
 
 import { useLocalizer, Link } from "@/utils/hooks";
 import formatFileSize from "@/utils/formatFileSize";
-import formatDateTime from "@/utils/formatDateTime";
+import { friendlyFormatDateTime } from "@/utils/formatDateTime";
 import UserLink from "@/components/UserLink";
 import StatusText from "@/components/StatusText";
 import ScoreText from "@/components/ScoreText";
@@ -17,7 +17,7 @@ function parseSubmissionMeta(submission: ApiTypes.SubmissionMetaDto) {
   return {
     submission,
     submissionLink: `/s/${submission.id}`,
-    timeString: formatDateTime(submission.submitTime),
+    timeString: friendlyFormatDateTime(submission.submitTime),
     problemIdString: getProblemIdString(submission.problem),
     problemUrl: getProblemUrl(submission.problem)
   };
