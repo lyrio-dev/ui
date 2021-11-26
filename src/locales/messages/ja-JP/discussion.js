@@ -14,7 +14,7 @@ module.exports = {
     commented_on: "[TBT] commented ",
     edited: "[TBT] Edited",
     label: {
-      nonpublic: "[TBT] Nonpublic",
+      nonpublic: "[TBT] Non-public",
       problem_owner: "[TBT] Problem owner",
       discussion_publisher: "[TBT] Initiator"
     },
