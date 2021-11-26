@@ -1,5 +1,5 @@
 return {
-  zh_CN: "Simplified Chinese",
+  zh_CN: "Chinese (Simplified)",
   en_US: "English",
   ja_JP: "Japanese"
 };
