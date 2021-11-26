@@ -14,7 +14,7 @@ module.exports = {
     commented_on: "commented ",
     edited: "Edited",
     label: {
-      nonpublic: "Private",
+      nonpublic: "Non-public",
       problem_owner: "Problem owner",
       discussion_publisher: "Initiator"
     },
@@ -22,9 +22,9 @@ module.exports = {
       edit: "Edit",
       quote: "Quote",
       permission_manage: "Manage Permission",
-      set_non_public: "Make private",
+      set_non_public: "Make Non-public",
       set_public: "Make public",
-      confirm_set_non_public: "Confirm make private",
+      confirm_set_non_public: "Confirm make non-public",
       confirm_set_public: "Confirm make public",
       delete: "Delete",
       confirm_delete: "Confirm delete",
