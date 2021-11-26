@@ -1,4 +1,4 @@
-return = {
+return {
   title: "Discussions",
   errors: {
     PERMISSION_DENIED: "Permission denied.",
