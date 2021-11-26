@@ -1,6 +1,6 @@
 return {
-  title: "Judge Machines",
-  header: "Judge Machines",
+  title: "Judge Machine",
+  header: "Judge Machine",
   refresh: "Refresh",
   add: "Add",
   add_new_name: "Judge Machine Name",
