@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title_new: "New discussion",
   title_update: "Edit discussion",
   errors: {
