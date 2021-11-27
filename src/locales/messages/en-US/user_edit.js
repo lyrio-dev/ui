@@ -155,7 +155,7 @@ return {
       email: "Email",
       invalid_email: "Invalid email address.",
       duplicate_email: "This email address has already been occupied.",
-      email_verification_code: "Email verification code",
+      email_verification_code: "Email Verification Code",
       send_email_verification_code: "Send",
       verification_code_sent: "Email verification code sent.",
       invalid_email_verification_code: "Invalid email verification code",
