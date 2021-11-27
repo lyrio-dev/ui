@@ -7,12 +7,12 @@ return {
   operations_and_status: "Op. / Status",
   operations: "Op.",
   delete: "Delete",
-  download_as_archive: "Download as Archive",
+  download_as_archive: "Download as archive",
   download_as_archive_error: "Error downloading file {filename}: {error}",
   confirm_delete: "Confirm delete",
   new_filename: "New filename",
   rename: "Rename",
-  no_files: "No Files",
+  no_files: "No files",
   files_count_and_size: "{count} files, {totalSize} in total",
   files_count_and_size_narrow: "{count} files\n{totalSize} in total",
   files_count_and_size_with_uploading: "{count} files, {totalSize} in total, {uploadingCount} uploading",
@@ -29,7 +29,7 @@ return {
   progress_error: "Error",
   progress_cancelled: "Canceled",
   cancel_upload: "Cancel",
-  back_to_problem: "Back to Problem",
+  back_to_problem: "Back to problem",
   no_files_to_download: "No files to download.",
   invalid_filename: "Invalid filename.",
   error: {
@@ -39,6 +39,6 @@ return {
     TOO_MANY_FILES: "Too many files. Please contact the admin.",
     TOTAL_SIZE_TOO_LARGE: "Total size of files too large. Please contact the admin.",
     FILE_UUID_EXISTS: "Unknown error.",
-    FILE_NOT_UPLOADED: "Couldn't find uploaded file."
+    FILE_NOT_UPLOADED: "Couldn't find the uploaded file."
   }
 };
