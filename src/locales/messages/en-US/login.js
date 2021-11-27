@@ -25,7 +25,7 @@ return {
     title: "Choose a new username",
     message: "We are sorry but your username is invalid in our new system. You must choose a new username to continue.",
     message_username:
-      'Username should contains only A-Z, a-z, 0-9 and <code>"-_.#$"</code> and be in the length of 3 to 24.',
+      'Username should only contain A-Z, a-z, 0-9 and "-_.#$", while whose length should be between 3 and 24 characters.',
     invalid_username: "Invalid username.",
     placeholder: "New username",
     confirm: "Rename",
