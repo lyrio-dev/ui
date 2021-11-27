@@ -1,5 +1,5 @@
 return {
-  title: "Tags Manage",
+  title: "Tag Manager",
   tag_count: "{count} Tags",
   error: {
     PERMISSION_DENIED: "Permission denied.",
