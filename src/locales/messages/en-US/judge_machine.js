@@ -1,6 +1,6 @@
 return {
-  title: "Judge Machine",
-  header: "Judge Machine",
+  title: "Judge Machines",
+  header: "Judge Machines",
   refresh: "Refresh",
   add: "Add",
   add_new_name: "Judge Machine Name",
@@ -25,5 +25,5 @@ return {
     PERMISSION_DENIED: "Permission denied.",
     NO_SUCH_JUDGE_CLIENT: "No such judge machine."
   },
-  no_judge_machine: "No judge machines"
+  no_judge_machine: "No judge machine"
 };
