@@ -1,5 +1,5 @@
 return {
-  zh_CN: "中文（简体）",
+  zh_CN: "简体中文",
   en_US: "英语",
   ja_JP: "日语"
 };
