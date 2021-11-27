@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Problem Set",
   error: {
     PERMISSION_DENIED: "Permission denied.",

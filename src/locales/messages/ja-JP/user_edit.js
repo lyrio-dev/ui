@@ -1,4 +1,4 @@
-module.exports = {
+return {
   menu: {
     profile: "プロファイル",
     preference: "環境設定",

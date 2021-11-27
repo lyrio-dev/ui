@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "問題",
   error: {
     PERMISSION_DENIED: "権限がありません。",

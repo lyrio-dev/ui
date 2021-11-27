@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "[TBT] Groups",
   header: "[TBT] Groups",
   not_logged_in: "[TBT] Not logged in.",

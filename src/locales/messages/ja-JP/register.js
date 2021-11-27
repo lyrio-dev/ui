@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "新規登録",
   register_new_account: "新規登録",
   username: "ユーザ名",

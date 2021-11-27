@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title_edit: "Edit Problem",
   title_new: "New Problem",
   header_edit: "Edit Problem {idString}",

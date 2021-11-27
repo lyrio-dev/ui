@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Statistics",
   error: {
     NO_SUCH_PROBLEM: "No such problem.",

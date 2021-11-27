@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "评测设置",
   header: "评测设置",
   back_to_problem: "返回",
@@ -107,7 +107,7 @@ module.exports = {
         interface: "接口",
         interfaces: {
           testlib: "Testlib",
-          legacy: "旧版 SYZOJ",
+          legacy: "SYZOJ 2",
           lemon: "Lemon",
           hustoj: "HustOJ",
           qduoj: "QDUOJ",

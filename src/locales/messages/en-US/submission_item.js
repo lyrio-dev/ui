@@ -1,4 +1,4 @@
-module.exports = {
+return {
   columns: {
     status: "Status",
     score: "Score",

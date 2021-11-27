@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "重置密码",
   reset_your_password: "重置您的密码",
   email: "邮箱",

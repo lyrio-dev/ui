@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "タグ管理",
   tag_count: "タグが {count} 個あります",
   error: {

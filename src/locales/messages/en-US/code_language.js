@@ -1,4 +1,4 @@
-module.exports = {
+return {
   code_language: "Language",
   cpp: {
     name: "C++",
@@ -145,7 +145,8 @@ module.exports = {
         name: "Version",
         values: {
           2015: "2015",
-          2018: "2018"
+          2018: "2018",
+          2021: "2021"
         }
       },
       optimize: {

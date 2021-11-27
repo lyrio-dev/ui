@@ -1,4 +1,4 @@
-module.exports = {
+return {
   navbar: {
     home: "首页",
     problem_set: "题库",

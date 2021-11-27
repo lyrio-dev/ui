@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "ユーザ",
   error: {
     TAKE_TOO_MANY: "リクエストが制限を超えています。"

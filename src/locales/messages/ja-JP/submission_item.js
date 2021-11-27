@@ -1,4 +1,4 @@
-module.exports = {
+return {
   columns: {
     status: "状態",
     score: "得点",

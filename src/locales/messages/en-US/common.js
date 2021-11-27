@@ -1,4 +1,4 @@
-module.exports = {
+return {
   navbar: {
     home: "Home",
     problem_set: "Problem Set",

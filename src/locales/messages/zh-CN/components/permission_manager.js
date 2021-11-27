@@ -1,4 +1,4 @@
-module.exports = {
+return {
   header: "权限管理",
   owner: "所有者",
   permission_for_users: "用户",

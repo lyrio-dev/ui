@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "ジャッジ設定",
   header: "ジャッジ設定",
   back_to_problem: "戻る",
@@ -115,7 +115,7 @@ module.exports = {
         interface: "[TBT] Interface",
         interfaces: {
           testlib: "[TBT] Testlib",
-          legacy: "[TBT] Old SYZOJ",
+          legacy: "[TBT] SYZOJ 2",
           lemon: "[TBT] Lemon",
           hustoj: "[TBT] HustOJ",
           qduoj: "[TBT] QDUOJ",

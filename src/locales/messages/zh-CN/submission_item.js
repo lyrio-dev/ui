@@ -1,4 +1,4 @@
-module.exports = {
+return {
   columns: {
     status: "状态",
     score: "分数",

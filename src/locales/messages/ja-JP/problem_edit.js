@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title_edit: "問題編集",
   title_new: "新規作成",
   header_edit: "問題 {idString} を編集する",

@@ -36,6 +36,14 @@ async function* readDirectoryRecursively(dir) {
   }
 }
 
+const readMessageFile = async filename => {
+  try {
+    return new Function(await fs.promises.readFile(require.resolve(filename), "utf-8"))();
+  } catch (e) {
+    throw new Error(`\n  Error in ${filename}:\n  ${e.stack}`);
+  }
+};
+
 module.exports = async (locale, loaderContext) => {
   loaderContext.addDependency(__filename);
 
@@ -46,7 +54,7 @@ module.exports = async (locale, loaderContext) => {
     const objectPath = relativePath.slice(0, -3); // Remove ".js"
 
     loaderContext.addDependency(absolutePath);
-    result[objectPath.split("/").join(".")] = escapeLocalizedMessages(require(absolutePath));
+    result[objectPath.split("/").join(".")] = escapeLocalizedMessages(await readMessageFile(absolutePath));
   }
 
   return {

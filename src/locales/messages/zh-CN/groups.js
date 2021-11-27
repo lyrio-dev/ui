@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "用户组",
   header: "用户组",
   not_logged_in: "未登录。",

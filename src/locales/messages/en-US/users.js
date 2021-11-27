@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Users",
   error: {
     TAKE_TOO_MANY: "Requested number of items per page exceeds the limit."

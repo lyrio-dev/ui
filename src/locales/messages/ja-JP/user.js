@@ -1,4 +1,4 @@
-module.exports = {
+return {
   error: {
     NO_SUCH_USER: "ユーザが存在しません。"
   },

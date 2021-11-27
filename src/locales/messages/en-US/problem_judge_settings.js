@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Judge Settings",
   header: "Settings",
   back_to_problem: "Back",
@@ -110,7 +110,7 @@ module.exports = {
         interface: "Interface",
         interfaces: {
           testlib: "Testlib",
-          legacy: "Old SYZOJ",
+          legacy: "SYZOJ 2",
           lemon: "Lemon",
           hustoj: "HustOJ",
           qduoj: "QDUOJ",

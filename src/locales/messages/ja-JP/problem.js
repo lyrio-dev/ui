@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "問題",
   meta_labels: {
     non_public: "非表示",

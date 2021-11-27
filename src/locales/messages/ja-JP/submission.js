@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "提出",
   cancel: "中止",
   confirm_cancel: "中止する",

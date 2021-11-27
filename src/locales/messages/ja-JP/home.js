@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "ホーム",
   annnouncements: {
     header: "[TBT] Annnouncement",

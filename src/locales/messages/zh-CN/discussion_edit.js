@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title_new: "添加讨论",
   title_update: "编辑讨论",
   errors: {

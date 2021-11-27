@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "首页设置",
   errors: {
     PERMISSION_DENIED: "权限不足。",

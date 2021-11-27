@@ -1,4 +1,4 @@
-module.exports = {
+return {
   title: "Register",
   register_new_account: "Register new account",
   username: "Username",
