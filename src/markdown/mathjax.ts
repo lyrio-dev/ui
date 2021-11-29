@@ -29,9 +29,17 @@ mathDocument.updateDocument();
 
 export function renderMath(math: string, display: boolean) {
   try {
-    return mathDocument.convert(math, {
+    const wrapper = mathDocument.convert(math, {
       display
     });
+
+    const title = document.createElement("title");
+    title.innerText = math;
+
+    const defsElement = wrapper.getElementsByTagName("defs")[0];
+    defsElement.parentNode.insertBefore(title, defsElement);
+
+    return wrapper;
   } catch (e) {
     console.log(e);
 
