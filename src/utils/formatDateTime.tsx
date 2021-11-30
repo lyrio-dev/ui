@@ -36,7 +36,7 @@ export function friendlyFormatDateTime(date: Date | string | number): [string | 
   if (!(date instanceof Date)) date = new Date(date);
 
   const now = new Date();
-  const dateOnlyAndWithYear = date.getFullYear() === now.getFullYear();
+  const dateOnlyAndWithYear = date.getFullYear() !== now.getFullYear();
 
   return [formatDateTime(date, dateOnlyAndWithYear)[dateOnlyAndWithYear ? 1 : 0], formatDateTime(date)[1]];
 }
