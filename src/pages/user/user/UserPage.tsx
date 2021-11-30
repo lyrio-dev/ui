@@ -401,7 +401,7 @@ export default {
     return <UserPage now={now} {...response} />;
   }),
   byUsername: defineRoute(async request => {
-    const username = request.params.username;
+    const username = decodeURIComponent(request.params.username);
     if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText("user.error.NO_SUCH_USER"));
     const [now, response] = await fetchData({ username });
 

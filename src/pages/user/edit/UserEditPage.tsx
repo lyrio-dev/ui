@@ -115,7 +115,7 @@ async function getView(username: string, type: EditType, query: Record<string, s
 }
 
 export default defineRoute(async request => {
-  const username = request.params.username;
+  const username = decodeURIComponent(request.params.username);
   if (!isValidUsername(username)) throw new RouteError(makeToBeLocalizedText(`user_edit.errors.NO_SUCH_USER`));
   return await getView(request.params.username, request.params.type as EditType, request.query);
 });
