@@ -102,7 +102,7 @@ export function renderMarkdown(
       return 0;
     },
     normalize: (match: LinkifyIt.Match): void => {
-      match.url = "/u/" + match.url.replace(/^@/, "");
+      match.url = "/u/" + encodeURIComponent(match.url.replace(/^@/, ""));
     }
   });
 
