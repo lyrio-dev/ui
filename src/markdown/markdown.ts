@@ -6,6 +6,8 @@ import MarkdownItMergeCells from "markdown-it-merge-cells/src";
 import MarkdownItTaskLists from "@hackmd/markdown-it-task-lists";
 import LinkifyIt from "linkify-it";
 
+import tlds from "tlds";
+
 export interface MarkdownHighlightPlaceholder {
   id: string;
   code: string;
@@ -105,6 +107,8 @@ export function renderMarkdown(
       match.url = "/u/" + encodeURIComponent(match.url.replace(/^@/, ""));
     }
   });
+
+  renderer.linkify.tlds(tlds);
 
   if (onPatchRenderer) onPatchRenderer(renderer);
 
