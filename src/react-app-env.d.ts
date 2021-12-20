@@ -21,6 +21,8 @@ declare module "*.wasm" {
 interface Window {
   publicPath: string;
   apiEndpoint: string;
+  appLogo: string;
+  gravatarCdn: string;
   appVersion: {
     hash?: string;
     date?: string;

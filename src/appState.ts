@@ -96,7 +96,9 @@ export class AppState {
   get appLogoThemed(): { src: string; style: React.CSSProperties } {
     const logoSelector = this.serverPreference.misc.appLogoForTheme[this.theme] || "original";
     const logoUrlSelector =
-      logoSelector === "original" || logoSelector === "inverted" ? this.serverPreference.misc.appLogo : logoSelector;
+      logoSelector === "original" || logoSelector === "inverted"
+        ? window.appLogo || this.serverPreference.misc.appLogo
+        : logoSelector;
     const logoUrl = logoUrlSelector === "default" ? null : logoUrlSelector;
     const logoInverted = logoSelector === "inverted";
     return logoUrl

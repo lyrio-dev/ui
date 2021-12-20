@@ -19,7 +19,7 @@ function ensureTrailingSlash(url: string) {
 function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
   switch (avatar.type) {
     case "gravatar":
-      return `${ensureTrailingSlash(appState.serverPreference.misc.gravatarCdn)}avatar/${
+      return `${ensureTrailingSlash(window.gravatarCdn || appState.serverPreference.misc.gravatarCdn)}avatar/${
         avatar.key
       }?size=${size}&default=404`;
     case "qq":

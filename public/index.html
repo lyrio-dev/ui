@@ -96,6 +96,24 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         faviconUrl = publicPath + "favicon.ico";
       }
 
+      // Specify the app logo in the same way.
+      var appLogo;
+      try {
+        appLogo = __applogo__;
+      } catch (e) {
+        appLogo = null;
+      }
+      window.appLogo = appLogo;
+
+      // Specify the gravatar CDN in the same way.
+      var gravatarCdn;
+      try {
+        gravatarCdn = __gravatar__;
+      } catch (e) {
+        gravatarCdn = null;
+      }
+      window.gravatarCdn = gravatarCdn;
+
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");
         link.rel = rel;
