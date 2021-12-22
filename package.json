@@ -1,6 +1,6 @@
 {
   "name": "@lyrio/ui",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "devDependencies": {
     "@fontsource/dm-mono": "^4.0.0",
     "@fontsource/fira-code": "^4.0.0",
