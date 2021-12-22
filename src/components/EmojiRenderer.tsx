@@ -10,7 +10,7 @@ interface EmojiRendererProps {
 
 export const getTwemojiOptions = (inline: boolean) =>
   ({
-    base: "https://cdn.jsdelivr.net/npm/@discordapp/twemoji@13.0.1/dist/",
+    base: window.twemojiCdn || "https://cdn.jsdelivr.net/npm/@discordapp/twemoji@13.0.1/dist/",
     size: "svg",
     ext: ".svg",
     className: inline ? style.emoji : "",

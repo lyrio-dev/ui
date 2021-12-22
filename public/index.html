@@ -114,6 +114,15 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.gravatarCdn = gravatarCdn;
 
+      // Specify the Twemoji CDN in the same way.
+      var twemojiCdn;
+      try {
+        twemojiCdn = __twemoji__;
+      } catch (e) {
+        twemojiCdn = null;
+      }
+      window.twemojiCdn = twemojiCdn;
+
       function addLinkTag(rel, href, onerror) {
         var link = document.createElement("link");
         link.rel = rel;

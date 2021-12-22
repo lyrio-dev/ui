@@ -23,6 +23,7 @@ interface Window {
   apiEndpoint: string;
   appLogo: string;
   gravatarCdn: string;
+  twemojiCdn: string;
   appVersion: {
     hash?: string;
     date?: string;
