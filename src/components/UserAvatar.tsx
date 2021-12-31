@@ -30,7 +30,7 @@ function getAvatarUrl(avatar: ApiTypes.UserAvatarDto, size: number) {
       else sizeParam = 5;
       return `https://q1.qlogo.cn/g?b=qq&nk=${avatar.key}&s=${sizeParam}`;
     case "github":
-      return `https://github.com/${avatar.key}.png?size=${size}`;
+      return `${ensureTrailingSlash(window.ghAvatarCdn) || "https://github.com/"}${avatar.key}.png?size=${size}`;
   }
 }
 

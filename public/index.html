@@ -114,6 +114,15 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.gravatarCdn = gravatarCdn;
 
+      // Specify the GitHub avatar CDN in the same way.
+      var ghAvatarCdn;
+      try {
+        ghAvatarCdn = __ghavatar__;
+      } catch (e) {
+        ghAvatarCdn = null;
+      }
+      window.ghAvatarCdn = ghAvatarCdn;
+
       // Specify the Twemoji CDN in the same way.
       var twemojiCdn;
       try {
