@@ -29,9 +29,8 @@ import type { editor } from "monaco-editor";
 import { Locale } from "@/interfaces/Locale";
 import { appState } from "@/appState";
 
-// This module uses Webpack's val-loader
-import _uiFontSelectors from "./ui-font-selectors";
-const uiFontSelectors = (_uiFontSelectors as unknown) as string[];
+// This module uses Vite's compile-time plugin
+const uiFontSelectors = import.meta.compileTime("./ui-font-selectors.js") as string[];
 
 export const availableCodeFonts = [
   "Fira Code",

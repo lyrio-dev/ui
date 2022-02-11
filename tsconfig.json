@@ -9,7 +9,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "experimentalDecorators": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",

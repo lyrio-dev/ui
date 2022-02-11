@@ -1,8 +1,5 @@
 import Prism from "prismjs";
 
-import cssUrlTomorrow from "@/assets/prism-tomorrow.url.css";
-import cssUrlTomorrowNight from "@/assets/prism-tomorrow-night.url.css";
-
 function normalizeCode(code: string) {
   return code.split("\r").join("");
 }
@@ -10,26 +7,6 @@ function normalizeCode(code: string) {
 function escapeHtml(text: string) {
   text = text.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split(" ").join("&nbsp;");
   return text;
-}
-
-export enum CodeHighlighterTheme {
-  Tomorrow,
-  TomorrowNight
-}
-
-const cssLinkTag = document.createElement("link");
-cssLinkTag.rel = "stylesheet";
-document.head.appendChild(cssLinkTag);
-
-export function setPrismTheme(theme: CodeHighlighterTheme) {
-  switch (theme) {
-    case CodeHighlighterTheme.Tomorrow:
-      cssLinkTag.href = cssUrlTomorrow;
-      break;
-    case CodeHighlighterTheme.TomorrowNight:
-      cssLinkTag.href = cssUrlTomorrowNight;
-      break;
-  }
 }
 
 export function highlight(code: string, language: string) {

@@ -1,7 +1,7 @@
 import { FilterXSS, escapeAttrValue } from "xss";
 
 // Get the default white list
-const xssWhiteList = require("xss/lib/default").whiteList;
+import { whiteList as xssWhiteList } from "xss/lib/default";
 
 // Disallow <audio> and <video> tags
 delete xssWhiteList.audio;

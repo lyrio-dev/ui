@@ -3,7 +3,7 @@ import { Dropdown, Grid, Header, Popup, Button, Form, Message } from "semantic-u
 import { observer } from "mobx-react";
 import yaml from "js-yaml";
 import { v4 as uuid } from "uuid";
-import lodashClonedeep from "lodash.clonedeep";
+import lodash from "lodash";
 
 import style from "./ProblemJudgeSettingsPage.module.less";
 
@@ -57,7 +57,7 @@ let ProblemJudgeSettingsPage: React.FC<ProblemJudgeSettingsPageProps> = props =>
   }
 
   function normalizeJudgeInfo(judgeInfo: unknown) {
-    const cloned = lodashClonedeep(judgeInfo);
+    const cloned = lodash.cloneDeep(judgeInfo);
     ProblemTypeEditorComponent.normalizeJudgeInfo(cloned);
     return cloned;
   }

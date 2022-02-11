@@ -8,7 +8,7 @@ function getScript(url) {
 /**
  * @param {string} googleAnalyticsId
  */
-export function loadGoogleAnalytics(googleAnalyticsId: string) {
+export function loadGoogleAnalytics(googleAnalyticsId) {
   if (!googleAnalyticsId) return;
 
   if (googleAnalyticsId.startsWith("G")) {

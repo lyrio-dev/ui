@@ -1,5 +1,5 @@
-import { CodeHighlighterTheme } from "@/utils/CodeHighlighter";
-import { ThemeMeta } from ".";
+import { CodeHighlighterTheme } from "../prism-theme";
+import { ThemeMeta } from "..";
 
 import "./far.css";
 

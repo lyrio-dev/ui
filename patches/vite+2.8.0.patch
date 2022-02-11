@@ -1,0 +1,60 @@
+diff --git a/node_modules/vite/dist/node/chunks/dep-c9c9d3e5.js b/node_modules/vite/dist/node/chunks/dep-c9c9d3e5.js
+index 61ca06f..de6ca07 100644
+--- a/node_modules/vite/dist/node/chunks/dep-c9c9d3e5.js
++++ b/node_modules/vite/dist/node/chunks/dep-c9c9d3e5.js
+@@ -21697,10 +21697,6 @@ function resolveHtmlTransforms(plugins) {
+     return [preHooks, postHooks];
+ }
+ async function applyHtmlTransforms(html, hooks, ctx) {
+-    const headTags = [];
+-    const headPrependTags = [];
+-    const bodyTags = [];
+-    const bodyPrependTags = [];
+     for (const hook of hooks) {
+         const res = await hook(html, ctx);
+         if (!res) {
+@@ -21718,6 +21714,10 @@ async function applyHtmlTransforms(html, hooks, ctx) {
+                 html = res.html || html;
+                 tags = res.tags;
+             }
++            const headTags = [];
++            const headPrependTags = [];
++            const bodyTags = [];
++            const bodyPrependTags = [];
+             for (const tag of tags) {
+                 if (tag.injectTo === 'body') {
+                     bodyTags.push(tag);
+@@ -21732,21 +21732,20 @@ async function applyHtmlTransforms(html, hooks, ctx) {
+                     headPrependTags.push(tag);
+                 }
+             }
++            if (headPrependTags.length) {
++                html = injectToHead(html, headPrependTags, true);
++            }
++            if (headTags.length) {
++                html = injectToHead(html, headTags);
++            }
++            if (bodyPrependTags.length) {
++                html = injectToBody(html, bodyPrependTags, true);
++            }
++            if (bodyTags.length) {
++                html = injectToBody(html, bodyTags);
++            }
+         }
+     }
+-    // inject tags
+-    if (headPrependTags.length) {
+-        html = injectToHead(html, headPrependTags, true);
+-    }
+-    if (headTags.length) {
+-        html = injectToHead(html, headTags);
+-    }
+-    if (bodyPrependTags.length) {
+-        html = injectToBody(html, bodyPrependTags, true);
+-    }
+-    if (bodyTags.length) {
+-        html = injectToBody(html, bodyTags);
+-    }
+     return html;
+ }
+ const importRE = /\bimport\s*("[^"]*[^\\]"|'[^']*[^\\]');*/g;

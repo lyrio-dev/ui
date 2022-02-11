@@ -1,8 +1,12 @@
-const fs = require("fs");
-const css = require("css");
+import fs from "fs";
+import css from "css";
+import { createRequire } from "module";
 
-module.exports = () => {
-  const cssFileContents = fs.readFileSync(require.resolve("fomantic-ui-css/semantic.css"), "utf-8");
+const require = createRequire(import.meta.url);
+const semanticCssPath = require.resolve("fomantic-ui-css/semantic.css");
+
+export default () => {
+  const cssFileContents = fs.readFileSync(semanticCssPath, "utf-8");
   const ast = css.parse(cssFileContents);
   const selectors = ast.stylesheet.rules
     .filter(
@@ -13,6 +17,6 @@ module.exports = () => {
 
   return {
     cachable: true,
-    code: `module.exports = ${JSON.stringify(selectors.flat())};`
+    data: selectors.flat()
   };
 };

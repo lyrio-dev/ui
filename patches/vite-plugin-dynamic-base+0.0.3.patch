@@ -1,0 +1,124 @@
+diff --git a/node_modules/vite-plugin-dynamic-base/dist/index.js b/node_modules/vite-plugin-dynamic-base/dist/index.js
+index 60e1f26..f81148b 100644
+--- a/node_modules/vite-plugin-dynamic-base/dist/index.js
++++ b/node_modules/vite-plugin-dynamic-base/dist/index.js
+@@ -1,9 +1,79 @@
+ "use strict";
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.dynamicBase = void 0;
++
++/// @ts-check
++const swc = require("@swc/core");
++
++const { Visitor } = require("@swc/core/Visitor.js");
++
++class PlaceholderReplacer extends Visitor {
++    constructor(placeholder, expression) {
++        super();
++        this.placeholder = placeholder;
++        this.expression = PlaceholderReplacer.parseExpression(expression);
++    }
++
++    static parseExpression(expression) {
++        return swc.parseSync(expression).body[0].expression;
++    }
++
++    /**
++     * @param {import("@swc/core").StringLiteral} node 
++     * @returns {import("@swc/core").Expression}
++     */
++    visitStringLiteral(node) {
++        const stringParts = node.value.split(this.placeholder);
++        if (stringParts.length === 1) return node;
++
++        const createStringExpression = (str) => ({
++            type: 'StringLiteral',
++            span: { start: 0, end: 0, ctxt: 0 },
++            value: str,
++            hasEscape: true,
++            kind: { type: 'normal', containsQuote: true }
++        });
++
++        let subExpressions = Array(stringParts.length * 2 - 1);
++        for (let i = 0; i < stringParts.length; i++) {
++            subExpressions[i * 2] = createStringExpression(stringParts[i]);
++            if (i !== stringParts.length - 1) {
++                subExpressions[i * 2 + 1] = this.expression;
++            }
++        }
++
++        subExpressions = subExpressions.filter(expr => expr.type !== "StringLiteral" || expr.value !== "");
++
++        if (subExpressions.length === 1) return subExpressions[0];
++
++        const createAddExpression = (left) => ({
++            type: 'BinaryExpression',
++            span: { start: 0, end: 0, ctxt: 0 },
++            operator: '+',
++            left: left,
++            right: null
++        });
++
++        let rootExpression;
++        let previousExpression;
++        for (let i = 0; i < subExpressions.length; i++) {
++            const currentSubExpression = subExpressions[i];
++            if (i === 0) {
++                previousExpression = rootExpression = createAddExpression(currentSubExpression);
++            } else if (i === subExpressions.length - 1) {
++                previousExpression.right = currentSubExpression;
++            } else {
++                previousExpression.right = createAddExpression(currentSubExpression);
++                previousExpression = previousExpression.right;
++            }
++        }
++
++        return rootExpression;
++    }
++}
++
+ function dynamicBase(options) {
+     const { publicPath = 'window.__dynamic_base__' } = options || {};
+-    const preloadHelperId = 'vite/preload-helper';
+     let assetsDir = 'assets';
+     let base = '/';
+     return {
+@@ -14,26 +84,21 @@ function dynamicBase(options) {
+             assetsDir = resolvedConfig.build.assetsDir;
+             base = resolvedConfig.base;
+         },
+-        transform(code, id) {
+-            if (id === preloadHelperId) {
+-                code = code.replace(/(\${base})/g, `\${${publicPath}}$1`);
+-                return {
+-                    code
+-                };
+-            }
+-        },
+-        generateBundle({ format }, bundle) {
+-            if (format !== 'es') {
++        async generateBundle({ format }, bundle) {
++            if (format !== 'es' && format !== 'system') {
+                 return;
+             }
+-            const assetsMarker = `${base}${assetsDir}/`;
+-            const assetsMarkerRE = new RegExp(`("${assetsMarker}*.*.*")`, 'g');
+-            for (const file in bundle) {
+-                const chunk = bundle[file];
+-                if (chunk.type === 'chunk' && chunk.code.indexOf(assetsMarker) > -1) {
+-                    chunk.code = chunk.code.replace(assetsMarkerRE, `${publicPath}+$1`);
++            const assetsRE = new RegExp(`${base}${assetsDir}/`, 'g');
++            await Promise.all(Object.entries(bundle).map(async ([, chunk]) => {
++                if (chunk.type === 'chunk' && chunk.code.indexOf(base) > -1) {
++                    const ast = await swc.parse(chunk.code);
++                    const replacer = new PlaceholderReplacer(base, publicPath);
++                    replacer.visitModule(ast);
++                    chunk.code = (await swc.print(ast, { minify: true })).code;
++                } else if (chunk.type === 'asset' && chunk.fileName.endsWith(".css")) {
++                    chunk.source = chunk.source.replace(assetsRE, "");
+                 }
+-            }
++            }));
+         }
+     };
+ }

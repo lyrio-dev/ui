@@ -1,12 +1,12 @@
-import { CodeHighlighterTheme, setPrismTheme } from "@/utils/CodeHighlighter";
+import { CodeHighlighterTheme, setPrismTheme } from "./prism-theme";
 
 export interface ThemeMeta {
   highlight: CodeHighlighterTheme;
   editor: string;
 }
 
-import pure from "./pure";
-import far from "./far";
+import pure from "./themes/pure";
+import far from "./themes/far";
 
 export const defaultLightTheme = "pure";
 export const defaultDarkTheme = "far";

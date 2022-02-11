@@ -25,7 +25,6 @@ Start [lyrio](https://github.com/lyrio-dev/lyrio) API server. For example, if th
 * If the API endpoint is not the same as the lyrio-ui's root url, you should replace the `__api_endpoint__` string in lyrio-ui's HTML (e.g. with Nginx's `ngx_http_sub_module` module) with the API endpoint (in the form of JS expression, e.g. `"http://lyrio.test"`).
 * To change the initial title of the page, replace `__default_title__`.
 * To load compiled frontend resources from another host, replace `__public_path__`.
-* To load polyfills from another [polyfill-service](https://github.com/Financial-Times/polyfill-service) host, replace `__polyfill_service__`.
 * To change the favicon, replace `__favicon__`.
 
 All these replacements work in development or production environment.
@@ -91,4 +90,4 @@ Start the development server:
 $ yarn start
 ```
 
-Wait for webpack to finish compilation and the development server to start, then open `http://lyrio-ui.test`.
+Wait for Vite to finish compilation and the development server to start, then open `http://lyrio-ui.test`.

@@ -1,5 +1,5 @@
 import * as wastyle from "wastyle";
-import astyleBinaryUrl from "wastyle/dist/astyle.wasm";
+import astyleBinaryUrl from "wastyle/dist/astyle.wasm?url";
 
 import { CodeLanguage } from "@/interfaces/CodeLanguage";
 

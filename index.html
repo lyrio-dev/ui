@@ -27,8 +27,6 @@
 function safeStringify(object) {
   return JSON.stringify(object).split("<").join("\\u003C");
 }
-
-const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
 %>
 <!DOCTYPE html>
 <html>
@@ -37,12 +35,12 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
   <meta charset="utf-8">
 
   <script>
-    window.appVersion = <%= safeStringify({
+    window.appVersion = <%- safeStringify({
       hash: gitRepoInfo.abbreviatedSha,
       date: gitRepoInfo.committerDate
     }) %>;
 
-    var addLinkTag = (function () {
+    (function () {
       function normalizePath(path) {
         while (path.endsWith("/")) path = path.slice(0, -1);
         return path + "/";
@@ -78,15 +76,6 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
         apiEndpoint = "";
       }
       window.apiEndpoint = normalizePath(apiEndpoint);
-
-      // Specify the polyfill-service URL in the same way.
-      var polyfillServiceUrl;
-      try {
-        polyfillServiceUrl = __polyfill_service__;
-      } catch (e) {
-        polyfillServiceUrl = "https://polyfill.io";
-      }
-      window.polyfillServiceUrl = normalizePath(polyfillServiceUrl);
 
       // Specify the favicon URL in the same way.
       var faviconUrl;
@@ -132,17 +121,16 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       }
       window.twemojiCdn = twemojiCdn;
 
-      function addLinkTag(rel, href, onerror) {
+      function addLinkTag(rel, href) {
         var link = document.createElement("link");
         link.rel = rel;
         link.href = href;
-        link.onerror = onerror;
         document.head.appendChild(link);
       }
 
       addLinkTag("icon", faviconUrl);
 
-      return addLinkTag;
+      __add_link_tags__
     })();
   </script>
 
@@ -158,7 +146,7 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 999999999;
+      z-index: 99999;
       width: calc(100vw - 28px);
       margin: 0 14px 0 14px;
       height: 100vh;
@@ -344,28 +332,6 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       document.head.appendChild(script);
     }
     refreshSession();
-
-    (function () {
-      // Handle public path for CSS <link> tags
-      function addCssLinkTag(href) {
-        addLinkTag("stylesheet", href, handleLoadingError);
-      }
-
-      <% for (const tag of htmlWebpackPlugin.tags.headTags) { %>
-        <%
-          if (tag.tagName === "link"
-           && tag.attributes
-           && tag.attributes.rel === "stylesheet"
-           && typeof tag.attributes.href === "string"
-           && tag.attributes.href.startsWith("./")
-          ) {
-        %>
-          addCssLinkTag(window.publicPath + <%= safeStringify(tag.attributes.href.substr(2)) %>);
-        <% } else { %>
-          <% throw new Error(`Couldn't handle this head tag: ${JSON.stringify(tag)}`); %>
-        <% } %>
-      <% } %>
-    })();
   </script>
 </head>
 
@@ -387,24 +353,16 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
   <!-- Dynamicly generate <script> tags -->
   <script>
     (function () {
-      function addScriptTag(src) {
+      function addScriptTag(attributes, code) {
         var script = document.createElement("script");
-        script.src = src;
+        if (attributes) for (var key in attributes) script.setAttribute(key, attributes[key]);
+
+        script.async = false;
         script.onerror = handleLoadingError;
+        if (code) script.src = "data:text/javascript," + code;
+
         document.body.appendChild(script);
-        return script;
       }
-
-      // Load polyfill-service and xdomain.js before loading application
-      var scriptsToWaitBeforeLoadingApplication = 0;
-
-      // polyfill-service
-      var polyfillServiceScriptTag = addScriptTag(
-        window.polyfillServiceUrl + "v3/polyfill.min.js?features=es2019%2Ces2018%2Ces2017%2Ces2016%2Ces2015%2Ces6"
-      );
-      polyfillServiceScriptTag.crossOrigin = "anonymous";
-      polyfillServiceScriptTag.onload = loadApplication;
-      scriptsToWaitBeforeLoadingApplication++;
 
       // xdomain.js
       // Check for cross-origin API endpoint.
@@ -415,35 +373,17 @@ const gitRepoInfo = htmlWebpackPlugin.options.gitRepoInfo;
       if (isCrossOrigin(apiEndpoint)) {
         // Load xdomain library from API host.
         var apiHostCorsPath = apiEndpoint + "api/cors/";
-        var xdomainScriptTag = addScriptTag(apiHostCorsPath + "xdomain.min.js");
-        xdomainScriptTag.setAttribute("data-slave", apiHostCorsPath + "xdomain.html");
-        xdomainScriptTag.onload = loadApplication;
-        scriptsToWaitBeforeLoadingApplication++;
+        addScriptTag({
+          src: apiHostCorsPath + "xdomain.min.js",
+          "data-slave": apiHostCorsPath + "xdomain.html"
+        }, null);
       }
 
-      // Delay everything to load after the polyfills loaded
-      function loadApplication() {
-        if (--scriptsToWaitBeforeLoadingApplication > 0) return;
-
-        var publicPath = window.publicPath;
-        <% for (const tag of htmlWebpackPlugin.tags.bodyTags) { %>
-          <%
-            if (tag.tagName === "script"
-             && tag.attributes
-             && typeof tag.attributes.src === "string"
-             && tag.attributes.src.startsWith("./")
-            ) {
-          %>
-            addScriptTag(publicPath + <%= safeStringify(tag.attributes.src.substr(2)) %>);
-          <% } else if (tag.tagName === "script" && tag.innerHTML) { %>
-            <%= tag.innerHTML %>;
-          <% } else { %>
-            <% throw new Error(`Couldn't handle this body tag: ${JSON.stringify(tag)}`); %>
-          <% } %>
-        <% } %>
-      }
+      __add_script_tags__
     })();
   </script>
+
+  <script type="module" src="/src/index.ts"></script>
 </body>
 
 </html>
