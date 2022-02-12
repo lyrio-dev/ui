@@ -1,6 +1,5 @@
 import validator from "validator";
 
-// Change `/patches/markdown-it-mentions+1.0.0.patch` together if you change this regex
 export function isValidUsername(username: string): boolean {
   return /^[a-zA-Z0-9\-_.#$]{3,24}$/.test(username);
 }

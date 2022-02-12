@@ -3,8 +3,10 @@ import { v4 as uuid } from "uuid";
 
 import MarkdownItMath from "markdown-it-math-loose";
 import MarkdownItMergeCells from "markdown-it-merge-cells/src";
-import MarkdownItMentions from "markdown-it-mentions";
 import MarkdownItTaskLists from "@hackmd/markdown-it-task-lists";
+import LinkifyIt from "linkify-it";
+
+import tlds from "tlds";
 
 export interface MarkdownHighlightPlaceholder {
   id: string;
@@ -84,12 +86,29 @@ export function renderMarkdown(
     blockRenderer: (code: string) => addMathPlaceholder(code, true)
   });
   renderer.use(MarkdownItMergeCells);
-  renderer.use(MarkdownItMentions, {
-    parseURL: (username: string) => `/u/${username}`
-  });
   renderer.use(MarkdownItTaskLists, {
     enabled: true
   });
+
+  renderer.linkify.add("@", {
+    validate: (text: string, pos: number, self: LinkifyIt.LinkifyIt): number | boolean => {
+      var tail: string = text.slice(pos);
+      const re: RegExp = /^[a-zA-Z0-9\-_.#$]{3,24}$/;
+
+      if (re.test(tail)) {
+        if (pos >= 2 && tail[pos - 2] === "@") {
+          return false;
+        }
+        return tail.match(re)[0].length;
+      }
+      return 0;
+    },
+    normalize: (match: LinkifyIt.Match): void => {
+      match.url = "/u/" + encodeURIComponent(match.url.replace(/^@/, ""));
+    }
+  });
+
+  renderer.linkify.tlds(tlds);
 
   if (onPatchRenderer) onPatchRenderer(renderer);
 

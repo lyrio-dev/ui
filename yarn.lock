@@ -1862,6 +1862,11 @@
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-2.1.0.tgz#ea3dd64c4805597311790b61e872cbd1ed2cd806"
   integrity sha512-Q7DYAOi9O/+cLLhdaSvKdaumWyHbm7HAk/bFwwyTuU0arR5yyCeW5GOoqt4tJTpDRxhpx9Q8kQL6vMpuw9hDSw==
 
+"@types/linkify-it@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-3.0.2.tgz#fd2cd2edbaa7eaac7e7f3c1748b52a19143846c9"
+  integrity sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==
+
 "@types/lodash.clonedeep@^4.5.6":
   version "4.5.6"
   resolved "https://registry.yarnpkg.com/@types/lodash.clonedeep/-/lodash.clonedeep-4.5.6.tgz#3b6c40a0affe0799a2ce823b440a6cf33571d32b"
@@ -8794,24 +8799,12 @@ markdown-it-math-loose@^4.1.1:
   optionalDependencies:
     ascii2mathml "^0.6.2"
 
-markdown-it-mentions@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/markdown-it-mentions/-/markdown-it-mentions-1.0.0.tgz#2dc6a06d0604bfbf57ac22efb3558f338098990a"
-  integrity sha512-zZnkEWHfnIXCwzgv9WJh0Wo6iuwLJaApfOMQfKEqjYM5A98XXEChPRqI7jvZAdzPGfCfaBFv0GUQqUYw4DeSjg==
-  dependencies:
-    markdown-it-regexp "^0.4.0"
-
 markdown-it-merge-cells@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/markdown-it-merge-cells/-/markdown-it-merge-cells-1.0.1.tgz#ad375a09fa709213c19a354e537e560789ae2be8"
   integrity sha512-4I6wBy8OPgPRSYAw7VC3SEgIcuM7HiFvTi1AW9bbPYRoXoAsr6inyjX723gyDUUj9dQT7ICNWtxrom9ULOW46A==
   dependencies:
     babel-runtime "^6.26.0"
-
-markdown-it-regexp@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/markdown-it-regexp/-/markdown-it-regexp-0.4.0.tgz#d64d713eecec55ce4cfdeb321750ecc099e2c2dc"
-  integrity sha1-1k1xPuzsVc5M/esyF1DswJniwtw=
 
 markdown-it@^12.0.4:
   version "12.0.4"
@@ -12952,6 +12945,11 @@ tiny-warning@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-1.0.3.tgz#94a30db453df4c643d0fd566060d60a875d84754"
   integrity sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
+
+tlds@^1.227.0:
+  version "1.227.0"
+  resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.227.0.tgz#6352577d74c4b7f6f80ebdeebafdf28c10aee8c0"
+  integrity sha512-H6KXre7PSkfZyPiGzHvdG/p42LCfPmmyH3MhmZnULiVGEGXKBe8vzyLrw6q0UAtXOL0eNScA9vC4DcfhrcaPlg==
 
 tmp@^0.0.33:
   version "0.0.33"
