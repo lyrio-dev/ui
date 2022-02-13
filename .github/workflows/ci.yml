@@ -16,10 +16,12 @@ jobs:
     - name: Set up Node
       uses: actions/setup-node@v2-beta
       with:
-        node-version: 14.x
+        node-version: 16.x
     - name: Install
       run: yarn
     - name: Build
       run: yarn build
+      env:
+        NODE_OPTIONS: --max_old_space_size=8192
     - name: Check style
       run: yarn check-style
