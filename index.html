@@ -99,7 +99,7 @@ function safeStringify(object) {
       try {
         gravatarCdn = __gravatar__;
       } catch (e) {
-        gravatarCdn = null;
+        gravatarCdn = "";
       }
       window.gravatarCdn = gravatarCdn;
 
@@ -108,7 +108,7 @@ function safeStringify(object) {
       try {
         ghAvatarCdn = __ghavatar__;
       } catch (e) {
-        ghAvatarCdn = null;
+        ghAvatarCdn = "";
       }
       window.ghAvatarCdn = ghAvatarCdn;
 
