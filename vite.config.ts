@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import fs from "fs";
+import path from "path";
 
 // Vite plugins
 import react from "@vitejs/plugin-react";
@@ -21,6 +22,27 @@ import rollupNodePolyFill from "rollup-plugin-node-polyfills";
 import getGitRepoInfo from "git-repo-info";
 import { Options as HtmlMinifierOptions } from "html-minifier-terser";
 import { browsersWithSupportForFeatures } from "browserslist-generator";
+
+import tsconfig from "./tsconfig.json";
+
+const tsconfigPathAliases = Object.fromEntries(
+  Object.entries(tsconfig.compilerOptions.paths).map(([key, values]) => {
+    let value = values[0];
+    if (key.endsWith("/*")) {
+      key = key.slice(0, -2);
+      value = value.slice(0, -2);
+    }
+
+    const nodeModulesPrefix = "node_modules/";
+    if (value.startsWith(nodeModulesPrefix)) {
+      value = value.replace(nodeModulesPrefix, "");
+    } else {
+      value = path.join(__dirname, value);
+    }
+
+    return [key, value];
+  })
+);
 
 const enabledNodePolyfills = {
   util: "rollup-plugin-node-polyfills/polyfills/util",
@@ -120,9 +142,7 @@ export default defineConfig({
   resolve: {
     alias: {
       ...enabledNodePolyfills,
-      ["@"]: __dirname + "/src",
-      ["semantic-ui-css"]: "fomantic-ui-css",
-      ["mobx-react"]: "mobx-react-lite"
+      ...tsconfigPathAliases
     }
   },
   build: {
