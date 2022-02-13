@@ -1,4 +1,4 @@
-import { observable, computed } from "mobx";
+import { observable, computed, makeObservable } from "mobx";
 import { computedFn } from "mobx-utils";
 import { create, persist } from "mobx-persist";
 
@@ -20,6 +20,7 @@ export const browserDefaultLocale = getBrowserLocale();
 
 export class AppState {
   constructor() {
+    makeObservable(this);
     this.initializationThemeDetection();
   }
 

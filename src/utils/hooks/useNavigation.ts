@@ -1,11 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { observable } from "mobx";
+import { makeObservable, observable } from "mobx";
 import { useNavigation, Link as NaviLink } from "react-navi";
 import { LinkProps } from "react-navi/dist/types/Link";
 
 import { useLocalizer } from "./useLocalizer";
 
 class ConfirmNavigationState {
+  constructor() {
+    makeObservable(this);
+  }
+
   @observable
   count = 0;
 }
