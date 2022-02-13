@@ -44,7 +44,7 @@ const PreviewSearch = <T extends {}>(props: PropsWithChildren<PreviewSearchProps
     setResults(results || []);
     setHideResults(false);
     setPending(false);
-  }, 500).callback;
+  }, 500);
 
   const [hideResults, setHideResults] = useState(true);
   const navigation = useNavigationChecked();

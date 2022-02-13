@@ -56,7 +56,7 @@ export function getBreadcrumb(
           <Breadcrumb.Section
             active
             as={Link}
-            href={({ pathname: "/d", query: { problemId: "all" } } as unknown) as string}
+            href={{ pathname: "/d", query: { problemId: "all" } } as unknown as string}
             className={style.allProblemsLink}
           >
             {_("discussions.breadcrumb.problem")}

@@ -112,12 +112,7 @@ let AppLayout: React.FC = props => {
       <Button className={style.loginAndRegisterButton} onClick={() => onLoginOrRegisterClick("login")}>
         {_(".header.user.login")}
       </Button>
-      <Button
-        className={style.loginAndRegisterButton}
-        primary
-        onClick={() => onLoginOrRegisterClick("register")}
-        type="primary"
-      >
+      <Button className={style.loginAndRegisterButton} primary onClick={() => onLoginOrRegisterClick("register")}>
         {_(".header.user.register")}
       </Button>
     </>

@@ -314,10 +314,8 @@ const AuditView: React.FC<AuditViewProps> = props => {
                     </Comment.Author>
                     <Comment.Text>
                       {(() => {
-                        const message = (replace(
-                          _(`user_audit.${result.action}`),
-                          /\[(.+?)\]/g,
-                          (match: string, key: string) => {
+                        const message = (
+                          replace(_(`user_audit.${result.action}`), /\[(.+?)\]/g, (match: string, key: string) => {
                             switch (key) {
                               case "firstObject":
                                 return renderObject(
@@ -336,8 +334,8 @@ const AuditView: React.FC<AuditViewProps> = props => {
                               default:
                                 return null;
                             }
-                          }
-                        ) as React.ReactNode[]).map((node, i) => <React.Fragment key={i}>{node}</React.Fragment>);
+                          }) as React.ReactNode[]
+                        ).map((node, i) => <React.Fragment key={i}>{node}</React.Fragment>);
 
                         return result.details && Object.keys(result.details) ? (
                           <Accordion

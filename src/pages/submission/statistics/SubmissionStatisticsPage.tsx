@@ -2,6 +2,16 @@ import React, { useEffect } from "react";
 import { Table, Icon, Button, Segment, Header, Dropdown, Menu } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import { Bar, Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Title,
+  BarElement,
+  Tooltip
+} from "chart.js";
 import { v4 as uuid } from "uuid";
 
 import style from "./SubmissionStatisticsPage.module.less";
@@ -20,6 +30,8 @@ import { getScoreColor } from "@/components/ScoreText";
 import { defineRoute, RouteError } from "@/AppRouter";
 import { getProblemIdString } from "@/pages/problem/utils";
 import { makeToBeLocalizedText } from "@/locales";
+
+ChartJS.register(BarElement, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip);
 
 const SUBMISSIONS_PER_PAGE = appState.serverPreference.pagination.submissionStatistics;
 
@@ -161,50 +173,55 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
           <div className={style.chartContainer}>
             <Bar
               options={{
-                tooltips: {
-                  xPadding: 10,
-                  yPadding: 10,
-                  displayColors: false,
-                  titleFontSize: 13,
-                  bodyFontSize: 13,
-                  titleFontStyle: "",
-                  callbacks: {
-                    title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + tooltip[0].label : ""),
-                    label: tooltip => _(".chart_tooltip.count") + tooltip.value
+                plugins: {
+                  tooltip: {
+                    padding: 10,
+                    displayColors: false,
+                    titleFont: {
+                      size: 13,
+                      style: "initial"
+                    },
+                    bodyFont: {
+                      size: 13
+                    },
+                    callbacks: {
+                      title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + tooltip[0].label : ""),
+                      label: tooltip => _(".chart_tooltip.count") + tooltip.formattedValue
+                    }
+                  },
+                  legend: {
+                    display: false
                   }
                 },
                 scales: {
-                  yAxes: [
-                    {
-                      ticks: {
-                        beginAtZero: true,
-                        padding: 10,
-                        maxTicksLimit: 5,
-                        fontSize: 13,
-                        fontColor: "#888"
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      padding: 10,
+                      maxTicksLimit: 5,
+                      font: {
+                        size: 13
                       },
-                      gridLines: {
-                        drawBorder: false,
-                        color: "#ccc"
-                      }
+                      color: "#888"
+                    },
+                    grid: {
+                      drawBorder: false,
+                      color: "#ccc"
                     }
-                  ],
-                  xAxes: [
-                    {
-                      ticks: {
-                        fontSize: 13,
-                        fontColor: "#888"
-                      },
-                      gridLines: {
-                        display: false
+                  },
+                  x: {
+                    ticks: {
+                      font: {
+                        size: 13
+                        // color: "#888"
                       }
+                    },
+                    grid: {
+                      display: false
                     }
-                  ]
+                  }
                 },
-                maintainAspectRatio: false,
-                legend: {
-                  display: false
-                }
+                maintainAspectRatio: false
               }}
               data={{
                 labels: scores.map(([score, count]) => score),
@@ -223,50 +240,56 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
           <div className={style.chartContainer}>
             <Line
               options={{
-                tooltips: {
-                  xPadding: 10,
-                  yPadding: 10,
-                  displayColors: false,
-                  titleFontSize: 13,
-                  bodyFontSize: 13,
-                  titleFontStyle: "",
-                  callbacks: {
-                    title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + "≤ " + tooltip[0].label : ""),
-                    label: tooltip => _(".chart_tooltip.count") + tooltip.value
+                plugins: {
+                  tooltip: {
+                    padding: 10,
+                    displayColors: false,
+                    titleFont: {
+                      size: 13,
+                      style: "initial"
+                    },
+                    bodyFont: {
+                      size: 13
+                    },
+                    callbacks: {
+                      title: tooltip =>
+                        tooltip.length === 1 ? _(".chart_tooltip.score") + "≤ " + tooltip[0].label : "",
+                      label: tooltip => _(".chart_tooltip.count") + tooltip.formattedValue
+                    }
+                  },
+                  legend: {
+                    display: false
                   }
                 },
                 scales: {
-                  yAxes: [
-                    {
-                      ticks: {
-                        beginAtZero: true,
-                        padding: 10,
-                        maxTicksLimit: 5,
-                        fontSize: 13,
-                        fontColor: "#888"
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      padding: 10,
+                      maxTicksLimit: 5,
+                      font: {
+                        size: 13
                       },
-                      gridLines: {
-                        drawBorder: false,
-                        color: "#ccc"
-                      }
+                      color: "#888"
+                    },
+                    grid: {
+                      drawBorder: false,
+                      color: "#ccc"
                     }
-                  ],
-                  xAxes: [
-                    {
-                      ticks: {
-                        fontSize: 13,
-                        fontColor: "#888"
+                  },
+                  x: {
+                    ticks: {
+                      font: {
+                        size: 13
                       },
-                      gridLines: {
-                        display: false
-                      }
+                      color: "#888"
+                    },
+                    grid: {
+                      display: false
                     }
-                  ]
+                  }
                 },
-                maintainAspectRatio: false,
-                legend: {
-                  display: false
-                }
+                maintainAspectRatio: false
               }}
               data={{
                 labels: scorePrefixSum.map(([score, count]) => score),
@@ -291,50 +314,56 @@ let SubmissionStatisticsPage: React.FC<SubmissionStatisticsPageProps> = props =>
           <div className={style.chartContainer}>
             <Line
               options={{
-                tooltips: {
-                  xPadding: 10,
-                  yPadding: 10,
-                  displayColors: false,
-                  titleFontSize: 13,
-                  bodyFontSize: 13,
-                  titleFontStyle: "",
-                  callbacks: {
-                    title: tooltip => (tooltip.length === 1 ? _(".chart_tooltip.score") + "≥ " + tooltip[0].label : ""),
-                    label: tooltip => _(".chart_tooltip.count") + tooltip.value
+                plugins: {
+                  tooltip: {
+                    padding: 10,
+                    displayColors: false,
+                    titleFont: {
+                      size: 13,
+                      style: "initial"
+                    },
+                    bodyFont: {
+                      size: 13
+                    },
+                    callbacks: {
+                      title: tooltip =>
+                        tooltip.length === 1 ? _(".chart_tooltip.score") + "≥ " + tooltip[0].label : "",
+                      label: tooltip => _(".chart_tooltip.count") + tooltip.formattedValue
+                    }
+                  },
+                  legend: {
+                    display: false
                   }
                 },
                 scales: {
-                  yAxes: [
-                    {
-                      ticks: {
-                        beginAtZero: true,
-                        padding: 10,
-                        maxTicksLimit: 5,
-                        fontSize: 13,
-                        fontColor: "#888"
+                  y: {
+                    beginAtZero: true,
+                    ticks: {
+                      padding: 10,
+                      maxTicksLimit: 5,
+                      font: {
+                        size: 13
                       },
-                      gridLines: {
-                        drawBorder: false,
-                        color: "#ccc"
-                      }
+                      color: "#888"
+                    },
+                    grid: {
+                      drawBorder: false,
+                      color: "#ccc"
                     }
-                  ],
-                  xAxes: [
-                    {
-                      ticks: {
-                        fontSize: 13,
-                        fontColor: "#888"
+                  },
+                  x: {
+                    ticks: {
+                      font: {
+                        size: 13
                       },
-                      gridLines: {
-                        display: false
-                      }
+                      color: "#888"
+                    },
+                    grid: {
+                      display: false
                     }
-                  ]
+                  }
                 },
-                maintainAspectRatio: false,
-                legend: {
-                  display: false
-                }
+                maintainAspectRatio: false
               }}
               data={{
                 labels: scoreSuffixSum.map(([score, count]) => score),

@@ -63,7 +63,7 @@ export function useFieldCheck(
     }
   }
 
-  const debouncedCheckField = useDebouncedCallback(checkField, debounce || 1).callback;
+  const debouncedCheckField = useDebouncedCallback(checkField, debounce || 1);
 
   // If NOT checked, start a check and wait for it
   // If already checked, return immediately

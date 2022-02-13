@@ -55,10 +55,8 @@ const PreferenceView: React.FC<PreferenceViewProps> = props => {
 
   const [systemLocale, setSystemLocale] = useState<Locale>((props.preference.locale?.system || null) as Locale);
   const [contentLocale, setContentLocale] = useState<Locale>((props.preference.locale?.content || null) as Locale);
-  const [
-    hidePreferredLocalizedContentUnavailableMessage,
-    setHidePreferredLocalizedContentUnavailableMessage
-  ] = useState(props.preference.locale?.hideUnavailableMessage || false);
+  const [hidePreferredLocalizedContentUnavailableMessage, setHidePreferredLocalizedContentUnavailableMessage] =
+    useState(props.preference.locale?.hideUnavailableMessage || false);
   const [theme, setTheme] = useState(props.preference.theme in themeList ? props.preference.theme : "");
   const [contentFontFace, setContentFontFace] = useState(
     props.preference.font?.contentFontFace || availableContentFonts[0] || "sans-serif"

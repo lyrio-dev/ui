@@ -157,8 +157,7 @@ return {
     auto_add_testcases: {
       auto_add_testcases: "Add testcases automatically",
       subtask: "Subtask",
-      help:
-        "Enter the regexes to match the filenames. Use capturing groups for the common parts of input/output filenames.\nIf two filenames are matched respectively by the input/output regexes and their capturing groups' text are equal, they become a testcase.",
+      help: "Enter the regexes to match the filenames. Use capturing groups for the common parts of input/output filenames.\nIf two filenames are matched respectively by the input/output regexes and their capturing groups' text are equal, they become a testcase.",
       help_no_output:
         "Enter the regexes to match the filenames. Each matched file will become a testcase's input file.",
       input_file: "Input File",

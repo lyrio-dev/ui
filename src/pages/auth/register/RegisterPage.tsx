@@ -112,28 +112,19 @@ let RegisterPage: React.FC = () => {
   );
 
   // passwordCheckStatus: false (not checked) | true (pass) | string (error message)
-  const [
-    checkPassword,
-    waitForPasswordCheck,
-    getPasswordUIValidateStatus,
-    getPasswordUIHelp,
-    getCurrentPassword
-  ] = useFieldCheck(password, false, false, value => {
-    if (!value) return _(".empty_password");
-    if (!isValidPassword(value)) return _(".invalid_password");
-    return true;
-  });
+  const [checkPassword, waitForPasswordCheck, getPasswordUIValidateStatus, getPasswordUIHelp, getCurrentPassword] =
+    useFieldCheck(password, false, false, value => {
+      if (!value) return _(".empty_password");
+      if (!isValidPassword(value)) return _(".invalid_password");
+      return true;
+    });
 
-  const [
-    checkRetypePassword,
-    waitForRetypePasswordCheck,
-    getRetypePasswordUIValidateStatus,
-    getRetypePasswordUIHelp
-  ] = useFieldCheck(retypePassword, true, false, value => {
-    if (value !== getCurrentPassword()) return _(".passwords_do_not_match");
-    if (!value) return _(".empty_password");
-    return true;
-  });
+  const [checkRetypePassword, waitForRetypePasswordCheck, getRetypePasswordUIValidateStatus, getRetypePasswordUIHelp] =
+    useFieldCheck(retypePassword, true, false, value => {
+      if (value !== getCurrentPassword()) return _(".passwords_do_not_match");
+      if (!value) return _(".empty_password");
+      return true;
+    });
 
   const [emailVerificationCodeError, setEmailVerificationCodeError] = useState(false);
 

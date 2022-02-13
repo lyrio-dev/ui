@@ -1,0 +1,10 @@
+diff --git a/node_modules/vite-plugin-html-minifier-terser/index.d.ts b/node_modules/vite-plugin-html-minifier-terser/index.d.ts
+index d1ab669..84608fd 100644
+--- a/node_modules/vite-plugin-html-minifier-terser/index.d.ts
++++ b/node_modules/vite-plugin-html-minifier-terser/index.d.ts
+@@ -1,4 +1,4 @@
+-import { Plugin } from 'vite';
++import { Plugin } from '../vite';
+ interface VitePluginHtmlMinifierTerser {
+   removeAttributeQuotes?: boolean,
+   collapseWhitespace?: boolean,

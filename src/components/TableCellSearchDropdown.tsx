@@ -45,7 +45,7 @@ const TableCellSearchDropdown: React.FC<TableCellSearchDropdownProps> = props =>
     setResult(results || []);
     if (!results || results.length === 0) setNoResult(true);
     setPending(false);
-  }, 500).callback;
+  }, 500);
 
   function onSelect(index: number) {
     props.onSelect(result[index].data);

@@ -319,7 +319,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                     options={Object.keys(props.permissionsLevelDetails).map(permissionLevel => ({
                       key: permissionLevel,
                       value: permissionLevel,
-                      text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
+                      text: props.permissionsLevelDetails[permissionLevel as any as number].title,
                       disabled:
                         !permissions.haveSubmitPermission && Number(permissionLevel) !== userPermission.permissionLevel
                     }))}
@@ -369,7 +369,7 @@ let PermissionManager: React.FC<PermissionManagerProps> = props => {
                       options={Object.keys(props.permissionsLevelDetails).map(permissionLevel => ({
                         key: permissionLevel,
                         value: permissionLevel,
-                        text: props.permissionsLevelDetails[(permissionLevel as any) as number].title,
+                        text: props.permissionsLevelDetails[permissionLevel as any as number].title,
                         disabled:
                           !permissions.haveSubmitPermission &&
                           Number(permissionLevel) !== groupPermission.permissionLevel
