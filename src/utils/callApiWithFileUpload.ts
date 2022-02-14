@@ -14,6 +14,11 @@ export interface FileUploadApiProgress {
   progress: number;
 }
 
+// Workaround: xdomain's FormData doesn't set [Symbol.toStringTag] to "FormData"
+//             so axios doesn't treat it as FormData
+//             see https://github.com/axios/axios/blob/c9aca7525703ab600eacd9e95fd7f6ecc9942616/lib/utils.js#L56
+FormData.prototype[Symbol.toStringTag] = "FormData";
+
 export async function callApiWithFileUpload<
   Request extends { uploadInfo?: ApiTypes.FileUploadInfoDto },
   Response extends { error?: string; signedUploadRequest?: ApiTypes.SignedFileUploadRequestDto }
