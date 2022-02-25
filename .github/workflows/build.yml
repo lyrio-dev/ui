@@ -1,11 +1,8 @@
-name: CI
+name: Build
 
 on:
-- push
-- pull_request
-
-env:
-  CI: true
+  push:
+  pull_request:
 
 jobs:
   build:
@@ -14,14 +11,18 @@ jobs:
     - name: Check out
       uses: actions/checkout@v2
     - name: Set up Node
-      uses: actions/setup-node@v2-beta
+      uses: actions/setup-node@v2
       with:
         node-version: 16.x
-    - name: Install
-      run: yarn
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
     - name: Build
       run: yarn build
       env:
         NODE_OPTIONS: --max_old_space_size=8192
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: dist
     - name: Check style
       run: yarn check-style

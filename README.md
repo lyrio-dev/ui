@@ -1,6 +1,6 @@
 # Lyrio UI
 
-[![Build Status](https://img.shields.io/github/workflow/status/lyrio-dev/ui/CI?style=flat-square)](https://github.com/lyrio-dev/ui/actions?query=workflow%3ACI)
+[![Build Status](https://img.shields.io/github/workflow/status/lyrio-dev/ui/CI?style=flat-square)](https://github.com/lyrio-dev/ui/actions?query=workflow%3ABuild)
 [![Dependencies](https://img.shields.io/david/lyrio-dev/ui?style=flat-square)](https://david-dm.org/lyrio-dev/ui)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)

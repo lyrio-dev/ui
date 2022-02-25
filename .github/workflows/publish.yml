@@ -1,0 +1,44 @@
+name: Publish & Deploy
+
+on:
+  push:
+    tags: v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v2
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: 16.x
+    - name: Install dependencies
+      run: yarn --frozen-lockfile
+    - name: Check style
+      run: yarn check-style
+    - name: Build
+      run: yarn build
+      env:
+        NODE_OPTIONS: --max_old_space_size=8192
+    - name: Publish
+      uses: JS-DevTools/npm-publish@v1
+      with:
+        token: ${{ secrets.NPM_TOKEN }}
+        tag: ${{ endsWith(github.ref_name, 'next') && 'next' || 'latest' }}
+    - name: Start Deployment for LibreOJ
+      run: |
+        eval `ssh-agent -s`
+        echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+
+        git config --global user.name $(git show -s --format='%an' HEAD)
+        git config --global user.email $(git show -s --format='%ae' HEAD)
+
+        git clone git@github.com:libreoj/bootstrap libreoj-bootstrap --depth 1
+        cd libreoj-bootstrap
+        jq "{ version: .version }" ../package.json > version.json
+        git commit -am "Update $(jq -r ".name" ../package.json) to $(jq -r ".version" ../package.json)"
+        git push
+      env:
+        SSH_KEY: ${{ secrets.DEPLOY_KEY }}
