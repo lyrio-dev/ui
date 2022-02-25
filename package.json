@@ -64,7 +64,7 @@
     "customize-cra": "^1.0.0",
     "cz-conventional-changelog": "3.3.0",
     "dayjs": "^1.10.7",
-    "dtsgenerator": "3.15.0",
+    "dtsgenerator": "2.7.0",
     "flat": "^5.0.2",
     "fomantic-ui-css": "^2.8.8",
     "fs-extra": "^10.0.0",
