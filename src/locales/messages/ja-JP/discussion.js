@@ -16,7 +16,10 @@ return {
     label: {
       nonpublic: "[TBT] Nonpublic",
       problem_owner: "[TBT] Problem owner",
-      discussion_publisher: "[TBT] Initiator"
+      discussion_publisher: "[TBT] Initiator",
+      admin: "[TBT] Site admin",
+      problem_admin: "[TBT] Problem admin",
+      discussion_admin: "[TBT] Discussion admin"
     },
     actions: {
       edit: "[TBT] Edit",

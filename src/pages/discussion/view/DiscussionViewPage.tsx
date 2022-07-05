@@ -296,13 +296,22 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
     .filter(e => e)
     .map((e, i) => <React.Fragment key={i}>{e}</React.Fragment>);
 
-  const label = !props.isPublic ? (
-    <Label className={style.label} icon="eye slash" color="red" content={_(".label.nonpublic")} basic />
-  ) : props.publisher.id === props.discussion.problem?.meta?.ownerId ? (
-    <Label className={style.label} content={_(".label.problem_owner")} basic />
-  ) : props.publisher.id === props.discussion.publisher.id && props.type === "Reply" ? (
-    <Label className={style.label} content={_(".label.discussion_publisher")} basic />
-  ) : null;
+  const labels = [
+    !props.isPublic && (
+      <Label className={style.label} icon="eye slash" color="red" content={_(".label.nonpublic")} basic />
+    ),
+    props.publisher.id === props.discussion.problem?.meta?.ownerId && (
+      <Label className={style.label} content={_(".label.problem_owner")} basic />
+    ),
+    props.publisher.id === props.discussion.publisher.id && props.type === "Reply" && (
+      <Label className={style.label} content={_(".label.discussion_publisher")} basic />
+    ),
+    props.publisher.isAdmin && <Label className={style.label} content={_(".label.admin")} basic />,
+    props.publisher.isProblemAdmin && props.discussion.problem && (
+      <Label className={style.label} content={_(".label.problem_admin")} basic />
+    ),
+    props.publisher.isDiscussionAdmin && <Label className={style.label} content={_(".label.discussion_admin")} basic />
+  ].filter(Boolean);
 
   return (
     <div
@@ -348,10 +357,10 @@ let DiscussionItem: React.FC<DiscussionItemProps> = props => {
                   </>
                 )}
               </span>
-              {label && (
+              {labels.length && (
                 <>
                   <div className={style.labelDivider} />
-                  {label}
+                  {labels}
                 </>
               )}
             </div>

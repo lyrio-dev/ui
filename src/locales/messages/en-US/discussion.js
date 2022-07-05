@@ -16,7 +16,10 @@ return {
     label: {
       nonpublic: "Nonpublic",
       problem_owner: "Problem owner",
-      discussion_publisher: "Initiator"
+      discussion_publisher: "Initiator",
+      admin: "Site admin",
+      problem_admin: "Problem admin",
+      discussion_admin: "Discussion admin"
     },
     actions: {
       edit: "Edit",
