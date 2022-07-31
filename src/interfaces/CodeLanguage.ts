@@ -105,8 +105,8 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "version",
       type: CodeLanguageOptionType.Select,
-      values: ["1.3", "1.4", "1.5"],
-      defaultValue: "1.4"
+      values: ["1.5", "1.6", "1.7", "1.8", "1.9"],
+      defaultValue: "1.8"
     },
     {
       name: "platform",
@@ -127,8 +127,8 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "version",
       type: CodeLanguageOptionType.Select,
-      values: ["2.7", "3.6", "3.9"],
-      defaultValue: "3.9"
+      values: ["2.7", "3.9", "3.10"],
+      defaultValue: "3.10"
     }
   ],
   [CodeLanguage.Rust]: [
@@ -149,7 +149,7 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "version",
       type: CodeLanguageOptionType.Select,
-      values: ["4.2", "5"],
+      values: ["4.2", "5", "6"],
       defaultValue: "5"
     },
     {
@@ -179,8 +179,8 @@ export const compileAndRunOptions: Record<CodeLanguage, CodeLanguageOption[]> = 
     {
       name: "version",
       type: CodeLanguageOptionType.Select,
-      values: ["7.3", "8"],
-      defaultValue: "8"
+      values: ["7.3", "8", "9"],
+      defaultValue: "9"
     }
   ],
   [CodeLanguage.FSharp]: []

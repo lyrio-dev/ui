@@ -97,9 +97,11 @@ return {
       version: {
         name: "[TBT] Version",
         values: {
-          1.3: "[TBT] 1.3",
-          1.4: "[TBT] 1.4",
-          1.5: "[TBT] 1.5"
+          1.5: "1.5",
+          1.6: "1.6",
+          1.7: "1.7",
+          1.8: "1.8",
+          1.9: "1.9"
         }
       },
       platform: {
@@ -131,9 +133,9 @@ return {
       version: {
         name: "[TBT] Version",
         values: {
-          2.7: "[TBT] 2.7",
-          3.6: "[TBT] 3.6",
-          3.9: "[TBT] 3.9"
+          2.7: "2.7",
+          3.9: "3.9",
+          3.10: "3.10"
         }
       }
     }
@@ -166,8 +168,9 @@ return {
       version: {
         name: "[TBT] Version",
         values: {
-          4.2: "[TBT] 4.2",
-          5: "[TBT] 5"
+          4.2: "4.2",
+          5: "5",
+          6: "6"
         }
       },
       optimize: {
@@ -209,8 +212,9 @@ return {
       version: {
         name: "[TBT] Version",
         values: {
-          7.3: "[TBT] 7.3",
-          8: "[TBT] 8"
+          7.3: "7.3",
+          8: "8",
+          9: "9"
         }
       }
     }
