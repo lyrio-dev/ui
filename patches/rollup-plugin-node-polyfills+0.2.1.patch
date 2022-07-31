@@ -1,0 +1,13 @@
+diff --git a/node_modules/rollup-plugin-node-polyfills/dist/types/index.d.ts b/node_modules/rollup-plugin-node-polyfills/dist/types/index.d.ts
+index fdc8d97..5dbd529 100644
+--- a/node_modules/rollup-plugin-node-polyfills/dist/types/index.d.ts
++++ b/node_modules/rollup-plugin-node-polyfills/dist/types/index.d.ts
+@@ -1,7 +1,7 @@
+ import { NodePolyfillsOptions } from './modules';
+ export default function (opts?: NodePolyfillsOptions): {
+     name: string;
+-    resolveId(importee: string, importer: string): {
++    resolveId(importee: string, importer: string | undefined): {
+         id: any;
+         moduleSideEffects: boolean;
+     } | null;

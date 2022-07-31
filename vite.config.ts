@@ -50,6 +50,9 @@ const enabledNodePolyfills = {
 };
 
 export default defineConfig({
+  server: {
+    port: 3000
+  },
   plugins: [
     react({
       babel: {
@@ -88,9 +91,10 @@ export default defineConfig({
       ],
       modernTargets: browsersWithSupportForFeatures(
         "es6-module-dynamic-import",
+        "javascript.statements.import_meta",
         "javascript.builtins.Object.fromEntries"
       ),
-      modernFeatureTestCode: "import('data:text/javascript,');Object.fromEntries([])"
+      modernFeatureTestExtraCode: "Object.fromEntries([]);"
     }),
     publicPath({
       publicPathExpression: "window.publicPath",
@@ -144,6 +148,7 @@ export default defineConfig({
     }
   },
   build: {
+    minify: "terser",
     rollupOptions: {
       plugins: [rollupNodePolyFill()]
     }

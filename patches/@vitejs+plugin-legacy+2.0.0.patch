@@ -1,0 +1,83 @@
+diff --git a/node_modules/@vitejs/plugin-legacy/dist/index.cjs b/node_modules/@vitejs/plugin-legacy/dist/index.cjs
+index 294a950..bcd3514 100644
+--- a/node_modules/@vitejs/plugin-legacy/dist/index.cjs
++++ b/node_modules/@vitejs/plugin-legacy/dist/index.cjs
+@@ -8,6 +8,7 @@ const node_module = require('node:module');
+ const node_url = require('node:url');
+ const vite = require('vite');
+ const MagicString = require('magic-string');
++const { browsersWithSupportForFeatures } = require('browserslist-generator')
+ 
+ function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e["default"] : e; }
+ 
+@@ -61,7 +62,7 @@ const legacyPolyfillId = "vite-legacy-polyfill";
+ const legacyEntryId = "vite-legacy-entry";
+ const systemJSInlineCode = `System.import(document.getElementById('${legacyEntryId}').getAttribute('data-src'))`;
+ const detectModernBrowserVarName = "__vite_is_modern_browser";
+-const detectModernBrowserCode = `try{import.meta.url;import("_").catch(()=>1);}catch(e){}window.${detectModernBrowserVarName}=true;`;
++const detectModernBrowserCode = extraCode => `try{import.meta.url;import("_").catch(()=>1);${extraCode}}catch(e){}window.${detectModernBrowserVarName}=true;`;
+ const dynamicFallbackInlineCode = `!function(){if(window.${detectModernBrowserVarName})return;console.warn("vite: loading legacy build because dynamic import or import.meta.url is unsupported, syntax error above should be ignored");var e=document.getElementById("${legacyPolyfillId}"),n=document.createElement("script");n.src=e.src,n.onload=function(){${systemJSInlineCode}},document.body.appendChild(n)}();`;
+ const forceDynamicImportUsage = `export function __vite_legacy_guard(){import('data:text/javascript,')};`;
+ const legacyEnvVarMarker = `__VITE_IS_LEGACY__`;
+@@ -69,6 +70,7 @@ const _require = node_module.createRequire((typeof document === 'undefined' ? ne
+ function viteLegacyPlugin(options = {}) {
+   let config;
+   const targets = options.targets || "defaults";
++  const modernTargets = options.modernTargets || browsersWithSupportForFeatures('es6-module-dynamic-import')
+   const genLegacy = options.renderLegacyChunks !== false;
+   const genDynamicFallback = genLegacy;
+   const debugFlags = (process.env.DEBUG || "").split(",");
+@@ -182,7 +184,7 @@ function viteLegacyPlugin(options = {}) {
+       }
+       if (!isLegacyChunk(chunk, opts)) {
+         if (options.modernPolyfills && !Array.isArray(options.modernPolyfills)) {
+-          await detectPolyfills(raw, { esmodules: true }, modernPolyfills);
++          await detectPolyfills(raw, modernTargets, modernPolyfills);
+         }
+         const ms = new MagicString__default(raw);
+         if (genDynamicFallback && chunk.isEntry) {
+@@ -311,7 +313,7 @@ function viteLegacyPlugin(options = {}) {
+         tags.push({
+           tag: "script",
+           attrs: { type: "module" },
+-          children: detectModernBrowserCode,
++          children: detectModernBrowserCode(options.modernFeatureTestExtraCode || ""),
+           injectTo: "head"
+         });
+         tags.push({
+@@ -511,7 +513,7 @@ function wrapIIFEBabelPlugin() {
+ const cspHashes = [
+   node_crypto.createHash("sha256").update(safari10NoModuleFix).digest("base64"),
+   node_crypto.createHash("sha256").update(systemJSInlineCode).digest("base64"),
+-  node_crypto.createHash("sha256").update(detectModernBrowserCode).digest("base64"),
++  node_crypto.createHash("sha256").update(detectModernBrowserCode("")).digest("base64"),
+   node_crypto.createHash("sha256").update(dynamicFallbackInlineCode).digest("base64")
+ ];
+ 
+diff --git a/node_modules/@vitejs/plugin-legacy/dist/index.d.ts b/node_modules/@vitejs/plugin-legacy/dist/index.d.ts
+index a7f0056..fa5f608 100644
+--- a/node_modules/@vitejs/plugin-legacy/dist/index.d.ts
++++ b/node_modules/@vitejs/plugin-legacy/dist/index.d.ts
+@@ -14,12 +14,20 @@ interface Options {
+     /**
+      * default: true
+      */
+-    polyfills?: boolean | string[];
++    polyfills?: boolean | string[]
+     additionalLegacyPolyfills?: string[];
+     /**
+      * default: false
+      */
+-    modernPolyfills?: boolean | string[];
++    modernPolyfills?: boolean | string[]
++    /**
++     * default: A browserslist with support for ES6 dynamic import
++     */
++    modernTargets?: string | string[] | { [key: string]: string }
++    /**
++     * default: ""
++     */
++    modernFeatureTestExtraCode?: string
+     /**
+      * default: true
+      */
