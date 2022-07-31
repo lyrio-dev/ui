@@ -68,7 +68,6 @@
     "flat": "^5.0.2",
     "fomantic-ui-css": "^2.8.8",
     "fs-extra": "^10.1.0",
-    "git-repo-info": "^2.1.1",
     "gravatar": "^1.8.2",
     "hack-font": "source-foundry/Hack#1eddf94",
     "husky": "^8.0.1",
@@ -162,5 +161,8 @@
   "files": [
     "/dist"
   ],
-  "jsdelivr": "dist/index.html"
+  "jsdelivr": "dist/index.html",
+  "dependencies": {
+    "git-commit-info": "^2.0.1"
+  }
 }

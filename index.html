@@ -36,8 +36,8 @@ function safeStringify(object) {
 
   <script>
     window.appVersion = <%- safeStringify({
-      hash: gitRepoInfo.abbreviatedSha,
-      date: gitRepoInfo.committerDate
+      hash: gitCommitInfo.hash.slice(0, 10),
+      date: gitCommitInfo.date
     }) %>;
 
     (function () {
@@ -345,7 +345,7 @@ function safeStringify(object) {
     <div id="error-footer">
       <code>
         Powered by Lyrio<br>
-        (version <%= gitRepoInfo.abbreviatedSha %>)
+        (version <%= gitCommitInfo.hash.slice(0, 10) %>)
       </code>
     </div>
   </div>

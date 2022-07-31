@@ -18,7 +18,7 @@ import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfil
 import rollupNodePolyFill from "rollup-plugin-node-polyfills";
 
 // Others
-import getGitRepoInfo from "git-repo-info";
+import getGitCommitInfo from "git-commit-info";
 import { Options as HtmlMinifierOptions } from "html-minifier-terser";
 import { browsersWithSupportForFeatures } from "browserslist-generator";
 
@@ -61,7 +61,7 @@ export default defineConfig({
     }),
     compileTime(),
     ejs({
-      gitRepoInfo: getGitRepoInfo()
+      gitCommitInfo: getGitCommitInfo()
     }),
     svgo({
       plugins: [
