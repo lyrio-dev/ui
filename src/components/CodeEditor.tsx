@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { observer } from "mobx-react";
 import ReactMonacoEditor from "react-monaco-editor";
 import { registerRulesForLanguage } from "monaco-ace-tokenizer";
@@ -46,7 +46,7 @@ import "monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatch
 import "monaco-editor/esm/vs/editor/contrib/caretOperations/browser/caretOperations.js";
 import "monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard.js";
 import "monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu.js";
-import "monaco-editor/esm/vs/editor/browser/controller/coreCommands.js";
+import "monaco-editor/esm/vs/editor/browser/coreCommands.js";
 import "monaco-editor/esm/vs/editor/contrib/cursorUndo/browser/cursorUndo.js";
 import "monaco-editor/esm/vs/editor/contrib/find/browser/findController.js";
 import "monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js";
