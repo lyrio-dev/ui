@@ -160,7 +160,7 @@ async function fetchData(idType: "id" | "displayId", id: number) {
 
 interface FileUploadInfo {
   file: File;
-  progressType: "Waiting" | "Hashing" | "Uploading" | "Requesting" | "Error" | "Cancelled";
+  progressType: "Waiting" | "Uploading" | "Retrying" | "Requesting" | "Error" | "Cancelled";
   cancel?: () => void;
   progress?: number;
   error?: string;
@@ -227,15 +227,6 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
               {_(".progress_waiting")}
             </>
           );
-        case "Hashing":
-          return (
-            <>
-              <Icon name="hashtag" />
-              {_(".progress_hashing", {
-                progress: formatProgress(debouncedUploadProgress)
-              })}
-            </>
-          );
         case "Uploading":
           return (
             <>
@@ -243,6 +234,13 @@ let FileTableRow: React.FC<FileTableRowProps> = props => {
               {_(".progress_uploading", {
                 progress: formatProgress(debouncedUploadProgress)
               })}
+            </>
+          );
+        case "Retrying":
+          return (
+            <>
+              <Icon name="redo" />
+              {_(".progress_retrying")}
             </>
           );
         case "Requesting":

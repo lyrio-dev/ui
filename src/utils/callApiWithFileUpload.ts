@@ -10,7 +10,7 @@ export interface ApiResponseWithUploadResult<T extends { error?: string }> {
 }
 
 export interface FileUploadApiProgress {
-  status: "Requesting" | "Uploading";
+  status: "Requesting" | "Uploading" | "Retrying";
   progress: number;
 }
 
@@ -71,28 +71,45 @@ export async function callApiWithFileUpload<
         }, 0);
     }
 
-    try {
-      if (result.response.signedUploadRequest.method === "PUT") {
-        await Axios.put(result.response.signedUploadRequest.url, file, {
-          cancelToken: cancelTokenSource.token,
-          onUploadProgress
-        });
-      } else {
-        const formData = new FormData();
-        Object.entries(result.response.signedUploadRequest.extraFormData).forEach(([key, value]) =>
-          formData.append(key, value as string)
-        );
+    const UPLOAD_RETRY_TIMES = 5;
+    const UPLOAD_RETRY_DEALY_MAX = 5;
+    for (let i = 0; i < UPLOAD_RETRY_TIMES; i++) {
+      try {
+        if (result.response.signedUploadRequest.method === "PUT") {
+          await Axios.put(result.response.signedUploadRequest.url, file, {
+            cancelToken: cancelTokenSource.token,
+            onUploadProgress
+          });
+        } else {
+          const formData = new FormData();
+          Object.entries(result.response.signedUploadRequest.extraFormData).forEach(([key, value]) =>
+            formData.append(key, value as string)
+          );
 
-        formData.append(result.response.signedUploadRequest.fileFieldName, file);
-        await Axios.post(result.response.signedUploadRequest.url, formData, {
-          cancelToken: cancelTokenSource.token,
-          onUploadProgress
-        });
+          formData.append(result.response.signedUploadRequest.fileFieldName, file);
+          await Axios.post(result.response.signedUploadRequest.url, formData, {
+            cancelToken: cancelTokenSource.token,
+            onUploadProgress
+          });
+        }
+
+        // Success, break retry loop
+        break;
+      } catch (e) {
+        if (isCancelled) {
+          // Cancelled, don't retry
+          error = true;
+          return { uploadCancelled: true };
+        } else if (i === UPLOAD_RETRY_TIMES - 1) {
+          // Failed after all retries
+          error = true;
+          return { uploadError: e };
+        } else {
+          // Retry after a delay
+          progressCallback({ status: "Retrying", progress: 0 });
+          await new Promise(resolve => setTimeout(resolve, UPLOAD_RETRY_DEALY_MAX * 1000 * Math.random()));
+        }
       }
-    } catch (e) {
-      error = true;
-      if (isCancelled) return { uploadCancelled: true };
-      return { uploadError: e };
     }
 
     if (progressCallback) progressCallback({ status: "Requesting", progress: 0 });
