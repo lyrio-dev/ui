@@ -77,7 +77,7 @@ let AppLayout: React.FC = props => {
     ...(appState.serverPreference.misc.legacyContestsEntryUrl
       ? {
           contests: {
-            icon: "calendar",
+            icon: "dove",
             text: ".navbar.contests",
             url: appState.serverPreference.misc.legacyContestsEntryUrl
           }
