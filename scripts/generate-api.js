@@ -2,9 +2,9 @@ const fetch = require("node-fetch");
 const dtsgenerator = require("dtsgenerator").default;
 const fs = require("fs-extra");
 
-const apiUrl = process.argv.filter(
-  arg => arg.toLowerCase().startsWith("http://") || arg.toLowerCase().startsWith("https://")
-)[0];
+const apiUrl =
+  process.argv.filter(arg => arg.toLowerCase().startsWith("http://") || arg.toLowerCase().startsWith("https://"))[0] ||
+  "http://lyrio.test/docs-json";
 
 if (!apiUrl) {
   console.error("Usage: node scripts/generate-api.js <url>");

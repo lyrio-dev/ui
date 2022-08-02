@@ -1262,7 +1262,7 @@ declare namespace ApiTypes {
     codeFontSize?: number;
     codeLineHeight?: number;
     codeFontLigatures?: boolean;
-    markdownEditorFont?: string;
+    markdownEditorFont?: "content" | "code";
   }
   export interface UserPreferenceLocaleDto {
     system?: "en_US" | "zh_CN" | "ja_JP";
