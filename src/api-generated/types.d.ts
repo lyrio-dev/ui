@@ -577,6 +577,7 @@ declare namespace ApiTypes {
     appLogo: string;
     appLogoForTheme: {};
     googleAnalyticsId: string;
+    plausibleApiEndpoint: string;
     gravatarCdn: string;
     redirectLegacyUrls: boolean;
     legacyContestsEntryUrl: boolean;

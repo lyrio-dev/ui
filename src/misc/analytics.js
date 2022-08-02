@@ -1,15 +1,17 @@
-function getScript(url) {
-  const script = document.createElement("script");
-  script.src = url;
-  script.async = true;
-  document.head.appendChild(script);
-}
+import Plausible from "plausible-tracker";
 
 /**
  * @param {string} googleAnalyticsId
  */
 export function loadGoogleAnalytics(googleAnalyticsId) {
   if (!googleAnalyticsId) return;
+
+  function getScript(url) {
+    const script = document.createElement("script");
+    script.src = url;
+    script.async = true;
+    document.head.appendChild(script);
+  }
 
   if (googleAnalyticsId.startsWith("G")) {
     // v4
@@ -45,4 +47,14 @@ export function loadGoogleAnalytics(googleAnalyticsId) {
   }
 }
 
-loadGoogleAnalytics();
+/**
+ * @param {string} apiEndpoint
+ */
+export function loadPlausible(apiEndpoint) {
+  if (!apiEndpoint) return;
+
+  const plausible = Plausible({
+    apiHost: apiEndpoint
+  });
+  plausible.enableAutoPageviews();
+}

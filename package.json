@@ -93,6 +93,7 @@
     "object-path": "^0.11.8",
     "p-all": "^4.0.0",
     "patch-package": "^6.4.7",
+    "plausible-tracker": "^0.3.8",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",
     "prismjs": "^1.28.0",
