@@ -11,6 +11,7 @@ import { prismjsPlugin as prismjs } from "vite-plugin-prismjs";
 import minifyHtml from "vite-plugin-html-minifier-terser";
 import svgo from "./vite/svgo";
 import publicPath from "vite-plugin-public-path";
+import { viteStaticCopy as copyStatic } from "vite-plugin-static-copy";
 
 // Node polyfill
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
@@ -138,6 +139,20 @@ export default defineConfig({
     }),
     prismjs({
       languages: fs.readFileSync(".prism-languages", "utf-8").trim().split("\n")
+    }),
+    copyStatic({
+      targets: [
+        ...(() => {
+          const sourceDir = path.resolve(
+            require.resolve("mathjax-full/package.json"),
+            "../es5/output/chtml/fonts/woff-v2"
+          );
+          return fs.readdirSync(sourceDir).map(filename => ({
+            src: path.join(sourceDir, filename),
+            dest: "assets/mathjax-fonts"
+          }));
+        })()
+      ]
     })
   ],
   base: process.env.NODE_ENV === "production" ? "/__vite_base__/" : "/",
