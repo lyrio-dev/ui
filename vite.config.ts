@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin } from "vite";
+import { defineConfig, splitVendorChunkPlugin, Plugin } from "vite";
 import fs from "fs";
 import path from "path";
 
@@ -12,6 +12,7 @@ import minifyHtml from "vite-plugin-html-minifier-terser";
 import svgo from "./vite/svgo";
 import publicPath from "vite-plugin-public-path";
 import { viteStaticCopy as copyStatic } from "vite-plugin-static-copy";
+import { default as purgeCss } from "vite-plugin-purgecss";
 
 // Node polyfill
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
@@ -154,7 +155,10 @@ export default defineConfig({
           }));
         })()
       ]
-    })
+    }),
+    purgeCss({
+      blocklist: [/data-emoji/]
+    }) as Plugin
   ],
   base: process.env.NODE_ENV === "production" ? "/__vite_base__/" : "/",
   resolve: {
