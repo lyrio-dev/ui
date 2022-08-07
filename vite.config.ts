@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, splitVendorChunkPlugin } from "vite";
 import fs from "fs";
 import path from "path";
 
@@ -55,6 +55,7 @@ export default defineConfig({
     port: 3000
   },
   plugins: [
+    splitVendorChunkPlugin(),
     react({
       babel: {
         plugins: [["@babel/plugin-proposal-decorators", { legacy: true }], ["@babel/plugin-proposal-class-properties"]]
