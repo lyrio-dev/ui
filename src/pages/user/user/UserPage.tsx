@@ -253,7 +253,14 @@ let UserPage: React.FC<UserPageProps> = props => {
             <div className={style.iconWrapper}>
               <Icon name="linkify" />
             </div>
-            <a href={props.information.url} title={props.information.url} target="_blank" rel="noreferrer noopener">
+            <a
+              href={
+                /^https?:\/\//i.test(props.information.url) ? props.information.url : "http://" + props.information.url
+              }
+              title={props.information.url}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
               {props.information.url}
             </a>
           </List.Item>
