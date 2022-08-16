@@ -5,7 +5,7 @@ const TEX_PACKAGES = ["ams", "boldsymbol", "colorv2", "html", "noundefined", "ph
 async function loadMathJax() {
   window.MathJax = {
     loader: {
-      load: ["input/tex-base", ...TEX_PACKAGES.map(packageName => `[tex]/${packageName}`), "output/svg", "ui/safe"]
+      load: ["input/tex-base", ...TEX_PACKAGES.map(packageName => `[tex]/${packageName}`), "output/chtml", "ui/safe"]
     },
     tex: {
       packages: ["base", ...TEX_PACKAGES]
@@ -23,7 +23,7 @@ await loadMathJax();
 export function renderMath(math: string, display: boolean) {
   try {
     window.MathJax.texReset();
-    const wrapper = window.MathJax.tex2svg(math, {
+    const wrapper = window.MathJax.tex2chtml(math, {
       display
     }) as HTMLElement;
 
