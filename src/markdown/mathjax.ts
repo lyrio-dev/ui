@@ -1,38 +1,29 @@
-import { mathjax } from "mathjax-full/js/mathjax";
-import { TeX } from "mathjax-full/js/input/tex";
-import { CHTML } from "mathjax-full/js/output/chtml";
-import { browserAdaptor } from "mathjax-full/js/adaptors/browserAdaptor";
-import { HTMLHandler } from "mathjax-full/js/handlers/html/HTMLHandler";
-import { SafeHandler } from "mathjax-full/js/ui/safe/SafeHandler";
+import getScript from "getscript-promise";
 
-// Load TeX packages
-import "mathjax-full/js/input/tex/ams/AmsConfiguration.js";
-import "mathjax-full/js/input/tex/boldsymbol/BoldsymbolConfiguration.js";
-import "mathjax-full/js/input/tex/colorv2/ColorV2Configuration.js";
-import "mathjax-full/js/input/tex/html/HtmlConfiguration.js";
-import "mathjax-full/js/input/tex/noundefined/NoUndefinedConfiguration.js";
-import "mathjax-full/js/input/tex/physics/PhysicsConfiguration.js";
+const TEX_PACKAGES = ["ams", "boldsymbol", "colorv2", "html", "noundefined", "physics"];
 
-mathjax.handlers.register(SafeHandler(new HTMLHandler(browserAdaptor())));
-
-const mathDocument = mathjax.document(document, {
-  InputJax: new TeX({
-    packages: {
-      "[+]": ["ams", "boldsymbol", "colorv2", "html", "noundefined", "physics"]
+async function loadMathJax() {
+  window.MathJax = {
+    loader: {
+      load: ["input/tex-base", ...TEX_PACKAGES.map(packageName => `[tex]/${packageName}`), "output/svg", "ui/safe"]
+    },
+    tex: {
+      packages: ["base", ...TEX_PACKAGES]
+    },
+    chtml: {
+      adaptiveCSS: false
     }
-  }),
-  OutputJax: new CHTML({
-    adaptiveCSS: false,
-    fontURL: window.publicPath + "assets/mathjax-fonts"
-  })
-});
-
-// Add CSS styles
-mathDocument.updateDocument();
+  };
+  await getScript(`${window.cdnjs}/mathjax/${EXTERNAL_PACKAGE_VERSION["mathjax-full"]}/es5/startup.js`);
+  await window.MathJax.startup.promise;
+  await window.MathJax.startup.document.updateDocument();
+}
+await loadMathJax();
 
 export function renderMath(math: string, display: boolean) {
   try {
-    const wrapper = mathDocument.convert(math, {
+    window.MathJax.texReset();
+    const wrapper = window.MathJax.tex2svg(math, {
       display
     }) as HTMLElement;
 

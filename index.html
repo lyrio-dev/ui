@@ -112,14 +112,14 @@ function safeStringify(object) {
       }
       window.ghAvatarCdn = ghAvatarCdn;
 
-      // Specify the Twemoji CDN in the same way.
-      var twemojiCdn;
+      // Specify the CDNJS mirror in the same way.
+      var cdnjs;
       try {
-        twemojiCdn = __twemoji__;
+        cdnjs = __cdnjs__;
       } catch (e) {
-        twemojiCdn = null;
+        cdnjs = "https://cdnjs.cloudflare.com/ajax/libs";
       }
-      window.twemojiCdn = twemojiCdn;
+      window.cdnjs = cdnjs;
 
       function addLinkTag(rel, href) {
         var link = document.createElement("link");
@@ -129,6 +129,19 @@ function safeStringify(object) {
       }
 
       addLinkTag("icon", faviconUrl);
+
+      <%
+      for (const [packageName, , cssFiles] of externalPackages) {
+        for (const css of (Array.isArray(cssFiles) ? cssFiles : [cssFiles]).filter(f => f)) {
+      %>
+          addLinkTag(
+            "stylesheet",
+            window.cdnjs + <%- safeStringify(`/${packageName}/${externalPackageVersions[packageName]}/${css}`) %>
+          );
+      <%
+        }
+      }
+      %>
 
       // __add_link_tags__
     })();
@@ -378,6 +391,20 @@ function safeStringify(object) {
           "data-slave": apiHostCorsPath + "xdomain.html"
         }, null);
       }
+
+      <%
+      for (const [packageName, scripts] of externalPackages) {
+        for (const scriptName of (Array.isArray(scripts) ? scripts : [scripts]).filter(f => f)) {
+      %>
+          addScriptTag({
+            src: window.cdnjs + <%-
+              safeStringify(`/${packageName}/${externalPackageVersions[packageName]}/${scriptName}`)
+            %>
+          });
+      <%
+        }
+      }
+      %>
 
       // __add_script_tags__
     })();

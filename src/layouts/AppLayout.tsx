@@ -4,8 +4,7 @@ import { useLoadingRoute } from "react-navi";
 import { Menu, Button, Dropdown, Container, Icon, Segment, Sidebar, SemanticICONS } from "semantic-ui-react";
 
 import "semantic-ui-css/semantic.css";
-import "noty/lib/noty.css";
-import "noty/lib/themes/semanticui.css";
+import "noty/src/themes/semanticui.scss";
 
 import style from "./AppLayout.module.less";
 

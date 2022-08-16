@@ -1,67 +1,11 @@
 import React, { useRef } from "react";
 import { observer } from "mobx-react";
-import ReactMonacoEditor from "react-monaco-editor";
+import ReactMonacoEditor from "@monaco-editor/react";
 import { registerRulesForLanguage } from "monaco-ace-tokenizer";
 import ResizeSensor from "css-element-queries/src/ResizeSensor";
 import path from "path";
 
-import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-
-if (!import.meta.env.LEGACY) {
-  // Vite's legacy build doesn't support WebWorker, since all workers are emitted as ES modules
-  self["MonacoEnvironment"] = {
-    getWorker() {
-      const OriginalWorkerConstructor = window.Worker;
-      const InterceptedWorkerConstructor = function () {
-        const args = Array.from(arguments);
-        if (new URL(args[0], location.href).origin !== location.origin) {
-          args[0] = `data:text/javascript,import${JSON.stringify(args[0])}`;
-        }
-
-        // @ts-ignore
-        return new OriginalWorkerConstructor(...args);
-      } as any;
-
-      window.Worker = InterceptedWorkerConstructor;
-      const editorWorker = new EditorWorker();
-      window.Worker = OriginalWorkerConstructor;
-
-      return editorWorker;
-    }
-  };
-}
-
-import "monaco-editor/esm/vs/basic-languages/yaml/yaml.js";
-import "monaco-editor/esm/vs/basic-languages/cpp/cpp.js";
-import "monaco-editor/esm/vs/basic-languages/java/java.js";
-import "monaco-editor/esm/vs/basic-languages/kotlin/kotlin.js";
-import "monaco-editor/esm/vs/basic-languages/pascal/pascal.js";
-import "monaco-editor/esm/vs/basic-languages/python/python.js";
-import "monaco-editor/esm/vs/basic-languages/rust/rust.js";
-import "monaco-editor/esm/vs/basic-languages/go/go.js";
-import "monaco-editor/esm/vs/basic-languages/csharp/csharp.js";
-import "monaco-editor/esm/vs/basic-languages/fsharp/fsharp.js";
-
-import "monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching.js";
-import "monaco-editor/esm/vs/editor/contrib/caretOperations/browser/caretOperations.js";
-import "monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard.js";
-import "monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu.js";
-import "monaco-editor/esm/vs/editor/browser/coreCommands.js";
-import "monaco-editor/esm/vs/editor/contrib/cursorUndo/browser/cursorUndo.js";
-import "monaco-editor/esm/vs/editor/contrib/find/browser/findController.js";
-import "monaco-editor/esm/vs/editor/contrib/folding/browser/folding.js";
-import "monaco-editor/esm/vs/editor/contrib/fontZoom/browser/fontZoom.js";
-import "monaco-editor/esm/vs/editor/standalone/browser/quickAccess/standaloneGotoLineQuickAccess.js";
-import "monaco-editor/esm/vs/editor/standalone/browser/iPadShowKeyboard/iPadShowKeyboard.js";
-import "monaco-editor/esm/vs/editor/contrib/inPlaceReplace/browser/inPlaceReplace.js";
-import "monaco-editor/esm/vs/editor/contrib/indentation/browser/indentation.js";
-import "monaco-editor/esm/vs/editor/contrib/linesOperations/browser/linesOperations.js";
-import "monaco-editor/esm/vs/editor/contrib/links/browser/links.js";
-import "monaco-editor/esm/vs/editor/contrib/multicursor/browser/multicursor.js";
-import "monaco-editor/esm/vs/editor/contrib/smartSelect/browser/smartSelect.js";
-import "monaco-editor/esm/vs/editor/contrib/unusualLineTerminators/browser/unusualLineTerminators.js";
-
-import * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as Monaco from "monaco-editor";
 
 import style from "./CodeEditor.module.less";
 
@@ -133,7 +77,7 @@ let CodeEditor: React.FC<CodeEditorProps> = props => {
           ...generateCodeFontEditorOptions(appState.locale),
           ...props.options
         }}
-        editorDidMount={editorDidMount}
+        onMount={editorDidMount}
         onChange={props.onChange}
       />
     </div>

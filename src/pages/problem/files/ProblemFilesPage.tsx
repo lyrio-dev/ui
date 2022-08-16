@@ -15,7 +15,7 @@ import {
   Ref
 } from "semantic-ui-react";
 import { v4 as uuid } from "uuid";
-import lodash from "lodash";
+import isEqual from "lodash/isEqual";
 import { WritableStream } from "web-streams-polyfill/ponyfill/es6";
 import streamsaver from "streamsaver";
 import pAll from "p-all";
@@ -401,7 +401,7 @@ let FileTable: React.FC<FileTableProps> = props => {
       if (fileUuids.includes(fileUuid)) newSelectedFiles.add(fileUuid);
     }
 
-    if (!lodash.isEqual(selectedFiles, newSelectedFiles)) setSelectedFiles(newSelectedFiles);
+    if (!isEqual(selectedFiles, newSelectedFiles)) setSelectedFiles(newSelectedFiles);
   }, [props.files]);
 
   function onSelectAll(checked: boolean) {

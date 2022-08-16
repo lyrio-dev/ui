@@ -9,7 +9,7 @@ interface Window {
   appLogo: string;
   gravatarCdn: string;
   ghAvatarCdn: string;
-  twemojiCdn: string;
+  cdnjs: string;
   appVersion: {
     hash?: string;
     date?: string;
@@ -21,4 +21,12 @@ interface Window {
   sessionInfo: ApiTypes.GetSessionInfoResponseDto;
   getSessionInfoCallback: (sessionInfo: ApiTypes.GetSessionInfoResponseDto) => void;
   refreshSession: (tokan: string) => void;
+
+  // Monaco Editor's window.require
+  require: any;
+
+  // MathJax configuration
+  MathJax: any;
 }
+
+declare const EXTERNAL_PACKAGE_VERSION: readonly Record<string, string>;

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ImageProps, Image } from "semantic-ui-react";
-import lodash from "lodash";
+import isEqual from "lodash/isEqual";
 
 import defaultAvatar from "@/assets/default-avatar.svg";
 import { appState } from "@/appState";
@@ -75,4 +75,4 @@ const UserAvatar: React.FC<UserAvatarProps> = props => {
   );
 };
 
-export default React.memo(UserAvatar, lodash.isEqual);
+export default React.memo(UserAvatar, isEqual);

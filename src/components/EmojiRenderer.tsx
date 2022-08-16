@@ -10,11 +10,11 @@ interface EmojiRendererProps {
 
 export const getTwemojiOptions = (inline: boolean) =>
   ({
-    base: window.twemojiCdn || "https://cdn.jsdelivr.net/npm/@discordapp/twemoji@13.0.1/dist/",
+    base: `${window.cdnjs}/twemoji/${EXTERNAL_PACKAGE_VERSION["twemoji"]}/`,
     size: "svg",
     ext: ".svg",
     className: inline ? style.emoji : "",
-    callback: (icon, options: twemoji.ParseObject, variant) => {
+    callback: (icon, options: TwemojiOptions, variant) => {
       if (icon === "1f1f9-1f1fc") icon = "1f1e8-1f1f3";
 
       switch (icon) {
@@ -29,7 +29,7 @@ export const getTwemojiOptions = (inline: boolean) =>
 
       return `${options.base}${options.size}/${icon}${options.ext}`;
     }
-  } as Partial<twemoji.ParseObject>);
+  } as Partial<TwemojiOptions>);
 
 export const EmojiRenderer: React.FC<EmojiRendererProps> = props => {
   const refElement = useRef<HTMLElement>();

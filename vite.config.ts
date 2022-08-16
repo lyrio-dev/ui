@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin, Plugin } from "vite";
+import { defineConfig } from "vite";
 import fs from "fs";
 import path from "path";
 
@@ -11,20 +11,22 @@ import { prismjsPlugin as prismjs } from "vite-plugin-prismjs";
 import minifyHtml from "vite-plugin-html-minifier-terser";
 import svgo from "./vite/svgo";
 import publicPath from "vite-plugin-public-path";
-import { viteStaticCopy as copyStatic } from "vite-plugin-static-copy";
-import { default as purgeCss } from "vite-plugin-purgecss";
+import { viteExternalsPlugin as externals } from "vite-plugin-externals";
+import { visualizer } from "rollup-plugin-visualizer";
 
 // Node polyfill
-import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
 import rollupNodePolyFill from "rollup-plugin-node-polyfills";
 
 // Others
 import getGitCommitInfo from "git-commit-info";
 import { Options as HtmlMinifierOptions } from "html-minifier-terser";
-import { browsersWithSupportForFeatures } from "browserslist-generator";
+import { browsersWithSupportForFeatures, normalizeBrowserslist } from "browserslist-generator";
+import { resolveToEsbuildTarget } from "esbuild-plugin-browserslist";
 
 import tsconfig from "./tsconfig.json";
+
+const isDev = process.env.NODE_ENV !== "production";
 
 const tsconfigPathAliases = Object.fromEntries(
   Object.entries(tsconfig.compilerOptions.paths).map(([key, values]) => {
@@ -45,18 +47,55 @@ const tsconfigPathAliases = Object.fromEntries(
   })
 );
 
+const modernTargets = browsersWithSupportForFeatures(
+  "es6-module-dynamic-import",
+  "javascript.statements.import_meta",
+  "javascript.operators.await.top_level"
+);
+
 const enabledNodePolyfills = {
   util: "rollup-plugin-node-polyfills/polyfills/util",
   path: "rollup-plugin-node-polyfills/polyfills/path",
   buffer: "rollup-plugin-node-polyfills/polyfills/buffer-es6"
 };
 
+// These packages are simply loaded in HTML with the JS path
+const baseExternalPackages: Record<
+  string,
+  { globalVariableName: string; devScript: string | string[]; prodScript?: string | string[]; css?: string | string[] }
+> = {
+  react: {
+    globalVariableName: "React",
+    devScript: "umd/react.development.js",
+    prodScript: "umd/react.production.min.js"
+  },
+  "react-dom": {
+    globalVariableName: "ReactDOM",
+    devScript: "umd/react-dom.development.js",
+    prodScript: "umd/react-dom.production.min.js"
+  },
+  mobx: { globalVariableName: "mobx", devScript: "mobx.umd.development.js", prodScript: "mobx.umd.production.min.js" },
+  axios: { globalVariableName: "axios", devScript: "axios.min.js" },
+  noty: { globalVariableName: "Noty", devScript: "noty.min.js", css: "noty.min.css" },
+  "semantic-ui-react": { globalVariableName: "semanticUIReact", devScript: "semantic-ui-react.min.js" }
+};
+
+const externalPackageVersions = Object.fromEntries(
+  [
+    // These packages are loaded separatedly in JS code when needed
+    "monaco-editor",
+    "mathjax-full",
+    "twemoji",
+
+    ...Object.keys(baseExternalPackages)
+  ].map(packageName => [packageName, require(`${packageName}/package.json`).version])
+);
+
 export default defineConfig({
   server: {
     port: 3000
   },
   plugins: [
-    splitVendorChunkPlugin(),
     react({
       babel: {
         plugins: [["@babel/plugin-proposal-decorators", { legacy: true }], ["@babel/plugin-proposal-class-properties"]]
@@ -64,7 +103,13 @@ export default defineConfig({
     }),
     compileTime(),
     ejs({
-      gitCommitInfo: getGitCommitInfo()
+      gitCommitInfo: getGitCommitInfo(),
+      externalPackages: Object.entries(baseExternalPackages).map(([packageName, { devScript, prodScript, css }]) => [
+        packageName,
+        !isDev && prodScript ? prodScript : devScript,
+        css
+      ]),
+      externalPackageVersions
     }),
     svgo({
       plugins: [
@@ -92,12 +137,8 @@ export default defineConfig({
         // Windows XP
         "Firefox 52"
       ],
-      modernTargets: browsersWithSupportForFeatures(
-        "es6-module-dynamic-import",
-        "javascript.statements.import_meta",
-        "javascript.builtins.Object.fromEntries"
-      ),
-      modernFeatureTestExtraCode: "Object.fromEntries([]);"
+      modernTargets,
+      modernFeatureTestExtraCode: "await 0"
     }),
     publicPath({
       publicPathExpression: "window.publicPath",
@@ -142,25 +183,18 @@ export default defineConfig({
     prismjs({
       languages: fs.readFileSync(".prism-languages", "utf-8").trim().split("\n")
     }),
-    copyStatic({
-      targets: [
-        ...(() => {
-          const sourceDir = path.resolve(
-            require.resolve("mathjax-full/package.json"),
-            "../es5/output/chtml/fonts/woff-v2"
-          );
-          return fs.readdirSync(sourceDir).map(filename => ({
-            src: path.join(sourceDir, filename),
-            dest: "assets/mathjax-fonts"
-          }));
-        })()
-      ]
+    externals({
+      "monaco-editor": "Monaco",
+      ...Object.fromEntries(
+        Object.entries(baseExternalPackages).map(([packageName, { globalVariableName }]) => [
+          packageName,
+          globalVariableName
+        ])
+      )
     }),
-    purgeCss({
-      blocklist: [/data-emoji/]
-    }) as Plugin
+    visualizer()
   ],
-  base: process.env.NODE_ENV === "production" ? "/__vite_base__/" : "/",
+  base: isDev ? "/" : "/__vite_base__/",
   resolve: {
     alias: {
       ...enabledNodePolyfills,
@@ -169,18 +203,31 @@ export default defineConfig({
   },
   build: {
     minify: "terser",
+    target: resolveToEsbuildTarget(normalizeBrowserslist(modernTargets), { printUnknownTargets: false }),
     rollupOptions: {
       plugins: [rollupNodePolyFill()]
     }
   },
+  esbuild: {
+    supported: {
+      "top-level-await": true
+    }
+  },
+  define: {
+    EXTERNAL_PACKAGE_VERSION: JSON.stringify(externalPackageVersions)
+  },
   optimizeDeps: {
+    exclude: ["mobx-utils/mobx-utils.module.js"],
     esbuildOptions: {
       // Node.js global to browser globalThis
       define: {
-        global: "globalThis"
+        global: "globalThis",
+        process: '{ "env": {} }'
       },
-      // Enable esbuild polyfill plugins
-      plugins: [NodeGlobalsPolyfillPlugin(), NodeModulesPolyfillPlugin()]
+      plugins: [
+        // Enable esbuild polyfill plugins
+        NodeModulesPolyfillPlugin()
+      ]
     }
   }
 });
