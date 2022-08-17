@@ -88,10 +88,14 @@ async function render(
 
   // Render highlights
   if (highlightPlaceholders.length > 0) {
-    const { highlight } = moduleCodeHighlighter || (moduleCodeHighlighter = await import("@/utils/CodeHighlighter"));
+    const { loadLanguages, highlightSync } =
+      moduleCodeHighlighter || (moduleCodeHighlighter = await import("@/utils/CodeHighlighter"));
+    const loadLanguagesPromise = loadLanguages(highlightPlaceholders.map(item => item.language));
+    if (loadLanguagesPromise) await loadLanguagesPromise;
+
     highlightPlaceholders.forEach(item => {
       const element = findPlaceholderElement(wrapper, item.id);
-      element.outerHTML = highlight(item.code, item.language);
+      element.outerHTML = highlightSync(item.code, item.language);
     });
   }
 

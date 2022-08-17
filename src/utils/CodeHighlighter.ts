@@ -1,4 +1,18 @@
-import Prism from "prismjs";
+import getScript from "getscript-promise";
+
+window["Prism"] = {
+  manual: true
+} as any;
+await Promise.all([
+  getScript(`${window.cdnjs}/prism/${EXTERNAL_PACKAGE_VERSION["prismjs"]}/components/prism-core.min.js`),
+  getScript(`${window.cdnjs}/prism/${EXTERNAL_PACKAGE_VERSION["prismjs"]}/plugins/autoloader/prism-autoloader.min.js`)
+]);
+
+const Prism = window["Prism"] as unknown as typeof import("prismjs");
+
+function normalizeLanguageName(language: string) {
+  return language.trim().toLowerCase();
+}
 
 function normalizeCode(code: string) {
   return code.split("\r").join("");
@@ -9,24 +23,60 @@ function escapeHtml(text: string) {
   return text;
 }
 
-export function highlight(code: string, language: string) {
+// See src/assets/prism-tomorrow.url.css
+function wrapHighlightResult(html: string) {
+  return `<div class="highlighted">${html}</div>`;
+}
+
+const languageAlias: Record<string, string> = {};
+export function loadLanguages(languages: string[]) {
+  languages = languages.map(normalizeLanguageName);
+
+  // Filter-out already-loaded languages
+  languages = languages.filter(l => !(l in languageAlias));
+
+  if (!languages.length) return;
+
+  return Promise.all(
+    languages.map(
+      language =>
+        new Promise<void>(resolve =>
+          Prism.plugins.autoloader.loadLanguages(
+            language,
+            ([resolvedLanguage]: string[]) => {
+              languageAlias[language] = resolvedLanguage;
+              resolve();
+            },
+            () => {
+              languageAlias[language] = null;
+              resolve();
+            }
+          )
+        )
+    )
+  );
+}
+
+/**
+ * Please ensure the `language` has been loaded.
+ */
+export function highlightSync(code: string, language: string) {
   code = normalizeCode(code);
+  const resolvedLanguage = languageAlias[normalizeLanguageName(language)];
 
-  function doHighlight() {
-    if (language) {
-      try {
-        const name = language.trim().toLowerCase();
-        if (name in Prism.languages) {
-          return Prism.highlight(code, Prism.languages[name], name);
-        }
-      } catch (e) {
-        console.error(`Failed to highlight, language = ${language}`, e);
-      }
+  if (resolvedLanguage) {
+    try {
+      return wrapHighlightResult(Prism.highlight(code, Prism.languages[resolvedLanguage], resolvedLanguage));
+    } catch (e) {
+      console.error(`Failed to highlight, language = ${language}`, e);
     }
-
-    return escapeHtml(code).split("\n").join("<br>");
+  } else {
+    return wrapHighlightResult(escapeHtml(code).split("\n").join("<br>"));
   }
+}
 
-  // See src/assets/prism-tomorrow.url.css
-  return `<div class="highlighted">${doHighlight()}</div>`;
+export async function highlight(code: string, language: string, callback: (result: string) => void) {
+  const loadLanguagePromise = loadLanguages([language]);
+  if (loadLanguagePromise) await loadLanguagePromise;
+  callback(highlightSync(code, language));
 }

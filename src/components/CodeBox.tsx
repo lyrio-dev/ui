@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Segment, SegmentProps } from "semantic-ui-react";
+import { Placeholder, Segment, SegmentProps } from "semantic-ui-react";
 import AnsiUp from "ansi_up";
 
 import style from "./CodeBox.module.less";
-import * as CodeHighlighter from "@/utils/CodeHighlighter";
-import { useLocalizer } from "@/utils/hooks";
+import { useLocalizer, useMaybeAsyncFunctionResult } from "@/utils/hooks";
 import { EmojiRenderer } from "./EmojiRenderer";
 
 export type OmittableString =
@@ -102,24 +101,43 @@ interface HighlightedCodeBoxProps {
   fontSizeOverride?: number;
   lineHeightOverride?: number;
   fontLigaturesOverride?: boolean;
+  placeholderLines?: number;
 }
 
+let CodeHighlighter: typeof import("@/utils/CodeHighlighter");
+
 export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCodeBoxProps>((props, ref) => {
-  const html = CodeHighlighter.highlight(props.code, props.language);
+  const [html, pending] = useMaybeAsyncFunctionResult(
+    async (code: string, language: string, callback: (result: string) => void) => {
+      CodeHighlighter ||= await import("@/utils/CodeHighlighter");
+      CodeHighlighter.highlight(code, language, callback);
+    },
+    [props.code, props.language]
+  );
+
   return (
     <CodeBox
       className={props.className}
       segmentClassName={props.segmentClassName}
       segment={props.segment}
       title={props.title}
-      html={html}
+      html={pending ? "" : html}
+      content={
+        pending ? (
+          <Placeholder>
+            {[...Array(props.placeholderLines || 4).keys()].map(i => (
+              <Placeholder.Line key={i} />
+            ))}
+          </Placeholder>
+        ) : null
+      }
       fontFaceOverride={props.fontFaceOverride}
       fontSizeOverride={props.fontSizeOverride}
       lineHeightOverride={props.lineHeightOverride}
       fontLigaturesOverride={props.fontLigaturesOverride}
       ref={ref}
     >
-      {props.children}
+      {!pending && props.children}
     </CodeBox>
   );
 });

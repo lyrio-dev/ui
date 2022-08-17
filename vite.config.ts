@@ -86,6 +86,7 @@ const externalPackageVersions = Object.fromEntries(
     "monaco-editor",
     "mathjax-full",
     "twemoji",
+    "prismjs",
 
     ...Object.keys(baseExternalPackages)
   ].map(packageName => [packageName, require(`${packageName}/package.json`).version])
