@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, Plugin } from "vite";
 import fs from "fs";
 import path from "path";
 
@@ -11,6 +11,7 @@ import { prismjsPlugin as prismjs } from "vite-plugin-prismjs";
 import minifyHtml from "vite-plugin-html-minifier-terser";
 import svgo from "./vite/svgo";
 import publicPath from "vite-plugin-public-path";
+import { default as purgeCss } from "vite-plugin-purgecss";
 import { viteExternalsPlugin as externals } from "vite-plugin-externals";
 import { visualizer } from "rollup-plugin-visualizer";
 
@@ -193,6 +194,9 @@ export default defineConfig({
         ])
       )
     }),
+    purgeCss({
+      blocklist: [/data-emoji/]
+    }) as Plugin,
     visualizer()
   ],
   base: isDev ? "/" : "/__vite_base__/",
