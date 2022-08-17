@@ -1,14 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
-import MarkdownIt from "markdown-it";
+import React, { useEffect, useState } from "react";
+import { Placeholder } from "semantic-ui-react";
+import type MarkdownIt from "markdown-it";
 import twemoji from "twemoji";
 
 import style from "./MarkdownContent.module.less";
 
-import { renderMarkdown } from "./markdown";
-import { renderMath } from "./mathjax";
 import { sanitize } from "./sanitize";
-import { useNavigationChecked } from "@/utils/hooks";
-import { highlight } from "@/utils/CodeHighlighter";
+import { useNavigationChecked, useMaybeAsyncFunctionResult } from "@/utils/hooks";
 import { getTwemojiOptions } from "@/components/EmojiRenderer";
 import { codeBoxStyle } from "@/components/CodeBox";
 
@@ -30,6 +28,7 @@ export interface MarkdownContentProps {
   patcher?: MarkdownContentPatcher;
   dontUseContentFont?: boolean;
   noOverflowCutFix?: boolean;
+  placeholderLines?: number;
 }
 
 // Patch rendered-markdown's styles for semantic-ui
@@ -66,69 +65,95 @@ function parseUrlIfSameOrigin(href: string) {
   return null;
 }
 
-const MarkdownContent: React.FC<MarkdownContentProps> = props => {
-  const html = useMemo(() => {
-    const [markdownResult, highlightPlaceholders, mathPlaceholders, findPlaceholderElement] = renderMarkdown(
-      props.content,
-      props.patcher?.onPatchRenderer
-    );
+// Cache "await import()" results so we don't need to enter asynchronous flow when need them the next time
+let moduleMarkdown: typeof import("./markdown");
+let moduleCodeHighlighter: typeof import("@/utils/CodeHighlighter");
+let moduleMathJax: typeof import("./mathjax");
 
-    const wrapper = document.createElement("div");
-    wrapper.innerHTML = props.noSanitize ? markdownResult : sanitize(markdownResult, props.patcher?.onXssFileterAttr);
+async function render(
+  content: string,
+  noSanitize: boolean,
+  patcher: MarkdownContentPatcher,
+  callback: (result: string) => void
+) {
+  const { renderMarkdown } = moduleMarkdown || (moduleMarkdown = await import("./markdown"));
 
-    // Render highlights
+  const [markdownResult, highlightPlaceholders, mathPlaceholders, findPlaceholderElement] = renderMarkdown(
+    content,
+    patcher?.onPatchRenderer
+  );
+
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = noSanitize ? markdownResult : sanitize(markdownResult, patcher?.onXssFileterAttr);
+
+  // Render highlights
+  if (highlightPlaceholders.length > 0) {
+    const { highlight } = moduleCodeHighlighter || (moduleCodeHighlighter = await import("@/utils/CodeHighlighter"));
     highlightPlaceholders.forEach(item => {
       const element = findPlaceholderElement(wrapper, item.id);
       element.outerHTML = highlight(item.code, item.language);
     });
+  }
 
-    // Render maths
+  // Render maths
+  if (mathPlaceholders.length > 0) {
+    const { renderMath } = moduleMathJax || (moduleMathJax = await import("./mathjax"));
     mathPlaceholders.forEach(item => {
       const element = findPlaceholderElement(wrapper, item.id);
       element.parentNode.replaceChild(renderMath(item.code, item.display), element);
     });
+  }
 
-    // Render emojis
-    twemoji.parse(wrapper, getTwemojiOptions(true));
+  // Render emojis
+  twemoji.parse(wrapper, getTwemojiOptions(true));
 
-    // Patch <a> tags for security reason
-    Array.from(wrapper.getElementsByTagName("a")).forEach(a => {
-      a.relList.add("noreferrer", "noreferrer");
-      if (!parseUrlIfSameOrigin(a.href)) a.target = "_blank";
-    });
+  // Patch <a> tags for security reason
+  Array.from(wrapper.getElementsByTagName("a")).forEach(a => {
+    a.relList.add("noreferrer", "noreferrer");
+    if (!parseUrlIfSameOrigin(a.href)) a.target = "_blank";
+  });
 
-    Array.from(wrapper.getElementsByClassName("task-list-item")).forEach(li => {
-      if (li.tagName !== "LI") return;
+  Array.from(wrapper.getElementsByClassName("task-list-item")).forEach(li => {
+    if (li.tagName !== "LI") return;
 
-      const input = li.firstElementChild as HTMLInputElement;
-      if (
-        !input ||
-        input.tagName !== "INPUT" ||
-        input.type.toLowerCase() !== "checkbox" ||
-        input.className !== "task-list-item-checkbox"
-      )
-        return;
+    const input = li.firstElementChild as HTMLInputElement;
+    if (
+      !input ||
+      input.tagName !== "INPUT" ||
+      input.type.toLowerCase() !== "checkbox" ||
+      input.className !== "task-list-item-checkbox"
+    )
+      return;
 
-      const checked = input.checked;
+    const checked = input.checked;
 
-      const semanticCheckbox = document.createElement("div");
-      semanticCheckbox.className = "ui checkbox " + style.taskListCheckbox + (checked ? " checked" : "");
-      input.className = "hidden";
-      semanticCheckbox.appendChild(input);
+    const semanticCheckbox = document.createElement("div");
+    semanticCheckbox.className = "ui checkbox " + style.taskListCheckbox + (checked ? " checked" : "");
+    input.className = "hidden";
+    semanticCheckbox.appendChild(input);
 
-      const div = document.createElement("div");
-      if (div.append) div.append(...li.childNodes);
-      else while (li.firstChild) div.appendChild(li.firstChild);
-      semanticCheckbox.appendChild(document.createElement("label"));
-      semanticCheckbox.appendChild(div);
+    const div = document.createElement("div");
+    if (div.append) div.append(...li.childNodes);
+    else while (li.firstChild) div.appendChild(li.firstChild);
+    semanticCheckbox.appendChild(document.createElement("label"));
+    semanticCheckbox.appendChild(div);
 
-      li.appendChild(semanticCheckbox);
-    });
+    li.appendChild(semanticCheckbox);
+  });
 
-    patchStyles(wrapper);
+  patchStyles(wrapper);
 
-    return wrapper.innerHTML;
-  }, [props.content, props.noSanitize, props.patcher]);
+  callback(wrapper.innerHTML);
+}
+
+// Move all async-rendering-control related code to a helper hook
+
+const MarkdownContent: React.FC<MarkdownContentProps> = props => {
+  const [html, pending] = useMaybeAsyncFunctionResult(
+    render,
+    [props.content, props.noSanitize, props.patcher],
+    [props.content]
+  );
 
   const navigation = useNavigationChecked();
   const [wrapperElement, setWrapperElement] = useState<HTMLDivElement>();
@@ -162,7 +187,13 @@ const MarkdownContent: React.FC<MarkdownContentProps> = props => {
     return () => cleanCallbacks.forEach(fn => fn && fn());
   }, [props.patcher, wrapperElement]);
 
-  return (
+  return pending ? (
+    <Placeholder>
+      {[...Array(props.placeholderLines || 4).keys()].map(i => (
+        <Placeholder.Line key={i} />
+      ))}
+    </Placeholder>
+  ) : (
     <div
       className={
         style.markdownContent +

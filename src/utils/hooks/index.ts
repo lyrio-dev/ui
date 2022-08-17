@@ -7,6 +7,7 @@ export * from "./useSocket";
 export * from "./useBoundingRect";
 export * from "./useScreenWidthWithin";
 export * from "./useAsyncCallbackPending";
+export * from "./useMaybeAsyncFunctionResult";
 export * from "./useFocusWithin";
 export * from "./useRecaptcha";
 export * from "./useNavigation";
