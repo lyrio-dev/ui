@@ -1,12 +1,12 @@
-diff --git a/node_modules/fomantic-ui-css/semantic.css b/node_modules/fomantic-ui-css/semantic.css
-index b902300..dc4b903 100644
---- a/node_modules/fomantic-ui-css/semantic.css
-+++ b/node_modules/fomantic-ui-css/semantic.css
-@@ -8,7 +8,6 @@
-  * http://opensource.org/licenses/MIT
-  *
-  */
+diff --git a/node_modules/fomantic-ui-css/components/site.css b/node_modules/fomantic-ui-css/components/site.css
+index b9e10c4..6ff4f19 100644
+--- a/node_modules/fomantic-ui-css/components/site.css
++++ b/node_modules/fomantic-ui-css/components/site.css
+@@ -13,7 +13,6 @@
+              Page
+ *******************************/
+ 
 -@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400%3B0,700%3B1,400%3B1,700&subset=latin&display=swap');
- /*!
-  * # Fomantic-UI 2.8.8 - Reset
-  * http://github.com/fomantic/Fomantic-UI/
+ html,
+ body {
+   height: 100%;

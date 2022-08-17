@@ -60,10 +60,53 @@ const enabledNodePolyfills = {
   buffer: "rollup-plugin-node-polyfills/polyfills/buffer-es6"
 };
 
+const semanticUiCssComponents = [
+  "accordion",
+  "breadcrumb",
+  "button",
+  "checkbox",
+  "comment",
+  "container",
+  "dimmer",
+  "divider",
+  "dropdown",
+  "flag",
+  "form",
+  "grid",
+  "header",
+  "icon",
+  "image",
+  "input",
+  "item",
+  "label",
+  "list",
+  "loader",
+  "menu",
+  "message",
+  "modal",
+  "placeholder",
+  "popup",
+  "progress",
+  "reset",
+  "search",
+  "segment",
+  "sidebar",
+  "statistic",
+  "table",
+  "tab",
+  "text"
+];
+
 // These packages are simply loaded in HTML with the JS path
 const baseExternalPackages: Record<
   string,
-  { globalVariableName: string; devScript: string | string[]; prodScript?: string | string[]; css?: string | string[] }
+  {
+    cdnjsName?: string;
+    globalVariableName?: string;
+    devScript?: string | string[];
+    prodScript?: string | string[];
+    css?: string | string[];
+  }
 > = {
   react: {
     globalVariableName: "React",
@@ -78,7 +121,11 @@ const baseExternalPackages: Record<
   mobx: { globalVariableName: "mobx", devScript: "mobx.umd.development.js", prodScript: "mobx.umd.production.min.js" },
   axios: { globalVariableName: "axios", devScript: "axios.min.js" },
   noty: { globalVariableName: "Noty", devScript: "noty.min.js", css: "noty.min.css" },
-  "semantic-ui-react": { globalVariableName: "semanticUIReact", devScript: "semantic-ui-react.min.js" }
+  "semantic-ui-react": { globalVariableName: "semanticUIReact", devScript: "semantic-ui-react.min.js" },
+  "fomantic-ui-css": {
+    cdnjsName: "fomantic-ui",
+    css: semanticUiCssComponents.map(component => `components/${component}.min.css`)
+  }
 };
 
 const externalPackageVersions = Object.fromEntries(
@@ -90,7 +137,10 @@ const externalPackageVersions = Object.fromEntries(
     "prismjs",
 
     ...Object.keys(baseExternalPackages)
-  ].map(packageName => [packageName, require(`${packageName}/package.json`).version])
+  ].map(packageName => [
+    baseExternalPackages[packageName]?.cdnjsName || packageName,
+    require(`${packageName}/package.json`).version
+  ])
 );
 
 export default defineConfig({
@@ -106,11 +156,13 @@ export default defineConfig({
     compileTime(),
     ejs({
       gitCommitInfo: getGitCommitInfo(),
-      externalPackages: Object.entries(baseExternalPackages).map(([packageName, { devScript, prodScript, css }]) => [
-        packageName,
-        !isDev && prodScript ? prodScript : devScript,
-        css
-      ]),
+      externalPackages: Object.entries(baseExternalPackages).map(
+        ([packageName, { cdnjsName, devScript, prodScript, css }]) => [
+          cdnjsName || packageName,
+          !isDev && prodScript ? prodScript : devScript,
+          css
+        ]
+      ),
       externalPackageVersions
     }),
     svgo({
@@ -188,10 +240,9 @@ export default defineConfig({
     externals({
       "monaco-editor": "Monaco",
       ...Object.fromEntries(
-        Object.entries(baseExternalPackages).map(([packageName, { globalVariableName }]) => [
-          packageName,
-          globalVariableName
-        ])
+        Object.entries(baseExternalPackages)
+          .filter(([, { globalVariableName }]) => globalVariableName)
+          .map(([packageName, { globalVariableName }]) => [packageName, globalVariableName])
       )
     }),
     purgeCss({
