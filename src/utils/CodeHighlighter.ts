@@ -1,14 +1,23 @@
 import getScript from "getscript-promise";
 
-window["Prism"] = {
-  manual: true
-} as any;
-await Promise.all([
-  getScript(`${window.cdnjs}/prism/${EXTERNAL_PACKAGE_VERSION["prismjs"]}/components/prism-core.min.js`),
-  getScript(`${window.cdnjs}/prism/${EXTERNAL_PACKAGE_VERSION["prismjs"]}/plugins/autoloader/prism-autoloader.min.js`)
-]);
+let Prism: typeof import("prismjs");
 
-const Prism = window["Prism"] as unknown as typeof import("prismjs");
+export const loadPrism = (() => {
+  let promise = (async () => {
+    window["Prism"] = {
+      manual: true
+    } as any;
+    await getScript(`${window.cdnjs}/prism/${EXTERNAL_PACKAGE_VERSION["prismjs"]}/components/prism-core.min.js`);
+    await getScript(
+      `${window.cdnjs}/prism/${EXTERNAL_PACKAGE_VERSION["prismjs"]}/plugins/autoloader/prism-autoloader.min.js`
+    );
+
+    Prism = window["Prism"] as unknown as typeof import("prismjs");
+  })();
+  promise.then(() => (promise = null));
+
+  return () => promise;
+})();
 
 function normalizeLanguageName(language: string) {
   return language.trim().toLowerCase();

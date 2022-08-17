@@ -2,23 +2,27 @@ import getScript from "getscript-promise";
 
 const TEX_PACKAGES = ["ams", "boldsymbol", "colorv2", "html", "noundefined", "physics"];
 
-async function loadMathJax() {
-  window.MathJax = {
-    loader: {
-      load: ["input/tex-base", ...TEX_PACKAGES.map(packageName => `[tex]/${packageName}`), "output/chtml", "ui/safe"]
-    },
-    tex: {
-      packages: ["base", ...TEX_PACKAGES]
-    },
-    chtml: {
-      adaptiveCSS: false
-    }
-  };
-  await getScript(`${window.cdnjs}/mathjax/${EXTERNAL_PACKAGE_VERSION["mathjax-full"]}/es5/startup.js`);
-  await window.MathJax.startup.promise;
-  await window.MathJax.startup.document.updateDocument();
-}
-await loadMathJax();
+export const loadMathJax = (() => {
+  let promise = (async () => {
+    window.MathJax = {
+      loader: {
+        load: ["input/tex-base", ...TEX_PACKAGES.map(packageName => `[tex]/${packageName}`), "output/chtml", "ui/safe"]
+      },
+      tex: {
+        packages: ["base", ...TEX_PACKAGES]
+      },
+      chtml: {
+        adaptiveCSS: false
+      }
+    };
+    await getScript(`${window.cdnjs}/mathjax/${EXTERNAL_PACKAGE_VERSION["mathjax-full"]}/es5/startup.js`);
+    await window.MathJax.startup.promise;
+    await window.MathJax.startup.document.updateDocument();
+  })();
+  promise.then(() => (promise = null));
+
+  return () => promise;
+})();
 
 export function renderMath(math: string, display: boolean) {
   try {

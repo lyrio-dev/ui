@@ -88,8 +88,10 @@ async function render(
 
   // Render highlights
   if (highlightPlaceholders.length > 0) {
-    const { loadLanguages, highlightSync } =
+    const { loadPrism, loadLanguages, highlightSync } =
       moduleCodeHighlighter || (moduleCodeHighlighter = await import("@/utils/CodeHighlighter"));
+    const loadPrismPromise = loadPrism();
+    if (loadPrismPromise) await loadPrismPromise;
     const loadLanguagesPromise = loadLanguages(highlightPlaceholders.map(item => item.language));
     if (loadLanguagesPromise) await loadLanguagesPromise;
 
@@ -101,7 +103,10 @@ async function render(
 
   // Render maths
   if (mathPlaceholders.length > 0) {
-    const { renderMath } = moduleMathJax || (moduleMathJax = await import("./mathjax"));
+    const { loadMathJax, renderMath } = moduleMathJax || (moduleMathJax = await import("./mathjax"));
+    const loadMathJaxPromise = loadMathJax();
+    if (loadMathJaxPromise) await loadMathJaxPromise;
+
     mathPlaceholders.forEach(item => {
       const element = findPlaceholderElement(wrapper, item.id);
       element.parentNode.replaceChild(renderMath(item.code, item.display), element);

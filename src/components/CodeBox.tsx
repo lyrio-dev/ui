@@ -110,6 +110,8 @@ export const HighlightedCodeBox = React.forwardRef<HTMLPreElement, HighlightedCo
   const [html, pending] = useMaybeAsyncFunctionResult(
     async (code: string, language: string, callback: (result: string) => void) => {
       CodeHighlighter ||= await import("@/utils/CodeHighlighter");
+      const loadPrismPromise = CodeHighlighter.loadPrism();
+      if (loadPrismPromise) await loadPrismPromise;
       CodeHighlighter.highlight(code, language, callback);
     },
     [props.code, props.language]
