@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Menu } from "semantic-ui-react";
 import { observer } from "mobx-react";
-import * as Monaco from "monaco-editor";
+import type * as Monaco from "monaco-editor";
 
 import style from "./TabbedEditor.module.less";
 
@@ -36,36 +36,40 @@ let TabbedEditor: React.FC<TabbedEditorProps> = props => {
       model: Monaco.editor.ITextModel;
       viewState: Monaco.editor.ICodeEditorViewState;
     }[]
-  >(
-    props.tabs.map((tab, i) => {
-      const model = Monaco.editor.createModel(tab.initialContent, tab.language);
+  >(null);
+
+  if (props.refSetValue)
+    props.refSetValue.current = (tabIndex: number, value: string) => {
+      if (refTabStates.current) refTabStates.current[tabIndex].model.setValue(value);
+    };
+
+  const refEditor = useRef<Monaco.editor.IStandaloneCodeEditor>();
+
+  const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  const refCurrentTabIndex = useRef(currentTabIndex);
+  refCurrentTabIndex.current = currentTabIndex;
+
+  function editorDidMount(editor: Monaco.editor.IStandaloneCodeEditor) {
+    refTabStates.current = props.tabs.map((tab, i) => {
+      const model = (window["Monaco"] as typeof Monaco).editor.createModel(tab.initialContent, tab.language);
       model.onDidChangeContent(() => refOnChangeCallback.current(i, model.getValue()));
       return {
         model,
         viewState: null
       };
-    })
-  );
-
-  if (props.refSetValue)
-    props.refSetValue.current = (tabIndex: number, value: string) =>
-      refTabStates.current[tabIndex].model.setValue(value);
-
-  const refEditor = useRef<Monaco.editor.IStandaloneCodeEditor>();
-
-  function editorDidMount(editor: Monaco.editor.IStandaloneCodeEditor) {
+    });
     refEditor.current = editor;
-    editor.setModel(refTabStates.current[0]?.model);
+    editor.setModel(refTabStates.current[refCurrentTabIndex.current]?.model);
   }
-
-  const [currentTabIndex, setCurrentTabIndex] = useState(0);
 
   function onChangeTab(index: number) {
     if (index === currentTabIndex) return;
 
-    refTabStates.current[currentTabIndex].viewState = refEditor.current.saveViewState();
-    refEditor.current.setModel(refTabStates.current[index].model);
-    refEditor.current.restoreViewState(refTabStates.current[index].viewState);
+    if (refEditor.current) {
+      refTabStates.current[currentTabIndex].viewState = refEditor.current.saveViewState();
+      refEditor.current.setModel(refTabStates.current[index].model);
+      refEditor.current.restoreViewState(refTabStates.current[index].viewState);
+    }
 
     setCurrentTabIndex(index);
   }

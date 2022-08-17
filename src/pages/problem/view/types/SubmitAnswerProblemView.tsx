@@ -91,11 +91,13 @@ let SubmitAnswerProblemSubmitView: React.FC<SubmitAnswerProblemSubmitViewProps> 
                 initialContent: ""
               }))}
               refSetValue={refSetEditorValue}
-              onChange={(i, newValue) => {
-                const a = editorContents.slice(0);
-                a[i] = newValue;
-                setEditorContents(a);
-              }}
+              onChange={(i, newValue) =>
+                setEditorContents(editorContents => {
+                  const a = editorContents.slice(0);
+                  a[i] = newValue;
+                  return a;
+                })
+              }
             />
           </SubmitViewFrame.EditorWrapper>
         }
