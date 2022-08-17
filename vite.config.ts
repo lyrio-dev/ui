@@ -93,7 +93,8 @@ const semanticUiCssComponents = [
   "statistic",
   "table",
   "tab",
-  "text"
+  "text",
+  "transition"
 ];
 
 // These packages are simply loaded in HTML with the JS path
