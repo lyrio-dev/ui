@@ -40,11 +40,11 @@ function safeStringify(object) {
       date: gitCommitInfo.date
     }) %>;
 
-    (function () {
-      function normalizePath(path) {
+    (() => {
+      var normalizePath = (path) => {
         while (path.endsWith("/")) path = path.slice(0, -1);
         return path + "/";
-      }
+      };
 
       // This is used for specify public path dynamicly for each request. Useful when you have multiple CDN servers.
       // Use ngx_http_sub_module in your server to replace the "__public_path__" placeholder with your CDN path.
@@ -121,12 +121,12 @@ function safeStringify(object) {
       }
       window.cdnjs = cdnjs;
 
-      function addLinkTag(rel, href) {
+      var addLinkTag = (rel, href) => {
         var link = document.createElement("link");
         link.rel = rel;
         link.href = href;
         document.head.appendChild(link);
-      }
+      };
 
       addLinkTag("icon", faviconUrl);
 
@@ -285,7 +285,7 @@ function safeStringify(object) {
 
   <!-- Handle script errors -->
   <script>
-    function fatalError(messages, stack) {
+    var fatalError = (messages, stack) => {
       var error = document.getElementById("error");
       if (error.style.display === "") return;
 
@@ -313,18 +313,18 @@ function safeStringify(object) {
       }
 
       error.style.display = "";
-    }
+    };
 
-    function handleLoadingError() {
+    var handleLoadingError = () => {
       fatalError([
         "There's an error loading the application. Please check your network connection.",
         "加载应用程序时出现错误，请检查您的网络连接。"
       ]);
-    }
+    };
 
     // Get session and server info
-    function refreshSession(token) {
-      function getSessionToken() {
+    var refreshSession = (token) => {
+      var getSessionToken = () => {
         try {
           var appState = JSON.parse(localStorage["appState"]);
           if (appState.logout) {
@@ -335,7 +335,7 @@ function safeStringify(object) {
         } catch (e) {
           return null;
         }
-      }
+      };
 
       if (!token) token = getSessionToken() || "";
       var script = document.createElement("script");
@@ -343,7 +343,7 @@ function safeStringify(object) {
       script.onerror = handleLoadingError;
       script.src = window.apiEndpoint + "api/auth/getSessionInfo?jsonp=1&token=" + encodeURIComponent(token);
       document.head.appendChild(script);
-    }
+    };
     refreshSession();
   </script>
 </head>
@@ -365,8 +365,8 @@ function safeStringify(object) {
 
   <!-- Dynamicly generate <script> tags -->
   <script>
-    (function () {
-      function addScriptTag(attributes, code) {
+    (() => {
+      var addScriptTag = (attributes, code) => {
         var script = document.createElement("script");
         if (attributes) for (var key in attributes) script.setAttribute(key, attributes[key]);
 
@@ -375,14 +375,14 @@ function safeStringify(object) {
         if (code) script.src = "data:text/javascript," + code;
 
         document.body.appendChild(script);
-      }
+      };
 
       // xdomain.js
       // Check for cross-origin API endpoint.
       var apiEndpoint = window.apiEndpoint;
-      function isCrossOrigin(url) {
+      var isCrossOrigin = (url) => {
         return new URL(url, location).origin !== location.origin;
-      }
+      };
       if (isCrossOrigin(apiEndpoint)) {
         // Load xdomain library from API host.
         var apiHostCorsPath = apiEndpoint + "api/cors/";
