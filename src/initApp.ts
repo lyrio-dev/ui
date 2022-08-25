@@ -57,21 +57,24 @@ function firstSessionInitialization() {
     sessionSwrInfo = JSON.parse(localStorage.getItem(SESSION_SWR_INFO_KEY));
   } catch {}
 
+  let usingCachedSessionInfo = false;
   if (
     sessionSwrInfo?.version === SESSION_SWR_INFO_VERSION &&
     Date.now() - sessionSwrInfo.date <= SESSION_SWR_INFO_VALID_FOR
   ) {
     console.log("session stale");
     applySessionInfo(sessionSwrInfo.sessionInfo);
+    usingCachedSessionInfo = true;
   }
 
   // revalidate (and apply new session info after)
-  waitForSessionInitialization();
+  const waitNewSessionInfoPromise = waitForSessionInitialization();
+  if (!usingCachedSessionInfo) return waitNewSessionInfoPromise;
 }
 
 export default async function initApp() {
   await initAppStateStore();
-  firstSessionInitialization();
+  await firstSessionInitialization();
   loadGoogleAnalytics(appState.serverPreference.misc.googleAnalyticsId);
   loadPlausible(appState.serverPreference.misc.plausibleApiEndpoint);
 }
