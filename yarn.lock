@@ -1459,14 +1459,6 @@ babel-plugin-prismjs@^2.1.0:
   resolved "https://registry.npmmirror.com/babel-plugin-prismjs/-/babel-plugin-prismjs-2.1.0.tgz#ade627896106326ad04d6d77fba92877618de571"
   integrity sha512-ehzSKYfeAz4U78zi/sfwsjDPlq0LvDKxNefcZTJ/iKBu+plsHsLqZhUeGf1+82LAcA35UZGbU6ksEx2Utphc/g==
 
-babel-runtime@^6.26.0:
-  version "6.26.0"
-  resolved "https://registry.npmmirror.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
-  integrity sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==
-  dependencies:
-    core-js "^2.4.0"
-    regenerator-runtime "^0.11.0"
-
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
@@ -1943,11 +1935,6 @@ copy-anything@^2.0.1:
   integrity sha512-1j20GZTsvKNkc4BY3NpMOM8tt///wY3FpIzozTOFO2ffuZcV61nojHXVKIy3WM+7ADCy5FVhdZYHYDdgTU0yJw==
   dependencies:
     is-what "^3.14.1"
-
-core-js@^2.4.0:
-  version "2.6.12"
-  resolved "https://registry.npmmirror.com/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
-  integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
 core-js@^3.23.4:
   version "3.24.1"
@@ -3599,12 +3586,10 @@ markdown-it-mentions@^1.0.0:
   dependencies:
     markdown-it-regexp "^0.4.0"
 
-markdown-it-merge-cells@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmmirror.com/markdown-it-merge-cells/-/markdown-it-merge-cells-1.0.1.tgz#ad375a09fa709213c19a354e537e560789ae2be8"
-  integrity sha512-4I6wBy8OPgPRSYAw7VC3SEgIcuM7HiFvTi1AW9bbPYRoXoAsr6inyjX723gyDUUj9dQT7ICNWtxrom9ULOW46A==
-  dependencies:
-    babel-runtime "^6.26.0"
+markdown-it-merge-cells@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-merge-cells/-/markdown-it-merge-cells-2.0.0.tgz#d3a6e391ce2c4678c2c5d31102d38fdc02b621f7"
+  integrity sha512-aSAr+Nux0PNdpWQsTZQ2ioxSgaIU7pSGtU4Q+UsxJQc4lexo8vOVUT+qvgQadoZcrgEoXHSpO0P9xFb/r9HdrA==
 
 markdown-it-regexp@^0.4.0:
   version "0.4.0"
@@ -4418,11 +4403,6 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
-
-regenerator-runtime@^0.11.0:
-  version "0.11.1"
-  resolved "https://registry.npmmirror.com/regenerator-runtime/-/regenerator-runtime-0.11.1.tgz#be05ad7f9bf7d22e056f9726cee5017fbf19e2e9"
-  integrity sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
 
 regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.9:
   version "0.13.9"
