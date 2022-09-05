@@ -68,7 +68,7 @@ interface SubmissionItemProps {
   answerInfo?: React.ReactNode;
 
   // If passed, will show a download icon
-  onDownloadAnswer?: React.ReactNode;
+  onDownloadAnswer?: () => void;
 
   // Mouse hover on "status" to display
   statusPopup?: (statusNode: React.ReactElement) => React.ReactNode;
@@ -273,7 +273,7 @@ interface SubmissionItemExtraRowsProps {
   answerInfo?: React.ReactNode;
 
   // If passed, will show a download icon
-  onDownloadAnswer?: React.ReactNode;
+  onDownloadAnswer?: () => void;
 
   // Mouse hover on "status" to display
   statusPopup?: (statusNode: React.ReactElement) => React.ReactNode;
