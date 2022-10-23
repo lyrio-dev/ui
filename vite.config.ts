@@ -51,7 +51,7 @@ const modernTargets = browsersWithSupportForFeatures(
   "es6-module-dynamic-import",
   "javascript.statements.import_meta",
   "javascript.operators.await.top_level"
-);
+).filter(browser => !(browser.includes("safari") || browser.includes("ios_saf")));
 
 const enabledNodePolyfills = {
   util: "rollup-plugin-node-polyfills/polyfills/util",
@@ -192,7 +192,7 @@ export default defineConfig({
         "Firefox 52"
       ],
       modernTargets,
-      modernFeatureTestExtraCode: "await 0"
+      modernFeatureTestExtraCode: "await 0;if(navigator.vendor.includes('Apple'))throw 0;"
     }),
     publicPath({
       publicPathExpression: "window.publicPath",

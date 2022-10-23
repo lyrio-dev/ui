@@ -366,6 +366,10 @@ function safeStringify(object) {
   <!-- Dynamicly generate <script> tags -->
   <script>
     (() => {
+      var modernScriptTags = [];
+      window.modernScriptTags = modernScriptTags;
+      var legacyScriptTags = [];
+      window.legacyScriptTags = legacyScriptTags;
       var addScriptTag = (attributes, code) => {
         var script = document.createElement("script");
         if (attributes) for (var key in attributes) script.setAttribute(key, attributes[key]);
@@ -374,8 +378,21 @@ function safeStringify(object) {
         script.onerror = handleLoadingError;
         if (code) script.src = "data:text/javascript," + code;
 
-        document.body.appendChild(script);
+        if (attributes.type === "module" && !code) {
+          modernScriptTags.push(script);
+        } else if (script.noModule) {
+          script.noModule = false;
+          legacyScriptTags.push(script);
+        } else {
+          var promise = new Promise(function (resolve) {
+            script.onload = resolve;
+          });
+          document.body.appendChild(script);
+          return promise;
+        }
       };
+
+      var dependencyPromises = [];
 
       // xdomain.js
       // Check for cross-origin API endpoint.
@@ -386,28 +403,61 @@ function safeStringify(object) {
       if (isCrossOrigin(apiEndpoint)) {
         // Load xdomain library from API host.
         var apiHostCorsPath = apiEndpoint + "api/cors/";
-        addScriptTag({
+        dependencyPromises.push(addScriptTag({
           src: apiHostCorsPath + "xdomain.min.js",
           "data-slave": apiHostCorsPath + "xdomain.html"
-        }, null);
+        }, null));
       }
 
       <%
       for (const [packageName, scripts] of externalPackages) {
         for (const scriptName of (Array.isArray(scripts) ? scripts : [scripts]).filter(f => f)) {
       %>
-          addScriptTag({
+          dependencyPromises.push(addScriptTag({
             src: window.cdnjs + <%-
               safeStringify(`/${packageName}/${externalPackageVersions[packageName]}/${scriptName}`)
             %>
-          });
+          }));
       <%
         }
       }
       %>
 
-      // __add_script_tags__
+      window.scriptTagsLoaded = Promise.all(dependencyPromises).then(function () {
+        // __add_script_tags__
+      });
     })();
+  </script>
+
+  <script>
+    (function () {
+      // Workaround for Vite: <script type="module"> got replaced by Vite
+      var script = document.currentScript;
+      if (script) {
+        var newScript = document.createElement("script");
+        newScript.type = "module";
+        newScript.innerHTML = script.innerHTML;
+        document.body.appendChild(newScript);
+        return;
+      }
+      window.scriptTagsLoaded.then(function () {
+        console.log("Loading " + (window.__vite_is_modern_browser ? "modern" : "legacy") + " script tags: feature detection");
+        var scriptTags = window.__vite_is_modern_browser ? window.modernScriptTags : window.legacyScriptTags;
+        for (var i in scriptTags) {
+          document.body.appendChild(scriptTags[i]);
+        }
+      });
+    })();
+  </script>
+
+  <script nomodule data-notransform>
+    window.scriptTagsLoaded.then(function () {
+      console.log("Loading legacy script tags: no module");
+      var scriptTags = window.legacyScriptTags;
+      for (var i in scriptTags) {
+        document.body.appendChild(scriptTags[i]);
+      }
+    });
   </script>
 
   <script type="module" src="/src/index.ts"></script>

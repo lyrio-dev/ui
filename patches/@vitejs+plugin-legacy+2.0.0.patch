@@ -1,5 +1,5 @@
 diff --git a/node_modules/@vitejs/plugin-legacy/dist/index.cjs b/node_modules/@vitejs/plugin-legacy/dist/index.cjs
-index 294a950..bcd3514 100644
+index 294a950..61b2605 100644
 --- a/node_modules/@vitejs/plugin-legacy/dist/index.cjs
 +++ b/node_modules/@vitejs/plugin-legacy/dist/index.cjs
 @@ -8,6 +8,7 @@ const node_module = require('node:module');
@@ -15,7 +15,7 @@ index 294a950..bcd3514 100644
  const systemJSInlineCode = `System.import(document.getElementById('${legacyEntryId}').getAttribute('data-src'))`;
  const detectModernBrowserVarName = "__vite_is_modern_browser";
 -const detectModernBrowserCode = `try{import.meta.url;import("_").catch(()=>1);}catch(e){}window.${detectModernBrowserVarName}=true;`;
-+const detectModernBrowserCode = extraCode => `try{import.meta.url;import("_").catch(()=>1);${extraCode}}catch(e){}window.${detectModernBrowserVarName}=true;`;
++const detectModernBrowserCode = extraCode => `let f=true;try{import.meta.url;import("_").catch(()=>1);${extraCode}}catch(e){f=false;}window.${detectModernBrowserVarName}=f;`;
  const dynamicFallbackInlineCode = `!function(){if(window.${detectModernBrowserVarName})return;console.warn("vite: loading legacy build because dynamic import or import.meta.url is unsupported, syntax error above should be ignored");var e=document.getElementById("${legacyPolyfillId}"),n=document.createElement("script");n.src=e.src,n.onload=function(){${systemJSInlineCode}},document.body.appendChild(n)}();`;
  const forceDynamicImportUsage = `export function __vite_legacy_guard(){import('data:text/javascript,')};`;
  const legacyEnvVarMarker = `__VITE_IS_LEGACY__`;
@@ -36,15 +36,29 @@ index 294a950..bcd3514 100644
          }
          const ms = new MagicString__default(raw);
          if (genDynamicFallback && chunk.isEntry) {
-@@ -311,7 +313,7 @@ function viteLegacyPlugin(options = {}) {
+@@ -311,15 +313,15 @@ function viteLegacyPlugin(options = {}) {
          tags.push({
            tag: "script",
            attrs: { type: "module" },
 -          children: detectModernBrowserCode,
+-          injectTo: "head"
+-        });
+-        tags.push({
+-          tag: "script",
+-          attrs: { type: "module" },
+-          children: dynamicFallbackInlineCode,
 +          children: detectModernBrowserCode(options.modernFeatureTestExtraCode || ""),
            injectTo: "head"
          });
-         tags.push({
++        // tags.push({
++        //   tag: "script",
++        //   attrs: { type: "module" },
++        //   children: dynamicFallbackInlineCode,
++        //   injectTo: "head"
++        // });
+       }
+       return {
+         html,
 @@ -511,7 +513,7 @@ function wrapIIFEBabelPlugin() {
  const cspHashes = [
    node_crypto.createHash("sha256").update(safari10NoModuleFix).digest("base64"),

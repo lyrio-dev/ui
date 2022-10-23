@@ -1,0 +1,16 @@
+diff --git a/node_modules/vite-plugin-public-path/dist/processing/html.js b/node_modules/vite-plugin-public-path/dist/processing/html.js
+index 66c437c..d3b9a13 100644
+--- a/node_modules/vite-plugin-public-path/dist/processing/html.js
++++ b/node_modules/vite-plugin-public-path/dist/processing/html.js
+@@ -88,6 +88,11 @@ function processHtml(config, options, _fileName, html) {
+     const patchAttributes = ["src", "data-src"];
+     const excludeScriptsFilter = options.excludeScripts ? (0, pluginutils_1.createFilter)(options.excludeScripts) : () => false;
+     const scriptTags = document.querySelectorAll("script[src], script[nomodule]").filter(tag => {
++        if (tag.hasAttribute("data-notransform")) {
++            tag.removeAttribute("data-notransform");
++            console.log("!!!");
++            return false;
++        }
+         var _a;
+         if (!patchAttributes.some(attr => tag.hasAttribute(attr))) {
+             // script tag has no src or data-src, keep tag for rewrite.
