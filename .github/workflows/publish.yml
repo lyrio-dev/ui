@@ -27,7 +27,18 @@ jobs:
       with:
         token: ${{ secrets.NPM_TOKEN }}
         tag: ${{ endsWith(github.ref_name, 'next') && 'next' || 'latest' }}
-    - name: Start Deployment for LibreOJ
+    - name: Start Deployment for LibreOJ CDN
+      uses: octokit/request-action@v2.x
+      with:
+        route: POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches
+        owner: LibreOJ
+        repo: CDN
+        workflow_id: deploy.yaml
+        ref: main
+        inputs: "{}"
+      env:
+        GITHUB_TOKEN: ${{ secrets.CDN_DEPLOY_GITHUB_TOKEN }}
+    - name: Start Deployment for LibreOJ Bootstrap
       run: |
         eval `ssh-agent -s`
         echo "$SSH_KEY" | tr -d '\r' | ssh-add -
