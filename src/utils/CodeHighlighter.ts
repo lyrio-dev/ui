@@ -71,6 +71,7 @@ export function loadLanguages(languages: string[]) {
  */
 export function highlightSync(code: string, language: string) {
   code = normalizeCode(code);
+  if (language.toLowerCase() === "c++") language = "cpp";
   const resolvedLanguage = languageAlias[normalizeLanguageName(language)];
 
   if (resolvedLanguage) {
@@ -79,9 +80,8 @@ export function highlightSync(code: string, language: string) {
     } catch (e) {
       console.error(`Failed to highlight, language = ${language}`, e);
     }
-  } else {
-    return wrapHighlightResult(escapeHtml(code).split("\n").join("<br>"));
   }
+  return wrapHighlightResult(escapeHtml(code).split("\n").join("<br>"));
 }
 
 export async function highlight(code: string, language: string, callback: (result: string) => void) {
