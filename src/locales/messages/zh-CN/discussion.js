@@ -16,7 +16,10 @@ return {
     label: {
       nonpublic: "未公开",
       problem_owner: "题目上传者",
-      discussion_publisher: "讨论发起者"
+      discussion_publisher: "讨论发起者",
+      admin: "站点管理员",
+      problem_admin: "题目管理员",
+      discussion_admin: "讨论管理员"
     },
     actions: {
       edit: "编辑",
